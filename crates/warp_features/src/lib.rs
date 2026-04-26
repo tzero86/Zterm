@@ -835,6 +835,9 @@ pub enum FeatureFlag {
     VerticalTabsSummaryMode,
 
     CloudModeInputV2,
+
+    /// Enables continuing cloud mode conversations in the cloud after an execution ends.
+    HandoffCloudCloud,
 }
 
 static FLAG_STATES: [AtomicBool; cardinality::<FeatureFlag>()] =
