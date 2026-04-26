@@ -1478,6 +1478,22 @@ impl TerminalModel {
         self.event_proxy.send_wakeup_event();
     }
 
+    pub fn append_followup_shared_session_scrollback(
+        &mut self,
+        scrollback: &[SerializedBlock],
+        is_alt_screen_active: bool,
+    ) {
+        debug_assert!(self.shared_session_status().is_viewer());
+
+        self.block_list_mut()
+            .append_followup_shared_session_scrollback(scrollback);
+        if is_alt_screen_active {
+            self.enter_alt_screen(true);
+        }
+
+        self.event_proxy.send_wakeup_event();
+    }
+
     pub fn obfuscate_secrets(&self) -> ObfuscateSecrets {
         self.obfuscate_secrets
     }

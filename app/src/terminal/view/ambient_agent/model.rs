@@ -426,6 +426,11 @@ impl AmbientAgentViewModel {
             },
         );
     }
+    pub fn attach_followup_session(&mut self, session_id: SessionId, ctx: &mut ModelContext<Self>) {
+        self.stop_progress_timer();
+        self.status = Status::AgentRunning;
+        ctx.emit(AmbientAgentViewModelEvent::FollowupSessionReady { session_id });
+    }
 
     pub fn status(&self) -> &Status {
         &self.status
@@ -653,8 +658,13 @@ impl AmbientAgentViewModel {
 
                         if let Some(session_id) = session_join_info.session_id {
                             me.stop_progress_timer();
+                            let event = if matches!(me.status, Status::AgentRunning) {
+                                AmbientAgentViewModelEvent::FollowupSessionReady { session_id }
+                            } else {
+                                AmbientAgentViewModelEvent::SessionReady { session_id }
+                            };
                             me.status = Status::AgentRunning;
-                            ctx.emit(AmbientAgentViewModelEvent::SessionReady { session_id });
+                            ctx.emit(event);
                         }
                     }
                     AmbientAgentEvent::AtCapacity => {
@@ -905,6 +915,10 @@ pub enum AmbientAgentViewModelEvent {
     ProgressUpdated,
     /// The ambient agent has started sharing its session.
     SessionReady {
+        session_id: SessionId,
+    },
+    /// A follow-up execution has started sharing a fresh session.
+    FollowupSessionReady {
         session_id: SessionId,
     },
     /// An environment was selected.

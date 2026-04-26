@@ -23,6 +23,11 @@ use std::collections::HashMap;
 /// this is an indication that we're too far ahead and
 /// could indicate an issue.
 const TOO_MANY_BUFFERED_EVENTS: usize = 50;
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum SharedSessionInitialLoadMode {
+    ReplaceFromSessionScrollback,
+    AppendFollowupScrollback,
+}
 
 /// The event loop is used to process a stream of events
 /// originating from the sender.
@@ -67,13 +72,22 @@ impl EventLoop {
         window_size: WindowSize,
         scrollback: Scrollback,
         catching_up_to_event_no: Option<usize>,
+        load_mode: SharedSessionInitialLoadMode,
         ctx: &mut ModelContext<Self>,
     ) -> Self {
         let scrollback_blocks = decode_scrollback(&scrollback);
         let is_alt_screen_active = scrollback.is_alt_screen_active;
-        terminal_model
-            .lock()
-            .load_shared_session_scrollback(scrollback_blocks.as_slice(), is_alt_screen_active);
+        match load_mode {
+            SharedSessionInitialLoadMode::ReplaceFromSessionScrollback => terminal_model
+                .lock()
+                .load_shared_session_scrollback(scrollback_blocks.as_slice(), is_alt_screen_active),
+            SharedSessionInitialLoadMode::AppendFollowupScrollback => terminal_model
+                .lock()
+                .append_followup_shared_session_scrollback(
+                    scrollback_blocks.as_slice(),
+                    is_alt_screen_active,
+                ),
+        }
 
         // When we load scrollback, we might not actually complete a block (e.g. shared session started
         // without any scrollback except active block). In this case, we want to make sure the input
