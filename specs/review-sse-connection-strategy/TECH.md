@@ -49,7 +49,7 @@ The poller's eligibility check observes a single signal — `has_active_consumer
 
 The poller treats parent and child agent runs differently because the trigger conditions are different, but both check the same consumer signal.
 
-**Child role** — `Conversation::is_child_agent_conversation()` is true (`parent_conversation_id` is set). The subscription is the child's inbox. It must be live whenever the child run exists, regardless of consumer registration. In practice every live child has at least one consumer (its driver, in CLI/cloud, or its agent view, in the GUI), and the inbox must be on whenever the run is alive so the consumer can act on incoming messages. This applies to every harness — Oz, ClaudeCode, Gemini, headless CLI children spawned via `start_agent` with `execution_mode: local`, and cloud children. Children today cannot themselves spawn children; if that constraint is lifted later, this role keeps applying unchanged.
+**Child role** — `Conversation::is_child_agent_conversation()` is true (`parent_conversation_id` is set). The subscription is the child's inbox. It is gated on having an active consumer in *this process* the same way the parent role is. In the process where the child run actually lives (a cloud worker for cloud Oz children; a local CLI driver process for `start_agent` with `execution_mode: local`), the agent_sdk driver registers a consumer for the run's lifetime, so the child's inbox stays live for the whole run. In any other process (e.g. the user's GUI tracking a cloud child), the child's own SSE only opens while a consumer is registered — i.e. the child's agent view is open. Without a local consumer the events would have nowhere to land, and the user's GUI already sees child→parent traffic via the parent's SSE. This applies to every harness — Oz, ClaudeCode, Gemini, headless CLI children spawned via `start_agent` with `execution_mode: local`, and cloud children. Children today cannot themselves spawn children; if that constraint is lifted later, this role keeps applying unchanged.
 
 **Parent role** — the conversation has at least one child run_id registered in `watched_run_ids` (from `register_watched_run_id` in `start_agent.rs`). The subscription delivers child lifecycle and child→parent messages into the parent's consumer. The parent role is gated on having an active consumer. In the GUI that means the agent view is open; in CLI/cloud it means the agent driver is running. When the last consumer for a parent disappears, child events for that parent are stored on the server and backfilled via the cursor when a consumer comes back.
 
@@ -62,11 +62,11 @@ The stronger present-day motivator for the consumer abstraction is a different s
 Formally, a conversation should be subscribed iff:
 
 ```
-is_child_agent_conversation()
-  OR (has_at_least_one_watched_child_run_id() AND has_active_consumer())
+has_active_consumer()
+  AND (is_child_agent_conversation() OR has_at_least_one_watched_child_run_id())
 ```
 
-Where `has_active_consumer()` returns true when at least one `AgentViewController` or `agent_sdk::driver` is registered for this conversation. This predicate is the single invariant the poller maintains. Every code path either makes a conversation eligible (and ensures a connection exists) or makes it ineligible (and tears the connection down).
+Where `has_active_consumer()` returns true when at least one `AgentViewController` or `agent_sdk::driver` is registered for this conversation. This predicate is the single invariant the streamer maintains. Every code path either makes a conversation eligible (and ensures a connection exists) or makes it ineligible (and tears the connection down).
 
 ### Subscription drivers
 

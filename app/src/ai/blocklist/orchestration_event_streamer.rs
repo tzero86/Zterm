@@ -87,18 +87,21 @@ pub enum ConsumerId {
 /// Async network coordinator for v2 orchestration event delivery via SSE.
 ///
 /// Holds a long-lived SSE connection per *eligible* conversation. A
-/// conversation is eligible iff:
+/// conversation is eligible iff there is an active consumer for it AND
+/// the conversation has at least one role in an orchestration tree:
 ///
 /// ```text
-/// is_child_agent_conversation()
-///   OR (has_at_least_one_watched_child_run_id AND has_active_consumer())
+/// has_active_consumer()
+///   AND (is_child_agent_conversation() OR has_at_least_one_watched_child_run_id)
 /// ```
 ///
-/// In other words: child agent runs always subscribe (their `self_run_id`
-/// subscription is their inbox); conversations that are parents of
-/// children subscribe only while a consumer (agent view or driver) is
-/// registered to consume the events; "solo" conversations (neither role)
-/// do not subscribe.
+/// The active-consumer requirement applies to both roles. A child still
+/// has its `self_run_id` watched as soon as the server token arrives,
+/// but no SSE opens until something in this process actually consumes
+/// the events — either an open agent view or an `agent_sdk` driver
+/// (in CLI / cloud worker processes). Without a local consumer the
+/// events would have nowhere to go, and any state the consumer cares
+/// about can be backfilled via the cursor when one registers later.
 pub struct OrchestrationEventStreamer {
     ai_client: Arc<dyn AIClient>,
     server_api: Arc<ServerApi>,
@@ -466,50 +469,31 @@ impl OrchestrationEventStreamer {
     }
 
     /// True iff this conversation should currently hold an SSE connection.
+    /// A subscription is needed only when there is an active consumer in
+    /// this process (an open agent view or an agent_sdk driver). Children
+    /// always have their `self_run_id` watched, so once a consumer
+    /// registers they pick up their inbox; without a local consumer no
+    /// one would observe the events anyway.
     fn is_eligible(&self, conversation_id: AIConversationId, ctx: &warpui::AppContext) -> bool {
+        if !self.has_active_consumer(conversation_id) {
+            return false;
+        }
         self.is_child_agent_conversation(conversation_id, ctx)
-            || (self.has_watched_child_run_id(conversation_id, ctx)
-                && self.has_active_consumer(conversation_id))
+            || self.has_watched_child_run_id(conversation_id, ctx)
     }
 
-    /// Computes the run_ids list for the SSE filter as the union of:
-    /// - `{self_run_id}` when this conversation is in the child role,
-    /// - the watched child run_ids when this conversation is in the parent
-    ///   role (i.e. `has_watched_child_run_id` AND `has_active_consumer`).
-    fn run_ids_for_sse(
-        &self,
-        conversation_id: AIConversationId,
-        ctx: &warpui::AppContext,
-    ) -> Vec<String> {
-        let mut ids: HashSet<String> = HashSet::new();
-        let self_run_id = self.self_run_id(conversation_id, ctx);
-        let is_child = self.is_child_agent_conversation(conversation_id, ctx);
-
-        if is_child {
-            if let Some(id) = &self_run_id {
-                ids.insert(id.clone());
-            }
-        }
-
-        // Include child run_ids when the parent role applies. Exclude
-        // the conversation's own self_run_id (the child role already
-        // covers that).
-        if self.has_watched_child_run_id(conversation_id, ctx)
-            && self.has_active_consumer(conversation_id)
-        {
-            if let Some(set) = self.watched_run_ids.get(&conversation_id) {
-                for id in set {
-                    if Some(id.as_str()) != self_run_id.as_deref() {
-                        ids.insert(id.clone());
-                    }
-                }
-            }
-        }
-
-        ids.into_iter().collect()
+    /// Returns the run_ids to include in the SSE filter for an eligible
+    /// conversation. The set is the union of `{self_run_id}` (when this
+    /// conversation is a child) and any registered child run_ids (when it
+    /// is a parent). Both contributions live in `watched_run_ids` already,
+    /// so this is a straight clone.
+    fn run_ids_for_sse(&self, conversation_id: AIConversationId) -> Vec<String> {
+        self.watched_run_ids
+            .get(&conversation_id)
+            .into_iter()
+            .flat_map(|set| set.iter().cloned())
+            .collect()
     }
-
-    // ---- SSE connection lifecycle ------------------------------------
 
     /// Re-evaluates eligibility and either opens / reconnects or tears
     /// down the SSE connection for the given conversation.
@@ -541,7 +525,7 @@ impl OrchestrationEventStreamer {
         conversation_id: AIConversationId,
         ctx: &mut ModelContext<Self>,
     ) {
-        let run_ids = self.run_ids_for_sse(conversation_id, ctx);
+        let run_ids = self.run_ids_for_sse(conversation_id);
         if run_ids.is_empty() {
             return;
         }
