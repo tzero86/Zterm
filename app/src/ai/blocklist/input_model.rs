@@ -1,4 +1,4 @@
-//! Model-layer AI input state management logic.
+﻿//! Model-layer AI input state management logic.
 //!
 //! The primary export of this module is `BlocklistAIInputModel`, which is a terminal pane-scoped
 //! model managing input "type" state (whether the input is in AI or shell mode). This model also
@@ -14,8 +14,8 @@ use parking_lot::FairMutex;
 use serde::{Deserialize, Serialize};
 use session_sharing_protocol::common::{InputMode, InputType as ProtocolInputType};
 use settings::Setting as _;
-use warp_core::features::FeatureFlag;
-use warpui::{AppContext, Entity, EntityId, ModelContext, ModelHandle, SingletonEntity};
+use zterm_core::features::FeatureFlag;
+use zterm_ui::{AppContext, Entity, EntityId, ModelContext, ModelHandle, SingletonEntity};
 
 pub use input_classifier::InputType;
 
@@ -24,7 +24,7 @@ use crate::terminal::cli_agent_sessions::{
     CLIAgentInputState, CLIAgentSessionsModel, CLIAgentSessionsModelEvent,
 };
 use crate::PrivacySettings;
-use warp_completer::completer::CompletionContext;
+use zterm_completer::completer::CompletionContext;
 
 use crate::{
     input_classifier::InputClassifierModel,
@@ -697,7 +697,7 @@ impl BlocklistAIInputModel {
                     futures_lite::future::yield_now().await;
 
                     let input =
-                        warp_completer::util::expand_aliases(input, &completion_context).await;
+                        zterm_completer::util::expand_aliases(input, &completion_context).await;
 
                     futures_lite::future::yield_now().await;
 

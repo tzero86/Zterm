@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+﻿use std::collections::HashMap;
 use std::path::Path;
 
 use crate::launch_configs::launch_config::{PaneTemplateType, SplitDirection};
@@ -66,7 +66,7 @@ fn test_generated_worktree_path_uses_repo_name_directory() {
 
     assert_eq!(
         repo_dir,
-        warp_core::paths::data_dir()
+        zterm_core::paths::data_dir()
             .join("worktrees")
             .join("backend")
     );

@@ -1,4 +1,4 @@
-use crate::ai::blocklist::usage::render_context_window_usage_icon;
+﻿use crate::ai::blocklist::usage::render_context_window_usage_icon;
 use crate::ai::blocklist::view_util::format_credits;
 use crate::appearance::Appearance;
 use crate::persistence::model::{
@@ -8,10 +8,10 @@ use crate::persistence::model::{
 use crate::ui_components::blended_colors;
 use std::cmp::Ordering;
 use std::collections::HashMap;
-use warp_core::ui::theme::color::internal_colors;
-use warp_core::ui::Icon;
-use warpui::elements::ConstrainedBox;
-use warpui::{
+use zterm_core::ui::theme::color::internal_colors;
+use zterm_core::ui::Icon;
+use zterm_ui::elements::ConstrainedBox;
+use zterm_ui::{
     elements::{
         Border, Container, CornerRadius, CrossAxisAlignment, Empty, Flex, MainAxisSize,
         MouseStateHandle, ParentElement, Radius, Text,
@@ -232,7 +232,7 @@ impl ConversationUsageView {
 
                 if *is_byok {
                     model_elements.push(
-                        ConstrainedBox::new(Icon::Key.to_warpui_icon(text_color.into()).finish())
+                        ConstrainedBox::new(Icon::Key.to_zterm_ui_icon(text_color.into()).finish())
                             .with_width(font_size)
                             .with_height(font_size)
                             .finish(),

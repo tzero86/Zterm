@@ -7,12 +7,12 @@ use std::cmp::{Ordering, PartialEq};
 use std::collections::HashMap;
 use std::rc::Rc;
 use std::sync::Arc;
-use warp_core::ui::appearance::Appearance;
-use warp_core::ui::Icon;
-use warp_editor::render::element::VerticalExpansionBehavior;
-use warpui::elements::{ConstrainedBox, ScrollbarWidth};
-use warpui::ui_components::components::UiComponent as _;
-use warpui::{
+use zterm_core::ui::appearance::Appearance;
+use zterm_core::ui::Icon;
+use zterm_editor::render::element::VerticalExpansionBehavior;
+use zterm_ui::elements::{ConstrainedBox, ScrollbarWidth};
+use zterm_ui::ui_components::components::UiComponent as _;
+use zterm_ui::{
     elements::{
         Align, Border, ChildView, Clipped, Container, CornerRadius, CrossAxisAlignment, Expanded,
         Flex, MainAxisSize, MouseStateHandle, OffsetPositioning, ParentElement, Radius,
@@ -24,7 +24,7 @@ use warpui::{
 };
 
 use crate::ai::agent::{AIAgentActionResult, AIAgentActionType};
-use warpui::{EntityId, EventContext};
+use zterm_ui::{EntityId, EventContext};
 
 use crate::ai::agent::RequestCommandOutputResult;
 use crate::ai::agent::{icons, AIAgentActionResultType};
@@ -120,7 +120,7 @@ lazy_static! {
 }
 
 pub fn init(app: &mut AppContext) {
-    use warpui::keymap::macros::*;
+    use zterm_ui::keymap::macros::*;
 
     app.register_fixed_bindings([
         FixedBinding::new(
@@ -238,7 +238,7 @@ pub struct RequestedCommandView {
     header_mouse_state: MouseStateHandle,
     is_editing: bool,
 
-    // A requested command can either be copied directly off of one citation (such as a Warp Drive
+    // A requested command can either be copied directly off of one citation (such as a Zterm Drive
     // object), derived from one or more citations, or be unrelated to any citations.
     // A given citation should only appear once per block.
     copied_from_citation: Option<AIAgentCitation>,
@@ -752,7 +752,7 @@ impl RequestedCommandView {
                     Container::new(
                         ConstrainedBox::new(
                             Icon::Info
-                                .to_warpui_icon(
+                                .to_zterm_ui_icon(
                                     blended_colors::text_sub(theme, theme.surface_1()).into(),
                                 )
                                 .finish(),
@@ -1545,9 +1545,9 @@ impl View for RequestedCommandView {
                 OffsetPositioning::offset_from_save_position_element(
                     Self::get_position_id_for_accept_split_button(&self.position_id_prefix),
                     vec2f(0., 8.),
-                    warpui::elements::PositionedElementOffsetBounds::WindowByPosition,
-                    warpui::elements::PositionedElementAnchor::BottomRight,
-                    warpui::elements::ChildAnchor::TopRight,
+                    zterm_ui::elements::PositionedElementOffsetBounds::WindowByPosition,
+                    zterm_ui::elements::PositionedElementAnchor::BottomRight,
+                    zterm_ui::elements::ChildAnchor::TopRight,
                 ),
             );
         }

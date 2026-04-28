@@ -1,19 +1,19 @@
-use std::iter;
+﻿use std::iter;
 
 use pathfinder_geometry::vector::vec2f;
-use warpui::clipboard::ClipboardContent;
-use warpui::elements::{
+use zterm_ui::clipboard::ClipboardContent;
+use zterm_ui::elements::{
     Border, ChildAnchor, ChildView, ConstrainedBox, Container, CornerRadius, CrossAxisAlignment,
     Empty, Expanded, Flex, HyperlinkLens, MainAxisAlignment, MainAxisSize, OffsetPositioning,
     ParentAnchor, ParentElement, ParentOffsetBounds, Radius, Stack, Text,
 };
-use warpui::fonts::{Properties, Weight};
-use warpui::{
+use zterm_ui::fonts::{Properties, Weight};
+use zterm_ui::{
     AppContext, Element, Entity, SingletonEntity, TypedActionView, View, ViewContext, ViewHandle,
 };
 
 use markdown_parser::{FormattedText, FormattedTextFragment, FormattedTextLine};
-use warpui::elements::FormattedTextElement;
+use zterm_ui::elements::FormattedTextElement;
 
 use crate::ai::blocklist::code_block::{
     render_code_block_plain, CodeBlockOptions, CodeSnippetButtonHandles,

@@ -1,4 +1,4 @@
-use crate::search::item::IconLocation;
+﻿use crate::search::item::IconLocation;
 use crate::search::mixer::{DataSourceRunError, SyncDataSource};
 use crate::search::result_renderer::ItemHighlightState;
 use crate::{appearance::Appearance, ui_components::icons::Icon};
@@ -9,9 +9,9 @@ use serde::{Deserialize, Serialize};
 use serde_json::json;
 use std::any::Any;
 use std::{collections::HashSet, sync::Arc};
-use warp_core::features::FeatureFlag;
-use warp_core::ui::theme::Fill;
-use warpui::{Action, AppContext, Element, Entity, ModelHandle};
+use zterm_core::features::FeatureFlag;
+use zterm_core::ui::theme::Fill;
+use zterm_ui::{Action, AppContext, Element, Entity, ModelHandle};
 
 use super::mixer::{AsyncDataSource, BoxFuture};
 use super::{item::SearchItem, mixer::DataSourceRunErrorWrapper};
@@ -176,7 +176,7 @@ pub enum QueryFilter {
     /// Filter results for launch configurations.
     LaunchConfigurations,
 
-    /// Filter for objects in Warp Drive
+    /// Filter for objects in Zterm Drive
     Drive,
 
     /// Filter results for environment variables.
@@ -307,7 +307,7 @@ impl QueryFilter {
             QueryFilter::Sessions => "sessions",
             QueryFilter::Conversations => "conversations",
             QueryFilter::LaunchConfigurations => "launch configurations",
-            QueryFilter::Drive => "Warp Drive",
+            QueryFilter::Drive => "Zterm Drive",
             QueryFilter::EnvironmentVariables => "environment variables",
             QueryFilter::PromptHistory => "prompt history",
             QueryFilter::Files => "files",

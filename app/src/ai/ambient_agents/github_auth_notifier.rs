@@ -1,10 +1,10 @@
-//! Notifier for GitHub authentication state changes.
+﻿//! Notifier for GitHub authentication state changes.
 //!
 //! This singleton emits events when GitHub OAuth completes, allowing
 //! any component in the app (e.g., `UpdateEnvironmentForm`) to react to
 //! auth state changes without relying on window activation timing.
 
-use warpui::{Entity, ModelContext, SingletonEntity};
+use zterm_ui::{Entity, ModelContext, SingletonEntity};
 
 /// Events emitted by the GitHub auth notifier.
 #[derive(Debug, Clone)]

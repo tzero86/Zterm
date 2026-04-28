@@ -1,4 +1,4 @@
-use std::{fs, io, path::PathBuf};
+﻿use std::{fs, io, path::PathBuf};
 
 pub(super) const PLUGIN_ENTRYPOINT_JS_FILE_NAME: &str = "main.js";
 
@@ -11,7 +11,7 @@ pub(super) enum PluginLoadError {
     MissingBuiltin(BuiltInPluginType),
 }
 
-/// Represents "Built-in" plugins. Each variant corresponds to a plugin bundled with Warp by
+/// Represents "Built-in" plugins. Each variant corresponds to a plugin bundled with Zterm by
 /// default (e.g. Completions/Command Signatures)
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub(super) enum BuiltInPluginType {

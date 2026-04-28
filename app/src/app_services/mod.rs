@@ -1,4 +1,4 @@
-//! Functionality relating to services that the application provides
+﻿//! Functionality relating to services that the application provides
 //! to the host system.
 //!
 //! For example, on macOS, this module sets up integrations with
@@ -12,7 +12,7 @@ mod mac;
 #[cfg(windows)]
 pub mod windows;
 
-use warpui::AppContext;
+use zterm_ui::AppContext;
 
 pub fn init(_ctx: &mut AppContext) {
     log::info!("Initializing app services");

@@ -1,11 +1,11 @@
-//! Modal for customizing the agent input footer chip layout.
+﻿//! Modal for customizing the agent input footer chip layout.
 //!
 //! Uses the shared [`ChipConfigurator`] with `LeftRightZones` layout to let users
 //! drag/drop chips between left, right, and unused banks.
 
-use warpui::keymap::FixedBinding;
+use zterm_ui::keymap::FixedBinding;
 
-use warpui::{AppContext, Element, Entity, SingletonEntity, TypedActionView, View, ViewContext};
+use zterm_ui::{AppContext, Element, Entity, SingletonEntity, TypedActionView, View, ViewContext};
 
 use crate::chip_configurator::{
     render_chip_editor_modal, render_chip_editor_sections, ChipConfigurator,
@@ -225,7 +225,7 @@ impl View for AgentToolbarInlineEditor {
 }
 
 pub fn init(app: &mut AppContext) {
-    use warpui::keymap::macros::*;
+    use zterm_ui::keymap::macros::*;
 
     app.register_fixed_bindings([FixedBinding::new(
         "escape",

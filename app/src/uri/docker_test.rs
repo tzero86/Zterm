@@ -1,4 +1,4 @@
-use warpui::App;
+﻿use zterm_ui::App;
 
 use crate::{
     auth::{auth_manager::AuthManager, AuthStateProvider},
@@ -18,7 +18,7 @@ fn test_open_docker_container() {
         app.add_singleton_model(AppTelemetryContextProvider::new_context_provider);
         app.add_singleton_model(AuthManager::new_for_test);
 
-        let base_url = Url::parse("warplocal://action/docker/open_subshell")
+        let base_url = Url::parse("ztermlocal://action/docker/open_subshell")
             .expect("base url should be successfully parsed");
 
         let container_id = (

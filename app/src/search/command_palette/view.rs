@@ -12,20 +12,20 @@ use crate::server::telemetry::LaunchConfigUiLocation;
 use crate::server::telemetry::TelemetryEvent;
 use crate::settings::CtrlTabBehavior;
 use crate::terminal::keys_settings::KeysSettings;
-use crate::themes::theme::WarpTheme;
+use crate::themes::theme::ZtermTheme;
 use crate::view_components::DismissibleToast;
 use crate::ToastStack;
 use lazy_static::lazy_static;
-use warp_core::send_telemetry_from_app_ctx;
-use warp_util::path::LineAndColumnArg;
+use zterm_core::send_telemetry_from_app_ctx;
+use zterm_util::path::LineAndColumnArg;
 
 use crate::search::action::search_item::MatchedBinding;
 use itertools::Itertools;
-use warpui::elements::DispatchEventResult;
-use warpui::elements::EventHandler;
-use warpui::event::KeyState;
-use warpui::platform::keyboard::KeyCode;
-use warpui::FocusContext;
+use zterm_ui::elements::DispatchEventResult;
+use zterm_ui::elements::EventHandler;
+use zterm_ui::event::KeyState;
+use zterm_ui::platform::keyboard::KeyCode;
+use zterm_ui::FocusContext;
 
 use crate::search::command_palette::zero_state::{self, Event as ZeroStateEvent, ZeroState};
 use crate::search::data_source::QueryResult;
@@ -41,14 +41,14 @@ use crate::search::command_palette::data_sources::DataSourceStore;
 use crate::server::ids::SyncId;
 use crate::session_management::SessionSource;
 use crate::workspace::{active_terminal_in_window, ForkedConversationDestination, WorkspaceAction};
-use warpui::elements::{
+use zterm_ui::elements::{
     Align, Border, ChildView, Clipped, ClippedScrollStateHandle, ClippedScrollable, ConstrainedBox,
     Container, CornerRadius, Dismiss, Empty, Fill, Flex, ParentElement, Radius, SavePosition,
     Shrinkable,
 };
-use warpui::keymap::BindingId;
-use warpui::units::{IntoPixels, Pixels};
-use warpui::{
+use zterm_ui::keymap::BindingId;
+use zterm_ui::units::{IntoPixels, Pixels};
+use zterm_ui::{
     AppContext, Element, Entity, EntityId, ModelHandle, SingletonEntity, TypedActionView,
     ViewContext, ViewHandle, WindowId,
 };
@@ -101,8 +101,8 @@ pub enum Event {
     InvokeEnvironmentVariables { id: SyncId },
     /// Open a notebook identified by `id`.
     OpenNotebook { id: SyncId },
-    /// View the relevant object in the Warp Drive sidebar.
-    ViewInWarpDrive { id: CloudObjectTypeAndId },
+    /// View the relevant object in the Zterm Drive sidebar.
+    ViewInZtermDrive { id: CloudObjectTypeAndId },
     /// Open a file at the given path.
     OpenFile {
         path: String,
@@ -170,7 +170,7 @@ impl TypedActionView for View {
     }
 }
 
-impl warpui::View for View {
+impl zterm_ui::View for View {
     fn ui_name() -> &'static str {
         "CommandPaletteView"
     }
@@ -402,7 +402,7 @@ impl View {
                 | (PaletteMode::LaunchConfig, QueryFilter::LaunchConfigurations)
                 | (PaletteMode::Files, QueryFilter::Files)
                 | (PaletteMode::Conversations, QueryFilter::Conversations)
-                | (PaletteMode::WarpDrive, QueryFilter::Drive)
+                | (PaletteMode::ZtermDrive, QueryFilter::Drive)
         )
     }
 
@@ -695,7 +695,7 @@ impl View {
         })
     }
 
-    fn render_palette_list(&self, theme: &WarpTheme, app: &AppContext) -> Box<dyn Element> {
+    fn render_palette_list(&self, theme: &ZtermTheme, app: &AppContext) -> Box<dyn Element> {
         match self.search_bar_state.as_ref(app).query_result_renderers() {
             None => Empty::new().finish(),
             Some(renderers) if renderers.is_empty() => {
@@ -886,8 +886,8 @@ impl View {
                 ctx.emit(Event::InvokeEnvironmentVariables { id })
             }
             CommandPaletteItemAction::OpenNotebook { id } => ctx.emit(Event::OpenNotebook { id }),
-            CommandPaletteItemAction::ViewInWarpDrive { id } => {
-                ctx.emit(Event::ViewInWarpDrive { id })
+            CommandPaletteItemAction::ViewInZtermDrive { id } => {
+                ctx.emit(Event::ViewInZtermDrive { id })
             }
             CommandPaletteItemAction::NewSession { source } => {
                 self.dispatch_typed_action_on_view(source.action().deref(), ctx);
@@ -1000,11 +1000,11 @@ impl View {
         self.close(ctx, Some(result_action.result_type()));
     }
 
-    /// Dispatches `action` to the correct window and [`warpui::View`] by using the current state of
+    /// Dispatches `action` to the correct window and [`zterm_ui::View`] by using the current state of
     /// the [`BindingSource`] model.
     fn dispatch_typed_action_on_view(
         &self,
-        action: &dyn warpui::Action,
+        action: &dyn zterm_ui::Action,
         ctx: &mut ViewContext<Self>,
     ) {
         send_telemetry_from_ctx!(

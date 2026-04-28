@@ -1,9 +1,9 @@
-use warpui::{Entity, SingletonEntity};
+﻿use zterm_ui::{Entity, SingletonEntity};
 
 #[cfg(feature = "local_fs")]
 use std::path::{Path, PathBuf};
 #[cfg(feature = "local_fs")]
-use warpui::ModelContext;
+use zterm_ui::ModelContext;
 
 #[cfg(feature = "local_fs")]
 use {
@@ -16,7 +16,7 @@ use {
         Repository, RepositoryUpdate,
     },
     std::{collections::HashMap, time::Duration},
-    warpui::{r#async::SpawnedFutureHandle, ModelHandle, WeakModelHandle},
+    zterm_ui::{r#async::SpawnedFutureHandle, ModelHandle, WeakModelHandle},
 };
 
 #[cfg(feature = "local_fs")]

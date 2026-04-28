@@ -4,15 +4,15 @@ use std::{
     sync::Arc,
 };
 
-use warp_util::path::ShellFamily;
+use zterm_util::path::ShellFamily;
 use warp_workflows::workflows as global_workflows;
 #[cfg(not(target_family = "wasm"))]
-use warpui::platform::OperatingSystem;
-use warpui::{AppContext, Entity, ModelContext, SingletonEntity};
+use zterm_ui::platform::OperatingSystem;
+use zterm_ui::{AppContext, Entity, ModelContext, SingletonEntity};
 
 #[cfg(feature = "local_fs")]
 use crate::user_config::load_workflows;
-use crate::{terminal::model::session::Session, user_config::WarpConfig};
+use crate::{terminal::model::session::Session, user_config::ZtermConfig};
 
 use super::{workflow::Workflow, WorkflowSource};
 
@@ -26,7 +26,7 @@ pub enum UseCache {
     No,
 }
 
-/// Singleton model that loads and caches local (non-WarpDrive) workflows.
+/// Singleton model that loads and caches local (non-ZtermDrive) workflows.
 pub struct LocalWorkflows {
     app_workflows: Vec<Workflow>,
 
@@ -49,7 +49,7 @@ impl LocalWorkflows {
         self.app_workflows.iter()
     }
 
-    /// Returns an iterator over the static set of workflows for 3rd party tools loaded from Warp's
+    /// Returns an iterator over the static set of workflows for 3rd party tools loaded from Zterm's
     /// workflows GitHub repo.
     pub fn global_workflows(
         &self,
@@ -136,7 +136,7 @@ impl LocalWorkflows {
                     .map(|workflow| (WorkflowSource::Project, workflow)),
             )
             .chain(
-                WarpConfig::as_ref(ctx)
+                ZtermConfig::as_ref(ctx)
                     .local_user_workflows()
                     .iter()
                     .map(|workflow| (WorkflowSource::Local, workflow)),
@@ -184,7 +184,7 @@ pub(super) fn load_project_workflows(path: &Path) -> Vec<Workflow> {
     match git2::Repository::discover(path) {
         Ok(repository) => repository.workdir().map_or(Vec::new(), |workdir| {
             load_workflows(&workflows_dir(
-                workdir.join(warp_core::paths::WARP_CONFIG_DIR),
+                workdir.join(zterm_core::paths::ZTERM_CONFIG_DIR),
             ))
         }),
         Err(_) => Vec::new(),
@@ -210,7 +210,7 @@ pub fn tail_command_for_shell(shell_family: ShellFamily, path: &PathBuf) -> Stri
 
 #[cfg(not(target_family = "wasm"))]
 pub fn prompt_chip_logging_workflow(shell_family: ShellFamily) -> Option<Workflow> {
-    if !warp_core::channel::ChannelState::enable_debug_features() {
+    if !zterm_core::channel::ChannelState::enable_debug_features() {
         return None;
     }
     let log_file_path = crate::context_chips::logging::log_file_path().ok()?;
@@ -224,7 +224,7 @@ pub fn prompt_chip_logging_workflow(shell_family: ShellFamily) -> Option<Workflo
         ),
         arguments: vec![],
         source_url: None,
-        author: Some("Warp".into()),
+        author: Some("Zterm".into()),
         author_url: None,
         shells: vec![],
         environment_variables: None,

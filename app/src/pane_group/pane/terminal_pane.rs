@@ -5,10 +5,10 @@ use std::{collections::HashMap, sync::mpsc::SyncSender};
 
 use base64::{engine::general_purpose::STANDARD as BASE64_STANDARD, Engine as _};
 use url::Url;
-use warp_cli::agent::Harness;
+use zterm_cli::agent::Harness;
 use warp_multi_agent_api as multi_agent_api;
 
-use warpui::{
+use zterm_ui::{
     AppContext, EntityId, ModelHandle, SingletonEntity, ViewContext, ViewHandle, WindowId,
 };
 
@@ -58,7 +58,7 @@ use crate::ai::blocklist::BlocklistAIHistoryEvent;
 #[cfg(not(target_family = "wasm"))]
 use crate::server::server_api::ServerApiProvider;
 
-use warp_core::execution_mode::AppExecutionMode;
+use zterm_core::execution_mode::AppExecutionMode;
 
 #[cfg(not(target_family = "wasm"))]
 use super::local_harness_launch::{prepare_local_harness_child_launch, PreparedLocalHarnessLaunch};
@@ -879,8 +879,8 @@ fn handle_terminal_view_event(
             Event::RoleRequestCancelled(role_request_id) => {
                 group.remove_shared_session_role_request(role_request_id.clone(), ctx);
             }
-            Event::OpenWarpDriveObjectInPane(uid) => {
-                ctx.emit(pane_group::Event::OpenWarpDriveObjectInPane(uid.clone()));
+            Event::OpenZtermDriveObjectInPane(uid) => {
+                ctx.emit(pane_group::Event::OpenZtermDriveObjectInPane(uid.clone()));
             }
             Event::OpenSuggestedAgentModeWorkflowModal { workflow_and_id } => {
                 ctx.emit(pane_group::Event::OpenSuggestedAgentModeWorkflowModal {

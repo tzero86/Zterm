@@ -1,4 +1,4 @@
-use crate::ai::blocklist::{render_ai_agent_mode_icon, AIQueryHistory, AIQueryHistoryOutputStatus};
+﻿use crate::ai::blocklist::{render_ai_agent_mode_icon, AIQueryHistory, AIQueryHistoryOutputStatus};
 use crate::terminal::model::session::SessionId;
 use crate::ui_components::icons::Icon as UIComponentsIcon;
 use async_channel::Sender;
@@ -10,17 +10,17 @@ use std::cmp::Ordering;
 use std::collections::HashSet;
 use std::{cmp, ops::Range, vec};
 use warp_command_signatures::IconType;
-use warp_completer::completer::{
+use zterm_completer::completer::{
     MatchType, PathSeparators, Suggestion, SuggestionResults, SuggestionType,
 };
-use warp_core::features::FeatureFlag;
-use warp_core::ui::theme::AnsiColorIdentifier;
-use warpui::elements::{
+use zterm_core::features::FeatureFlag;
+use zterm_core::ui::theme::AnsiColorIdentifier;
+use zterm_ui::elements::{
     ChildAnchor, DispatchEventResult, Expanded, Hoverable, MouseStateHandle, ParentAnchor,
     ParentOffsetBounds, ScrollbarWidth,
 };
-use warpui::ui_components::components::{Coords, UiComponent, UiComponentStyles};
-use warpui::{
+use zterm_ui::ui_components::components::{Coords, UiComponent, UiComponentStyles};
+use zterm_ui::{
     accessibility::{AccessibilityContent, WarpA11yRole},
     elements::{
         Align, AnchorPair, Border, ConstrainedBox, Container, CornerRadius, CrossAxisAlignment,
@@ -810,7 +810,7 @@ impl InputSuggestions {
                                     Properties::default()
                                         .weight(appearance.monospace_font_weight()),
                                 )
-                                .autosize_text(warp_core::ui::builder::MIN_FONT_SIZE)
+                                .autosize_text(zterm_core::ui::builder::MIN_FONT_SIZE)
                                 .with_color(main_text);
 
                                 let matches = item.matches.clone();

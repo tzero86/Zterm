@@ -5,7 +5,7 @@ pub mod util;
 mod imp;
 
 use crate::tab_configs::{TabConfig, TabConfigError};
-use crate::themes::theme::WarpThemeConfig;
+use crate::themes::theme::ZtermThemeConfig;
 use crate::{
     launch_configs::launch_config::LaunchConfig, themes::theme::ThemeKind,
     workflows::workflow::Workflow,
@@ -14,8 +14,8 @@ use lazy_static::lazy_static;
 #[cfg(feature = "local_fs")]
 use std::path::Path;
 use std::path::PathBuf;
-use warp_core::ui::theme::WarpTheme;
-use warpui::{Entity, ModelContext, SingletonEntity};
+use zterm_core::ui::theme::ZtermTheme;
+use zterm_ui::{Entity, ModelContext, SingletonEntity};
 
 #[cfg(test)]
 pub(crate) use imp::load_tab_configs;
@@ -25,7 +25,7 @@ pub use imp::{load_launch_configs, load_theme_configs};
 
 lazy_static! {
     pub static ref LAUNCH_CONFIG_COMMENT: String = format!(
-        "# Warp Launch Configuration
+        "# Zterm Launch Configuration
 #
 #
 # Use this to start a certain configuration of windows, tabs, and panes.
@@ -48,12 +48,12 @@ lazy_static! {
 #          commands:
 #            - exec: code .
 ",
-        warp_core::paths::home_relative_path(&crate::user_config::launch_configs_dir())
+        zterm_core::paths::home_relative_path(&crate::user_config::launch_configs_dir())
     );
 }
 
 #[derive(Clone)]
-pub enum WarpConfigUpdateEvent {
+pub enum ZtermConfigUpdateEvent {
     Themes,
     #[cfg_attr(not(feature = "local_fs"), expect(dead_code))]
     LocalUserWorkflows,
@@ -82,24 +82,24 @@ pub enum WarpConfigUpdateEvent {
 /// tab configs, etc.) and, on platforms where it differs, `config_local_dir()`
 /// (`settings.toml`, `keybindings.yaml`, `user_preferences.json`).
 #[derive(Default)]
-pub struct WarpConfig {
+pub struct ZtermConfig {
     launch_configs: Vec<LaunchConfig>,
     tab_configs: Vec<TabConfig>,
     #[cfg_attr(target_family = "wasm", allow(dead_code))]
     tab_config_errors: Vec<TabConfigError>,
-    theme_config: WarpThemeConfig,
+    theme_config: ZtermThemeConfig,
     local_user_workflows: Vec<Workflow>,
 }
 
-/// Platform-independent parts of WarpConfig.
+/// Platform-independent parts of ZtermConfig.
 ///
 /// Additional platform-dependent functionality can be found in impl blocks
 /// in native.rs and wasm.rs.
-impl WarpConfig {
+impl ZtermConfig {
     #[cfg(test)]
     pub fn mock(_ctx: &mut ModelContext<Self>) -> Self {
         Self {
-            theme_config: WarpThemeConfig::new(),
+            theme_config: ZtermThemeConfig::new(),
             ..Default::default()
         }
     }
@@ -112,7 +112,7 @@ impl WarpConfig {
         &self.tab_configs
     }
 
-    pub fn theme_config(&self) -> &WarpThemeConfig {
+    pub fn theme_config(&self) -> &ZtermThemeConfig {
         &self.theme_config
     }
 
@@ -120,7 +120,7 @@ impl WarpConfig {
         &self.local_user_workflows
     }
 
-    /// Saving the newly created launch configuration to the WarpConfig that we currently
+    /// Saving the newly created launch configuration to the ZtermConfig that we currently
     /// have.
     pub fn append_launch_config(
         &mut self,
@@ -129,27 +129,27 @@ impl WarpConfig {
     ) {
         if !self.launch_configs.contains(launch_config) {
             self.launch_configs.push(launch_config.to_owned());
-            ctx.emit(WarpConfigUpdateEvent::LaunchConfigs);
+            ctx.emit(ZtermConfigUpdateEvent::LaunchConfigs);
         }
     }
 
     pub fn update_theme_config(
         &mut self,
-        theme_config: WarpThemeConfig,
+        theme_config: ZtermThemeConfig,
         ctx: &mut ModelContext<Self>,
     ) {
         self.theme_config = theme_config;
-        ctx.emit(WarpConfigUpdateEvent::Themes);
+        ctx.emit(ZtermConfigUpdateEvent::Themes);
     }
 
     pub fn add_new_theme_to_config(
         &mut self,
         theme_name: ThemeKind,
-        theme: WarpTheme,
+        theme: ZtermTheme,
         ctx: &mut ModelContext<Self>,
     ) {
         self.theme_config.add_new_theme(theme_name, theme);
-        ctx.emit(WarpConfigUpdateEvent::Themes);
+        ctx.emit(ZtermConfigUpdateEvent::Themes);
     }
 
     /// Eagerly removes a tab config by its source path and emits a `TabConfigs` event.
@@ -161,19 +161,19 @@ impl WarpConfig {
         self.tab_configs
             .retain(|c| c.source_path.as_deref() != Some(path));
         if self.tab_configs.len() != before {
-            ctx.emit(WarpConfigUpdateEvent::TabConfigs);
+            ctx.emit(ZtermConfigUpdateEvent::TabConfigs);
         }
     }
 }
 
 /// Returns the base directory in which all of the user's data is stored.
 fn base_dir() -> PathBuf {
-    warp_core::paths::data_dir()
+    zterm_core::paths::data_dir()
 }
 
 /// Returns the path to the directory containing the user's custom themes.
 pub fn themes_dir() -> PathBuf {
-    warp_core::paths::themes_dir()
+    zterm_core::paths::themes_dir()
 }
 
 /// Returns the path to the directory containing the user's custom workflows.
@@ -195,13 +195,13 @@ pub fn tab_configs_dir() -> PathBuf {
 }
 
 /// Returns the path to the directory containing the built-in default tab configs.
-/// These are shipped with Warp and user-editable (Warp does not overwrite modifications).
+/// These are shipped with Zterm and user-editable (Warp does not overwrite modifications).
 #[cfg_attr(target_family = "wasm", expect(dead_code))]
 pub fn default_tab_configs_dir() -> PathBuf {
     base_dir().join("default_tab_configs")
 }
 
-/// Returns whether the path points to a tab config TOML file under one of Warp's
+/// Returns whether the path points to a tab config TOML file under one of Zterm's
 /// tab config directories.
 #[cfg(feature = "local_fs")]
 pub fn is_tab_config_toml(path: &Path) -> bool {
@@ -393,11 +393,11 @@ pub(crate) fn find_unused_worktree_config_path(dir: &Path, branch_name: &str) ->
     }
 }
 
-impl Entity for WarpConfig {
-    type Event = WarpConfigUpdateEvent;
+impl Entity for ZtermConfig {
+    type Event = ZtermConfigUpdateEvent;
 }
 
-impl SingletonEntity for WarpConfig {}
+impl SingletonEntity for ZtermConfig {}
 
 #[cfg(test)]
 #[path = "mod_test.rs"]

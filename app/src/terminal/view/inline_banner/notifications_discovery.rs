@@ -1,5 +1,5 @@
-use serde::Serialize;
-use warpui::{elements::MouseStateHandle, notification::RequestPermissionsOutcome, Element};
+﻿use serde::Serialize;
+use zterm_ui::{elements::MouseStateHandle, notification::RequestPermissionsOutcome, Element};
 
 use crate::{
     appearance::Appearance,

@@ -1,4 +1,4 @@
-name: Trigger Implementation on Plan Approved (Local)
+﻿name: Trigger Implementation on Plan Approved (Local)
 on:
   pull_request_target:
     types: [labeled]
@@ -19,4 +19,4 @@ jobs:
     secrets:
       OZ_MGMT_GHA_APP_ID: ${{ secrets.OZ_MGMT_GHA_APP_ID }}
       OZ_MGMT_GHA_PRIVATE_KEY: ${{ secrets.OZ_MGMT_GHA_PRIVATE_KEY }}
-      OSS_WARP_API_KEY: ${{ secrets.OSS_WARP_API_KEY }}
+      OSS_ZTERM_API_KEY: ${{ secrets.OSS_ZTERM_API_KEY }}

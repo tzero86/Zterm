@@ -1,12 +1,12 @@
-use fuzzy_match::FuzzyMatchResult;
+﻿use fuzzy_match::FuzzyMatchResult;
 use ordered_float::OrderedFloat;
-use warp_core::ui::theme::Fill;
-use warp_core::ui::Icon;
-use warpui::elements::{ConstrainedBox, Container, Flex, Highlight, ParentElement as _, Text};
-use warpui::fonts::{Properties, Style, Weight};
-use warpui::prelude::CrossAxisAlignment;
-use warpui::text_layout::ClipConfig;
-use warpui::{AppContext, Element, SingletonEntity as _};
+use zterm_core::ui::theme::Fill;
+use zterm_core::ui::Icon;
+use zterm_ui::elements::{ConstrainedBox, Container, Flex, Highlight, ParentElement as _, Text};
+use zterm_ui::fonts::{Properties, Style, Weight};
+use zterm_ui::prelude::CrossAxisAlignment;
+use zterm_ui::text_layout::ClipConfig;
+use zterm_ui::{AppContext, Element, SingletonEntity as _};
 
 use crate::ai::execution_profiles::profiles::ClientProfileId;
 use crate::appearance::Appearance;
@@ -81,7 +81,7 @@ impl SearchItem for ProfileSearchItem {
             ProfileSearchItemKind::Profile { .. } => Icon::Psychology,
             ProfileSearchItemKind::ManageProfiles => Icon::Gear,
         }
-        .to_warpui_icon(inline_styles::icon_color(appearance));
+        .to_zterm_ui_icon(inline_styles::icon_color(appearance));
 
         Container::new(
             ConstrainedBox::new(icon.finish())

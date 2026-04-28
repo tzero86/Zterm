@@ -1,4 +1,4 @@
-use pathfinder_color::ColorU;
+﻿use pathfinder_color::ColorU;
 
 use crate::{
     terminal::{
@@ -106,7 +106,7 @@ impl CellType {
         } else if self.is_url() || self.is_hovered_secret() {
             *URL_COLOR
         } else if matches!(obfuscate_mode, ObfuscateSecrets::Strikethrough) && is_unhovered_secret {
-            warpui::color::ColorU::new(128, 128, 128, 255)
+            zterm_ui::color::ColorU::new(128, 128, 128, 255)
         } else if self.is_default()
             || self.is_marked_text_char()
             || is_unhovered_secret

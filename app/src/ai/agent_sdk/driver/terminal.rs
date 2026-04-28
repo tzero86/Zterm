@@ -1,4 +1,4 @@
-use std::{
+﻿use std::{
     collections::HashMap,
     ffi::OsString,
     future::Future,
@@ -12,12 +12,12 @@ use std::{
 use futures::channel::oneshot;
 use session_sharing_protocol::common::{Role, SessionId};
 use session_sharing_protocol::sharer::SessionSourceType;
-use warp_cli::share::{ShareAccessLevel, ShareRequest, ShareSubject};
-use warp_completer::completer::CommandOutput;
-use warp_core::command::ExitCode;
-use warp_core::features::FeatureFlag;
-use warp_util::path::ShellFamily;
-use warpui::{
+use zterm_cli::share::{ShareAccessLevel, ShareRequest, ShareSubject};
+use zterm_completer::completer::CommandOutput;
+use zterm_core::command::ExitCode;
+use zterm_core::features::FeatureFlag;
+use zterm_util::path::ShellFamily;
+use zterm_ui::{
     r#async::FutureExt, AppContext, Entity, ModelContext, ModelHandle, SingletonEntity as _,
     ViewHandle,
 };
@@ -198,7 +198,7 @@ impl TerminalDriver {
         // When sharing is disabled (or running against ngrok), leave both halves
         // as None so that `wait_for_session_shared` returns immediately.
         let sharing_expected =
-            should_share && !warp_core::channel::ChannelState::server_root_url().contains("ngrok");
+            should_share && !zterm_core::channel::ChannelState::server_root_url().contains("ngrok");
         let (mut session_share_tx, session_share_rx) = if sharing_expected {
             if !FeatureFlag::CreatingSharedSessions.is_enabled() {
                 // Session sharing was requested but the feature is not enabled for this
@@ -272,7 +272,7 @@ impl TerminalDriver {
     pub fn with_terminal_view(
         &self,
         ctx: &mut ModelContext<Self>,
-        f: impl FnOnce(&mut TerminalView, &mut warpui::ViewContext<TerminalView>),
+        f: impl FnOnce(&mut TerminalView, &mut zterm_ui::ViewContext<TerminalView>),
     ) {
         self.terminal_view.update(ctx, f);
     }

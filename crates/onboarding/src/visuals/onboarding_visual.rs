@@ -1,10 +1,10 @@
 use pathfinder_color::ColorU;
-use warp_core::ui::Icon;
-use warpui::assets::asset_cache::{AssetCache, AssetSource, AssetState};
-use warpui::geometry::rect::RectF;
-use warpui::geometry::vector::{vec2f, Vector2F};
-use warpui::image_cache::{AnimatedImageBehavior, CacheOption, FitType, Image, ImageCache};
-use warpui::{
+use zterm_core::ui::Icon;
+use zterm_ui::assets::asset_cache::{AssetCache, AssetSource, AssetState};
+use zterm_ui::geometry::rect::RectF;
+use zterm_ui::geometry::vector::{vec2f, Vector2F};
+use zterm_ui::image_cache::{AnimatedImageBehavior, CacheOption, FitType, Image, ImageCache};
+use zterm_ui::{
     elements::{CornerRadius, Fill, Point, Radius},
     event::DispatchedEvent,
     AfterLayoutContext, AppContext, Element, EventContext, LayoutContext, PaintContext,

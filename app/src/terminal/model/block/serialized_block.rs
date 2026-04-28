@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+﻿use std::collections::HashSet;
 
 use crate::ai::agent::conversation::AIConversationId;
 use crate::ai::agent::task::TaskId;
@@ -15,7 +15,7 @@ use crate::util::extensions::TrimStringExt;
 use chrono::{DateTime, Local, TimeZone as _};
 use serde::{Deserialize, Serialize};
 use serde_bytes_repr::{ByteFmtDeserializer, ByteFmtSerializer};
-use warp_core::command::ExitCode;
+use zterm_core::command::ExitCode;
 
 use super::AgentInteractionMetadata;
 

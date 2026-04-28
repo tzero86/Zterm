@@ -1,9 +1,9 @@
-use crate::ai::llms::{is_using_api_key_for_provider, DisableReason, LLMId, LLMInfo};
+﻿use crate::ai::llms::{is_using_api_key_for_provider, DisableReason, LLMId, LLMInfo};
 use crate::menu::{MenuItem, MenuItemFields, MenuTooltipPosition};
 use itertools::Itertools;
 use std::sync::Arc;
-use warp_core::ui::Icon;
-use warpui::{
+use zterm_core::ui::Icon;
+use zterm_ui::{
     elements::{
         ConstrainedBox, Container, CrossAxisAlignment, Empty, Flex, ParentElement, SavePosition,
         Shrinkable, Text,
@@ -91,7 +91,7 @@ fn make_item_fields<A: Action + Clone>(
                 let icon_container = Container::new(
                     ConstrainedBox::new(if is_using_api_key {
                         Icon::Key
-                            .to_warpui_icon(appearance.theme().foreground())
+                            .to_zterm_ui_icon(appearance.theme().foreground())
                             .finish()
                     } else {
                         Empty::new().finish()

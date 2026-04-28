@@ -1,10 +1,10 @@
-use std::{collections::HashMap, os::unix::prelude::*, process::Child, sync::Arc};
+﻿use std::{collections::HashMap, os::unix::prelude::*, process::Child, sync::Arc};
 
 use itertools::Itertools;
 use mio::Interest;
 use parking_lot::Mutex;
 use signal_hook_mio::v1_0::Signals;
-use warp_cli::TerminalServerArgs;
+use zterm_cli::TerminalServerArgs;
 
 use crate::terminal::{
     local_tty::{self, server::protocol::NonblockingSocketFd},

@@ -1,4 +1,4 @@
-#[cfg(feature = "local_fs")]
+﻿#[cfg(feature = "local_fs")]
 use std::io::ErrorKind;
 use std::{
     collections::{
@@ -14,8 +14,8 @@ use aho_corasick::{AhoCorasick, MatchKind};
 use anyhow::{anyhow, Context};
 #[cfg(feature = "local_fs")]
 use futures::AsyncWriteExt;
-use warp_util::path::ShellFamily;
-use warpui::{
+use zterm_util::path::ShellFamily;
+use zterm_ui::{
     platform::{file_picker::FilePickerError, FilePickerConfiguration, OperatingSystem},
     r#async::SpawnedFutureHandle,
     AppContext, Entity, ModelContext, SingletonEntity, WindowId,
@@ -36,7 +36,7 @@ use crate::{
 
 use super::CloudObjectTypeAndId;
 
-/// Singleton model for exporting from Warp Drive.
+/// Singleton model for exporting from Zterm Drive.
 pub struct ExportManager {
     exports: HashMap<ExportId, Export>,
 }
@@ -59,7 +59,7 @@ pub enum ExportEvent {
     Completed { id: ExportId, path: PathBuf },
 }
 
-/// A single Warp Drive export.
+/// A single Zterm Drive export.
 struct Export {
     /// The ID of the window that started this export, for showing toasts.
     window_id: WindowId,

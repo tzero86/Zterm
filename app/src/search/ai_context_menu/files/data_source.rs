@@ -1,4 +1,4 @@
-#![cfg_attr(not(feature = "local_fs"), allow(dead_code))]
+﻿#![cfg_attr(not(feature = "local_fs"), allow(dead_code))]
 use super::search_item::FileSearchItem;
 use crate::code::opened_files::OpenedFilesModel;
 use crate::search::ai_context_menu::mixer::AIContextMenuSearchableAction;
@@ -16,7 +16,7 @@ use std::collections::HashMap;
 use std::collections::HashSet;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
-use warpui::{AppContext, SingletonEntity};
+use zterm_ui::{AppContext, SingletonEntity};
 
 const MAX_RESULTS: usize = 200;
 

@@ -4,11 +4,11 @@ use crate::slides::{bottom_nav, layout, slide_content};
 use crate::telemetry::OnboardingEvent;
 use crate::OnboardingIntention;
 use ui_components::{button, Component as _, Options as _};
-use warp_core::send_telemetry_from_ctx;
-use warp_core::ui::theme::Fill;
-use warp_core::ui::{appearance::Appearance, theme::color::internal_colors, Icon};
-use warpui::prelude::Align;
-use warpui::{
+use zterm_core::send_telemetry_from_ctx;
+use zterm_core::ui::theme::Fill;
+use zterm_core::ui::{appearance::Appearance, theme::color::internal_colors, Icon};
+use zterm_ui::prelude::Align;
+use zterm_ui::{
     elements::{
         Border, ClippedScrollStateHandle, ConstrainedBox, Container, CornerRadius,
         CrossAxisAlignment, DropShadow, Flex, FormattedTextElement, Hoverable, MainAxisAlignment,
@@ -162,7 +162,7 @@ impl FreeUserNoAiSlide {
         &self,
         appearance: &Appearance,
         text: String,
-        text_color: warpui::color::ColorU,
+        text_color: zterm_ui::color::ColorU,
         border_color: Fill,
     ) -> Box<dyn Element> {
         let label = appearance
@@ -232,7 +232,7 @@ impl FreeUserNoAiSlide {
         );
 
         Hoverable::new(mouse_state, move |_| {
-            let icon_el = ConstrainedBox::new(icon.to_warpui_icon(text_fill).finish())
+            let icon_el = ConstrainedBox::new(icon.to_zterm_ui_icon(text_fill).finish())
                 .with_width(20.)
                 .with_height(20.)
                 .finish();
@@ -415,15 +415,15 @@ impl FreeUserNoAiSlide {
                     .with_main_axis_alignment(MainAxisAlignment::Center)
                     .with_cross_axis_alignment(CrossAxisAlignment::Center)
                     .with_child(
-                        warpui::elements::Text::new_inline(
+                        zterm_ui::elements::Text::new_inline(
                             "Subscribe",
                             appearance.ui_font_family(),
                             14.,
                         )
                         .with_color(fg_color)
-                        .with_style(warpui::fonts::Properties {
+                        .with_style(zterm_ui::fonts::Properties {
                             weight: Weight::Semibold,
-                            style: warpui::fonts::Style::Normal,
+                            style: zterm_ui::fonts::Style::Normal,
                         })
                         .with_selectable(false)
                         .finish(),

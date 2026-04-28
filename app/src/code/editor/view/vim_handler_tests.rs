@@ -16,15 +16,15 @@ use crate::{
 use std::sync::Arc;
 use unindent::Unindent;
 use vim::vim::{MotionType, VimMode};
-use warp_core::{features::FeatureFlag, settings::Setting, ui::appearance::Appearance};
-use warp_editor::model::CoreEditorModel;
-use warp_editor::{
+use zterm_core::{features::FeatureFlag, settings::Setting, ui::appearance::Appearance};
+use zterm_editor::model::CoreEditorModel;
+use zterm_editor::{
     content::buffer::{InitialBufferState, ToBufferCharOffset, ToBufferPoint},
     render::element::VerticalExpansionBehavior,
 };
-use warp_util::user_input::UserInput;
-use warpui::text::point::Point;
-use warpui::{
+use zterm_util::user_input::UserInput;
+use zterm_ui::text::point::Point;
+use zterm_ui::{
     keymap::Keystroke, platform::WindowStyle, App, SingletonEntity, TypedActionView, UpdateModel,
     ViewHandle,
 };

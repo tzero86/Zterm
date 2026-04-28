@@ -1,6 +1,6 @@
-use vec1::{vec1, Vec1};
-use warp_core::{features::FeatureFlag, ui::builder::AnimatedButtonOptions};
-use warpui::{
+﻿use vec1::{vec1, Vec1};
+use zterm_core::{features::FeatureFlag, ui::builder::AnimatedButtonOptions};
+use zterm_ui::{
     elements::{
         Align, Border, ConstrainedBox, Container, CrossAxisAlignment, Element, Flex, Icon,
         MainAxisAlignment, MainAxisSize, MouseStateHandle, ParentElement, SavePosition, Shrinkable,

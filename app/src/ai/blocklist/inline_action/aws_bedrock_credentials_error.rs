@@ -1,12 +1,12 @@
-use settings::Setting as _;
-use warp_core::ui::Icon;
-use warpui::elements::{
+﻿use settings::Setting as _;
+use zterm_core::ui::Icon;
+use zterm_ui::elements::{
     ChildView, ConstrainedBox, Container, CrossAxisAlignment, Flex, MainAxisAlignment,
     MainAxisSize, MouseStateHandle, ParentElement, Shrinkable, SizeConstraintCondition,
     SizeConstraintSwitch, Text,
 };
-use warpui::ui_components::components::UiComponent;
-use warpui::{
+use zterm_ui::ui_components::components::UiComponent;
+use zterm_ui::{
     AppContext, Element, Entity, EventContext, SingletonEntity, TypedActionView, View, ViewContext,
     ViewHandle,
 };
@@ -131,7 +131,7 @@ impl View for AwsBedrockCredentialsErrorView {
         let make_alert_icon = || {
             ConstrainedBox::new(
                 Icon::AlertTriangle
-                    .to_warpui_icon(error_color(theme).into())
+                    .to_zterm_ui_icon(error_color(theme).into())
                     .finish(),
             )
             .with_width(icon_size(app))

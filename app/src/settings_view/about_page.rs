@@ -1,4 +1,4 @@
-use super::{
+﻿use super::{
     settings_page::{
         MatchData, PageType, SettingsPageEvent, SettingsPageMeta, SettingsPageViewHandle,
         SettingsWidget,
@@ -9,7 +9,7 @@ use crate::{
     appearance::Appearance, channel::ChannelState, themes::theme::ColorScheme,
     workspace::WorkspaceAction,
 };
-use warpui::{
+use zterm_ui::{
     assets::asset_cache::AssetSource,
     elements::{
         Align, CacheOption, ConstrainedBox, Container, CrossAxisAlignment, Element, Flex, Image,

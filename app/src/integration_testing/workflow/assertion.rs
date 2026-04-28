@@ -1,4 +1,4 @@
-use warpui::{
+﻿use zterm_ui::{
     async_assert, async_assert_eq,
     integration::{AssertionCallback, AssertionWithDataCallback},
     App, ViewHandle,

@@ -1,4 +1,4 @@
-use crate::ai::agent::AIAgentActionId;
+﻿use crate::ai::agent::AIAgentActionId;
 use crate::ai::blocklist::block::cli_controller::LongRunningCommandControlState;
 use crate::ai::blocklist::history_model::BlocklistAIHistoryModel;
 use crate::features::FeatureFlag;
@@ -9,7 +9,7 @@ use session_sharing_protocol::common::{
 };
 use std::io::{sink, Sink};
 use std::sync::Arc;
-use warpui::{Entity, ModelContext, SingletonEntity, WeakViewHandle};
+use zterm_ui::{Entity, ModelContext, SingletonEntity, WeakViewHandle};
 
 use crate::terminal::event_listener::ChannelEventListener;
 use crate::terminal::model::ansi::{self};

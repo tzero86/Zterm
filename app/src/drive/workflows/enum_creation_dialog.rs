@@ -2,9 +2,9 @@ use std::rc::Rc;
 
 use strum::IntoEnumIterator;
 use strum_macros::{EnumIter, IntoStaticStr};
-use warp_core::{features::FeatureFlag, ui::appearance::Appearance};
-use warp_editor::editor::NavigationKey;
-use warpui::{
+use zterm_core::{features::FeatureFlag, ui::appearance::Appearance};
+use zterm_editor::editor::NavigationKey;
+use zterm_ui::{
     elements::{
         Border, ClippedScrollStateHandle, ClippedScrollable, ConstrainedBox, Container,
         CornerRadius, CrossAxisAlignment, Empty, Fill, Flex, MainAxisAlignment, MainAxisSize,
@@ -597,7 +597,7 @@ impl EnumCreationDialog {
             .with_centered_text_label(label_text.to_owned())
             .with_style(UiComponentStyles {
                 font_size: Some(BUTTON_FONT_SIZE),
-                font_weight: Some(warpui::fonts::Weight::Normal),
+                font_weight: Some(zterm_ui::fonts::Weight::Normal),
                 ..Default::default()
             });
 
@@ -608,7 +608,7 @@ impl EnumCreationDialog {
         button
             .build()
             .on_click(move |ctx, _, _| ctx.dispatch_typed_action(action.clone()))
-            .with_cursor(warpui::platform::Cursor::PointingHand)
+            .with_cursor(zterm_ui::platform::Cursor::PointingHand)
             .finish()
     }
 

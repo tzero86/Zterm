@@ -3,8 +3,8 @@ use std::collections::HashMap;
 use std::ops::Deref;
 
 use anyhow::{Result, anyhow};
-use warpui::{AppContext, Entity, ModelContext, SingletonEntity};
-use warpui_extras::user_preferences::UserPreferences;
+use zterm_ui::{AppContext, Entity, ModelContext, SingletonEntity};
+use zterm_ui_extras::user_preferences::UserPreferences;
 
 use super::PrivatePreferences;
 

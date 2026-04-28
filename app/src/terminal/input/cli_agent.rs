@@ -1,4 +1,4 @@
-use super::{
+﻿use super::{
     common::{add_input_suggestions_overlays, wrap_input_with_terminal_padding_and_focus_handler},
     Input, InputAction, InputDropTargetData, CLI_AGENT_RICH_INPUT_EDITOR_BOTTOM_PADDING,
     CLI_AGENT_RICH_INPUT_EDITOR_MAX_HEIGHT, CLI_AGENT_RICH_INPUT_EDITOR_TOP_PADDING,
@@ -11,11 +11,11 @@ use crate::{
     features::FeatureFlag,
     terminal::{cli_agent_sessions::CLIAgentSessionsModel, view::TerminalAction},
 };
-use warp_core::ui::{
+use zterm_core::ui::{
     color::{contrast::MinimumAllowedContrast, ContrastingColor},
     theme::color::internal_colors,
 };
-use warpui::{
+use zterm_ui::{
     elements::{
         Border, Clipped, ConstrainedBox, Container, DispatchEventResult, DropTarget, Element,
         EventHandler, Flex, Hoverable, ParentElement, SavePosition, Stack,

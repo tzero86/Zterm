@@ -1,8 +1,8 @@
-use std::any::Any;
+﻿use std::any::Any;
 
 use async_channel::Sender;
 
-use warpui::{
+use zterm_ui::{
     elements::Point,
     event::DispatchedEvent,
     geometry::{rect::RectF, vector::Vector2F},

@@ -1,4 +1,4 @@
-use crate::{
+﻿use crate::{
     cloud_object::{
         breadcrumbs::ContainingObject,
         model::{persistence::CloudModelEvent, view::CloudViewModel},
@@ -15,7 +15,7 @@ use crate::{
     AppContext, CloudModel, UpdateManager,
 };
 
-use warpui::{Entity, ModelContext, SingletonEntity};
+use zterm_ui::{Entity, ModelContext, SingletonEntity};
 
 use super::CloudEnvVarCollectionModel;
 

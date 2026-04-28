@@ -1,4 +1,4 @@
-pub(crate) mod agent_input_footer;
+﻿pub(crate) mod agent_input_footer;
 mod agent_message_bar;
 mod agent_view_block;
 pub mod child_agent_status_card;
@@ -16,16 +16,16 @@ pub use agent_view_block::*;
 pub use controller::*;
 pub use ephemeral_message_model::*;
 pub use inline_agent_view_header::*;
-use warpui::fonts::Properties;
+use zterm_ui::fonts::Properties;
 pub use zero_state_block::*;
 
 use std::sync::LazyLock;
 
 use pathfinder_color::ColorU;
-use warp_core::ui::theme::Fill;
-use warp_core::ui::{appearance::Appearance, color::blend::Blend};
-use warpui::keymap::Keystroke;
-use warpui::{AppContext, SingletonEntity};
+use zterm_core::ui::theme::Fill;
+use zterm_core::ui::{appearance::Appearance, color::blend::Blend};
+use zterm_ui::keymap::Keystroke;
+use zterm_ui::{AppContext, SingletonEntity};
 
 use crate::view_components::action_button::ActionButtonTheme;
 

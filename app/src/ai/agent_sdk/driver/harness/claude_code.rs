@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+﻿use std::collections::HashMap;
 use std::fmt::Write as _;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
@@ -10,8 +10,8 @@ use serde::{Deserialize, Serialize};
 use serde_json::{Map, Value};
 use tempfile::NamedTempFile;
 use uuid::Uuid;
-use warp_cli::agent::Harness;
-use warpui::{ModelHandle, ModelSpawner};
+use zterm_cli::agent::Harness;
+use zterm_ui::{ModelHandle, ModelSpawner};
 
 use crate::ai::agent::conversation::AIConversationId;
 use crate::ai::ambient_agents::AmbientAgentTaskId;

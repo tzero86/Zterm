@@ -7,12 +7,12 @@ use pathfinder_color::ColorU;
 use pathfinder_geometry::vector::vec2f;
 use rust_embed::RustEmbed;
 use std::borrow::Cow;
-use warp_core::ui::appearance::Appearance;
-use warp_core::ui::theme::{AnsiColor, AnsiColors, Details, Fill, TerminalColors, WarpTheme};
-use warpui::fonts::{Cache, FamilyId, Weight};
-use warpui::platform;
-use warpui::prelude::CrossAxisAlignment;
-use warpui::{
+use zterm_core::ui::appearance::Appearance;
+use zterm_core::ui::theme::{AnsiColor, AnsiColors, Details, Fill, TerminalColors, ZtermTheme};
+use zterm_ui::fonts::{Cache, FamilyId, Weight};
+use zterm_ui::platform;
+use zterm_ui::prelude::CrossAxisAlignment;
+use zterm_ui::{
     elements::{
         ChildAnchor, ChildView, ConstrainedBox, Container, Flex, MainAxisAlignment, MainAxisSize,
         OffsetPositioning, ParentElement, PositionedElementAnchor, PositionedElementOffsetBounds,
@@ -172,7 +172,7 @@ impl TypedActionView for OnboardingExampleView {
 
 fn main() -> Result<()> {
     // Initialize logging for the onboarding binary.
-    warp_logging::init(warp_logging::LogConfig {
+    zterm_logging::init(zterm_logging::LogConfig {
         is_cli: false,
         log_destination: None,
     })?;
@@ -220,8 +220,8 @@ fn adeberry_colors() -> TerminalColors {
     TerminalColors::new(ADEBERRY_NORMAL_COLORS, ADEBERRY_BRIGHT_COLORS)
 }
 
-fn adeberry() -> WarpTheme {
-    WarpTheme::new(
+fn adeberry() -> ZtermTheme {
+    ZtermTheme::new(
         Fill::Solid(ColorU::from_u32(0x1D2022FF)),
         ColorU::from_u32(0xE4EEF5FF),
         Fill::Solid(ColorU::from_u32(0x6C96B4FF)),
@@ -233,7 +233,7 @@ fn adeberry() -> WarpTheme {
     )
 }
 
-fn build_appearance(theme: WarpTheme, ctx: &mut AppContext) -> Appearance {
+fn build_appearance(theme: ZtermTheme, ctx: &mut AppContext) -> Appearance {
     let ui_font_family =
         load_default_ui_font_family(ctx).expect("unable to load default ui font family");
 

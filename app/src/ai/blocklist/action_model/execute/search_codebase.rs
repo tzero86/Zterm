@@ -1,11 +1,11 @@
-use std::{
+﻿use std::{
     collections::HashMap,
     path::{Path, PathBuf},
 };
 
 use futures::{channel::oneshot, future::BoxFuture, FutureExt};
 use itertools::Itertools;
-use warpui::{AppContext, Entity, EntityId, ModelContext, ModelHandle, SingletonEntity};
+use zterm_ui::{AppContext, Entity, EntityId, ModelContext, ModelHandle, SingletonEntity};
 
 use crate::{
     ai::{

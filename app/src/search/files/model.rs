@@ -1,4 +1,4 @@
-#![cfg_attr(not(feature = "local_fs"), allow(dead_code))]
+﻿#![cfg_attr(not(feature = "local_fs"), allow(dead_code))]
 use fuzzy_match::{
     contains_wildcards, match_indices_case_insensitive, match_wildcard_pattern_case_insensitive,
     FuzzyMatchResult,
@@ -8,7 +8,7 @@ use std::{
     collections::HashSet,
     path::{Path, PathBuf},
 };
-use warpui::{AppContext, Entity, ModelContext, SingletonEntity};
+use zterm_ui::{AppContext, Entity, ModelContext, SingletonEntity};
 
 cfg_if::cfg_if! {
     if #[cfg(feature = "local_fs")] {

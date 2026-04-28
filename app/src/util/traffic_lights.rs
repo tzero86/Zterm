@@ -13,7 +13,7 @@ mod linux_only {
     pub(super) use pathfinder_color::ColorU;
     pub(super) use pathfinder_geometry::vector::vec2f;
     pub(super) use std::sync::Arc;
-    pub(super) use warpui::elements::{
+    pub(super) use zterm_ui::elements::{
         Align, Border, ChildAnchor, ConstrainedBox, Container, CornerRadius, Flex, Hoverable, Icon,
         OffsetPositioning, ParentAnchor, ParentElement, ParentOffsetBounds, Radius, Rect, Stack,
     };
@@ -27,8 +27,8 @@ mod windows_only {
     pub(super) use crate::ui_components::icons::Icon as IconComponent;
     pub(super) use pathfinder_color::ColorU;
     pub(super) use pathfinder_geometry::vector::vec2f;
-    pub(super) use warp_core::ui::theme;
-    pub(super) use warpui::elements::{
+    pub(super) use zterm_core::ui::theme;
+    pub(super) use zterm_ui::elements::{
         Align, Border, ChildAnchor, ConstrainedBox, Container, CornerRadius, Hoverable,
         OffsetPositioning, ParentAnchor, ParentOffsetBounds, Radius, Rect, Stack,
     };
@@ -47,12 +47,12 @@ mod windows_only {
 use windows_only::*;
 
 #[cfg(not(target_os = "windows"))]
-use warpui::elements::Empty;
+use zterm_ui::elements::Empty;
 
-use crate::themes::theme::WarpTheme;
-use warpui::elements::MouseStateHandle;
-use warpui::platform::FullscreenState;
-use warpui::{AppContext, Element, WindowId};
+use crate::themes::theme::ZtermTheme;
+use zterm_ui::elements::MouseStateHandle;
+use zterm_ui::platform::FullscreenState;
+use zterm_ui::{AppContext, Element, WindowId};
 
 #[cfg(any(target_os = "windows", target_os = "linux"))]
 const BUTTON_ICON_SIZE: f32 = 22.;
@@ -135,7 +135,7 @@ impl TrafficLightData {
     /// Horizontal space needed for the traffic light buttons.
     ///
     /// Normally, we don't need to manually adjust any sizes based on zoom level as it is handled
-    /// by warpui. However, native traffic light buttons (e.g. on macOS) don't scale with zoom, so
+    /// by zterm_ui. However, native traffic light buttons (e.g. on macOS) don't scale with zoom, so
     /// we need to divide by the zoom factor to keep the padding constant.
     pub fn width(&self, zoom_factor: f32) -> f32 {
         if self.scales_with_zoom {
@@ -150,7 +150,7 @@ impl TrafficLightData {
         &self,
         fullscreen_state: FullscreenState,
         mouse_states: &TrafficLightMouseStates,
-        theme: &WarpTheme,
+        theme: &ZtermTheme,
         _app: &AppContext,
     ) -> Box<dyn Element> {
         if !cfg!(target_os = "linux") {
@@ -286,7 +286,7 @@ impl TrafficLightData {
     fn render_button(
         mouse_state: MouseStateHandle,
         child: Box<dyn Element>,
-        theme: &WarpTheme,
+        theme: &ZtermTheme,
     ) -> Hoverable {
         Hoverable::new(mouse_state, |state| {
             let background_color = if state.is_hovered() {
@@ -311,7 +311,7 @@ impl TrafficLightData {
         &self,
         fullscreen_state: FullscreenState,
         mouse_states: &TrafficLightMouseStates,
-        theme: &WarpTheme,
+        theme: &ZtermTheme,
         app: &AppContext,
     ) -> Box<dyn Element> {
         self.render_tab_row(fullscreen_state, mouse_states, theme, app)
@@ -410,7 +410,7 @@ impl TrafficLightData {
     fn render_windows_close_button_icon(icon_color: ColorU) -> Box<dyn Element> {
         ConstrainedBox::new(
             IconComponent::X
-                .to_warpui_icon(theme::Fill::Solid(icon_color))
+                .to_zterm_ui_icon(theme::Fill::Solid(icon_color))
                 .finish(),
         )
         .with_height(16.)
@@ -447,7 +447,7 @@ impl TrafficLightData {
         &self,
         _fullscreen_state: FullscreenState,
         _mouse_states: &TrafficLightMouseStates,
-        _theme: &WarpTheme,
+        _theme: &ZtermTheme,
         _app: &AppContext,
     ) -> Box<dyn Element> {
         Empty::new().finish()

@@ -1,7 +1,7 @@
-use pathfinder_color::ColorU;
+﻿use pathfinder_color::ColorU;
 use pathfinder_geometry::vector::Vector2F;
-use warp_core::ui::{appearance::Appearance, Icon};
-use warpui::{
+use zterm_core::ui::{appearance::Appearance, Icon};
+use zterm_ui::{
     elements::{
         Align, ConstrainedBox, Container, CornerRadius, CrossAxisAlignment, DropShadow, Flex,
         MainAxisAlignment, ParentElement as _, Radius, Shrinkable,
@@ -157,7 +157,7 @@ impl View for GlowingEditor {
         let agent_icon = Container::new(
             ConstrainedBox::new(
                 Icon::AgentMode
-                    .to_warpui_icon(theme.sub_text_color(theme.background()))
+                    .to_zterm_ui_icon(theme.sub_text_color(theme.background()))
                     .finish(),
             )
             .with_height(font_size)

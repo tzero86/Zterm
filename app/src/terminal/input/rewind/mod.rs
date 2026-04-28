@@ -1,4 +1,4 @@
-//! Inline menu for selecting rewind points in a conversation.
+﻿//! Inline menu for selecting rewind points in a conversation.
 //! Used by the `/rewind` slash command to let users select which point to rewind to.
 
 mod data_source;
@@ -8,7 +8,7 @@ mod view;
 pub use data_source::SelectRewindPoint;
 pub use view::{RewindMenuEvent, RewindMenuView};
 
-use warpui::keymap::Keystroke;
+use zterm_ui::keymap::Keystroke;
 
 use crate::terminal::input::inline_menu::{
     default_navigation_message_items, InlineMenuAction, InlineMenuMessageArgs, InlineMenuType,

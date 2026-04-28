@@ -1,4 +1,4 @@
-use crate::{
+﻿use crate::{
     appearance::Appearance,
     auth::auth_view_shared_helpers::render_offline_contents,
     editor::{EditorView, InteractionState, SingleLineEditorOptions, TextColors, TextOptions},
@@ -14,11 +14,11 @@ use crate::{
 
 use anyhow::anyhow;
 use lazy_static::lazy_static;
-use warp_core::{
+use zterm_core::{
     features::FeatureFlag,
     ui::{appearance::DEFAULT_COMMAND_PALETTE_FONT_SIZE, builder::UiBuilder},
 };
-use warpui::{
+use zterm_ui::{
     accessibility::{AccessibilityContent, WarpA11yRole},
     clipboard::ClipboardContent,
     color::ColorU,
@@ -65,7 +65,7 @@ lazy_static! {
 }
 
 pub fn init(app: &mut AppContext) {
-    use warpui::keymap::macros::*;
+    use zterm_ui::keymap::macros::*;
 
     app.register_fixed_bindings([FixedBinding::new(
         "enter",
@@ -611,7 +611,7 @@ impl AuthViewBody {
                 "In order to use Warp’s AI features or collaborate with others, please create an account."
             }
             AuthViewVariant::HitDriveObjectLimitCloseable => {
-                "In order to create more objects in Warp Drive, please create an account."
+                "In order to create more objects in Zterm Drive, please create an account."
             }
             AuthViewVariant::ShareRequirementCloseable => {
                 "In order to share, please create an account."
@@ -643,7 +643,7 @@ impl AuthViewBody {
             AuthViewVariant::Initial => "Welcome to Warp!",
             AuthViewVariant::RequireLoginCloseable
             | AuthViewVariant::HitDriveObjectLimitCloseable
-            | AuthViewVariant::ShareRequirementCloseable => "Sign up for Warp",
+            | AuthViewVariant::ShareRequirementCloseable => "Sign up for Zterm",
         };
 
         ui_builder

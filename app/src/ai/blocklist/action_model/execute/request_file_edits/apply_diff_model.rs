@@ -1,4 +1,4 @@
-//! Entity submodel that encapsulates all filesystem access for diff application.
+﻿//! Entity submodel that encapsulates all filesystem access for diff application.
 //!
 //! The executor holds a [`ModelHandle<ApplyDiffModel>`] and calls
 //! [`ApplyDiffModel::apply_diffs`] without knowing whether the session is local
@@ -11,8 +11,8 @@
 use ai::diff_validation::AIRequestedCodeDiff;
 use futures::FutureExt;
 use vec1::Vec1;
-use warpui::r#async::BoxFuture;
-use warpui::{Entity, ModelContext, ModelHandle, SingletonEntity as _};
+use zterm_ui::r#async::BoxFuture;
+use zterm_ui::{Entity, ModelContext, ModelHandle, SingletonEntity as _};
 
 use crate::ai::agent::{AIIdentifiers, FileEdit};
 use crate::ai::blocklist::SessionContext;

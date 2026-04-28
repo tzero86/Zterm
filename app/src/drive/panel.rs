@@ -1,5 +1,5 @@
 use futures::Future;
-use warpui::{
+use zterm_ui::{
     elements::{Align, Flex, Hoverable, MouseStateHandle, ParentElement, SavePosition, Shrinkable},
     presenter::ChildView,
     windowing::{StateEvent, WindowManager},
@@ -31,19 +31,19 @@ use super::{
         has_feature_gated_anonymous_user_reached_workflow_limit,
     },
     index::{DriveIndex, DriveIndexAction, DriveIndexEvent},
-    items::WarpDriveItemId,
+    items::ZtermDriveItemId,
     CloudObjectTypeAndId, DriveObjectType,
 };
 
 pub const MIN_SIDEBAR_WIDTH: f32 = 250.;
 pub const MAX_SIDEBAR_WIDTH_RATIO: f32 = 0.75;
 
-pub const WARP_DRIVE_POSITION_ID: &str = "warp_drive";
+pub const ZTERM_DRIVE_POSITION_ID: &str = "warp_drive";
 
-/// The sidebar that houses Warp Drive.
+/// The sidebar that houses Zterm Drive.
 /// `DrivePanel` is different from `DriveIndex` in that it is responsible for
-/// how Warp Drive interacts with the workspace and the rest of the app, whereas
-/// `DriveIndex` is the main warp drive view and responsible for the internals of Warp Drive.
+/// how Zterm Drive interacts with the workspace and the rest of the app, whereas
+/// `DriveIndex` is the main warp drive view and responsible for the internals of Zterm Drive.
 pub struct DrivePanel {
     index_view: ViewHandle<DriveIndex>,
     mouse_state_handles: MouseStateHandles,
@@ -86,7 +86,7 @@ pub enum DrivePanelEvent {
     OpenNotebook(NotebookSource),
     OpenEnvVarCollection(EnvVarCollectionSource),
     OpenWorkflowInPane(WorkflowOpenSource, WorkflowViewMode),
-    FocusWarpDrive,
+    FocusZtermDrive,
     AttachPlanAsContext(AIDocumentId),
 }
 
@@ -304,7 +304,7 @@ impl DrivePanel {
             DriveIndexEvent::OpenWorkflowModalWithCloudWorkflow(workflow_id) => {
                 self.open_workflow_modal_with_existing(*workflow_id, ctx)
             }
-            DriveIndexEvent::FocusWarpDrive => ctx.emit(DrivePanelEvent::FocusWarpDrive),
+            DriveIndexEvent::FocusZtermDrive => ctx.emit(DrivePanelEvent::FocusZtermDrive),
             DriveIndexEvent::OpenSharedObjectsCreationDeniedModal(object_type, team_uid) => ctx
                 .emit(DrivePanelEvent::OpenSharedObjectsCreationDeniedModal(
                     *object_type,
@@ -455,7 +455,7 @@ impl DrivePanel {
 
     pub fn set_selected_object(
         &mut self,
-        id: Option<WarpDriveItemId>,
+        id: Option<ZtermDriveItemId>,
         ctx: &mut ViewContext<Self>,
     ) {
         self.index_view.update(ctx, |index_view, ctx| {
@@ -595,7 +595,7 @@ impl DrivePanel {
 
     pub fn expand_section_for_drive_item_id(
         &mut self,
-        item_id: WarpDriveItemId,
+        item_id: ZtermDriveItemId,
         ctx: &mut ViewContext<Self>,
     ) {
         self.index_view.update(ctx, |index, ctx| {
@@ -603,21 +603,21 @@ impl DrivePanel {
         })
     }
 
-    /// This functions scrolls the relevant Warp Drive item into view.
-    pub fn scroll_item_into_view(&mut self, item_id: WarpDriveItemId, ctx: &mut ViewContext<Self>) {
+    /// This functions scrolls the relevant Zterm Drive item into view.
+    pub fn scroll_item_into_view(&mut self, item_id: ZtermDriveItemId, ctx: &mut ViewContext<Self>) {
         self.index_view.update(ctx, |index, ctx| {
             index.scroll_item_into_view(item_id, ctx);
         })
     }
 
-    /// This functions sets the index of a focused Warp Drive item.
+    /// This functions sets the index of a focused Zterm Drive item.
     pub fn set_focused_index(&mut self, focused_index: Option<usize>, ctx: &mut ViewContext<Self>) {
         self.index_view.update(ctx, |index, ctx| {
             index.set_focused_index(focused_index, true, ctx);
         })
     }
 
-    pub fn set_focused_item(&mut self, item_id: WarpDriveItemId, ctx: &mut ViewContext<Self>) {
+    pub fn set_focused_item(&mut self, item_id: ZtermDriveItemId, ctx: &mut ViewContext<Self>) {
         self.index_view.update(ctx, |index, ctx| {
             ctx.focus(&self.index_view);
             index.set_focused_item(item_id, true, ctx);
@@ -631,7 +631,7 @@ impl DrivePanel {
         source: SharingDialogSource,
         ctx: &mut ViewContext<Self>,
     ) {
-        let warp_drive_item_id = WarpDriveItemId::Object(object_id);
+        let warp_drive_item_id = ZtermDriveItemId::Object(object_id);
         self.index_view.update(ctx, |index, ctx| {
             index.set_focused_item(warp_drive_item_id, true, ctx);
             index.toggle_share_dialog(&warp_drive_item_id, invitee_email, source, ctx);
@@ -674,7 +674,7 @@ impl DrivePanel {
 
 impl View for DrivePanel {
     fn ui_name() -> &'static str {
-        "WarpDrivePanel"
+        "ZtermDrivePanel"
     }
 
     fn on_focus(&mut self, focus_ctx: &FocusContext, ctx: &mut ViewContext<Self>) {
@@ -683,14 +683,14 @@ impl View for DrivePanel {
         }
     }
 
-    fn render(&self, _app: &warpui::AppContext) -> Box<dyn warpui::Element> {
+    fn render(&self, _app: &zterm_ui::AppContext) -> Box<dyn zterm_ui::Element> {
         let body = Hoverable::new(
             self.mouse_state_handles.focus_panel_mouse_state.clone(),
             |_| {
                 Align::new(
                     SavePosition::new(
                         ChildView::new(&self.index_view).finish(),
-                        WARP_DRIVE_POSITION_ID,
+                        ZTERM_DRIVE_POSITION_ID,
                     )
                     .finish(),
                 )
@@ -705,7 +705,7 @@ impl View for DrivePanel {
 
         let mut col = Flex::column();
         col.add_child(Shrinkable::new(1., body).finish());
-        col.with_main_axis_size(warpui::elements::MainAxisSize::Max)
+        col.with_main_axis_size(zterm_ui::elements::MainAxisSize::Max)
             .finish()
     }
 }

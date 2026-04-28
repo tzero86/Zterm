@@ -3,11 +3,11 @@
 //! This module provides common styling functions used across all inline menu
 //! implementations (models, slash commands, conversations) to ensure consistent
 //! visual design matching the Figma specifications.
-use warp_core::ui::appearance::Appearance;
-use warp_core::ui::color::blend::Blend;
-use warp_core::ui::theme::{Fill, WarpTheme};
-use warpui::color::ColorU;
-use warpui::{AppContext, SingletonEntity};
+use zterm_core::ui::appearance::Appearance;
+use zterm_core::ui::color::blend::Blend;
+use zterm_core::ui::theme::{Fill, ZtermTheme};
+use zterm_ui::color::ColorU;
+use zterm_ui::{AppContext, SingletonEntity};
 
 use crate::ai::blocklist::agent_view::agent_view_bg_fill;
 use crate::search::result_renderer::ItemHighlightState;
@@ -46,15 +46,15 @@ pub fn item_background(
     }
 }
 
-pub fn primary_text_color(theme: &WarpTheme, background: Fill) -> Fill {
+pub fn primary_text_color(theme: &ZtermTheme, background: Fill) -> Fill {
     theme.main_text_color(background)
 }
 
-pub fn secondary_text_color(theme: &WarpTheme, background: Fill) -> Fill {
+pub fn secondary_text_color(theme: &ZtermTheme, background: Fill) -> Fill {
     theme.sub_text_color(background)
 }
 
-pub fn disabled_text_color(theme: &WarpTheme, background: Fill) -> Fill {
+pub fn disabled_text_color(theme: &ZtermTheme, background: Fill) -> Fill {
     theme.disabled_text_color(background)
 }
 

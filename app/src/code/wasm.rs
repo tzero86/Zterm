@@ -1,7 +1,7 @@
-use std::path::{Path, PathBuf};
+﻿use std::path::{Path, PathBuf};
 
-use warp_util::path::LineAndColumnArg;
-use warpui::{
+use zterm_util::path::LineAndColumnArg;
+use zterm_ui::{
     elements::{DraggableState, Empty, MouseStateHandle},
     AppContext, Element, Entity, ModelHandle, TypedActionView, View, ViewContext, ViewHandle,
 };

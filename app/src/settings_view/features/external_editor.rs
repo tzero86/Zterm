@@ -1,8 +1,8 @@
-use std::{cell::RefCell, collections::HashMap};
+﻿use std::{cell::RefCell, collections::HashMap};
 
 use settings::{Setting, ToggleableSetting};
-use warp_core::features::FeatureFlag;
-use warpui::{
+use zterm_core::features::FeatureFlag;
+use zterm_ui::{
     elements::{Flex, MouseStateHandle, ParentElement},
     ui_components::{components::UiComponent, switch::SwitchStateHandle},
     Element, Entity, SingletonEntity, TypedActionView, View, ViewContext, ViewHandle,
@@ -154,7 +154,7 @@ impl ExternalEditorView {
 
         let mut items = vec![default_app];
 
-        items.push(DropdownItem::new("Warp", make_action(EditorChoice::Warp)));
+        items.push(DropdownItem::new("Zterm", make_action(EditorChoice::Warp)));
         if FeatureFlag::AllowOpeningFileLinksUsingEditorEnv.is_enabled() {
             items.push(DropdownItem::new(
                 "$EDITOR",
@@ -176,7 +176,7 @@ impl ExternalEditorView {
             EditorChoice::ExternalEditor(editor) => {
                 dropdown.set_selected_by_name(format!("{editor}"), ctx)
             }
-            EditorChoice::Warp => dropdown.set_selected_by_name("Warp", ctx),
+            EditorChoice::Warp => dropdown.set_selected_by_name("Zterm", ctx),
             EditorChoice::EnvEditor => dropdown.set_selected_by_name("$EDITOR", ctx),
             EditorChoice::SystemDefault => dropdown.set_selected_by_name(default_option_text, ctx),
         };
@@ -275,7 +275,7 @@ impl View for ExternalEditorView {
         "ExternalEditorView"
     }
 
-    fn render(&self, app: &warpui::AppContext) -> Box<dyn warpui::Element> {
+    fn render(&self, app: &zterm_ui::AppContext) -> Box<dyn zterm_ui::Element> {
         let appearance = Appearance::as_ref(app);
 
         let default_editor = render_dropdown_item(

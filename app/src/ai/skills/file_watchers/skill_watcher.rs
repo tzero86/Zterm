@@ -16,8 +16,8 @@ use watcher::{BulkFilesystemWatcherEvent, HomeDirectoryWatcher, HomeDirectoryWat
 
 use crate::server::datetime_ext::DateTimeExt;
 use crate::warp_managed_paths_watcher::{
-    filter_repository_update_by_prefix, warp_managed_skill_dirs, WarpManagedPathsWatcher,
-    WarpManagedPathsWatcherEvent,
+    filter_repository_update_by_prefix, warp_managed_skill_dirs, ZtermManagedPathsWatcher,
+    ZtermManagedPathsWatcherEvent,
 };
 use ai::skills::{
     home_skills_path, parse_skill, ParsedSkill, SkillProvider, SKILL_PROVIDER_DEFINITIONS,
@@ -29,7 +29,7 @@ use repo_metadata::{
     repository::{Repository, SubscriberId},
     DirectoryWatcher, RepoMetadataModel, RepositoryUpdate,
 };
-use warpui::{AppContext, Entity, ModelContext, ModelHandle, SingletonEntity};
+use zterm_ui::{AppContext, Entity, ModelContext, ModelHandle, SingletonEntity};
 
 #[derive(Debug, PartialEq)]
 pub enum SkillWatcherEvent {
@@ -124,7 +124,7 @@ impl SkillWatcher {
                     }
                 },
             );
-            ctx.subscribe_to_model(&WarpManagedPathsWatcher::handle(ctx), |me, event, ctx| {
+            ctx.subscribe_to_model(&ZtermManagedPathsWatcher::handle(ctx), |me, event, ctx| {
                 me.handle_warp_managed_paths_event(event, ctx);
             });
         }
@@ -578,7 +578,7 @@ impl SkillWatcher {
             }
 
             let Ok(std_dir_path) =
-                warp_util::standardized_path::StandardizedPath::from_local_canonicalized(
+                zterm_util::standardized_path::StandardizedPath::from_local_canonicalized(
                     &canonical_dir,
                 )
             else {
@@ -806,10 +806,10 @@ impl SkillWatcher {
 
     fn handle_warp_managed_paths_event(
         &mut self,
-        event: &WarpManagedPathsWatcherEvent,
+        event: &ZtermManagedPathsWatcherEvent,
         ctx: &mut ModelContext<Self>,
     ) {
-        let WarpManagedPathsWatcherEvent::FilesChanged(update) = event;
+        let ZtermManagedPathsWatcherEvent::FilesChanged(update) = event;
         for skill_dir in warp_managed_skill_dirs() {
             if let Some(filtered_update) = filter_repository_update_by_prefix(update, &skill_dir) {
                 self.handle_repository_update(&filtered_update, ctx);
@@ -827,7 +827,7 @@ impl SkillWatcher {
         ctx: &mut ModelContext<Self>,
     ) {
         let Ok(std_path) =
-            warp_util::standardized_path::StandardizedPath::from_local_canonicalized(path)
+            zterm_util::standardized_path::StandardizedPath::from_local_canonicalized(path)
         else {
             return;
         };

@@ -1,7 +1,7 @@
-use std::{fs, path::Path};
+﻿use std::{fs, path::Path};
 
 use anyhow::{Context as _, Result};
-use warp_cli::skill::SkillSpec;
+use zterm_cli::skill::SkillSpec;
 
 use super::*;
 
@@ -63,7 +63,7 @@ fn resolve_from_root_path_by_directory_scan_respects_directory_precedence() -> R
         &warp_skill,
         "my-skill",
         "desc",
-        "# Warp version\n\nDo not pick this when .agents exists.",
+        "# Zterm version\n\nDo not pick this when .agents exists.",
     )?;
     write_skill_file(
         &claude_skill,
@@ -201,7 +201,7 @@ fn resolve_simple_name_uses_directory_precedence() -> Result<()> {
         &warp_skill,
         "my-skill",
         "desc",
-        "# Warp version\n\nThis should lose to .agents but beat .claude.",
+        "# Zterm version\n\nThis should lose to .agents but beat .claude.",
     )?;
 
     let claude_skill = root.join(".claude/skills/my-skill/SKILL.md");

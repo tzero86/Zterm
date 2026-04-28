@@ -1,11 +1,11 @@
-//! Shared display metadata for [`Harness`] variants.
+﻿//! Shared display metadata for [`Harness`] variants.
 //!
 //! Any UI surface that shows a harness to the user — the harness selector
 //! dropdown, the conversation details sidebar, etc. — should source its label,
 //! icon, and brand color from here so the two surfaces cannot drift.
 
 use pathfinder_color::ColorU;
-use warp_cli::agent::Harness;
+use zterm_cli::agent::Harness;
 
 use crate::ai::agent::conversation::AIAgentHarness;
 use crate::ai::blocklist::CLAUDE_ORANGE;

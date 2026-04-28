@@ -1,4 +1,4 @@
-use warpui::{
+﻿use zterm_ui::{
     elements::{CrossAxisAlignment, Fill, Flex, ParentElement, Shrinkable},
     presenter::ChildView,
     ui_components::components::{Coords, UiComponent, UiComponentStyles},
@@ -207,7 +207,7 @@ impl View for StartupShellView {
     }
 
     /// Renders controls to change the default shell for new sessions.
-    fn render(&self, app: &warpui::AppContext) -> Box<dyn warpui::Element> {
+    fn render(&self, app: &zterm_ui::AppContext) -> Box<dyn zterm_ui::Element> {
         let appearance = Appearance::as_ref(app);
         let ui_builder = appearance.ui_builder();
         let theme = appearance.theme();

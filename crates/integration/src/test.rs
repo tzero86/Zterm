@@ -75,7 +75,7 @@ use pathfinder_geometry::{rect::RectF, vector::Vector2F};
 use rust_embed::RustEmbed;
 use settings::Setting as _;
 use shell::ShellType;
-use warpui::{
+use zterm_ui::{
     async_assert, async_assert_eq,
     integration::{AssertionOutcome, StepData, TestStep},
     keymap::{Keystroke, Trigger},
@@ -88,7 +88,7 @@ use warp::{terminal::find::TerminalFindModel, util::bindings::CustomAction, Agen
 
 use sysinfo::{Pid, ProcessesToUpdate, System};
 use version_compare::Cmp;
-use warpui::units::Lines;
+use zterm_ui::units::Lines;
 
 use crate::util::{skip_if_powershell_core_2303, ShellRcType};
 
@@ -239,9 +239,9 @@ use warp::{
     },
     workspace::{Workspace, NEW_SESSION_MENU_BUTTON_POSITION_ID, NEW_TAB_BUTTON_POSITION_ID},
 };
-use warpui::event::KeyState;
-use warpui::keymap::PerPlatformKeystroke;
-use warpui::platform::keyboard::KeyCode;
+use zterm_ui::event::KeyState;
+use zterm_ui::keymap::PerPlatformKeystroke;
+use zterm_ui::platform::keyboard::KeyCode;
 
 const ADD_NEXT_OCCURRENCE_KEYBINDING: &str = "ctrl-g";
 
@@ -284,7 +284,7 @@ pub fn test_add_workflows_to_warp_config() -> Builder {
 
                     workflows.read(app, |workflows, _| {
                         // Note that this can be a synchronous assertion because unlike the next test step,
-                        // we don't have concurrency with a WarpConfig watcher thread
+                        // we don't have concurrency with a ZtermConfig watcher thread
                         assert_eq!(
                             workflows.local_workflows().count(),
                             0,

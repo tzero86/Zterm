@@ -1,15 +1,15 @@
-//! SearchItem implementation for user query menu items.
+﻿//! SearchItem implementation for user query menu items.
 
 use fuzzy_match::FuzzyMatchResult;
 use ordered_float::OrderedFloat;
-use warp_core::ui::color::coloru_with_opacity;
-use warp_core::ui::theme::Fill;
-use warp_core::ui::Icon;
-use warpui::elements::{ConstrainedBox, Container, Highlight, Shrinkable, Text};
-use warpui::fonts::{Properties, Weight};
-use warpui::scene::{CornerRadius, Radius};
-use warpui::text_layout::ClipConfig;
-use warpui::{AppContext, Element, SingletonEntity};
+use zterm_core::ui::color::coloru_with_opacity;
+use zterm_core::ui::theme::Fill;
+use zterm_core::ui::Icon;
+use zterm_ui::elements::{ConstrainedBox, Container, Highlight, Shrinkable, Text};
+use zterm_ui::fonts::{Properties, Weight};
+use zterm_ui::scene::{CornerRadius, Radius};
+use zterm_ui::text_layout::ClipConfig;
+use zterm_ui::{AppContext, Element, SingletonEntity};
 
 use crate::ai::agent::AIAgentExchangeId;
 use crate::appearance::Appearance;
@@ -65,7 +65,7 @@ impl SearchItem for UserQuerySearchItem {
         // Once this search item is used by multiple sources,
         // we'll want to set this icon based on which source is generating this item.
         let icon = Container::new(
-            ConstrainedBox::new(Icon::ArrowSplit.to_warpui_icon(color).finish())
+            ConstrainedBox::new(Icon::ArrowSplit.to_zterm_ui_icon(color).finish())
                 .with_width(appearance.monospace_font_size())
                 .with_height(appearance.monospace_font_size())
                 .finish(),

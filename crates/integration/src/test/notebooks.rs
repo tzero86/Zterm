@@ -20,7 +20,7 @@ use warp::{
         window::{add_and_save_window, close_window, save_active_window_id},
     },
 };
-use warpui::integration::TestStep;
+use zterm_ui::integration::TestStep;
 
 use super::{new_builder, Builder};
 

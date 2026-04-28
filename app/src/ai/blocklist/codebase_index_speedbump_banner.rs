@@ -1,13 +1,13 @@
-use std::path::PathBuf;
+﻿use std::path::PathBuf;
 
 use crate::appearance::Appearance;
 use crate::terminal::view::{InlineBannerId, TerminalAction};
 use crate::ui_components::blended_colors;
 use crate::ui_components::icons::Icon;
-use warpui::elements::{Align, ConstrainedBox};
-use warpui::ui_components::button::ButtonVariant;
-use warpui::ui_components::components::Coords;
-use warpui::{
+use zterm_ui::elements::{Align, ConstrainedBox};
+use zterm_ui::ui_components::button::ButtonVariant;
+use zterm_ui::ui_components::components::Coords;
+use zterm_ui::{
     elements::{
         Container, CrossAxisAlignment, Flex, MainAxisSize, MouseStateHandle, ParentElement,
         Shrinkable,
@@ -150,7 +150,7 @@ impl CodebaseIndexSpeedbumpBannerState {
         let info_icon = Container::new(
             ConstrainedBox::new(
                 Icon::Info
-                    .to_warpui_icon(theme.active_ui_text_color())
+                    .to_zterm_ui_icon(theme.active_ui_text_color())
                     .finish(),
             )
             .with_width(appearance.ui_font_size() * 1.2)

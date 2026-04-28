@@ -1,17 +1,17 @@
-use itertools::Itertools;
+﻿use itertools::Itertools;
 use serde::{Deserialize, Serialize};
 #[cfg(not(test))]
 use std::env::var_os;
 use vec1::{vec1, Vec1};
-use warpui::keymap::Keystroke;
+use zterm_ui::keymap::Keystroke;
 #[cfg(not(test))]
-use warpui::keymap::Trigger;
-use warpui::AppContext;
+use zterm_ui::keymap::Trigger;
+use zterm_ui::AppContext;
 
 use anyhow::Context;
 
 /// Environment variable to disable saving keybindings to file (used in integration tests)
-pub const DISABLE_SAVE_ENV_VAR: &str = "WARP_TEST_DISABLE_KEYBINDING_SAVE";
+pub const DISABLE_SAVE_ENV_VAR: &str = "ZTERM_TEST_DISABLE_KEYBINDING_SAVE";
 const REMOVED_KEYBINDING_SERIALIZATION: &str = "none";
 
 #[derive(PartialEq, Debug)]
@@ -95,7 +95,7 @@ where
 
 #[cfg(not(test))]
 pub fn keybinding_file_path() -> std::path::PathBuf {
-    warp_core::paths::config_local_dir().join(KEYBINDINGS_FILE_NAME)
+    zterm_core::paths::config_local_dir().join(KEYBINDINGS_FILE_NAME)
 }
 
 /// Save the custom keybindings map to disk.

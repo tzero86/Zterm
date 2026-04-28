@@ -1,11 +1,11 @@
-//! Module containing utilities to query the currently running antivirus / EDR software on the
+﻿//! Module containing utilities to query the currently running antivirus / EDR software on the
 //! user's machine.
 
 mod telemetry;
 #[cfg(windows)]
 mod windows;
 
-use warpui::{Entity, ModelContext, SingletonEntity};
+use zterm_ui::{Entity, ModelContext, SingletonEntity};
 
 /// Singleton model that reports the currently running antivirus software.
 #[derive(Debug, Clone)]

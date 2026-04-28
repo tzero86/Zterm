@@ -1,4 +1,4 @@
-use crate::auth::UserUid;
+﻿use crate::auth::UserUid;
 use crate::terminal::model::ansi::{CommandFinishedValue, Handler};
 use crate::terminal::model::blocks::BlockList;
 use crate::terminal::model::test_utils::TestBlockListBuilder;
@@ -11,8 +11,8 @@ use itertools::Itertools;
 use session_sharing_protocol::common::{
     ParticipantId, ParticipantInfo, ParticipantList, ProfileData, Role, Selection, Sharer, Viewer,
 };
-use warp_core::command::ExitCode;
-use warpui::App;
+use zterm_core::command::ExitCode;
+use zterm_ui::App;
 
 #[test]
 fn test_choosing_preset_colors() {

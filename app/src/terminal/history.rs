@@ -1,4 +1,4 @@
-use chrono::{DateTime, Local, TimeZone as _};
+﻿use chrono::{DateTime, Local, TimeZone as _};
 use futures::Future;
 use serde::{Deserialize, Serialize};
 use std::{
@@ -6,8 +6,8 @@ use std::{
     sync::Arc,
 };
 
-use warp_core::command::ExitCode;
-use warpui::{AppContext, Entity, ModelContext, SingletonEntity};
+use zterm_core::command::ExitCode;
+use zterm_ui::{AppContext, Entity, ModelContext, SingletonEntity};
 
 use super::{
     model::block::{AgentInteractionMetadata, Block, SerializedAIMetadata, SerializedBlock},

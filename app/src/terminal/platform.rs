@@ -1,4 +1,4 @@
-#[allow(unused_imports)]
+﻿#[allow(unused_imports)]
 use crate::{Assets, ASSETS};
 use anyhow::Result;
 
@@ -21,7 +21,7 @@ mod mac {
         str,
     };
 
-    use warpui::platform::mac::utils::nsstring_as_str;
+    use zterm_ui::platform::mac::utils::nsstring_as_str;
 
     const FALLBACK_LOCALE: &str = "UTF-8";
 

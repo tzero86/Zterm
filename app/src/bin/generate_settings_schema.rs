@@ -1,4 +1,4 @@
-//! Generates a JSON Schema file describing Warp's user-facing settings.
+﻿//! Generates a JSON Schema file describing Warp's user-facing settings.
 //!
 //! Usage:
 //! ```
@@ -12,7 +12,7 @@ use schemars::SchemaGenerator;
 use serde_json::{Map, Value};
 
 use settings::schema::SettingSchemaEntry;
-use warp_core::features::{FeatureFlag, DEBUG_FLAGS, DOGFOOD_FLAGS, PREVIEW_FLAGS, RELEASE_FLAGS};
+use zterm_core::features::{FeatureFlag, DEBUG_FLAGS, DOGFOOD_FLAGS, PREVIEW_FLAGS, RELEASE_FLAGS};
 
 /// Ensures all `inventory::submit!` registrations from the app crate's
 /// dependency tree are linked into the binary.
@@ -235,7 +235,7 @@ fn main() {
     root.insert(
         "description".to_string(),
         Value::String(format!(
-            "JSON Schema for Warp settings ({channel} channel, {entry_count} settings)"
+            "JSON Schema for Zterm settings ({channel} channel, {entry_count} settings)"
         )),
     );
     root.insert("type".to_string(), Value::String("object".to_string()));

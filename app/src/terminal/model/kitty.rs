@@ -1,4 +1,4 @@
-use anyhow::Result;
+﻿use anyhow::Result;
 use base64::Engine;
 use flate2::read::ZlibDecoder;
 use pathfinder_geometry::vector::Vector2F;
@@ -7,8 +7,8 @@ use std::cmp::min;
 use std::io::Read;
 #[cfg(feature = "local_fs")]
 use std::{env, fs, str};
-use warpui::image_cache::{resize_dimensions, FitType};
-use warpui::{
+use zterm_ui::image_cache::{resize_dimensions, FitType};
+use zterm_ui::{
     assets::asset_cache::Asset,
     image_cache::{CustomHeaderCreationError, CustomImageFormat, CustomImageHeader, ImageType},
     util::{parse_i32, parse_u32},

@@ -11,37 +11,37 @@ use crate::ui_components::icons::Icon as UiIcon;
 use crate::workspace::WorkspaceAction;
 use channel_versions::overrides::TargetOS;
 use parking_lot::RwLock;
-use warp_core::semantic_selection::SemanticSelection;
-use warp_core::ui::theme::WarpTheme;
-use warpui::elements::{
+use zterm_core::semantic_selection::SemanticSelection;
+use zterm_core::ui::theme::ZtermTheme;
+use zterm_ui::elements::{
     CrossAxisAlignment, Icon, MainAxisAlignment, MainAxisSize, MouseStateHandle, SelectableArea,
     SelectionHandle, Text,
 };
-use warpui::ui_components::components::{UiComponent, UiComponentStyles};
-use warpui::{
+use zterm_ui::ui_components::components::{UiComponent, UiComponentStyles};
+use zterm_ui::{
     elements::{Border, Container, Flex, ParentElement},
     AppContext, Element, Entity, SingletonEntity, TypedActionView, View, ViewContext,
 };
 
 use super::render::{HORIZONTAL_TEXT_MARGIN, SSH_DOCS_URL, SUBSHELL_DOCS_URL};
-use super::settings::WarpifySettings;
+use super::settings::ZtermifySettings;
 use super::{render, subshell_bootstrap_success_block_bytes, WarpificationSource};
 
 const VERTICAL_TEXT_MARGIN: f32 = 16.;
 
 #[derive(Debug, Clone)]
-pub enum WarpifySuccessBlockEvent {
-    OpenWarpifySettings,
+pub enum ZtermifySuccessBlockEvent {
+    OpenZtermifySettings,
 }
 
 #[derive(Debug, Clone, Eq, PartialEq)]
-pub enum WarpifySuccessBlockAction {
-    ClearAutoWarpifySnippet,
-    OpenWarpifySettings,
+pub enum ZtermifySuccessBlockAction {
+    ClearAutoZtermifySnippet,
+    OpenZtermifySettings,
     OpenUrl(String),
 }
 
-struct AutoWarpifySnippet {
+struct AutoZtermifySnippet {
     /// On subshell initialization, this will contain the output grid to display,
     /// containing info like how to auto-warpify the subshell.
     output_grid: Cow<'static, str>,
@@ -55,14 +55,14 @@ struct AutoWarpifySnippet {
     can_write_to_rc: bool,
 }
 
-pub struct WarpifySuccessBlock {
+pub struct ZtermifySuccessBlock {
     source: WarpificationSource,
     spawning_command: String,
     learn_more_link_mouse_states: MouseStateHandle,
-    auto_warpify_snippet: Option<AutoWarpifySnippet>,
+    auto_warpify_snippet: Option<AutoZtermifySnippet>,
 }
 
-impl WarpifySuccessBlock {
+impl ZtermifySuccessBlock {
     #[allow(clippy::new_without_default)]
     pub fn new(
         source: WarpificationSource,
@@ -72,7 +72,7 @@ impl WarpifySuccessBlock {
         disable_tmux: bool,
         ctx: &mut ViewContext<Self>,
     ) -> Self {
-        ctx.subscribe_to_model(&WarpifySettings::handle(ctx), move |_, _, _, ctx| {
+        ctx.subscribe_to_model(&ZtermifySettings::handle(ctx), move |_, _, _, ctx| {
             ctx.notify();
         });
 
@@ -114,9 +114,9 @@ impl WarpifySuccessBlock {
             })
         };
         let auto_warpify_snippet = auto_warpify_snippet.map(|(output_grid, can_write_to_rc)| {
-            AutoWarpifySnippet {
+            AutoZtermifySnippet {
                 description: (if !output_grid.is_empty() {
-                    "Run the following to automatically Warpify in the future:"
+                    "Run the following to automatically Ztermify in the future:"
                 } else {
                     "In remote subshells, Warp runs commands in the background to power completions, syntax highlighting, and other features."
                 }).into(),
@@ -145,7 +145,7 @@ impl WarpifySuccessBlock {
 
     pub fn render_spawning_command(
         &self,
-        theme: &WarpTheme,
+        theme: &ZtermTheme,
         appearance: &Appearance,
     ) -> Box<dyn Element> {
         let spawning_command = self.spawning_command.clone();
@@ -154,7 +154,7 @@ impl WarpifySuccessBlock {
             .finish()
     }
 
-    pub fn render_title_ui(&self, theme: &WarpTheme, appearance: &Appearance) -> Box<dyn Element> {
+    pub fn render_title_ui(&self, theme: &ZtermTheme, appearance: &Appearance) -> Box<dyn Element> {
         let header_contents = render::build_header_row(
             "Session Warpified",
             Icon::new(UiIcon::Warp.into(), theme.active_ui_detail()),
@@ -198,7 +198,7 @@ impl WarpifySuccessBlock {
                 None,
                 Some(Box::new({
                     move |ctx| {
-                        ctx.dispatch_typed_action(WarpifySuccessBlockAction::OpenUrl(
+                        ctx.dispatch_typed_action(ZtermifySuccessBlockAction::OpenUrl(
                             url.to_owned(),
                         ));
                     }
@@ -252,7 +252,7 @@ impl WarpifySuccessBlock {
                         code_snippet.to_string(),
                     ));
 
-                    ctx.dispatch_typed_action(WarpifySuccessBlockAction::ClearAutoWarpifySnippet);
+                    ctx.dispatch_typed_action(ZtermifySuccessBlockAction::ClearAutoZtermifySnippet);
                 }
             })),
             Some(Box::new({
@@ -267,7 +267,7 @@ impl WarpifySuccessBlock {
         let semantic_selection = SemanticSelection::as_ref(app);
         let selected_text = auto_warpify_snippet.selected_text.clone();
 
-        // TODO(Simon): Implement full selection and copying functionality for the WarpifySuccessBlock.
+        // TODO(Simon): Implement full selection and copying functionality for the ZtermifySuccessBlock.
         // Look to the `EnvVarCollectionBlock` for the existing implementation paradigm. We don't
         // yet have a robust way of ensuring that every aspect of text selection is implemented
         // properly, so be extra careful not to miss any details!
@@ -308,15 +308,15 @@ impl WarpifySuccessBlock {
     }
 }
 
-impl Entity for WarpifySuccessBlock {
-    type Event = WarpifySuccessBlockEvent;
+impl Entity for ZtermifySuccessBlock {
+    type Event = ZtermifySuccessBlockEvent;
 }
 
-pub const WARPIFY_SUCCESS_BLOCK_VISIBLE_KEY: &str = "WarpifySuccessBlockVisible";
+pub const WARPIFY_SUCCESS_BLOCK_VISIBLE_KEY: &str = "ZtermifySuccessBlockVisible";
 
-impl View for WarpifySuccessBlock {
+impl View for ZtermifySuccessBlock {
     fn ui_name() -> &'static str {
-        "WarpifySuccessBlock"
+        "ZtermifySuccessBlock"
     }
 
     fn render(&self, app: &AppContext) -> Box<dyn Element> {
@@ -341,18 +341,18 @@ impl View for WarpifySuccessBlock {
     }
 }
 
-impl TypedActionView for WarpifySuccessBlock {
-    type Action = WarpifySuccessBlockAction;
+impl TypedActionView for ZtermifySuccessBlock {
+    type Action = ZtermifySuccessBlockAction;
 
     fn handle_action(&mut self, action: &Self::Action, ctx: &mut ViewContext<Self>) {
         match action {
-            WarpifySuccessBlockAction::OpenWarpifySettings => {
-                ctx.emit(WarpifySuccessBlockEvent::OpenWarpifySettings);
+            ZtermifySuccessBlockAction::OpenZtermifySettings => {
+                ctx.emit(ZtermifySuccessBlockEvent::OpenZtermifySettings);
             }
-            WarpifySuccessBlockAction::OpenUrl(url) => {
+            ZtermifySuccessBlockAction::OpenUrl(url) => {
                 ctx.open_url(url);
             }
-            WarpifySuccessBlockAction::ClearAutoWarpifySnippet => {
+            ZtermifySuccessBlockAction::ClearAutoZtermifySnippet => {
                 self.clear_auto_warpify_snippet(ctx);
             }
         }

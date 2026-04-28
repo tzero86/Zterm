@@ -1,5 +1,5 @@
-use warp_core::ui::appearance::Appearance;
-use warpui::{
+﻿use zterm_core::ui::appearance::Appearance;
+use zterm_ui::{
     fonts::Weight,
     ui_components::components::{Coords, UiComponentStyles},
 };

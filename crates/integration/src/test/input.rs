@@ -18,7 +18,7 @@ use warp::{
         view_getters::{single_input_view_for_tab, single_terminal_view_for_tab},
     },
 };
-use warpui::{async_assert_eq, integration::TestStep, Event};
+use zterm_ui::{async_assert_eq, integration::TestStep, Event};
 
 use crate::Builder;
 

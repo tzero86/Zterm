@@ -1,9 +1,9 @@
-//! Shared tooltip UI components for file path and link tooltips
+﻿//! Shared tooltip UI components for file path and link tooltips
 
 #[cfg(feature = "local_fs")]
 use std::path::Path;
 
-use warpui::{
+use zterm_ui::{
     elements::{
         Border, Container, CornerRadius, Flex, MouseStateHandle, ParentElement, Radius, Text,
     },
@@ -249,7 +249,7 @@ pub fn should_show_open_in_warp_link(path: &Path, app: &AppContext) -> bool {
         notebooks::file::is_markdown_file,
         util::file::external_editor::{settings::EditorChoice, EditorSettings},
     };
-    use warpui::SingletonEntity;
+    use zterm_ui::SingletonEntity;
 
     let settings = EditorSettings::as_ref(app);
 

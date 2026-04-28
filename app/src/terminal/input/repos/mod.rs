@@ -1,4 +1,4 @@
-//! Inline repo switcher menu showing indexed repos with git status.
+﻿//! Inline repo switcher menu showing indexed repos with git status.
 mod data_source;
 #[cfg(feature = "local_fs")]
 mod search_item;
@@ -8,7 +8,7 @@ pub use view::{InlineReposMenuEvent, InlineReposMenuView};
 
 use std::path::PathBuf;
 
-use warpui::keymap::Keystroke;
+use zterm_ui::keymap::Keystroke;
 
 use crate::terminal::input::inline_menu::{
     default_navigation_message_items, InlineMenuAction, InlineMenuMessageArgs, InlineMenuRowAction,

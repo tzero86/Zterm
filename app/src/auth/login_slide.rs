@@ -1,4 +1,4 @@
-use crate::appearance::Appearance;
+﻿use crate::appearance::Appearance;
 use crate::auth::auth_manager::{AuthManager, AuthManagerEvent};
 use crate::auth::auth_view_modal::AuthRedirectPayload;
 use crate::auth::auth_view_shared_helpers::{
@@ -13,24 +13,24 @@ use crate::util::bindings::CustomAction;
 use crate::{send_telemetry_from_ctx, send_telemetry_sync_from_ctx};
 
 use onboarding::slides::{layout, slide_content};
-use onboarding::{OnboardingIntention, AI_FEATURES, WARP_DRIVE_FEATURES};
+use onboarding::{OnboardingIntention, AI_FEATURES, ZTERM_DRIVE_FEATURES};
 use pathfinder_color::ColorU;
 use ui_components::{button, Component as _, Options as _};
-use warp_core::features::FeatureFlag;
-use warp_core::ui::theme::color::internal_colors;
-use warp_core::ui::Icon;
-use warpui::clipboard::ClipboardContent;
-use warpui::elements::{
+use zterm_core::features::FeatureFlag;
+use zterm_core::ui::theme::color::internal_colors;
+use zterm_core::ui::Icon;
+use zterm_ui::clipboard::ClipboardContent;
+use zterm_ui::elements::{
     Align, Border, CacheOption, ClippedScrollStateHandle, ConstrainedBox, Container, CornerRadius,
     CrossAxisAlignment, Dismiss, Fill, Flex, FormattedTextElement, HighlightedHyperlink, Image,
     MainAxisAlignment, MainAxisSize, MouseStateHandle, OffsetPositioning, ParentElement, Radius,
     Shrinkable, Stack,
 };
-use warpui::fonts::Weight;
-use warpui::keymap::{FixedBinding, Keystroke};
-use warpui::text_layout::TextAlignment;
-use warpui::ui_components::components::{Coords, UiComponent, UiComponentStyles};
-use warpui::{
+use zterm_ui::fonts::Weight;
+use zterm_ui::keymap::{FixedBinding, Keystroke};
+use zterm_ui::text_layout::TextAlignment;
+use zterm_ui::ui_components::components::{Coords, UiComponent, UiComponentStyles};
+use zterm_ui::{
     actions::StandardAction, AppContext, Element, Entity, FocusContext, SingletonEntity,
     TypedActionView, UpdateModel, View, ViewContext, ViewHandle,
 };
@@ -38,7 +38,7 @@ use warpui::{
 use std::cell::Cell;
 
 use pathfinder_geometry::vector::vec2f;
-use warpui::elements::{ChildAnchor, ParentAnchor, ParentOffsetBounds};
+use zterm_ui::elements::{ChildAnchor, ParentAnchor, ParentOffsetBounds};
 
 const TOS_URL: &str = "https://www.warp.dev/terms-of-service";
 
@@ -47,7 +47,7 @@ const TOS_URL: &str = "https://www.warp.dev/terms-of-service";
 // ---------------------------------------------------------------------------
 
 pub fn init(app: &mut AppContext) {
-    use warpui::keymap::macros::*;
+    use zterm_ui::keymap::macros::*;
 
     app.register_fixed_bindings([
         FixedBinding::new(
@@ -165,7 +165,7 @@ pub struct LoginSlideView {
     /// Onboarding intention selected by the user, used to render Drive-focused
     /// copy on the Terminal+Drive path. On the login slide, `intention ==
     /// OnboardingIntention::Terminal` is equivalent to "Terminal+Drive":
-    /// `RootView` only routes Terminal-intent users here when Warp Drive is
+    /// `RootView` only routes Terminal-intent users here when Zterm Drive is
     /// enabled.
     intention: OnboardingIntention,
     theme_visual_path: &'static str,
@@ -477,7 +477,7 @@ impl LoginSlideView {
 
         let is_terminal = matches!(self.intention, OnboardingIntention::Terminal);
         let title_text = if is_terminal {
-            "Get started with Warp Drive"
+            "Get started with Zterm Drive"
         } else {
             "Get started with AI"
         };
@@ -601,7 +601,7 @@ impl LoginSlideView {
 
         let cmd_enter = Keystroke::parse("cmdorctrl-enter").unwrap_or_default();
         let skip_label = if matches!(self.intention, OnboardingIntention::Terminal) {
-            "Disable Warp Drive"
+            "Disable Zterm Drive"
         } else {
             "Disable AI features"
         };
@@ -758,7 +758,7 @@ impl LoginSlideView {
             } else {
                 // First call (narrow layout fallback): placeholder.
                 editor_rendered.set(true);
-                Container::new(warpui::elements::Empty::new().finish())
+                Container::new(zterm_ui::elements::Empty::new().finish())
                     .with_padding_top(12.)
                     .with_padding_bottom(12.)
                     .with_padding_left(16.)
@@ -898,7 +898,7 @@ impl LoginSlideView {
 
         let is_terminal = matches!(self.intention, OnboardingIntention::Terminal);
         let title_text = if is_terminal {
-            "Are you sure you want to disable Warp Drive?"
+            "Are you sure you want to disable Zterm Drive?"
         } else {
             "Are you sure you want to disable AI features?"
         };
@@ -934,7 +934,7 @@ impl LoginSlideView {
             .finish();
 
         let body_text_str = if is_terminal {
-            "Warp Drive lets you save workflows and knowledge across devices and share them with your team. By continuing, you won't have access to the following features:"
+            "Zterm Drive lets you save workflows and knowledge across devices and share them with your team. By continuing, you won't have access to the following features:"
         } else {
             "Warp is better with AI. By continuing, you won't have access to any of the following features:"
         };
@@ -950,12 +950,12 @@ impl LoginSlideView {
         let mut feature_list =
             Flex::column().with_cross_axis_alignment(CrossAxisAlignment::Stretch);
         let feature_items: &[&str] = if is_terminal {
-            WARP_DRIVE_FEATURES
+            ZTERM_DRIVE_FEATURES
         } else {
             AI_FEATURES
         };
         for &item in feature_items {
-            let icon_el = ConstrainedBox::new(Icon::X.to_warpui_icon(feature_x_fill).finish())
+            let icon_el = ConstrainedBox::new(Icon::X.to_zterm_ui_icon(feature_x_fill).finish())
                 .with_width(16.)
                 .with_height(16.)
                 .finish();
@@ -989,7 +989,7 @@ impl LoginSlideView {
             .finish();
 
         let cancel_label = if is_terminal {
-            "Enable Warp Drive"
+            "Enable Zterm Drive"
         } else {
             "Enable AI features"
         };
@@ -1109,13 +1109,13 @@ impl View for LoginSlideView {
             );
             let overlay_opacity = (100u8).saturating_sub(img.opacity);
             stack.add_child(
-                warpui::elements::Rect::new()
+                zterm_ui::elements::Rect::new()
                     .with_background(theme.background().with_opacity(overlay_opacity))
                     .finish(),
             );
         } else {
             stack.add_child(
-                Container::new(warpui::elements::Empty::new().finish())
+                Container::new(zterm_ui::elements::Empty::new().finish())
                     .with_background(theme.background())
                     .finish(),
             );

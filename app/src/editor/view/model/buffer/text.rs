@@ -1,4 +1,4 @@
-use arrayvec::ArrayVec;
+﻿use arrayvec::ArrayVec;
 use num_traits::SaturatingSub;
 use std::{
     cmp,
@@ -8,8 +8,8 @@ use std::{
 };
 use string_offset::{ByteOffset, CharOffset};
 use sum_tree::{self, SeekBias, SumTree};
-use warpui::text::point::Point;
-use warpui::text_layout::TextStyle;
+use zterm_ui::text::point::Point;
+use zterm_ui::text_layout::TextStyle;
 
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
 enum Run {

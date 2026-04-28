@@ -1,4 +1,4 @@
-/// Coarse format classification for the edit payload that produced a code diff.
+﻿/// Coarse format classification for the edit payload that produced a code diff.
 ///
 /// This distinguishes the legacy search/replace edit format from the structured
 /// V4A patch format used by `apply_patch`.
@@ -6,7 +6,7 @@ use ai::diff_validation::DiffMatchFailures;
 use serde::Serialize;
 use serde_json::json;
 use strum_macros::{EnumDiscriminants, EnumIter};
-use warp_core::telemetry::{EnablementState, TelemetryEvent, TelemetryEventDesc};
+use zterm_core::telemetry::{EnablementState, TelemetryEvent, TelemetryEventDesc};
 
 use crate::ai::{agent::AIIdentifiers, blocklist::RequestedEditResolution};
 
@@ -195,7 +195,7 @@ impl TelemetryEvent for RequestFileEditsTelemetryEvent {
     }
 
     fn event_descs() -> impl Iterator<Item = Box<dyn TelemetryEventDesc>> {
-        warp_core::telemetry::enum_events::<Self>()
+        zterm_core::telemetry::enum_events::<Self>()
     }
 }
 
@@ -245,4 +245,4 @@ impl TelemetryEventDesc for RequestFileEditsTelemetryEventDiscriminants {
     }
 }
 
-warp_core::register_telemetry_event!(RequestFileEditsTelemetryEvent);
+zterm_core::register_telemetry_event!(RequestFileEditsTelemetryEvent);

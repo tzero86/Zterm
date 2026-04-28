@@ -1,4 +1,4 @@
-//! Shared types for message bar rendering across terminal and agent views.
+﻿//! Shared types for message bar rendering across terminal and agent views.
 pub mod attached_context;
 pub mod common;
 
@@ -6,11 +6,11 @@ use std::borrow::Cow;
 use std::sync::Arc;
 
 use pathfinder_color::ColorU;
-use warp_core::ui::Icon;
-use warpui::assets::asset_cache::AssetSource;
-use warpui::elements::MouseStateHandle;
-use warpui::keymap::Keystroke;
-use warpui::EventContext;
+use zterm_core::ui::Icon;
+use zterm_ui::assets::asset_cache::AssetSource;
+use zterm_ui::elements::MouseStateHandle;
+use zterm_ui::keymap::Keystroke;
+use zterm_ui::EventContext;
 /// A trait for types that can produce a message based on some contextual arguments.
 ///
 /// The generic `Args` parameter allows each call site to define its own

@@ -1,20 +1,20 @@
-use crate::appearance::Appearance;
+﻿use crate::appearance::Appearance;
 use crate::ui_components::buttons::{icon_button, icon_button_with_color};
 use crate::ui_components::icons::Icon;
 
 use super::super::header_content::HeaderRenderContext;
 use super::{ActionPayload, PaneHeaderAction};
 
-use warp_core::ui::icons::ICON_DIMENSIONS;
-use warp_core::ui::theme::Fill;
-use warpui::elements::{
+use zterm_core::ui::icons::ICON_DIMENSIONS;
+use zterm_core::ui::theme::Fill;
+use zterm_ui::elements::{
     Align, Clipped, ConstrainedBox, Container, CrossAxisAlignment, Flex, Hoverable,
     MainAxisAlignment, MainAxisSize, MouseStateHandle, ParentElement, SavePosition, Shrinkable,
     Text,
 };
-use warpui::text_layout::ClipConfig;
-use warpui::ui_components::components::UiComponent;
-use warpui::Element;
+use zterm_ui::text_layout::ClipConfig;
+use zterm_ui::ui_components::components::UiComponent;
+use zterm_ui::Element;
 
 /// Horizontal padding applied inside each edge column of the three-column header.
 pub const HEADER_EDGE_PADDING: f32 = 4.;

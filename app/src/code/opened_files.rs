@@ -1,10 +1,10 @@
-//! Module containing the definition of [`OpenedFilesModel`],
+﻿//! Module containing the definition of [`OpenedFilesModel`],
 //! which tracks files that have been opened, organized by repository.
 
 use std::{collections::HashMap, path::PathBuf};
 
 use instant::Instant;
-use warpui::{Entity, ModelContext, SingletonEntity};
+use zterm_ui::{Entity, ModelContext, SingletonEntity};
 
 #[derive(Default, Clone)]
 pub struct OpenedFilesInRepo(HashMap<PathBuf, Instant>);

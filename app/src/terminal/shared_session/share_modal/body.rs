@@ -1,4 +1,4 @@
-use crate::ai::blocklist::BlocklistAIHistoryModel;
+﻿use crate::ai::blocklist::BlocklistAIHistoryModel;
 use crate::appearance::Appearance;
 
 use crate::terminal::shared_session::replay_agent_conversations::reconstruct_response_events_from_conversations;
@@ -9,24 +9,24 @@ use crate::terminal::shared_session::{
 };
 use crate::terminal::TerminalModel;
 use byte_unit::Byte;
-use warp_core::features::FeatureFlag;
+use zterm_core::features::FeatureFlag;
 
 use std::default::Default;
 use std::sync::Arc;
 
 use parking_lot::FairMutex;
 
-use warpui::elements::{
+use zterm_ui::elements::{
     Container, Flex, MainAxisSize, MouseStateHandle, ParentElement, Shrinkable, Text,
 };
-use warpui::ui_components::button::ButtonVariant;
-use warpui::ui_components::components::UiComponent;
-use warpui::ui_components::radio_buttons::{
+use zterm_ui::ui_components::button::ButtonVariant;
+use zterm_ui::ui_components::components::UiComponent;
+use zterm_ui::ui_components::radio_buttons::{
     RadioButtonItem, RadioButtonLayout, RadioButtonStateHandle,
 };
 
 use super::style::{self, BUTTON_GAP, MODAL_MARGIN};
-use warpui::{
+use zterm_ui::{
     platform::Cursor, AppContext, Element, Entity, SingletonEntity, TypedActionView, View,
     ViewContext,
 };
@@ -82,7 +82,7 @@ impl Body {
     /// during session initialization. This is important because these events count toward
     /// the session size quota, but are separate from the scrollback blocks.
     fn calculate_agent_conversations_size(
-        terminal_view_id: warpui::EntityId,
+        terminal_view_id: zterm_ui::EntityId,
         ctx: &ViewContext<Self>,
     ) -> Byte {
         let conversations: Vec<_> = BlocklistAIHistoryModel::as_ref(ctx)
@@ -105,7 +105,7 @@ impl Body {
         &mut self,
         open_source: SharedSessionActionSource,
         model: Arc<FairMutex<TerminalModel>>,
-        terminal_view_id: warpui::EntityId,
+        terminal_view_id: zterm_ui::EntityId,
         ctx: &mut ViewContext<Self>,
     ) {
         let model = model.lock();

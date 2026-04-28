@@ -1,4 +1,4 @@
-use super::{
+﻿use super::{
     view::PaneView, DetachType, PaneConfiguration, PaneContent, PaneGroup, PaneId, ShareableLink,
     ShareableLinkError,
 };
@@ -9,7 +9,7 @@ use crate::{
     ai::execution_profiles::profiles::ClientProfileId,
     app_state::LeafContents,
 };
-use warpui::{AppContext, ModelHandle, SingletonEntity, View, ViewContext, ViewHandle};
+use zterm_ui::{AppContext, ModelHandle, SingletonEntity, View, ViewContext, ViewHandle};
 
 pub struct ExecutionProfileEditorPane {
     view: ViewHandle<PaneView<ExecutionProfileEditorView>>,

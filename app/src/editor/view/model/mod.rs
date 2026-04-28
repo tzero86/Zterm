@@ -1,4 +1,4 @@
-mod buffer;
+﻿mod buffer;
 mod display_map;
 mod selections;
 
@@ -29,12 +29,12 @@ use std::{
 use num_traits::SaturatingSub;
 use string_offset::{ByteOffset, CharOffset};
 use vec1::{vec1, Vec1};
-use warpui::{
+use zterm_ui::{
     accessibility::{AccessibilityContent, WarpA11yRole},
     text_layout::TextStyle,
     AppContext, Entity, ModelAsRef, ModelContext, ModelHandle,
 };
-use warpui::{
+use zterm_ui::{
     text::{point::Point, word_boundaries::WordBoundariesPolicy, TextBuffer},
     SingletonEntity,
 };

@@ -1,4 +1,4 @@
-//! Module containing logic to determine to open a file in a text editor, if it is installed.
+﻿//! Module containing logic to determine to open a file in a text editor, if it is installed.
 //! TODO(PLAT-749): Add support for more editors.
 
 use command::r#async::Command;
@@ -6,8 +6,8 @@ use enum_iterator::{all, cardinality};
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 use std::sync::OnceLock;
-use warp_util::path::LineAndColumnArg;
-use warpui::AppContext;
+use zterm_util::path::LineAndColumnArg;
+use zterm_ui::AppContext;
 use winreg::enums::{HKEY_CURRENT_USER, HKEY_LOCAL_MACHINE};
 use winreg::RegKey;
 use winreg::HKEY;

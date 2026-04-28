@@ -1,4 +1,4 @@
-//! This module contains rendering functions for various requested inline actions that have not yet
+﻿//! This module contains rendering functions for various requested inline actions that have not yet
 //! been transformed into a [`View`] component. This currently encompasses UI for file retrieval,
 //! environmental variable collection, and SSH Warpification, to name a few.
 //!
@@ -16,13 +16,13 @@ use markdown_parser::FormattedTextLine;
 use pathfinder_color::ColorU;
 use std::borrow::Cow;
 use std::rc::Rc;
-use warp_core::ui::appearance::Appearance;
-use warp_core::ui::theme::color::internal_colors::neutral_2;
-use warpui::elements::Align;
-use warpui::elements::Clipped;
-use warpui::elements::FormattedTextElement;
-use warpui::fonts::FamilyId;
-use warpui::{
+use zterm_core::ui::appearance::Appearance;
+use zterm_core::ui::theme::color::internal_colors::neutral_2;
+use zterm_ui::elements::Align;
+use zterm_ui::elements::Clipped;
+use zterm_ui::elements::FormattedTextElement;
+use zterm_ui::fonts::FamilyId;
+use zterm_ui::{
     elements::{
         Border, ConstrainedBox, Container, CornerRadius, CrossAxisAlignment, Empty, Flex,
         Hoverable, MainAxisAlignment, MouseStateHandle, ParentElement, Radius, Shrinkable,

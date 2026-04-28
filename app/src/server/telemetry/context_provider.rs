@@ -1,5 +1,5 @@
-use warp_core::telemetry::{TelemetryContextModel, TelemetryContextProvider};
-use warpui::{AppContext, ModelContext, SingletonEntity};
+﻿use zterm_core::telemetry::{TelemetryContextModel, TelemetryContextProvider};
+use zterm_ui::{AppContext, ModelContext, SingletonEntity};
 
 use crate::auth::AuthStateProvider;
 

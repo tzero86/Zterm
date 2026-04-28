@@ -1,14 +1,14 @@
-use std::{path::Path, sync::Arc};
+﻿use std::{path::Path, sync::Arc};
 
 use pathfinder_geometry::vector::vec2f;
 
 #[cfg(feature = "local_fs")]
 use repo_metadata::RepoMetadataModel;
 use repo_metadata::{repositories::DetectedRepositories, watcher::DirectoryWatcher};
-use warp_core::ui::appearance::Appearance;
+use zterm_core::ui::appearance::Appearance;
 #[cfg(feature = "local_fs")]
-use warp_files::FileModel;
-use warpui::{platform::WindowStyle, App, SingletonEntity, View};
+use zterm_files::FileModel;
+use zterm_ui::{platform::WindowStyle, App, SingletonEntity, View};
 
 use crate::server::server_api::team::MockTeamClient;
 use crate::server::server_api::workspace::MockWorkspaceClient;

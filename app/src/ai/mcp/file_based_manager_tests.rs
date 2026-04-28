@@ -3,7 +3,7 @@ use crate::ai::mcp::FileMCPWatcher;
 use crate::ai::mcp::ParsedTemplatableMCPServerResult;
 use crate::auth::AuthStateProvider;
 use crate::settings::{AISettings, FocusedTerminalInfo};
-use crate::warp_managed_paths_watcher::{warp_data_dir, WarpManagedPathsWatcher};
+use crate::warp_managed_paths_watcher::{warp_data_dir, ZtermManagedPathsWatcher};
 use crate::workspaces::user_workspaces::UserWorkspaces;
 use repo_metadata::{
     repositories::DetectedRepositories, watcher::DirectoryWatcher, RepoMetadataModel,
@@ -12,17 +12,17 @@ use settings::Setting as _;
 use std::collections::HashSet;
 use std::path::PathBuf;
 use uuid::Uuid;
-use warp_core::features::FeatureFlag;
-use warpui::{App, Entity, ModelHandle, SingletonEntity as _};
+use zterm_core::features::FeatureFlag;
+use zterm_ui::{App, Entity, ModelHandle, SingletonEntity as _};
 use watcher::HomeDirectoryWatcher;
 
 // Helper to initialize dependencies and return FileBasedMCPManager handle
-fn setup_app(app: &mut App) -> warpui::ModelHandle<FileBasedMCPManager> {
+fn setup_app(app: &mut App) -> zterm_ui::ModelHandle<FileBasedMCPManager> {
     app.add_singleton_model(DirectoryWatcher::new);
     app.add_singleton_model(|_| DetectedRepositories::default());
     app.add_singleton_model(RepoMetadataModel::new);
     app.add_singleton_model(HomeDirectoryWatcher::new_for_test);
-    app.add_singleton_model(WarpManagedPathsWatcher::new_for_testing);
+    app.add_singleton_model(ZtermManagedPathsWatcher::new_for_testing);
     app.add_singleton_model(FileMCPWatcher::new);
     app.add_singleton_model(AISettings::new_with_defaults);
     app.add_singleton_model(|_| AuthStateProvider::new_for_test());

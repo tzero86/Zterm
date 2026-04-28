@@ -1,8 +1,8 @@
-use super::styles::{HEADER_BORDER, HEADER_ROW_HEIGHT};
+﻿use super::styles::{HEADER_BORDER, HEADER_ROW_HEIGHT};
 use settings::Setting as _;
 use std::collections::HashMap;
-use warp_core::features::FeatureFlag;
-use warpui::{
+use zterm_core::features::FeatureFlag;
+use zterm_ui::{
     units::{IntoPixels, Pixels},
     AppContext, Entity, ModelContext, ModelHandle, SingletonEntity, WindowId,
 };

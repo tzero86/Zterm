@@ -3,9 +3,9 @@ use std::sync::Arc;
 use chrono::{Duration, Utc};
 use futures_util::future::BoxFuture;
 use itertools::Itertools;
-use warp_core::ui::appearance::Appearance;
-use warp_editor::editor::EditorView;
-use warpui::{
+use zterm_core::ui::appearance::Appearance;
+use zterm_editor::editor::EditorView;
+use zterm_ui::{
     platform::WindowStyle, presenter::ChildView, r#async::Timer, telemetry::EventPayload,
     AddSingletonModel, App, AppContext, Element, Entity, SingletonEntity, TypedActionView, View,
     ViewHandle, WindowId,
@@ -25,7 +25,7 @@ use crate::{
         },
         Owner, Revision, ServerCloudObject, ServerMetadata, ServerNotebook, ServerPermissions,
     },
-    drive::OpenWarpDriveObjectSettings,
+    drive::OpenZtermDriveObjectSettings,
     editor::{DisplayPoint, EditorAction, InteractionState, SelectAction},
     network::NetworkStatus,
     notebooks::{
@@ -140,7 +140,7 @@ fn open_notebook(
     notebook: CloudNotebook,
 ) -> BoxFuture<'static, ()> {
     let load_future = handle.update(app, |view, ctx| {
-        view.load(notebook, &OpenWarpDriveObjectSettings::default(), ctx)
+        view.load(notebook, &OpenZtermDriveObjectSettings::default(), ctx)
     });
     app.update(|ctx| ctx.await_spawned_future(load_future.future_id()))
 }
@@ -391,7 +391,7 @@ fn test_focus_tracking() {
 #[ignore]
 fn test_edit_telemetry() {
     fn edit_events() -> Vec<serde_json::Value> {
-        warpui::telemetry::flush_events()
+        zterm_ui::telemetry::flush_events()
             .into_iter()
             .filter_map(|event| match event.payload {
                 EventPayload::NamedEvent { name, value, .. } if name == "Notebook Edited" => value,

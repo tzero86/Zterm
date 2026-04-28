@@ -1,4 +1,4 @@
-use chrono::{DateTime, Duration, Utc};
+﻿use chrono::{DateTime, Duration, Utc};
 use instant::Instant;
 use persistence::model::AgentConversationData;
 use std::{
@@ -8,8 +8,8 @@ use std::{
         Arc,
     },
 };
-use warp_core::features::FeatureFlag;
-use warpui::{App, EntityId};
+use zterm_core::features::FeatureFlag;
+use zterm_ui::{App, EntityId};
 
 use crate::ai::agent::conversation::{AIConversation, AIConversationId, ConversationStatus};
 use crate::ai::ambient_agents::task::{TaskCreatorInfo, TaskStatusMessage};
@@ -29,7 +29,7 @@ use super::{
     MAX_PERSONAL_TASKS, MAX_TEAM_TASKS,
 };
 use crate::ai::ambient_agents::task::HarnessConfig;
-use warp_cli::agent::Harness;
+use zterm_cli::agent::Harness;
 
 /// Creates a test task with specified creator UID and updated_at time
 fn create_test_task(
@@ -1009,7 +1009,7 @@ fn test_harness_filter_matches_only_selected_harness() {
             let gemini_items = items_for(HarnessFilter::Specific(Harness::Gemini));
             assert_eq!(gemini_items, vec![format!("task:{}", task_gemini.task_id)]);
 
-            // Warp Agent / Oz → default-snapshot task and local conversation.
+            // Zterm Agent / Oz → default-snapshot task and local conversation.
             // The stub task with no snapshot resolves to `harness() == None` and
             // is deliberately excluded from any specific-harness filter.
             let oz_items = items_for(HarnessFilter::Specific(Harness::Oz));

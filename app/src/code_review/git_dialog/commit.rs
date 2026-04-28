@@ -1,11 +1,11 @@
-//! Commit mode for [`GitDialog`]. Drafts a commit message via AI on open,
+﻿//! Commit mode for [`GitDialog`]. Drafts a commit message via AI on open,
 //! then on confirm runs `run_commit` and optionally chains `run_push` /
 //! `create_pr` per the selected intent.
 
 use std::path::Path;
 
-use warp_core::ui::appearance::Appearance;
-use warpui::{
+use zterm_core::ui::appearance::Appearance;
+use zterm_ui::{
     elements::{
         ChildView, ClippedScrollStateHandle, Container, CornerRadius, CrossAxisAlignment, Element,
         Flex, MainAxisAlignment, MainAxisSize, MouseStateHandle, ParentElement, Radius, Text,

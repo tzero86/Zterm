@@ -1,4 +1,4 @@
-use crate::ai::mcp::file_based_manager::FileBasedMCPManagerEvent;
+﻿use crate::ai::mcp::file_based_manager::FileBasedMCPManagerEvent;
 use crate::ai::mcp::templatable_manager::oauth::{
     load_credentials_from_secure_storage, write_to_secure_storage, FILE_BASED_MCP_CREDENTIALS_KEY,
     TEMPLATABLE_MCP_CREDENTIALS_KEY,
@@ -55,10 +55,10 @@ use simple_logger::manager::LogManager;
 use simple_logger::SimpleLogger;
 use tokio::io::AsyncBufReadExt as _;
 use uuid::Uuid;
-use warp_core::safe_error;
-use warp_core::{execution_mode::AppExecutionMode, features::FeatureFlag, settings::Setting as _};
-use warpui::AppContext;
-use warpui::{windowing::WindowManager, ModelContext, SingletonEntity};
+use zterm_core::safe_error;
+use zterm_core::{execution_mode::AppExecutionMode, features::FeatureFlag, settings::Setting as _};
+use zterm_ui::AppContext;
+use zterm_ui::{windowing::WindowManager, ModelContext, SingletonEntity};
 
 use super::{
     oauth::{self, AuthContext, FileBasedPersistedCredentialsMap, PersistedCredentialsMap},
@@ -1790,7 +1790,7 @@ async fn spawn_server(
                 if err.kind() == std::io::ErrorKind::NotFound {
                     let cwd_display = cwd_for_log
                         .as_deref()
-                        .unwrap_or("<inherited from Warp's process cwd>");
+                        .unwrap_or("<inherited from Zterm's process cwd>");
                     logger.log(format!(
                         "[error] MCP: Failed to spawn '{server_name}': command '{command_for_log}' \
                          not found (cwd: {cwd_display}). If your MCP server depends on a specific \
@@ -2097,8 +2097,8 @@ fn make_client_info() -> rmcp::model::ClientInfo {
         protocol_version: Default::default(),
         capabilities: Default::default(),
         client_info: rmcp::model::Implementation {
-            name: warp_core::channel::ChannelState::app_id().to_string(),
-            version: warp_core::channel::ChannelState::app_version()
+            name: zterm_core::channel::ChannelState::app_id().to_string(),
+            version: zterm_core::channel::ChannelState::app_version()
                 .map(|v| v.to_string())
                 .unwrap_or_default(),
             title: None,

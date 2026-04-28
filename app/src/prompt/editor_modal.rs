@@ -1,14 +1,14 @@
-use itertools::Itertools;
-use warp_core::ui::theme::Fill;
+﻿use itertools::Itertools;
+use zterm_core::ui::theme::Fill;
 
 use pathfinder_geometry::vector::vec2f;
 use serde::Serialize;
-use warpui::keymap::FixedBinding;
-use warpui::platform::Cursor;
-use warpui::ui_components::button::ButtonVariant;
-use warpui::ui_components::components::{Coords, UiComponent, UiComponentStyles};
+use zterm_ui::keymap::FixedBinding;
+use zterm_ui::platform::Cursor;
+use zterm_ui::ui_components::button::ButtonVariant;
+use zterm_ui::ui_components::components::{Coords, UiComponent, UiComponentStyles};
 
-use warpui::{
+use zterm_ui::{
     AppContext, Element, Entity, SingletonEntity, TypedActionView, View, ViewContext, ViewHandle,
 };
 
@@ -31,7 +31,7 @@ use crate::terminal::session_settings::SessionSettings;
 use crate::view_components::{Dropdown, DropdownItem};
 use crate::Appearance;
 use crate::{report_if_error, send_telemetry_from_ctx};
-use warpui::elements::{
+use zterm_ui::elements::{
     Align, Border, ChildAnchor, ChildView, Clipped, ConstrainedBox, Container, CornerRadius,
     CrossAxisAlignment, Empty, Flex, Hoverable, MainAxisAlignment, MainAxisSize, MouseStateHandle,
     OffsetPositioning, ParentAnchor, ParentElement, ParentOffsetBounds, Radius, Stack,
@@ -57,12 +57,12 @@ const MODAL_CONTENT_FONT_SIZE: f32 = 14.;
 const CHECKBOX_SIZE: f32 = 16.;
 
 const MODAL_TITLE: &str = "Edit prompt";
-const WARP_PROMPT_SECTION_HEADER: &str = "Warp terminal prompt";
+const ZTERM_PROMPT_SECTION_HEADER: &str = "Warp terminal prompt";
 const SHELL_PROMPT_SECTION_HEADER: &str = "Shell prompt (PS1)";
 const RESTORE_DEFAULT_BUTTON: &str = "Restore default";
 
 pub fn init(app: &mut AppContext) {
-    use warpui::keymap::macros::*;
+    use zterm_ui::keymap::macros::*;
 
     app.register_fixed_bindings([FixedBinding::new(
         "escape",
@@ -487,7 +487,7 @@ impl EditorModal {
             .span(MODAL_TITLE.to_string())
             .with_style(UiComponentStyles {
                 font_size: Some(MODAL_TITLE_FONT_SIZE),
-                font_weight: Some(warpui::fonts::Weight::Bold),
+                font_weight: Some(zterm_ui::fonts::Weight::Bold),
                 ..Default::default()
             })
             .build()
@@ -675,10 +675,10 @@ impl EditorModal {
             .with_child(
                 appearance
                     .ui_builder()
-                    .span(WARP_PROMPT_SECTION_HEADER.to_string())
+                    .span(ZTERM_PROMPT_SECTION_HEADER.to_string())
                     .with_style(UiComponentStyles {
                         font_size: Some(MODAL_CONTENT_FONT_SIZE),
-                        font_weight: Some(warpui::fonts::Weight::Semibold),
+                        font_weight: Some(zterm_ui::fonts::Weight::Semibold),
                         ..Default::default()
                     })
                     .build()
@@ -727,7 +727,7 @@ impl EditorModal {
             .span(SHELL_PROMPT_SECTION_HEADER.to_string())
             .with_style(UiComponentStyles {
                 font_size: Some(MODAL_CONTENT_FONT_SIZE),
-                font_weight: Some(warpui::fonts::Weight::Semibold),
+                font_weight: Some(zterm_ui::fonts::Weight::Semibold),
                 ..Default::default()
             })
             .build()

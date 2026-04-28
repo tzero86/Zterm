@@ -1,6 +1,6 @@
 use crate::slides::progress_dots;
-use warp_core::ui::appearance::Appearance;
-use warpui::{
+use zterm_core::ui::appearance::Appearance;
+use zterm_ui::{
     elements::{
         Align, Container, CrossAxisAlignment, Empty, Flex, MainAxisSize, ParentElement, Shrinkable,
     },

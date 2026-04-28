@@ -30,10 +30,10 @@ use log::debug;
 #[cfg(not(target_family = "wasm"))]
 use std::collections::HashMap;
 use url::Url;
-use warp_core::send_telemetry_from_ctx;
-use warp_editor::editor::NavigationKey;
-use warp_graphql::queries::user_github_info::UserGithubInfoResult;
-use warpui::{
+use zterm_core::send_telemetry_from_ctx;
+use zterm_editor::editor::NavigationKey;
+use zterm_graphql::queries::user_github_info::UserGithubInfoResult;
+use zterm_ui::{
     elements::{
         Border, ChildAnchor, ChildView, Clipped, ClippedScrollStateHandle, ClippedScrollable,
         ConstrainedBox, Container, CornerRadius, CrossAxisAlignment, Dismiss, Element, Empty,
@@ -56,7 +56,7 @@ use warpui::{
 const SUBMIT_BUTTON_FOCUSED: &str = "SubmitButtonFocused";
 
 pub fn init(app: &mut AppContext) {
-    use warpui::keymap::macros::*;
+    use zterm_ui::keymap::macros::*;
 
     app.register_fixed_bindings([
         FixedBinding::new(
@@ -1413,7 +1413,7 @@ impl UpdateEnvironmentForm {
 
                 match result {
                     Ok(result) => match result {
-                        warp_graphql::queries::suggest_cloud_environment_image::SuggestCloudEnvironmentImageResult::SuggestCloudEnvironmentImageOutput(output) => {
+                        zterm_graphql::queries::suggest_cloud_environment_image::SuggestCloudEnvironmentImageResult::SuggestCloudEnvironmentImageOutput(output) => {
                             let image = output.image;
                             let needs_custom_image = output.needs_custom_image;
                             let reason = output.reason;
@@ -1425,7 +1425,7 @@ impl UpdateEnvironmentForm {
                                 ctx,
                             );
                         }
-                        warp_graphql::queries::suggest_cloud_environment_image::SuggestCloudEnvironmentImageResult::SuggestCloudEnvironmentImageAuthRequiredOutput(output) => {
+                        zterm_graphql::queries::suggest_cloud_environment_image::SuggestCloudEnvironmentImageResult::SuggestCloudEnvironmentImageAuthRequiredOutput(output) => {
                             me.suggest_image_cache.insert(
                                 key.clone(),
                                 CachedSuggestImageResult::AuthRequired {
@@ -1437,7 +1437,7 @@ impl UpdateEnvironmentForm {
                                 auth_url: output.auth_url,
                             };
                         }
-                        warp_graphql::queries::suggest_cloud_environment_image::SuggestCloudEnvironmentImageResult::UserFacingError(_) => {
+                        zterm_graphql::queries::suggest_cloud_environment_image::SuggestCloudEnvironmentImageResult::UserFacingError(_) => {
                             let error_message = "Failed to suggest a Docker image".to_string();
                             send_telemetry_from_ctx!(
                                 CloudAgentTelemetryEvent::ImageSuggestionFailed {
@@ -1450,7 +1450,7 @@ impl UpdateEnvironmentForm {
                                 message: error_message,
                             };
                         }
-                        warp_graphql::queries::suggest_cloud_environment_image::SuggestCloudEnvironmentImageResult::Unknown => {
+                        zterm_graphql::queries::suggest_cloud_environment_image::SuggestCloudEnvironmentImageResult::Unknown => {
                             let error_message = "Unknown response from suggestCloudEnvironmentImage".to_string();
                             send_telemetry_from_ctx!(
                                 CloudAgentTelemetryEvent::ImageSuggestionFailed {
@@ -1987,7 +1987,7 @@ impl UpdateEnvironmentForm {
                         .with_child(
                             ConstrainedBox::new(
                                 Icon::Github
-                                    .to_warpui_icon(theme.active_ui_text_color())
+                                    .to_zterm_ui_icon(theme.active_ui_text_color())
                                     .finish(),
                             )
                             .with_width(icon_size)
@@ -2104,7 +2104,7 @@ impl UpdateEnvironmentForm {
                             .with_child(
                                 ConstrainedBox::new(
                                     Icon::Refresh
-                                        .to_warpui_icon(theme.active_ui_text_color())
+                                        .to_zterm_ui_icon(theme.active_ui_text_color())
                                         .finish(),
                                 )
                                 .with_width(icon_size)
@@ -2741,7 +2741,7 @@ impl UpdateEnvironmentForm {
             return base_auth_url.to_string();
         };
 
-        let scheme_for_next = std::env::var("WARP_OAUTH_NEXT_SCHEME")
+        let scheme_for_next = std::env::var("ZTERM_OAUTH_NEXT_SCHEME")
             .ok()
             .filter(|value| !value.is_empty())
             .or_else(|| {
@@ -2823,7 +2823,7 @@ impl UpdateEnvironmentForm {
     }
 
     fn oauth_next_scheme() -> String {
-        if let Ok(override_value) = std::env::var("WARP_OAUTH_NEXT_SCHEME") {
+        if let Ok(override_value) = std::env::var("ZTERM_OAUTH_NEXT_SCHEME") {
             if !override_value.is_empty() {
                 return override_value;
             }
@@ -3085,7 +3085,7 @@ impl UpdateEnvironmentForm {
                 };
 
                 let icon_size = appearance.ui_font_size();
-                let icon = ConstrainedBox::new(Icon::Lightbulb.to_warpui_icon(text_fill).finish())
+                let icon = ConstrainedBox::new(Icon::Lightbulb.to_zterm_ui_icon(text_fill).finish())
                     .with_width(icon_size)
                     .with_height(icon_size)
                     .finish();
@@ -3454,8 +3454,8 @@ impl TypedActionView for UpdateEnvironmentForm {
         &mut self,
         _action: &Self::Action,
         _ctx: &mut ViewContext<Self>,
-    ) -> warpui::accessibility::ActionAccessibilityContent {
-        warpui::accessibility::ActionAccessibilityContent::default()
+    ) -> zterm_ui::accessibility::ActionAccessibilityContent {
+        zterm_ui::accessibility::ActionAccessibilityContent::default()
     }
 }
 
@@ -3464,7 +3464,7 @@ impl View for UpdateEnvironmentForm {
         "UpdateEnvironmentForm"
     }
 
-    fn keymap_context(&self, app: &AppContext) -> warpui::keymap::Context {
+    fn keymap_context(&self, app: &AppContext) -> zterm_ui::keymap::Context {
         let mut context = Self::default_keymap_context();
         if self.submit_button.is_focused(app) {
             context.set.insert(SUBMIT_BUTTON_FOCUSED);

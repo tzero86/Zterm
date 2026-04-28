@@ -27,7 +27,7 @@ use crate::{
     drive::{
         cloud_object_styling::warp_drive_icon_color,
         drive_helpers::has_feature_gated_anonymous_user_reached_workflow_limit,
-        items::WarpDriveItemId,
+        items::ZtermDriveItemId,
         sharing::{ContentEditability, ShareableObject, SharingAccessLevel},
         workflows::{
             ai_assist::GeneratedCommandMetadataError,
@@ -36,7 +36,7 @@ use crate::{
             workflow_arg_selector::{WorkflowArgSelector, WorkflowArgSelectorEvent},
             workflow_arg_type_helpers::{self, ArgumentEditorRowIndex},
         },
-        CloudObjectTypeAndId, DriveObjectType, OpenWarpDriveObjectSettings,
+        CloudObjectTypeAndId, DriveObjectType, OpenZtermDriveObjectSettings,
     },
     editor::{
         EditorOptions, EditorView, EnterAction, EnterSettings, Event as EditorEvent,
@@ -82,9 +82,9 @@ use crate::{
     FeatureFlag, UserWorkspaces,
 };
 
-use warp_core::{context_flag::ContextFlag, settings::Setting, ui::theme::AnsiColorIdentifier};
-use warp_editor::editor::NavigationKey;
-use warpui::{
+use zterm_core::{context_flag::ContextFlag, settings::Setting, ui::theme::AnsiColorIdentifier};
+use zterm_editor::editor::NavigationKey;
+use zterm_ui::{
     clipboard::ClipboardContent,
     elements::{
         Align, Border, ChildAnchor, ChildView, Clipped, ClippedScrollStateHandle,
@@ -120,7 +120,7 @@ pub mod env_var_selector;
 mod syntax_highlightable;
 
 pub fn init(app: &mut AppContext) {
-    use warpui::keymap::macros::id;
+    use zterm_ui::keymap::macros::id;
     app.register_editable_bindings([EditableBinding::new(
         "workflowview:save",
         "Save workflow",
@@ -225,7 +225,7 @@ impl WorkflowEditorErrorState {
 
 #[derive(Debug, Clone)]
 pub enum WorkflowAction {
-    ViewInWarpDrive(WarpDriveItemId),
+    ViewInZtermDrive(ZtermDriveItemId),
     AddArgument,
     ToggleViewMode,
     RunWorkflow,
@@ -249,7 +249,7 @@ pub enum WorkflowViewEvent {
     Pane(PaneEvent),
     CreatedWorkflow(SyncId),
     UpdatedWorkflow(SyncId),
-    ViewInWarpDrive(WarpDriveItemId),
+    ViewInZtermDrive(ZtermDriveItemId),
     OpenDriveObjectShareDialog {
         cloud_object_type_and_id: CloudObjectTypeAndId,
         invitee_email: Option<String>,
@@ -591,7 +591,7 @@ impl WorkflowView {
                 {
                     self.load(
                         workflow.clone(),
-                        &OpenWarpDriveObjectSettings::default(),
+                        &OpenZtermDriveObjectSettings::default(),
                         self.workflow_view_mode,
                         ctx,
                     );
@@ -611,7 +611,7 @@ impl WorkflowView {
                 {
                     self.load(
                         workflow,
-                        &OpenWarpDriveObjectSettings::default(),
+                        &OpenZtermDriveObjectSettings::default(),
                         self.workflow_view_mode,
                         ctx,
                     );
@@ -629,7 +629,7 @@ impl WorkflowView {
         if let Some(workflow) = cloud_workflow {
             self.load(
                 workflow,
-                &OpenWarpDriveObjectSettings::default(),
+                &OpenZtermDriveObjectSettings::default(),
                 self.workflow_view_mode,
                 ctx,
             );
@@ -639,7 +639,7 @@ impl WorkflowView {
     pub fn wait_for_initial_load_then_load(
         &mut self,
         workflow_id: SyncId,
-        settings: &OpenWarpDriveObjectSettings,
+        settings: &OpenZtermDriveObjectSettings,
         mode: WorkflowViewMode,
         window_id: WindowId,
         ctx: &mut ViewContext<Self>,
@@ -680,7 +680,7 @@ impl WorkflowView {
     fn fetch_and_load_workflow(
         &mut self,
         workflow_id: ServerId,
-        settings: &OpenWarpDriveObjectSettings,
+        settings: &OpenZtermDriveObjectSettings,
         mode: WorkflowViewMode,
         window_id: WindowId,
         ctx: &mut ViewContext<Self>,
@@ -718,7 +718,7 @@ impl WorkflowView {
     pub fn load(
         &mut self,
         workflow: CloudWorkflow,
-        settings: &OpenWarpDriveObjectSettings,
+        settings: &OpenZtermDriveObjectSettings,
         mode: WorkflowViewMode,
         ctx: &mut ViewContext<Self>,
     ) {
@@ -763,7 +763,7 @@ impl WorkflowView {
                 pane_config.set_title(workflow_name, ctx);
                 if let Some(server_id) = workflow.id.into_server() {
                     pane_config.set_shareable_object(
-                        Some(ShareableObject::WarpDriveObject(server_id)),
+                        Some(ShareableObject::ZtermDriveObject(server_id)),
                         ctx,
                     );
                 }
@@ -850,7 +850,7 @@ impl WorkflowView {
 
         if let Some(focused_folder_id) = settings.focused_folder_id.map(SyncId::ServerId) {
             self.view_in_warp_drive(
-                WarpDriveItemId::Object(CloudObjectTypeAndId::Folder(focused_folder_id)),
+                ZtermDriveItemId::Object(CloudObjectTypeAndId::Folder(focused_folder_id)),
                 ctx,
             );
         }
@@ -1580,7 +1580,7 @@ impl WorkflowView {
     }
 
     /// Save the workflow and associated state. This makes a best-effort attempt to not
-    /// unnecessarily modify the backing Warp Drive object.
+    /// unnecessarily modify the backing Zterm Drive object.
     fn save(&mut self, ctx: &mut ViewContext<Self>) {
         if FeatureFlag::WorkflowAliases.is_enabled() && self.are_aliases_dirty(ctx) {
             self.save_aliases(ctx);
@@ -2064,7 +2064,7 @@ impl WorkflowView {
                 } else {
                     Icon::Workflow
                 }
-                .to_warpui_icon(
+                .to_zterm_ui_icon(
                     warp_drive_icon_color(
                         appearance,
                         if self.is_for_agent_mode {
@@ -2219,7 +2219,7 @@ impl WorkflowView {
                 let mut stack = Stack::new().with_child(
                     ConstrainedBox::new(
                         Icon::HelpCircle
-                            .to_warpui_icon(
+                            .to_zterm_ui_icon(
                                 appearance
                                     .theme()
                                     .sub_text_color(appearance.theme().background()),
@@ -2370,7 +2370,7 @@ impl WorkflowView {
                 let text_and_icon = TextAndIcon::new(
                     alignment,
                     label,
-                    icon.to_warpui_icon(appearance.theme().active_ui_text_color()),
+                    icon.to_zterm_ui_icon(appearance.theme().active_ui_text_color()),
                     MainAxisSize::Min,
                     MainAxisAlignment::Center,
                     vec2f(10., 10.),
@@ -2465,7 +2465,7 @@ impl WorkflowView {
                     .finish();
 
                 let button_with_tool_tip = appearance.ui_builder().tool_tip_on_element(
-                    "Generate a title, descriptions, or parameters with Warp AI".to_string(),
+                    "Generate a title, descriptions, or parameters with Zterm AI".to_string(),
                     self.ui_state_handles.ai_assist_tool_tip.clone(),
                     rendered_button,
                     ParentAnchor::TopMiddle,
@@ -2607,8 +2607,8 @@ impl WorkflowView {
         })
     }
 
-    fn view_in_warp_drive(&mut self, id: WarpDriveItemId, ctx: &mut ViewContext<Self>) {
-        ctx.emit(WorkflowViewEvent::ViewInWarpDrive(id));
+    fn view_in_warp_drive(&mut self, id: ZtermDriveItemId, ctx: &mut ViewContext<Self>) {
+        ctx.emit(WorkflowViewEvent::ViewInZtermDrive(id));
     }
 
     fn issue_request(&mut self, ctx: &mut ViewContext<Self>) {
@@ -2843,7 +2843,7 @@ impl WorkflowView {
                     .with_children([
                         ConstrainedBox::new(
                             Icon::Trash
-                                .to_warpui_icon(appearance.theme().foreground())
+                                .to_zterm_ui_icon(appearance.theme().foreground())
                                 .finish(),
                         )
                         .with_width(16.)
@@ -2966,7 +2966,7 @@ impl View for WorkflowView {
                     self.breadcrumbs.clone(),
                     appearance,
                     |ctx, _, breadcrumb| {
-                        ctx.dispatch_typed_action(WorkflowAction::ViewInWarpDrive(
+                        ctx.dispatch_typed_action(WorkflowAction::ViewInZtermDrive(
                             breadcrumb.kind.into_item_id(),
                         ));
                     },
@@ -3059,7 +3059,7 @@ impl View for WorkflowView {
                 SCROLLBAR_WIDTH,
                 theme.nonactive_ui_detail().into(),
                 theme.active_ui_detail().into(),
-                warpui::elements::Fill::None,
+                zterm_ui::elements::Fill::None,
             )
             .finish(),
         );
@@ -3130,7 +3130,7 @@ impl TypedActionView for WorkflowView {
 
     fn handle_action(&mut self, action: &Self::Action, ctx: &mut ViewContext<Self>) {
         match action {
-            WorkflowAction::ViewInWarpDrive(id) => self.view_in_warp_drive(*id, ctx),
+            WorkflowAction::ViewInZtermDrive(id) => self.view_in_warp_drive(*id, ctx),
             WorkflowAction::AddArgument => self.add_argument(ctx),
             WorkflowAction::ToggleViewMode => self.toggle_view_mode(ctx),
             WorkflowAction::CloseUnsavedDialog => self.hide_unsaved_changes_dialog(ctx),

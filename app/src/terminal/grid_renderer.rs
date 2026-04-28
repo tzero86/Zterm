@@ -11,7 +11,7 @@ use crate::terminal::model::index::Point;
 use crate::terminal::model::selection::SelectionPoint;
 use crate::terminal::model::{ObfuscateSecrets, SecretHandle};
 
-use crate::themes::theme::WarpTheme;
+use crate::themes::theme::ZtermTheme;
 use crate::util::color::{ContrastingColor, MinimumAllowedContrast};
 
 use core::mem;
@@ -21,18 +21,18 @@ use std::cmp::Ordering;
 use std::ops::Range;
 use std::{collections::HashMap, ops::RangeInclusive};
 use unicode_width::UnicodeWidthChar;
-use warp_core::features::FeatureFlag;
-use warpui::assets::asset_cache::{AssetCache, AssetSource, AssetState};
-use warpui::color::ColorU;
-use warpui::elements::{Border, CornerRadius, Fill, Radius, DEFAULT_UI_LINE_HEIGHT_RATIO};
-use warpui::fonts::{FamilyId, FontId, Properties, Style, Weight};
-use warpui::geometry::rect::RectF;
-use warpui::geometry::vector::{vec2f, Vector2F};
-use warpui::image_cache::{AnimatedImageBehavior, CacheOption, FitType, Image, ImageCache};
-use warpui::platform::LineStyle;
-use warpui::text_layout::{Line, StyleAndFont, TextStyle, DEFAULT_TOP_BOTTOM_RATIO};
-use warpui::units::{IntoLines as _, Lines, Pixels};
-use warpui::{AppContext, Element, EntityId, PaintContext, Scene, SingletonEntity};
+use zterm_core::features::FeatureFlag;
+use zterm_ui::assets::asset_cache::{AssetCache, AssetSource, AssetState};
+use zterm_ui::color::ColorU;
+use zterm_ui::elements::{Border, CornerRadius, Fill, Radius, DEFAULT_UI_LINE_HEIGHT_RATIO};
+use zterm_ui::fonts::{FamilyId, FontId, Properties, Style, Weight};
+use zterm_ui::geometry::rect::RectF;
+use zterm_ui::geometry::vector::{vec2f, Vector2F};
+use zterm_ui::image_cache::{AnimatedImageBehavior, CacheOption, FitType, Image, ImageCache};
+use zterm_ui::platform::LineStyle;
+use zterm_ui::text_layout::{Line, StyleAndFont, TextStyle, DEFAULT_TOP_BOTTOM_RATIO};
+use zterm_ui::units::{IntoLines as _, Lines, Pixels};
+use zterm_ui::{AppContext, Element, EntityId, PaintContext, Scene, SingletonEntity};
 
 pub use self::cell_glyph_cache::CellGlyphCache;
 use self::cell_type::{CellType, IsFocused, Secret};
@@ -288,7 +288,7 @@ pub fn render_grid<'a>(
     end_row: usize,
     colors: &color::List,
     override_colors: &color::OverrideList,
-    theme: &WarpTheme,
+    theme: &ZtermTheme,
     default_font_properties: Properties,
     font_family: FamilyId,
     font_size: f32,
@@ -463,7 +463,7 @@ fn render_grid_without_ligatures<'a>(
     visible_rows: impl Iterator<Item = usize>,
     colors: &color::List,
     override_colors: &color::OverrideList,
-    theme: &WarpTheme,
+    theme: &ZtermTheme,
     default_font_properties: Properties,
     font_family: FamilyId,
     font_size: f32,
@@ -583,7 +583,7 @@ fn render_grid_without_ligatures<'a>(
         }
 
         if !foreground_image_ids.is_empty() {
-            ctx.scene.start_layer(warpui::ClipBounds::ActiveLayer);
+            ctx.scene.start_layer(zterm_ui::ClipBounds::ActiveLayer);
             for image_placement in foreground_image_ids {
                 if let Some((image_metadata, image_placement_data)) = image_metadata
                     .get(&image_placement.image_id)
@@ -967,7 +967,7 @@ fn render_grid_with_ligatures<'a>(
     visible_rows: impl Iterator<Item = usize>,
     colors: &color::List,
     override_colors: &color::OverrideList,
-    theme: &WarpTheme,
+    theme: &ZtermTheme,
     default_font_properties: Properties,
     font_family: FamilyId,
     font_size: f32,
@@ -1082,7 +1082,7 @@ fn render_grid_with_ligatures<'a>(
         }
 
         if !foreground_image_ids.is_empty() {
-            ctx.scene.start_layer(warpui::ClipBounds::ActiveLayer);
+            ctx.scene.start_layer(zterm_ui::ClipBounds::ActiveLayer);
             for image_placement in foreground_image_ids {
                 if let Some((image_metadata, image_placement_data)) = image_metadata
                     .get(&image_placement.image_id)

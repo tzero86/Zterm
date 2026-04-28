@@ -24,7 +24,7 @@ use warp::{
     terminal::shell::{self, ShellType},
     workspace::Workspace,
 };
-use warpui::{
+use zterm_ui::{
     async_assert, async_assert_eq, clipboard::ClipboardContent, integration::TestStep, ViewHandle,
 };
 

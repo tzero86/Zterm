@@ -1,20 +1,20 @@
 use std::sync::Arc;
 
 use pathfinder_color::ColorU;
-use warp_core::ui::icons::Icon;
-use warp_core::ui::theme::{Fill, WarpTheme};
-use warpui::clipboard::ClipboardContent;
-use warpui::elements::{
+use zterm_core::ui::icons::Icon;
+use zterm_core::ui::theme::{Fill, ZtermTheme};
+use zterm_ui::clipboard::ClipboardContent;
+use zterm_ui::elements::{
     ChildView, ConstrainedBox, Container, CornerRadius, CrossAxisAlignment, DispatchEventResult,
     Element, EventHandler, Flex, MainAxisAlignment, MainAxisSize, ParentElement, Radius, Rect,
     Shrinkable,
 };
-use warpui::fonts::Weight;
-use warpui::ui_components::components::{UiComponent, UiComponentStyles};
-use warpui::{View, ViewContext, ViewHandle};
+use zterm_ui::fonts::Weight;
+use zterm_ui::ui_components::components::{UiComponent, UiComponentStyles};
+use zterm_ui::{View, ViewContext, ViewHandle};
 
-use warp_core::ui::appearance::Appearance as CoreAppearance;
-use warp_core::ui::theme::color::internal_colors;
+use zterm_core::ui::appearance::Appearance as CoreAppearance;
+use zterm_core::ui::theme::color::internal_colors;
 
 use crate::ai::agent::conversation::ConversationStatus;
 use crate::ai::agent_management::notifications::item::NotificationSourceAgent;
@@ -85,7 +85,7 @@ impl ActionButtonTheme for NotificationArtifactButtonTheme {
 }
 
 /// Callback invoked when the user clicks the expand/collapse affordance on a clamped message.
-pub(crate) type OnExpandClick = Box<dyn Fn(&mut warpui::EventContext)>;
+pub(crate) type OnExpandClick = Box<dyn Fn(&mut zterm_ui::EventContext)>;
 
 /// Renders the inner content of a notification item.
 /// Dispatches to the rich layout (with branch row) or simple layout based on `item.branch`.
@@ -258,7 +258,7 @@ fn render_branch_label(branch: &str, appearance: &Appearance) -> Box<dyn Element
             .with_cross_axis_alignment(CrossAxisAlignment::Center)
             .with_spacing(2.)
             .with_child(
-                ConstrainedBox::new(Icon::GitBranch.to_warpui_icon(color).finish())
+                ConstrainedBox::new(Icon::GitBranch.to_zterm_ui_icon(color).finish())
                     .with_width(10.)
                     .with_height(10.)
                     .finish(),
@@ -331,7 +331,7 @@ fn render_timestamp_with_dot(item: &NotificationItem, appearance: &Appearance) -
 fn render_expand_chevron(
     expanded: bool,
     on_click: OnExpandClick,
-    theme: &WarpTheme,
+    theme: &ZtermTheme,
 ) -> Box<dyn Element> {
     let icon = if expanded {
         Icon::ChevronDown
@@ -339,7 +339,7 @@ fn render_expand_chevron(
         Icon::ChevronRight
     };
     let chevron = ConstrainedBox::new(
-        icon.to_warpui_icon(theme.disabled_text_color(theme.surface_1()))
+        icon.to_zterm_ui_icon(theme.disabled_text_color(theme.surface_1()))
             .finish(),
     )
     .with_width(12.)
@@ -411,7 +411,7 @@ const NOTIFICATION_AVATAR_SIZING: IconWithStatusSizing = IconWithStatusSizing {
 fn render_agent_avatar(
     agent: NotificationSourceAgent,
     category: NotificationCategory,
-    theme: &WarpTheme,
+    theme: &ZtermTheme,
 ) -> Box<dyn Element> {
     let status = notification_category_to_conversation_status(category);
     let variant = match agent {

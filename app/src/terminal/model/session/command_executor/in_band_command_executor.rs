@@ -1,4 +1,4 @@
-use std::any::Any;
+﻿use std::any::Any;
 use std::cmp::min;
 use std::collections::HashMap;
 use std::sync::Arc;
@@ -9,21 +9,21 @@ use async_channel::{self, Receiver, Sender};
 use async_trait::async_trait;
 use chrono::DateTime;
 use parking_lot::{Mutex, MutexGuard};
-use warp_core::command::ExitCode;
-use warp_terminal::model::Point;
-use warpui::r#async::block_on;
+use zterm_core::command::ExitCode;
+use zterm_terminal::model::Point;
+use zterm_ui::r#async::block_on;
 
 use crate::safe_info;
 use crate::server::datetime_ext::DateTimeExt;
 use crate::terminal::event::ExecutedExecutorCommandEvent;
 use crate::terminal::shell::{Shell, ShellType};
-use warp_util::on_cancel::OnCancelFutureExt;
+use zterm_util::on_cancel::OnCancelFutureExt;
 
 use crate::terminal::model::session::command_executor::{
     shared, CommandExecutor, ExecutorCommandEvent,
 };
 use crate::terminal::SizeInfo;
-use warp_completer::completer::{CommandExitStatus, CommandOutput};
+use zterm_completer::completer::{CommandExitStatus, CommandOutput};
 
 use super::ExecuteCommandOptions;
 
@@ -383,7 +383,7 @@ impl CommandExecutor for InBandCommandExecutor {
     ///
     /// The given `command` is executed in the active session using the
     /// `warp_run_generator_command`/`Warp-Run-GeneratorCommand` shell script API that is declared as
-    /// part of Warp's bootstrap script.
+    /// part of Zterm's bootstrap script.
     ///
     /// Internally, `command` is added to a queue of commands to be executed serially (this is to
     /// avoid output from multiple commands corrupting one another since the pty is a single

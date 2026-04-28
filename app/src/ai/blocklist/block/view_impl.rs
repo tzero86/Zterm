@@ -33,18 +33,18 @@ use common::get_highlight_ranges_for_find_matches;
 use pathfinder_color::ColorU;
 use settings::Setting as _;
 use std::collections::{HashMap, HashSet};
-use warp_core::features::FeatureFlag;
-use warp_core::semantic_selection::SemanticSelection;
-use warpui::elements::{
+use zterm_core::features::FeatureFlag;
+use zterm_core::semantic_selection::SemanticSelection;
+use zterm_ui::elements::{
     Align, ConstrainedBox, CornerRadius, CrossAxisAlignment, Empty, Expanded, FormattedTextElement,
     Hoverable, MainAxisAlignment, MainAxisSize, MouseStateHandle, Radius, SavePosition,
     SelectableArea,
 };
-use warpui::{
+use zterm_ui::{
     elements::{Border, Container, Flex, ParentElement},
     AppContext, Element, SingletonEntity,
 };
-use warpui::{View, ViewContext};
+use zterm_ui::{View, ViewContext};
 
 use crate::ai::agent::AIAgentCitation;
 use crate::ai::agent::AIAgentInput;
@@ -83,22 +83,22 @@ use crate::ui_components::icons::Icon;
 use crate::util::link_detection::DetectedLinkType;
 use crate::workspace::WorkspaceAction;
 use itertools::Itertools;
-use warp_core::ui::color::contrast::{
+use zterm_core::ui::color::contrast::{
     foreground_color_with_minimum_contrast, MinimumAllowedContrast,
 };
-use warp_core::ui::color::Rgb;
-use warp_core::ui::theme::{Fill, WarpTheme};
-use warpui::elements::{Highlight, HighlightedRange, Text};
-use warpui::fonts::Properties;
-use warpui::platform::Cursor;
-use warpui::text_layout::TextStyle;
-use warpui::ui_components::components::UiComponent;
+use zterm_core::ui::color::Rgb;
+use zterm_core::ui::theme::{Fill, ZtermTheme};
+use zterm_ui::elements::{Highlight, HighlightedRange, Text};
+use zterm_ui::fonts::Properties;
+use zterm_ui::platform::Cursor;
+use zterm_ui::text_layout::TextStyle;
+use zterm_ui::ui_components::components::UiComponent;
 
 /// Helper function to create gray strikethrough highlight for secrets
 fn create_secret_gray_highlight() -> Highlight {
     Highlight::new().with_text_style(
         TextStyle::new()
-            .with_foreground_color(warpui::color::ColorU::new(128, 128, 128, 255))
+            .with_foreground_color(zterm_ui::color::ColorU::new(128, 128, 128, 255))
             .with_show_strikethrough(true),
     )
 }
@@ -137,7 +137,7 @@ fn add_slash_command_highlight(
 
         let current_properties = existing.properties();
         let mut bold_properties = current_properties;
-        bold_properties.weight = warpui::fonts::Weight::Bold;
+        bold_properties.weight = zterm_ui::fonts::Weight::Bold;
 
         Highlight::new()
             .with_text_style(updated_style)
@@ -145,7 +145,7 @@ fn add_slash_command_highlight(
     } else {
         // Create new highlight with default properties and bold weight
         let default_properties = Properties {
-            weight: warpui::fonts::Weight::Bold,
+            weight: zterm_ui::fonts::Weight::Bold,
             ..Default::default()
         };
         Highlight::new()
@@ -433,7 +433,7 @@ pub(crate) fn add_highlights_to_rich_text(
     find_context: Option<FindContext<'_>>,
     location_index: usize,
     line_count: usize,
-    theme: &WarpTheme,
+    theme: &ZtermTheme,
     is_selecting: bool,
     is_action: bool,
     app: &AppContext,
@@ -683,7 +683,7 @@ pub fn render_citation(
     let theme = appearance.theme();
 
     let (icon, name) = match citation {
-        AIAgentCitation::WarpDriveObject { uid } => {
+        AIAgentCitation::ZtermDriveObject { uid } => {
             let item = CloudModel::as_ref(app)
                 .get_by_uid(uid)?
                 .to_warp_drive_item(appearance)?;
@@ -693,13 +693,13 @@ pub fn render_citation(
             )
         }
         AIAgentCitation::WarpDocumentation { .. } => {
-            let icon = Icon::Warp.to_warpui_icon(theme.foreground()).finish();
+            let icon = Icon::Warp.to_zterm_ui_icon(theme.foreground()).finish();
             let name = String::from("Warp Docs");
             (Some(icon), name)
         }
         AIAgentCitation::WebPage { url } => {
             let icon = Icon::LinkExternal
-                .to_warpui_icon(theme.foreground())
+                .to_zterm_ui_icon(theme.foreground())
                 .finish();
             let name = url.clone();
             (Some(icon), name)
@@ -1225,13 +1225,13 @@ impl View for AIBlock {
         selectable.finish()
     }
 
-    fn on_focus(&mut self, focus_ctx: &warpui::FocusContext, ctx: &mut ViewContext<Self>) {
+    fn on_focus(&mut self, focus_ctx: &zterm_ui::FocusContext, ctx: &mut ViewContext<Self>) {
         if focus_ctx.is_self_focused() {
             self.focus_subview_if_necessary(ctx);
         }
     }
 
-    fn keymap_context(&self, app: &AppContext) -> warpui::keymap::Context {
+    fn keymap_context(&self, app: &AppContext) -> zterm_ui::keymap::Context {
         let mut context = Self::default_keymap_context();
 
         if self

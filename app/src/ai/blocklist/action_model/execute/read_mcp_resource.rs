@@ -1,9 +1,9 @@
-use super::{ActionExecution, AnyActionExecution, ExecuteActionInput, PreprocessActionInput};
+﻿use super::{ActionExecution, AnyActionExecution, ExecuteActionInput, PreprocessActionInput};
 #[cfg(not(target_family = "wasm"))]
 use crate::ai::mcp::TemplatableMCPServerManager;
 use crate::terminal::model::session::active_session::ActiveSession;
 use futures::{future::BoxFuture, FutureExt};
-use warpui::{Entity, EntityId, ModelContext, ModelHandle};
+use zterm_ui::{Entity, EntityId, ModelContext, ModelHandle};
 
 #[cfg(not(target_family = "wasm"))]
 use crate::ai::{
@@ -14,7 +14,7 @@ use crate::ai::{
     },
 };
 #[cfg(not(target_family = "wasm"))]
-use warpui::SingletonEntity;
+use zterm_ui::SingletonEntity;
 
 pub struct ReadMCPResourceExecutor {
     _active_session: ModelHandle<ActiveSession>,

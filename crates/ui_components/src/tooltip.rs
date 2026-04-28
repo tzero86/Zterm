@@ -1,7 +1,7 @@
 use std::borrow::Cow;
 
-use warp_core::ui::{appearance::Appearance, theme::color::internal_colors};
-use warpui::{keymap::Keystroke, prelude::*};
+use zterm_core::ui::{appearance::Appearance, theme::color::internal_colors};
+use zterm_ui::{keymap::Keystroke, prelude::*};
 
 use crate::{Component, keyboard_shortcut};
 
@@ -39,7 +39,7 @@ impl Component for Tooltip {
         &self,
         appearance: &Appearance,
         params: Self::Params<'a>,
-    ) -> Box<dyn warpui::Element> {
+    ) -> Box<dyn zterm_ui::Element> {
         let font_family = appearance.ui_font_family();
         let font_size = appearance.ui_font_size() + UI_FONT_SIZE_ADJUSTMENT;
 

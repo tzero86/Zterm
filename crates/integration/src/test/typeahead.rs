@@ -15,7 +15,7 @@ use warp::{
         shell::{Shell, ShellType},
     },
 };
-use warpui::{
+use zterm_ui::{
     async_assert, async_assert_eq,
     integration::{AssertionCallback, AssertionOutcome, TestStep},
 };

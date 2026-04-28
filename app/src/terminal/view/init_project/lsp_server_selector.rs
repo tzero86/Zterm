@@ -1,4 +1,4 @@
-use crate::ai::agent::icons::yellow_stop_icon;
+﻿use crate::ai::agent::icons::yellow_stop_icon;
 use crate::ai::blocklist::block::toggleable_items::{ToggleableItemBuilder, ToggleableItemsView};
 use crate::ai::blocklist::inline_action::inline_action_header::INLINE_ACTION_HORIZONTAL_PADDING;
 use crate::ai::blocklist::inline_action::inline_action_icons::icon_size;
@@ -7,7 +7,7 @@ use crate::ui_components::blended_colors;
 use lsp::supported_servers::LSPServerType;
 use std::path::PathBuf;
 
-use warpui::{
+use zterm_ui::{
     elements::{
         Border, ChildView, ConstrainedBox, Container, CornerRadius, CrossAxisAlignment, Expanded,
         Flex, MainAxisAlignment, MainAxisSize, MouseStateHandle, ParentElement, Radius, Shrinkable,

@@ -1,9 +1,9 @@
-//! A peer wrapper that transparently handles reconnection when the underlying transport is closed.
+﻿//! A peer wrapper that transparently handles reconnection when the underlying transport is closed.
 
 use std::future::Future;
 
 use uuid::Uuid;
-use warpui::ModelSpawner;
+use zterm_ui::ModelSpawner;
 
 use super::TemplatableMCPServerManager;
 

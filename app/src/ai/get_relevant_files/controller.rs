@@ -1,4 +1,4 @@
-use ai::index::{
+﻿use ai::index::{
     full_source_code_embedding::{
         manager::{CodebaseIndexManager, CodebaseIndexManagerEvent},
         RetrievalID,
@@ -13,9 +13,9 @@ use std::{
     path::{Path, PathBuf},
     sync::Arc,
 };
-use warp_core::features::FeatureFlag;
+use zterm_core::features::FeatureFlag;
 
-use warpui::{AppContext, Entity, ModelContext, SingletonEntity};
+use zterm_ui::{AppContext, Entity, ModelContext, SingletonEntity};
 
 use crate::{
     ai::{

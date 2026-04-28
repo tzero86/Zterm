@@ -1,5 +1,5 @@
-use warp_core::ui::{appearance::Appearance, theme::color::internal_colors};
-use warpui::{
+﻿use zterm_core::ui::{appearance::Appearance, theme::color::internal_colors};
+use zterm_ui::{
     elements::{CornerRadius, Radius},
     fonts::Weight,
     ui_components::components::{Coords, UiComponentStyles},

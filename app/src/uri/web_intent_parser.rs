@@ -1,4 +1,4 @@
-#[cfg(target_family = "wasm")]
+﻿#[cfg(target_family = "wasm")]
 use crate::uri::browser_url_handler::parse_current_url;
 use crate::ChannelState;
 use anyhow::{anyhow, Result};
@@ -6,7 +6,7 @@ use url::Url;
 use uuid::Uuid;
 
 #[cfg(target_family = "wasm")]
-use warp_core::context_flag::ContextFlag;
+use zterm_core::context_flag::ContextFlag;
 
 #[derive(Debug)]
 /// Represents an intent parsed from a web url

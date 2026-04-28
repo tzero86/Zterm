@@ -1,4 +1,4 @@
-use fuzzy_match::FuzzyMatchResult;
+﻿use fuzzy_match::FuzzyMatchResult;
 use ordered_float::OrderedFloat;
 use std::fmt::Debug;
 
@@ -8,11 +8,11 @@ use crate::search::ai_context_menu::styles;
 use crate::search::ai_context_menu::{mixer::AIContextMenuSearchableAction, safe_truncate};
 use crate::search::item::SearchItem;
 use crate::search::result_renderer::ItemHighlightState;
-use warpui::elements::{
+use zterm_ui::elements::{
     ConstrainedBox, Container, CrossAxisAlignment, Flex, Highlight, Icon, ParentElement, Text,
 };
-use warpui::fonts::{Properties, Weight};
-use warpui::{AppContext, Element, SingletonEntity};
+use zterm_ui::fonts::{Properties, Weight};
+use zterm_ui::{AppContext, Element, SingletonEntity};
 
 const MAX_COMBINED_LENGTH: usize = 55;
 

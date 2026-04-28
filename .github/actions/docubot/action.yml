@@ -1,4 +1,4 @@
-name: "Docubot"
+﻿name: "Docubot"
 description: "Helps Warp engineers identify PRs that need documentation updates in GitBook"
 inputs:
   prompt:
@@ -21,7 +21,7 @@ runs:
   using: composite
   steps:
     - name: Setup Warp CLI
-      uses: ./.github/actions/setup_warp_cli
+      uses: ./.github/actions/setup_zterm_cli
       with:
         warp_channel: ${{ inputs.warp_channel }}
     - name: Clone Warp GitBook repository
@@ -126,7 +126,7 @@ runs:
     - name: Run Warp agent
       shell: bash
       env:
-        WARP_API_KEY: ${{ inputs.warp_api_key }}
+        ZTERM_API_KEY: ${{ inputs.warp_api_key }}
         GH_TOKEN: ${{ inputs.github_token }}
         PROFILE_ID: ${{ inputs.profile_id }}
       run: |
@@ -151,7 +151,7 @@ runs:
         # Execute the agent run
         "$cmd" agent run \
           --prompt "$(cat prompt.output.txt)" \
-          --api-key "$WARP_API_KEY" \
+          --api-key "$ZTERM_API_KEY" \
           --cwd "$GITHUB_WORKSPACE" \
           ${PROFILE_ID:+--profile "$PROFILE_ID"}
     - name: Upload Warp logs

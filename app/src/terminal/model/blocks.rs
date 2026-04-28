@@ -1,4 +1,4 @@
-mod selection;
+﻿mod selection;
 
 use crate::ai::agent::{conversation::AIConversationId, AIAgentActionId};
 use crate::ai::blocklist::SerializedBlockListItem;
@@ -35,13 +35,13 @@ use std::ops::{AddAssign, Range, RangeInclusive};
 use std::sync::Arc;
 use std::time::Duration;
 use sum_tree::{Dimension, Item, SeekBias, SumTree};
-use warp_core::features::FeatureFlag;
-use warpui::color::ColorU;
-use warpui::r#async::executor::Background;
-use warpui::record_trace_event;
+use zterm_core::features::FeatureFlag;
+use zterm_ui::color::ColorU;
+use zterm_ui::r#async::executor::Background;
+use zterm_ui::record_trace_event;
 
 use std::collections::{HashMap, HashSet};
-use warpui::{
+use zterm_ui::{
     units::{IntoLines, IntoPixels, Lines},
     AppContext, EntityId, ViewHandle,
 };
@@ -65,7 +65,7 @@ use crate::terminal::model::blockgrid::BlockGrid;
 use crate::terminal::model::grid::Dimensions;
 use crate::terminal::model::secrets::ObfuscateSecrets;
 use crate::terminal::model::terminal_model::{BlockIndex, WithinBlock};
-use warp_terminal::model::{KeyboardModes, KeyboardModesApplyBehavior};
+use zterm_terminal::model::{KeyboardModes, KeyboardModesApplyBehavior};
 
 use selection::BlockListSelection;
 pub use selection::SelectionRange;
@@ -3520,10 +3520,10 @@ impl ansi::Handler for BlockList {
             }
             ClearMode::All => {
                 // TODO(alokedesai): Investigate how we can call `clear_visible_screen` here to have
-                // Warp's custom logic for "clear". It's not immediately straightforward because a
+                // Zterm's custom logic for "clear". It's not immediately straightforward because a
                 // a running program that writes output, clears the visible screen, and then writes
                 // more output should all be encapsulated within a single block, which wouldn't be
-                // quite right with Warp's custom clear screen logic.
+                // quite right with Zterm's custom clear screen logic.
             }
             _ => {}
         }

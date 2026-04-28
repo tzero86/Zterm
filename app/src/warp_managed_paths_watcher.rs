@@ -9,17 +9,17 @@ use repo_metadata::RepositoryUpdate;
 #[cfg(any(not(target_family = "wasm"), test))]
 use repo_metadata::TargetFile;
 #[cfg(not(target_family = "wasm"))]
-use warpui::ModelHandle;
-use warpui::{Entity, ModelContext, SingletonEntity};
+use zterm_ui::ModelHandle;
+use zterm_ui::{Entity, ModelContext, SingletonEntity};
 #[cfg(not(target_family = "wasm"))]
 use watcher::{BulkFilesystemWatcher, BulkFilesystemWatcherEvent};
 
 /// Duration between filesystem watch events for the Warp managed paths watcher, in milliseconds.
 #[cfg(not(target_family = "wasm"))]
-const WARP_MANAGED_PATHS_WATCHER_DEBOUNCE_MILLI_SECS: u64 = 500;
+const ZTERM_MANAGED_PATHS_WATCHER_DEBOUNCE_MILLI_SECS: u64 = 500;
 
 pub(crate) fn warp_data_dir() -> PathBuf {
-    warp_core::paths::data_dir()
+    zterm_core::paths::data_dir()
 }
 
 #[cfg(target_family = "wasm")]
@@ -35,7 +35,7 @@ pub(crate) fn ensure_warp_watch_roots_exist() {
         );
     }
 
-    let config_local_dir = warp_core::paths::config_local_dir();
+    let config_local_dir = zterm_core::paths::config_local_dir();
     if config_local_dir != data_dir {
         if let Err(err) = fs::create_dir_all(&config_local_dir) {
             log::warn!(
@@ -48,16 +48,16 @@ pub(crate) fn ensure_warp_watch_roots_exist() {
 
 #[cfg_attr(target_family = "wasm", allow(dead_code))]
 pub(crate) fn warp_home_config_dir() -> Option<PathBuf> {
-    warp_core::paths::warp_home_config_dir()
+    zterm_core::paths::warp_home_config_dir()
 }
 
 pub(crate) fn warp_home_skills_dir() -> Option<PathBuf> {
-    warp_core::paths::warp_home_skills_dir()
+    zterm_core::paths::warp_home_skills_dir()
 }
 
 #[cfg_attr(target_family = "wasm", allow(dead_code))]
 pub(crate) fn warp_home_mcp_config_file_path() -> Option<PathBuf> {
-    warp_core::paths::warp_home_mcp_config_file_path()
+    zterm_core::paths::warp_home_mcp_config_file_path()
 }
 
 #[cfg_attr(target_family = "wasm", allow(dead_code))]
@@ -200,23 +200,23 @@ fn filesystem_event_to_repository_update(event: &BulkFilesystemWatcherEvent) -> 
 
 #[cfg(target_family = "wasm")]
 #[allow(dead_code)]
-pub(crate) enum WarpManagedPathsWatcherEvent {}
+pub(crate) enum ZtermManagedPathsWatcherEvent {}
 
 #[cfg(not(target_family = "wasm"))]
-pub(crate) enum WarpManagedPathsWatcherEvent {
+pub(crate) enum ZtermManagedPathsWatcherEvent {
     FilesChanged(RepositoryUpdate),
 }
 
 #[cfg(not(target_family = "wasm"))]
-pub(crate) struct WarpManagedPathsWatcher {
+pub(crate) struct ZtermManagedPathsWatcher {
     _watcher: ModelHandle<BulkFilesystemWatcher>,
 }
 
 #[cfg(target_family = "wasm")]
-pub(crate) struct WarpManagedPathsWatcher;
+pub(crate) struct ZtermManagedPathsWatcher;
 
 #[cfg(not(target_family = "wasm"))]
-impl WarpManagedPathsWatcher {
+impl ZtermManagedPathsWatcher {
     pub(crate) fn new(ctx: &mut ModelContext<Self>) -> Self {
         Self::new_internal(ctx, true)
     }
@@ -230,7 +230,7 @@ impl WarpManagedPathsWatcher {
         let watcher = if should_register_watcher {
             ctx.add_model(|ctx| {
                 BulkFilesystemWatcher::new(
-                    Duration::from_millis(WARP_MANAGED_PATHS_WATCHER_DEBOUNCE_MILLI_SECS),
+                    Duration::from_millis(ZTERM_MANAGED_PATHS_WATCHER_DEBOUNCE_MILLI_SECS),
                     ctx,
                 )
             })
@@ -241,7 +241,7 @@ impl WarpManagedPathsWatcher {
 
         if should_register_watcher {
             let data_dir = warp_data_dir();
-            let config_local_dir = warp_core::paths::config_local_dir();
+            let config_local_dir = zterm_core::paths::config_local_dir();
             let should_register_config_local_dir = config_local_dir != data_dir;
             let worktrees_dir = data_dir.join("worktrees");
             Self::register_path(
@@ -333,13 +333,13 @@ impl WarpManagedPathsWatcher {
     ) {
         let update = filesystem_event_to_repository_update(event);
         if !update.is_empty() {
-            ctx.emit(WarpManagedPathsWatcherEvent::FilesChanged(update));
+            ctx.emit(ZtermManagedPathsWatcherEvent::FilesChanged(update));
         }
     }
 }
 
 #[cfg(target_family = "wasm")]
-impl WarpManagedPathsWatcher {
+impl ZtermManagedPathsWatcher {
     pub(crate) fn new(_ctx: &mut ModelContext<Self>) -> Self {
         Self
     }
@@ -350,11 +350,11 @@ impl WarpManagedPathsWatcher {
     }
 }
 
-impl Entity for WarpManagedPathsWatcher {
-    type Event = WarpManagedPathsWatcherEvent;
+impl Entity for ZtermManagedPathsWatcher {
+    type Event = ZtermManagedPathsWatcherEvent;
 }
 
-impl SingletonEntity for WarpManagedPathsWatcher {}
+impl SingletonEntity for ZtermManagedPathsWatcher {}
 
 #[cfg(test)]
 mod tests {

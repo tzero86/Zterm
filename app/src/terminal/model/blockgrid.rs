@@ -1,4 +1,4 @@
-use crate::terminal::event_listener::ChannelEventListener;
+﻿use crate::terminal::event_listener::ChannelEventListener;
 use crate::terminal::SizeInfo;
 
 use crate::terminal::model::ansi::{
@@ -27,7 +27,7 @@ use super::image_map::StoredImageMetadata;
 use super::kitty::{KittyAction, KittyResponse};
 use super::secrets::RespectObfuscatedSecrets;
 use super::selection::ScrollDelta;
-use warp_terminal::model::{KeyboardModes, KeyboardModesApplyBehavior};
+use zterm_terminal::model::{KeyboardModes, KeyboardModesApplyBehavior};
 
 #[derive(Clone)]
 pub struct BlockGrid {

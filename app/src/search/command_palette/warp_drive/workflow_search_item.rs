@@ -11,9 +11,9 @@ use crate::search::workflows::fuzzy_match::FuzzyMatchWorkflowResult;
 use crate::ui_components::icons::Icon;
 use crate::workflows::CloudWorkflow;
 use ordered_float::OrderedFloat;
-use warpui::elements::{Clipped, Container, Flex, Highlight, ParentElement, Shrinkable, Text};
-use warpui::fonts::{Properties, Weight};
-use warpui::{AppContext, Element, SingletonEntity};
+use zterm_ui::elements::{Clipped, Container, Flex, Highlight, ParentElement, Shrinkable, Text};
+use zterm_ui::fonts::{Properties, Weight};
+use zterm_ui::{AppContext, Element, SingletonEntity};
 
 /// Search item result for a cloud workflow.
 #[derive(Debug)]
@@ -142,7 +142,7 @@ impl SearchItem for WorkflowSearchItem {
     }
 
     fn execute_result(&self) -> Self::Action {
-        CommandPaletteItemAction::ViewInWarpDrive {
+        CommandPaletteItemAction::ViewInZtermDrive {
             id: CloudObjectTypeAndId::Workflow(self.cloud_workflow.id),
         }
     }

@@ -1,11 +1,11 @@
-use pathfinder_color::ColorU;
-use warp_core::ui::appearance::Appearance;
-use warp_core::ui::theme::Fill;
-use warpui::elements::{
+﻿use pathfinder_color::ColorU;
+use zterm_core::ui::appearance::Appearance;
+use zterm_core::ui::theme::Fill;
+use zterm_ui::elements::{
     ChildView, ClippedScrollStateHandle, ClippedScrollable, Dismiss, ParentElement, ScrollbarWidth,
 };
-use warpui::fonts::FamilyId;
-use warpui::{
+use zterm_ui::fonts::FamilyId;
+use zterm_ui::{
     elements::{
         ConstrainedBox, Container, CornerRadius, CrossAxisAlignment, DropShadow, Flex,
         MainAxisAlignment, MainAxisSize, Radius, Text,
@@ -61,7 +61,7 @@ struct Styles {
 }
 
 pub fn init(app: &mut AppContext) {
-    use warpui::keymap::macros::*;
+    use zterm_ui::keymap::macros::*;
 
     app.register_fixed_bindings([FixedBinding::new(
         "escape",
@@ -168,7 +168,7 @@ impl NodeVersionPopupView {
             Container::new(
                 ConstrainedBox::new(
                     icons::Icon::NodeJS
-                        .to_warpui_icon(styles.tertiary_text_color.into())
+                        .to_zterm_ui_icon(styles.tertiary_text_color.into())
                         .finish(),
                 )
                 .with_width(24.)
@@ -228,7 +228,7 @@ impl NodeVersionPopupView {
             Container::new(
                 ConstrainedBox::new(
                     icons::Icon::NodeJS
-                        .to_warpui_icon(styles.tertiary_text_color.into())
+                        .to_zterm_ui_icon(styles.tertiary_text_color.into())
                         .finish(),
                 )
                 .with_width(24.)
@@ -372,7 +372,7 @@ impl View for NodeVersionPopupView {
             ScrollbarWidth::Auto,
             appearance.theme().nonactive_ui_detail().into(),
             appearance.theme().active_ui_detail().into(),
-            warpui::elements::Fill::None,
+            zterm_ui::elements::Fill::None,
         )
         .with_overlayed_scrollbar()
         .finish();

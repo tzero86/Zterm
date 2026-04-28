@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
-use super::items::folder::WarpDriveFolder;
-use super::items::WarpDriveItem;
+use super::items::folder::ZtermDriveFolder;
+use super::items::ZtermDriveItem;
 use super::CloudObjectTypeAndId;
 use crate::server::cloud_objects::update_manager::InitiatedBy;
 use crate::{
@@ -21,8 +21,8 @@ use crate::{
 use anyhow::Result;
 use async_trait::async_trait;
 
-// Re-exported from warp_server_client.
-pub use warp_server_client::ids::FolderId;
+// Re-exported from zterm_server_client.
+pub use zterm_server_client::ids::FolderId;
 
 /// The model for a `CloudFolder`.
 #[derive(Clone, Debug, PartialEq)]
@@ -167,8 +167,8 @@ impl CloudModelType for CloudFolderModel {
         id: SyncId,
         _appearance: &Appearance,
         folder: &CloudFolder,
-    ) -> Option<Box<dyn WarpDriveItem>> {
-        Some(Box::new(WarpDriveFolder::new(
+    ) -> Option<Box<dyn ZtermDriveItem>> {
+        Some(Box::new(ZtermDriveFolder::new(
             self.cloud_object_type_and_id(id),
             folder.clone(),
         )))

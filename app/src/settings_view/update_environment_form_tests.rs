@@ -1,4 +1,4 @@
-use super::{
+﻿use super::{
     EnvironmentFormInitArgs, EnvironmentFormValues, GithubAuthRedirectTarget, SuggestImageState,
     UpdateEnvironmentForm, UpdateEnvironmentFormAction,
 };
@@ -18,10 +18,10 @@ use crate::workspaces::team_tester::TeamTesterStatus;
 use crate::workspaces::user_workspaces::UserWorkspaces;
 use crate::workspaces::workspace::Workspace;
 use url::Url;
-use warp_core::ui::appearance::Appearance;
-use warpui::elements::{Empty, MouseStateHandle};
-use warpui::platform::WindowStyle;
-use warpui::{
+use zterm_core::ui::appearance::Appearance;
+use zterm_ui::elements::{Empty, MouseStateHandle};
+use zterm_ui::platform::WindowStyle;
+use zterm_ui::{
     AddSingletonModel, App, AppContext, Element, Entity, SingletonEntity, TypedActionView, View,
     WindowId,
 };
@@ -71,7 +71,7 @@ fn test_build_auth_url_with_next_overrides_existing() {
     let result = UpdateEnvironmentForm::build_auth_url_with_next(
         base_url,
         GithubAuthRedirectTarget::SettingsEnvironments,
-        "warpdev",
+        "ztermdev",
     );
     let parsed = Url::parse(&result).expect("result should be valid url");
     let mut next_values = parsed
@@ -82,7 +82,7 @@ fn test_build_auth_url_with_next_overrides_existing() {
     assert_eq!(next_values.len(), 1);
     assert_eq!(
         next_values.pop(),
-        Some("warpdev://settings/environments".to_string())
+        Some("ztermdev://settings/environments".to_string())
     );
     assert!(parsed
         .query_pairs()
@@ -95,7 +95,7 @@ fn test_build_auth_url_with_next_focus_cloud_mode() {
     let result = UpdateEnvironmentForm::build_auth_url_with_next(
         base_url,
         GithubAuthRedirectTarget::FocusCloudMode,
-        "warplocal",
+        "ztermlocal",
     );
     let parsed = Url::parse(&result).expect("result should be valid url");
     let next_value = parsed
@@ -104,7 +104,7 @@ fn test_build_auth_url_with_next_focus_cloud_mode() {
         .map(|(_, value)| value.into_owned());
     assert_eq!(
         next_value,
-        Some("warplocal://action/focus_cloud_mode".to_string())
+        Some("ztermlocal://action/focus_cloud_mode".to_string())
     );
 }
 
@@ -114,7 +114,7 @@ fn test_build_auth_url_with_next_uses_scheme_param() {
     let result = UpdateEnvironmentForm::build_auth_url_with_next(
         base_url,
         GithubAuthRedirectTarget::FocusCloudMode,
-        "warplocal",
+        "ztermlocal",
     );
     let parsed = Url::parse(&result).expect("result should be valid url");
     let next_value = parsed

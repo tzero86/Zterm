@@ -1,15 +1,15 @@
-use std::borrow::Cow;
+﻿use std::borrow::Cow;
 use std::collections::HashMap;
 use std::path::PathBuf;
 use std::sync::Arc;
 use std::time::Duration;
 
-use warp_util::standardized_path::StandardizedPath;
+use zterm_util::standardized_path::StandardizedPath;
 
 use futures::future::BoxFuture;
 use futures::FutureExt;
-use warpui::r#async::FutureExt as AsyncFutureExt;
-use warpui::{AppContext, Entity, EntityId, ModelContext, ModelHandle, SingletonEntity};
+use zterm_ui::r#async::FutureExt as AsyncFutureExt;
+use zterm_ui::{AppContext, Entity, EntityId, ModelContext, ModelHandle, SingletonEntity};
 
 use crate::ai::agent::redaction::redact_secrets;
 use crate::ai::agent::{
@@ -437,7 +437,7 @@ async fn run_grep(
 #[cfg(not(target_family = "wasm"))]
 async fn run_ripgrep(queries: &[String], absolute_path: String) -> Result<GrepResult, GrepError> {
     let path = PathBuf::from(absolute_path);
-    let result = warp_ripgrep::search::search(queries, &[path], false, false).await;
+    let result = zterm_ripgrep::search::search(queries, &[path], false, false).await;
 
     match result {
         Ok(matches) => {

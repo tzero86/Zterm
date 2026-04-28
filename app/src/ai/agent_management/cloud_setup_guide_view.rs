@@ -1,4 +1,4 @@
-use crate::ai::agent_management::telemetry::{AgentManagementTelemetryEvent, SetupGuideStep};
+﻿use crate::ai::agent_management::telemetry::{AgentManagementTelemetryEvent, SetupGuideStep};
 use crate::ai::blocklist::code_block::{
     render_code_block_plain, CodeBlockOptions, CodeSnippetButtonHandles,
 };
@@ -11,23 +11,23 @@ use crate::workflows::WorkflowType;
 use serde::Serialize;
 use std::collections::HashMap;
 use string_offset::CharCounter;
-use warp_completer::signatures::CommandRegistry;
-use warp_completer::{util::parse_current_commands_and_tokens, ParsedTokensSnapshot};
-use warp_core::report_error;
-use warp_core::ui::theme::{AnsiColorIdentifier, AnsiColors};
-use warpui::clipboard::ClipboardContent;
-use warpui::elements::{
+use zterm_completer::signatures::CommandRegistry;
+use zterm_completer::{util::parse_current_commands_and_tokens, ParsedTokensSnapshot};
+use zterm_core::report_error;
+use zterm_core::ui::theme::{AnsiColorIdentifier, AnsiColors};
+use zterm_ui::clipboard::ClipboardContent;
+use zterm_ui::elements::{
     new_scrollable::{ClippedAxisConfiguration, DualAxisConfig, NewScrollable},
     Align, Border, ClippedScrollStateHandle, ConstrainedBox, Container, CornerRadius,
     CrossAxisAlignment, Element, Empty, Expanded, Flex, Highlight, HighlightedRange,
     MainAxisAlignment, MainAxisSize, MouseStateHandle, ParentElement, Radius, Text,
 };
-use warpui::fonts::{Properties, Weight};
-use warpui::prelude::ChildView;
-use warpui::text_layout::TextStyle;
-use warpui::ui_components::components::{UiComponent, UiComponentStyles};
-use warpui::ViewHandle;
-use warpui::{AppContext, Entity, SingletonEntity, TypedActionView, View, ViewContext};
+use zterm_ui::fonts::{Properties, Weight};
+use zterm_ui::prelude::ChildView;
+use zterm_ui::text_layout::TextStyle;
+use zterm_ui::ui_components::components::{UiComponent, UiComponentStyles};
+use zterm_ui::ViewHandle;
+use zterm_ui::{AppContext, Entity, SingletonEntity, TypedActionView, View, ViewContext};
 
 const DOCS_URL: &str = "https://docs.warp.dev/agent-platform/cloud-agents/overview";
 const ENV_DOCS_URL: &str =
@@ -617,7 +617,7 @@ impl View for CloudSetupGuideView {
             },
             theme.nonactive_ui_detail().into(),
             theme.active_ui_detail().into(),
-            warpui::elements::Fill::None,
+            zterm_ui::elements::Fill::None,
         )
         .finish();
 

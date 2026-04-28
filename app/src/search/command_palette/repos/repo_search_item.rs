@@ -1,9 +1,9 @@
-use ai::workspace::WorkspaceMetadata;
+﻿use ai::workspace::WorkspaceMetadata;
 use fuzzy_match::FuzzyMatchResult;
 use ordered_float::OrderedFloat;
 use std::path::Path;
-use warp_core::ui::theme::Fill;
-use warpui::{
+use zterm_core::ui::theme::Fill;
+use zterm_ui::{
     elements::{Align, ConstrainedBox, Flex, Highlight, ParentElement, Shrinkable, Text},
     fonts::{Properties, Weight},
     AppContext, Element, SingletonEntity,

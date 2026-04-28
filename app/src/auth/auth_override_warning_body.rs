@@ -1,21 +1,21 @@
-use crate::appearance::Appearance;
+﻿use crate::appearance::Appearance;
 use crate::util::color::lighten;
-use warp_core::ui::builder::UiBuilder;
-use warp_core::ui::color::darken;
-use warpui::keymap::FixedBinding;
+use zterm_core::ui::builder::UiBuilder;
+use zterm_core::ui::color::darken;
+use zterm_ui::keymap::FixedBinding;
 
 use crate::modal::MODAL_CORNER_RADIUS;
-use warp_core::ui::color::blend::Blend;
-use warpui::accessibility::{AccessibilityContent, WarpA11yRole};
-use warpui::color::ColorU;
-use warpui::elements::{
+use zterm_core::ui::color::blend::Blend;
+use zterm_ui::accessibility::{AccessibilityContent, WarpA11yRole};
+use zterm_ui::color::ColorU;
+use zterm_ui::elements::{
     ConstrainedBox, Container, CornerRadius, CrossAxisAlignment, Fill, Flex, Icon,
     MouseStateHandle, ParentElement, Radius, Shrinkable,
 };
-use warpui::fonts::Weight;
-use warpui::ui_components::button::ButtonVariant;
-use warpui::ui_components::components::{Coords, UiComponent, UiComponentStyles};
-use warpui::{
+use zterm_ui::fonts::Weight;
+use zterm_ui::ui_components::button::ButtonVariant;
+use zterm_ui::ui_components::components::{Coords, UiComponent, UiComponentStyles};
+use zterm_ui::{
     AppContext, Element, Entity, FocusContext, SingletonEntity, TypedActionView, View, ViewContext,
 };
 
@@ -32,7 +32,7 @@ const AUTH_OVERRIDE_DESCRIPTION: &str = "It looks like you logged into a Warp ac
 const AUTH_OVERRIDE_CONFIRMATION_WARNING: &str = "This cannot be undone.";
 const AUTH_OVERRIDE_INITIAL_STEP_HEADER: &str = "New login detected";
 const AUTH_OVERRIDE_CONFIRM_CONFIRMATION_STEP_HEADER: &str =
-    "Delete personal Warp Drive objects and preferences?";
+    "Delete personal Zterm Drive objects and preferences?";
 const AUTH_OVERRIDE_BULK_EXPORT_BUTTON_LABEL: &str = "Export your data";
 const AUTH_OVERRIDE_BULK_EXPORT_DESCRIPTION: &str = " to import later.";
 const AUTH_OVERRIDE_CANCEL_BUTTON_LABEL: &str = "Cancel";
@@ -64,7 +64,7 @@ pub struct AuthOverrideWarningBody {
 }
 
 pub fn init(app: &mut AppContext) {
-    use warpui::keymap::macros::*;
+    use zterm_ui::keymap::macros::*;
 
     app.register_fixed_bindings([FixedBinding::new(
         "enter",
@@ -377,7 +377,7 @@ impl View for AuthOverrideWarningBody {
     fn accessibility_contents(&self, _: &AppContext) -> Option<AccessibilityContent> {
         Some(AccessibilityContent::new(
             "New login detected",
-            "Warp has detected a new login from a web browser. Press escape to cancel and continue using Warp without login.",
+            "Warp has detected a new login from a web browser. Press escape to cancel and continue using Zterm without login.",
             WarpA11yRole::HelpRole,
         ))
     }

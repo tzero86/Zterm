@@ -94,7 +94,7 @@ pub enum Event {
     SourcedRcFileInSubshell(SourcedRcFileInSubshellEvent),
     /// Emitted when the active block's prompt has been updated.
     PromptUpdated,
-    /// Emitted when the honor_ps1 state of the shell is out-of-sync with Warp's settings.
+    /// Emitted when the honor_ps1 state of the shell is out-of-sync with Zterm's settings.
     /// This can happen in cases such as when the user changes between PS1 and Warp prompt inside
     /// of an SSH session (the bindkeys are sent to the SSH session but not the local session, so
     /// they are out-of-sync when the user exits SSH).
@@ -186,9 +186,9 @@ pub enum TerminalMode {
 #[derive(Clone, Debug)]
 pub enum SshLoginStatus {
     /// We have some evidence login is complete but should check again.
-    RecheckBeforeWarpifying,
+    RecheckBeforeZtermifying,
     /// We have high confidence login is complete.
-    ReadyToWarpify,
+    ReadyToZtermify,
 }
 
 #[derive(Clone, Debug)]

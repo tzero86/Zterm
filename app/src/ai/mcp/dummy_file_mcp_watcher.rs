@@ -1,4 +1,4 @@
-use warpui::{Entity, ModelContext, SingletonEntity};
+﻿use zterm_ui::{Entity, ModelContext, SingletonEntity};
 
 pub struct FileMCPWatcher {}
 

@@ -1,7 +1,7 @@
-use settings::{
+﻿use settings::{
     macros::define_settings_group, RespectUserSyncSetting, SupportedPlatforms, SyncToCloud,
 };
-use warpui::{AppContext, WindowId};
+use zterm_ui::{AppContext, WindowId};
 
 define_settings_group!(WindowSettings, settings: [
     background_blur_radius: BackgroundBlurRadius {

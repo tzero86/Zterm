@@ -1,11 +1,11 @@
-use std::collections::BTreeSet;
+﻿use std::collections::BTreeSet;
 
 use crate::ai::agent_sdk::output::{self, TableFormat};
 use crate::ai::llms::LLMPreferences;
 use comfy_table::Cell;
 use serde::Serialize;
-use warp_cli::{model::ModelCommand, GlobalOptions};
-use warpui::{platform::TerminationMode, AppContext, ModelContext, SingletonEntity};
+use zterm_cli::{model::ModelCommand, GlobalOptions};
+use zterm_ui::{platform::TerminationMode, AppContext, ModelContext, SingletonEntity};
 
 /// Handle model-related CLI commands.
 pub fn run(
@@ -59,7 +59,7 @@ impl ModelCommandRunner {
     }
 }
 
-impl warpui::Entity for ModelCommandRunner {
+impl zterm_ui::Entity for ModelCommandRunner {
     type Event = ();
 }
 

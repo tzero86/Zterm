@@ -1,11 +1,11 @@
-//! The model for maintaining global experiment state.
+﻿//! The model for maintaining global experiment state.
 
 use std::collections::HashSet;
 
 use super::ServerExperiment;
 use crate::{persistence::ModelEvent, report_if_error, GlobalResourceHandlesProvider};
 use anyhow::Context;
-use warpui::{Entity, ModelContext, SingletonEntity};
+use zterm_ui::{Entity, ModelContext, SingletonEntity};
 
 #[cfg(test)]
 pub use tests::TestModel;

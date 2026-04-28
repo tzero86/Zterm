@@ -1,4 +1,4 @@
-use std::path::PathBuf;
+﻿use std::path::PathBuf;
 
 use crate::cloud_object::UniquePer;
 use crate::server::sync_queue::QueueItem;
@@ -19,9 +19,9 @@ use crate::{
     },
 };
 use serde::{Deserialize, Serialize};
-use warp_core::channel::ChannelState;
-use warp_core::features::FeatureFlag;
-use warpui::{AppContext, SingletonEntity};
+use zterm_core::channel::ChannelState;
+use zterm_core::features::FeatureFlag;
+use zterm_ui::{AppContext, SingletonEntity};
 
 use super::llms::LLMId;
 
@@ -248,7 +248,7 @@ pub struct AIExecutionProfile {
     pub cli_agent_model: Option<LLMId>,
     pub computer_use_model: Option<LLMId>,
 
-    /// Whether plans created by the agent should be automatically synced to Warp Drive
+    /// Whether plans created by the agent should be automatically synced to Zterm Drive
     pub autosync_plans_to_warp_drive: bool,
 
     /// Whether the agent may use web search when helpful for completing tasks

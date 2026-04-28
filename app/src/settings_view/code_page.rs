@@ -48,14 +48,14 @@ use pathfinder_color::ColorU;
 use std::borrow::Cow;
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
-use warp_core::{
+use zterm_core::{
     features::FeatureFlag,
     report_if_error,
     settings::ToggleableSetting as _,
     ui::theme::{AnsiColorIdentifier, Fill as ThemeFill},
 };
-use warp_util::path::user_friendly_path;
-use warpui::{
+use zterm_util::path::user_friendly_path;
+use zterm_ui::{
     elements::{
         ChildView, ConstrainedBox, Container, CornerRadius, CrossAxisAlignment, Element, Empty,
         Expanded, Fill, Flex, MainAxisAlignment, MainAxisSize, MouseStateHandle, ParentElement,
@@ -83,7 +83,7 @@ const CODE_FEATURE_NAME: &str = "Code";
 const INITIALIZATION_SETTINGS_HEADER: &str = "Initialization Settings";
 const CODEBASE_INDEXING_LABEL: &str = "Codebase indexing";
 const CODEBASE_INDEX_DESCRIPTION: &str = "Warp can automatically index code repositories as you navigate them, helping agents quickly understand context and provide solutions. Code is never stored on the server. If a codebase is unable to be indexed, Warp can still navigate your codebase and gain insights via grep and find tool calling.";
-const WARP_INDEXING_IGNORE_DESCRIPTION: &str = "To exclude specific files or directories from indexing, add them to the .warpindexingignore file in your repository directory. These files will still be accessible to AI features, but they won't be included in codebase embeddings.";
+const ZTERM_INDEXING_IGNORE_DESCRIPTION: &str = "To exclude specific files or directories from indexing, add them to the .warpindexingignore file in your repository directory. These files will still be accessible to AI features, but they won't be included in codebase embeddings.";
 const AUTO_INDEX_FEATURE_NAME: &str = "Index new folders by default";
 const AUTO_INDEX_DESCRIPTION: &str = "When set to true, Warp will automatically index code repositories as you navigate them - helping agents quickly understand context and provide targeted solutions.";
 const INDEXING_DISABLED_ADMIN_TEXT: &str = "Team admins have disabled codebase indexing.";
@@ -880,7 +880,7 @@ impl SettingsWidget for CodePageWidget {
         ));
         content.add_child(self.render_settings_subtext(
             global_ai_enabled,
-            WARP_INDEXING_IGNORE_DESCRIPTION,
+            ZTERM_INDEXING_IGNORE_DESCRIPTION,
             appearance,
         ));
 
@@ -1342,15 +1342,15 @@ impl CodePageWidget {
                     ..Default::default()
                 })
                 .with_text_and_icon_label(
-                    warpui::ui_components::button::TextAndIcon::new(
-                        warpui::ui_components::button::TextAndIconAlignment::IconFirst,
+                    zterm_ui::ui_components::button::TextAndIcon::new(
+                        zterm_ui::ui_components::button::TextAndIconAlignment::IconFirst,
                         "Open project rules",
-                        warpui::elements::Icon::new(
+                        zterm_ui::elements::Icon::new(
                             "bundled/svg/file-code-02.svg",
                             theme.foreground(),
                         ),
-                        warpui::elements::MainAxisSize::Min,
-                        warpui::elements::MainAxisAlignment::Center,
+                        zterm_ui::elements::MainAxisSize::Min,
+                        zterm_ui::elements::MainAxisAlignment::Center,
                         pathfinder_geometry::vector::vec2f(14., 14.),
                     )
                     .with_inner_padding(4.),
@@ -1456,7 +1456,7 @@ impl CodePageWidget {
                         Container::new(
                             ConstrainedBox::new(
                                 Icon::SlashCircle
-                                    .to_warpui_icon(ThemeFill::Solid(status_color))
+                                    .to_zterm_ui_icon(ThemeFill::Solid(status_color))
                                     .finish(),
                             )
                             .with_width(STATUS_ICON_SIZE)
@@ -1541,7 +1541,7 @@ impl CodePageWidget {
             label_row.add_child(
                 Container::new(
                     ConstrainedBox::new(
-                        status_icon.to_warpui_icon(ThemeFill::Solid(color)).finish(),
+                        status_icon.to_zterm_ui_icon(ThemeFill::Solid(color)).finish(),
                     )
                     .with_width(STATUS_ICON_SIZE)
                     .with_height(STATUS_ICON_SIZE)
@@ -1823,7 +1823,7 @@ impl CodePageWidget {
         &self,
         workspace_path: &Path,
         server_type: LSPServerType,
-        server_model: Option<&warpui::ModelHandle<LspServerModel>>,
+        server_model: Option<&zterm_ui::ModelHandle<LspServerModel>>,
         is_enabled: bool,
         mouse_states: LspServerRowMouseStates,
         appearance: &Appearance,
@@ -2012,9 +2012,9 @@ impl CodePageWidget {
     /// Gets the status color and text for an LSP server.
     fn get_lsp_status_info(
         &self,
-        server_model: Option<&warpui::ModelHandle<LspServerModel>>,
+        server_model: Option<&zterm_ui::ModelHandle<LspServerModel>>,
         app: &AppContext,
-        theme: &warp_core::ui::theme::WarpTheme,
+        theme: &zterm_core::ui::theme::ZtermTheme,
     ) -> (ColorU, &'static str) {
         match server_model {
             Some(model) => {

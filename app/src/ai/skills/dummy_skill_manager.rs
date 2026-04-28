@@ -1,7 +1,7 @@
-use std::path::Path;
+﻿use std::path::Path;
 
 use ai::skills::{ParsedSkill, SkillProvider, SkillReference};
-use warpui::{AppContext, Entity, ModelContext, SingletonEntity};
+use zterm_ui::{AppContext, Entity, ModelContext, SingletonEntity};
 
 use crate::ai::skills::SkillDescriptor;
 

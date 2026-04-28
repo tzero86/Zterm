@@ -1,9 +1,9 @@
-use std::sync::Arc;
+﻿use std::sync::Arc;
 
-use warp_core::ui::icons::Icon;
-use warp_core::ui::theme::AnsiColorIdentifier;
-use warpui::elements::{ChildView, Element, Empty, ParentElement, Wrap};
-use warpui::{AppContext, Entity, TypedActionView, View, ViewContext, ViewHandle};
+use zterm_core::ui::icons::Icon;
+use zterm_core::ui::theme::AnsiColorIdentifier;
+use zterm_ui::elements::{ChildView, Element, Empty, ParentElement, Wrap};
+use zterm_ui::{AppContext, Entity, TypedActionView, View, ViewContext, ViewHandle};
 
 use crate::notebooks::NotebookId;
 use crate::terminal::input::MenuPositioning;
@@ -141,7 +141,7 @@ fn collect_buttons(
                 notebook_uid,
                 document_uid: _,
             } => {
-                // Only show plan button if synced to Warp Drive (has notebook_uid)
+                // Only show plan button if synced to Zterm Drive (has notebook_uid)
                 if let Some(notebook_uid) = notebook_uid {
                     let button_text = title.clone().unwrap_or("Untitled Plan".to_string());
                     let theme = theme.clone();

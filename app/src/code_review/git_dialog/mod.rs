@@ -1,4 +1,4 @@
-//! Unified dialog for git operations (commit / push / create PR).
+﻿//! Unified dialog for git operations (commit / push / create PR).
 //!
 //! `GitDialog` is a single view with multiple modes — each mode owns its own
 //! state, body renderer, and async op in its own submodule. The outer view
@@ -12,9 +12,9 @@
 use std::path::PathBuf;
 
 use pathfinder_geometry::vector::vec2f;
-use warp_core::features::FeatureFlag;
-use warp_core::ui::appearance::Appearance;
-use warpui::{
+use zterm_core::features::FeatureFlag;
+use zterm_core::ui::appearance::Appearance;
+use zterm_ui::{
     elements::{
         Align, Border, ChildAnchor, ChildView, ClippedScrollStateHandle, ClippedScrollable,
         ConstrainedBox, Container, CornerRadius, CrossAxisAlignment, Element, Flex, Hoverable,
@@ -68,7 +68,7 @@ pub fn init(ctx: &mut AppContext) {
     ctx.register_fixed_bindings(vec![FixedBinding::new(
         "escape",
         GitDialogAction::Cancel,
-        warpui::id!("GitDialog"),
+        zterm_ui::id!("GitDialog"),
     )]);
 }
 
@@ -370,7 +370,7 @@ fn render_file_changes_box(
                 ScrollbarWidth::Auto,
                 theme.nonactive_ui_detail().into(),
                 theme.active_ui_detail().into(),
-                warpui::elements::Fill::None,
+                zterm_ui::elements::Fill::None,
             )
             .finish(),
         )

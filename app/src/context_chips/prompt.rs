@@ -1,4 +1,4 @@
-use crate::{
+﻿use crate::{
     settings::{
         AISettings, AISettingsChangedEvent, InputSettings, InputSettingsChangedEvent,
         WarpPromptSeparator,
@@ -10,7 +10,7 @@ pub use super::ContextChipKind;
 use itertools::Itertools;
 use serde::{Deserialize, Serialize};
 use settings::Setting as _;
-use warpui::{Entity, GetSingletonModelHandle, ModelContext, SingletonEntity, UpdateModel};
+use zterm_ui::{Entity, GetSingletonModelHandle, ModelContext, SingletonEntity, UpdateModel};
 
 #[cfg(test)]
 #[path = "prompt_tests.rs"]
@@ -97,7 +97,7 @@ pub struct PromptConfiguration {
 
     #[schemars(description = "Whether the prompt is displayed on the same line as the input.")]
     same_line_prompt_enabled: bool,
-    /// The separator to use as a trailing character at the end of Warp prompt, if any.
+    /// The separator to use as a trailing character at the end of Zterm prompt, if any.
     #[schemars(description = "Trailing separator character for the prompt.")]
     separator: WarpPromptSeparator,
 }
@@ -246,7 +246,7 @@ impl Prompt {
         }
     }
 
-    /// Wehther same line prompt is enabled for Warp prompt.
+    /// Wehther same line prompt is enabled for Zterm prompt.
     pub fn same_line_prompt_enabled(&self) -> bool {
         self.config.same_line_prompt_enabled
     }

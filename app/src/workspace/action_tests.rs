@@ -1,11 +1,11 @@
-use super::WorkspaceAction;
+﻿use super::WorkspaceAction;
 use crate::pane_group::TerminalPaneId;
 use crate::workspace::tab_settings::{
     VerticalTabsDisplayGranularity, VerticalTabsPrimaryInfo, VerticalTabsTabItemMode,
     VerticalTabsViewMode,
 };
 use crate::workspace::PaneViewLocator;
-use warpui::EntityId;
+use zterm_ui::EntityId;
 
 #[test]
 fn vertical_tabs_view_mode_change_does_not_save_workspace_state() {

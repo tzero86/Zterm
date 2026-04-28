@@ -1,13 +1,13 @@
-//! Provider command for linking third-party services.
+﻿//! Provider command for linking third-party services.
 use crate::workspaces::user_workspaces::UserWorkspaces;
 use comfy_table::Cell;
 use serde::Serialize;
-use warp_cli::{
+use zterm_cli::{
     provider::{ProviderCommand, ProviderType},
     GlobalOptions,
 };
-use warp_core::channel::ChannelState;
-use warpui::{platform::TerminationMode, AppContext, ModelContext, SingletonEntity};
+use zterm_core::channel::ChannelState;
+use zterm_ui::{platform::TerminationMode, AppContext, ModelContext, SingletonEntity};
 
 use crate::ai::agent_sdk::output::{self, TableFormat};
 
@@ -123,7 +123,7 @@ impl ProviderCommandRunner {
     }
 }
 
-impl warpui::Entity for ProviderCommandRunner {
+impl zterm_ui::Entity for ProviderCommandRunner {
     type Event = ();
 }
 impl SingletonEntity for ProviderCommandRunner {}

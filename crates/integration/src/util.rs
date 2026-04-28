@@ -21,7 +21,7 @@ use warp::{
     },
     terminal::shell::ShellType,
 };
-use warpui::{App, WindowId};
+use zterm_ui::{App, WindowId};
 
 use warp::terminal::shell;
 

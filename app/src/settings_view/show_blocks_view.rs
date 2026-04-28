@@ -1,4 +1,4 @@
-use super::{
+﻿use super::{
     settings_page::{
         render_page_title, MatchData, PageType, SettingsPageMeta, SettingsPageViewHandle,
         SettingsWidget, HEADER_FONT_SIZE, PAGE_PADDING,
@@ -17,10 +17,10 @@ use anyhow::Result;
 use chrono::{DateTime, FixedOffset, Local};
 use pathfinder_geometry::vector::vec2f;
 use std::sync::Arc;
-use warp_core::ui::theme::color::internal_colors;
-use warpui::ui_components::button::ButtonVariant;
-use warpui::ui_components::components::{UiComponent, UiComponentStyles};
-use warpui::{
+use zterm_core::ui::theme::color::internal_colors;
+use zterm_ui::ui_components::button::ButtonVariant;
+use zterm_ui::ui_components::components::{UiComponent, UiComponentStyles};
+use zterm_ui::{
     clipboard::ClipboardContent,
     elements::{
         Align, ChildAnchor, ChildView, ConstrainedBox, Container, CornerRadius, CrossAxisAlignment,
@@ -30,9 +30,9 @@ use warpui::{
         ScrollableElement, Shrinkable, Stack, UniformList, UniformListState,
     },
 };
-use warpui::{color::ColorU, elements::Radius};
-use warpui::{elements::ScrollbarWidth, fonts::Weight};
-use warpui::{
+use zterm_ui::{color::ColorU, elements::Radius};
+use zterm_ui::{elements::ScrollbarWidth, fonts::Weight};
+use zterm_ui::{
     AppContext, Element, Entity, SingletonEntity, TypedActionView, View, ViewContext, ViewHandle,
 };
 
@@ -40,7 +40,7 @@ const SCROLLBAR_WIDTH: ScrollbarWidth = ScrollbarWidth::Auto;
 
 const UNSHARE_BLOCK_CONFIRMATION_DIALOG_TEXT: &str =
     "Are you sure you want to unshare this block?\n\
-\nIt will no longer be accessible by link and will be permanently deleted from Warp servers.";
+\nIt will no longer be accessible by link and will be permanently deleted from Zterm servers.";
 
 #[derive(Clone, Debug)]
 struct UserOwnedBlock {

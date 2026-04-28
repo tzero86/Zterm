@@ -1,6 +1,6 @@
-use warp_core::ui::appearance::Appearance;
-use warp_server_client::cloud_object::ServerPermissions;
-use warpui::{
+use zterm_core::ui::appearance::Appearance;
+use zterm_server_client::cloud_object::ServerPermissions;
+use zterm_ui::{
     platform::WindowStyle, AddSingletonModel, App, SingletonEntity, TypedActionView, ViewHandle,
 };
 
@@ -11,7 +11,7 @@ use crate::{
         model::{actions::ObjectActions, persistence::CloudModel, view::CloudViewModel},
         CloudObjectSyncStatus, ObjectIdType, ObjectType, Owner, ServerCreationInfo, Space,
     },
-    drive::{items::WarpDriveItemId, CloudObjectTypeAndId},
+    drive::{items::ZtermDriveItemId, CloudObjectTypeAndId},
     menu::MenuItem,
     network::NetworkStatus,
     notebooks::{CloudNotebook, CloudNotebookModel},
@@ -103,7 +103,7 @@ fn create_notebook(app: &mut App) -> SyncId {
 fn set_object_in_error(app: &mut App, cloud_object_type_and_id: &CloudObjectTypeAndId) {
     CloudModel::handle(app).update(
         app,
-        |cloud_model, _ctx: &mut warpui::ModelContext<'_, CloudModel>| {
+        |cloud_model, _ctx: &mut zterm_ui::ModelContext<'_, CloudModel>| {
             if let Some(object) = cloud_model.get_mut_by_uid(&cloud_object_type_and_id.uid()) {
                 object.set_pending_content_changes_status(CloudObjectSyncStatus::Errored);
             }
@@ -127,7 +127,7 @@ fn test_retry_menu_item_visibility() {
         let sync_id = create_workflow(&mut app);
         let cloud_object_type_and_id: CloudObjectTypeAndId =
             CloudObjectTypeAndId::from_id_and_type(sync_id, ObjectType::Workflow);
-        let warp_drive_item_id = WarpDriveItemId::Object(cloud_object_type_and_id);
+        let warp_drive_item_id = ZtermDriveItemId::Object(cloud_object_type_and_id);
 
         // by default, it doesn't show up
         index.update(&mut app, |index, ctx| {
@@ -271,7 +271,7 @@ fn test_warp_drive_navigation_states() {
         index.read(&app, |index, _| {
             assert_eq!(
                 index.selected,
-                Some(WarpDriveItemId::Object(cloud_object_type_and_id)),
+                Some(ZtermDriveItemId::Object(cloud_object_type_and_id)),
                 "Expect selected to have correct value"
             );
         });

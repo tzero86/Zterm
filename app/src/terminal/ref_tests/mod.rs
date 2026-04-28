@@ -1,4 +1,4 @@
-use std::fs::{self, File};
+﻿use std::fs::{self, File};
 use std::io::{self, Read};
 use std::path::Path;
 use std::sync::Arc;
@@ -6,7 +6,7 @@ use std::sync::Arc;
 use serde::Deserialize;
 use serde_json as json;
 
-use warpui::r#async::executor::Background;
+use zterm_ui::r#async::executor::Background;
 
 use crate::terminal::color;
 use crate::terminal::color::Colors;

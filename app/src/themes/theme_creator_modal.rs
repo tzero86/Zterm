@@ -1,4 +1,4 @@
-use crate::modal::Modal;
+﻿use crate::modal::Modal;
 use crate::themes::theme::ThemeKind;
 use crate::themes::theme_creator_body::{
     ThemeCreatorBody, ThemeCreatorBodyAction, ThemeCreatorBodyEvent,
@@ -7,14 +7,14 @@ use crate::view_components::DismissibleToast;
 use crate::workspace::ToastStack;
 use std::default::Default;
 use std::path::PathBuf;
-use warpui::fonts::Weight;
-use warpui::keymap::FixedBinding;
-use warpui::platform::{FilePickerConfiguration, FileType};
-use warpui::presenter::ChildView;
-use warpui::ui_components::components::{Coords, UiComponentStyles};
-use warpui::ViewHandle;
-use warpui::{AppContext, SingletonEntity as _};
-use warpui::{Element, Entity, TypedActionView, View, ViewContext};
+use zterm_ui::fonts::Weight;
+use zterm_ui::keymap::FixedBinding;
+use zterm_ui::platform::{FilePickerConfiguration, FileType};
+use zterm_ui::presenter::ChildView;
+use zterm_ui::ui_components::components::{Coords, UiComponentStyles};
+use zterm_ui::ViewHandle;
+use zterm_ui::{AppContext, SingletonEntity as _};
+use zterm_ui::{Element, Entity, TypedActionView, View, ViewContext};
 
 const THEME_CREATOR_MODAL_HEADER: &str = "Create new theme from image";
 
@@ -34,7 +34,7 @@ pub enum ThemeCreatorModalEvent {
 }
 
 pub fn init(app: &mut AppContext) {
-    use warpui::keymap::macros::*;
+    use zterm_ui::keymap::macros::*;
 
     app.register_fixed_bindings([FixedBinding::new(
         "escape",

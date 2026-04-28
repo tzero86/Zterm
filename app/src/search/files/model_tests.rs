@@ -1,9 +1,9 @@
-use super::super::search_item::{FileSearchItem, FileSearchResult};
+﻿use super::super::search_item::{FileSearchItem, FileSearchResult};
 use super::FileSearchModel;
 use fuzzy_match::FuzzyMatchResult;
 use repo_metadata::repositories::DetectedRepositories;
 use repo_metadata::RepoMetadataModel;
-use warpui::{App, SingletonEntity};
+use zterm_ui::{App, SingletonEntity};
 
 #[cfg(test)]
 mod file_search_model_tests {

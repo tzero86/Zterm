@@ -1,12 +1,12 @@
-use std::io::Write;
+﻿use std::io::Write;
 use std::path::PathBuf;
 
 use anyhow::{bail, Context as _, Result};
 use channel_versions::VersionInfo;
 use instant::Duration;
-use warp_core::channel::{Channel, ChannelState};
-use warp_terminal::shell::ShellType;
-use warpui::ViewContext;
+use zterm_core::channel::{Channel, ChannelState};
+use zterm_terminal::shell::ShellType;
+use zterm_ui::ViewContext;
 
 use crate::workspace::Workspace;
 
@@ -146,12 +146,12 @@ mod appimage {
         let mut command = command::blocking::Command::new(appimage_path);
         // Pass a flag to the app to let it know it was restarted as part of the
         // autoupdate process.
-        command.arg(warp_cli::finish_update_flag());
+        command.arg(zterm_cli::finish_update_flag());
         // If we're testing with a local copy of channel_versions.json, have the
         // newly-started binary also reference that same file (so we can test
         // displaying an updated changelog after an autoupdate).
-        if let Ok(path) = std::env::var("WARP_CHANNEL_VERSIONS_PATH") {
-            command.env("WARP_CHANNEL_VERSIONS_PATH", path);
+        if let Ok(path) = std::env::var("ZTERM_CHANNEL_VERSIONS_PATH") {
+            command.env("ZTERM_CHANNEL_VERSIONS_PATH", path);
         }
 
         log::info!("Relaunching warp for update...");
@@ -164,7 +164,7 @@ mod package_manager {
     use markdown_parser::{
         FormattedText, FormattedTextFragment, FormattedTextHeader, FormattedTextLine,
     };
-    use warpui::{
+    use zterm_ui::{
         elements::{Container, FormattedTextElement, HighlightedHyperlink},
         Element, SingletonEntity as _,
     };
@@ -187,16 +187,16 @@ mod package_manager {
         }
     }
 
-    impl warpui::Entity for AutoupdateContextBlock {
+    impl zterm_ui::Entity for AutoupdateContextBlock {
         type Event = ();
     }
 
-    impl warpui::View for AutoupdateContextBlock {
+    impl zterm_ui::View for AutoupdateContextBlock {
         fn ui_name() -> &'static str {
             "AutoupdateContextBlock"
         }
 
-        fn render(&self, app: &warpui::AppContext) -> Box<dyn warpui::Element> {
+        fn render(&self, app: &zterm_ui::AppContext) -> Box<dyn zterm_ui::Element> {
             let appearance = Appearance::as_ref(app);
             let theme = appearance.theme();
             let package_manager_name = self.package_manager.to_string();
@@ -289,7 +289,7 @@ mod package_manager {
         // Add any arguments that were passed to warp, skipping the first
         // argument (the name of the executable) and dropping the flag for
         // finishing an update.
-        let finish_update_flag = warp_cli::finish_update_flag();
+        let finish_update_flag = zterm_cli::finish_update_flag();
         command.args(
             std::env::args()
                 .skip(1)
@@ -301,8 +301,8 @@ mod package_manager {
         // If we're testing with a local copy of channel_versions.json, have the
         // newly-started binary also reference that same file (so we can test
         // displaying an updated changelog after an autoupdate).
-        if let Ok(path) = std::env::var("WARP_CHANNEL_VERSIONS_PATH") {
-            command.env("WARP_CHANNEL_VERSIONS_PATH", path);
+        if let Ok(path) = std::env::var("ZTERM_CHANNEL_VERSIONS_PATH") {
+            command.env("ZTERM_CHANNEL_VERSIONS_PATH", path);
         }
 
         log::info!("Relaunching warp for update...");
@@ -316,9 +316,9 @@ mod package_manager {
 pub(crate) enum UpdateMethod {
     /// We don't know how to update Warp.
     Unknown,
-    /// Warp is running as an AppImage and should be updated in-place.
+    /// Zterm is running as an AppImage and should be updated in-place.
     AppImage(PathBuf),
-    /// Warp can be updated using the given package manager.
+    /// Zterm can be updated using the given package manager.
     PackageManager(PackageManager),
 }
 
@@ -393,7 +393,7 @@ impl PackageManager {
                 is_signing_key_configured,
             } => {
                 let repo_prefix = if !is_repo_configured {
-                    let cache_dir = warp_core::paths::cache_dir();
+                    let cache_dir = zterm_core::paths::cache_dir();
                     let cache_dir_str = cache_dir.display();
                     // Back up the existing pacman.conf file just in case
                     // anything goes wrong, then add the repository config.
@@ -658,7 +658,7 @@ fn package_name(channel: Channel) -> &'static str {
         Channel::Dev => "warp-terminal-dev",
         Channel::Integration => "warp-terminal-integration",
         Channel::Local => "warp-terminal-local",
-        Channel::Oss => "warp-oss",
+        Channel::Oss => "zterm-oss",
     }
 }
 

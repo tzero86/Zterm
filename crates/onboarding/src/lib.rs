@@ -41,7 +41,7 @@ pub const AI_FEATURES: &[&str] = &[
 /// intention is selected with Warp Drive turned on. Shared by the login slide's
 /// skip-login confirmation dialog so the list stays in sync with any future
 /// surfaces that need it.
-pub const WARP_DRIVE_FEATURES: &[&str] = &["Warp Drive", "Session Sharing"];
+pub const ZTERM_DRIVE_FEATURES: &[&str] = &["Warp Drive", "Session Sharing"];
 
 cfg_if::cfg_if! {
     if #[cfg(feature = "bin")] {
@@ -76,7 +76,7 @@ pub use model::{OnboardingAuthState, SelectedSettings, UICustomizationSettings};
 pub use slides::ProjectOnboardingSettings;
 pub use telemetry::OnboardingEvent;
 
-pub fn init(app: &mut warpui::AppContext) {
+pub fn init(app: &mut zterm_ui::AppContext) {
     agent_onboarding_view::init(app);
     callout::init(app);
 }

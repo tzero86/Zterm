@@ -1,4 +1,4 @@
-//! File search row rendering components.
+﻿//! File search row rendering components.
 //!
 //! This module provides UI components for rendering file and directory search results
 //! in search interfaces. It handles the display of file names with their parent paths,
@@ -13,18 +13,18 @@
 
 use fuzzy_match::FuzzyMatchResult;
 use std::path::Path;
-use warp_core::ui::theme::Fill;
-use warpui::elements::{
+use zterm_core::ui::theme::Fill;
+use zterm_ui::elements::{
     Container, CrossAxisAlignment, Flex, Highlight, MainAxisSize, ParentElement, Shrinkable, Text,
 };
-use warpui::fonts::{Properties, Weight};
-use warpui::text_layout::ClipConfig;
-use warpui::{AppContext, Element};
+use zterm_ui::fonts::{Properties, Weight};
+use zterm_ui::text_layout::ClipConfig;
+use zterm_ui::{AppContext, Element};
 
 use crate::appearance::Appearance;
 use crate::search::ai_context_menu::safe_truncate;
 use crate::search::ItemHighlightState;
-use warpui::SingletonEntity;
+use zterm_ui::SingletonEntity;
 
 pub const MAX_COMBINED_LENGTH: usize = 55;
 

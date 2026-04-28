@@ -12,7 +12,7 @@ use warp::{
     },
     workspace::WorkspaceAction,
 };
-use warpui::{async_assert, async_assert_eq, integration::TestStep};
+use zterm_ui::{async_assert, async_assert_eq, integration::TestStep};
 
 use crate::util::{get_input_buffer, skip_if_powershell_core_2303};
 

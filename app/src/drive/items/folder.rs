@@ -1,5 +1,5 @@
-use warp_core::features::FeatureFlag;
-use warpui::{elements::MouseStateHandle, AppContext, Element};
+use zterm_core::features::FeatureFlag;
+use zterm_ui::{elements::MouseStateHandle, AppContext, Element};
 
 use crate::{
     appearance::Appearance,
@@ -12,21 +12,21 @@ use crate::{
     ui_components::icons::Icon,
 };
 
-use super::{WarpDriveItem, WarpDriveItemId};
+use super::{ZtermDriveItem, ZtermDriveItemId};
 
 #[derive(Clone)]
-pub struct WarpDriveFolder {
+pub struct ZtermDriveFolder {
     id: CloudObjectTypeAndId,
     folder: CloudFolder,
 }
 
-impl WarpDriveFolder {
+impl ZtermDriveFolder {
     pub fn new(id: CloudObjectTypeAndId, folder: CloudFolder) -> Self {
         Self { id, folder }
     }
 }
 
-impl WarpDriveItem for WarpDriveFolder {
+impl ZtermDriveItem for ZtermDriveFolder {
     fn display_name(&self) -> Option<String> {
         if self.folder.model().name.is_empty() {
             None
@@ -52,7 +52,7 @@ impl WarpDriveItem for WarpDriveFolder {
             Icon::from(DriveObjectType::Folder)
         };
 
-        Some(icon.to_warpui_icon(icon_fill).finish())
+        Some(icon.to_zterm_ui_icon(icon_fill).finish())
     }
 
     fn secondary_icon(&self, _color: Option<Fill>) -> Option<Box<dyn Element>> {
@@ -71,8 +71,8 @@ impl WarpDriveItem for WarpDriveFolder {
         None
     }
 
-    fn warp_drive_id(&self) -> WarpDriveItemId {
-        WarpDriveItemId::Object(self.id)
+    fn warp_drive_id(&self) -> ZtermDriveItemId {
+        ZtermDriveItemId::Object(self.id)
     }
 
     fn sync_status_icon(
@@ -92,7 +92,7 @@ impl WarpDriveItem for WarpDriveFolder {
         None
     }
 
-    fn clone_box(&self) -> Box<dyn WarpDriveItem> {
+    fn clone_box(&self) -> Box<dyn ZtermDriveItem> {
         Box::new(self.clone())
     }
 }

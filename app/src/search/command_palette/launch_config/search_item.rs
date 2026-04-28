@@ -1,4 +1,4 @@
-use crate::launch_configs::launch_config::LaunchConfig;
+﻿use crate::launch_configs::launch_config::LaunchConfig;
 use crate::{appearance::Appearance, ui_components::icons::Icon};
 use fuzzy_match::FuzzyMatchResult;
 
@@ -8,7 +8,7 @@ use crate::search::result_renderer::ItemHighlightState;
 
 use ordered_float::OrderedFloat;
 use std::sync::Arc;
-use warpui::{AppContext, Element, SingletonEntity};
+use zterm_ui::{AppContext, Element, SingletonEntity};
 
 /// SearchItem for a matching [`LaunchConfig`].
 #[derive(Debug)]

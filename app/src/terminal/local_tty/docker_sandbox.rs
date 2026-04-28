@@ -1,4 +1,4 @@
-//! Docker-sandbox-specific shell-starter types and helpers.
+﻿//! Docker-sandbox-specific shell-starter types and helpers.
 //!
 //! This module owns everything specific to running a Warp shell inside a
 //! `sbx`-managed Docker sandbox: the [`DockerSandboxShellStarter`] that
@@ -15,7 +15,7 @@ use futures::FutureExt as _;
 use serde::{Deserialize, Serialize};
 use std::ffi::OsStr;
 use std::path::{Path, PathBuf};
-use warpui::{AppContext, SingletonEntity as _};
+use zterm_ui::{AppContext, SingletonEntity as _};
 
 use super::shell::DirectShellStarter;
 use crate::{
@@ -46,13 +46,13 @@ const DOCKER_SANDBOX_NAME_PREFIX: &str = "warp-sandbox";
 ///
 /// Layout: `<cache_dir>/docker-sandbox/{init,workspace}/<sandbox_id>/`.
 fn docker_sandbox_host_root() -> PathBuf {
-    warp_core::paths::cache_dir().join("docker-sandbox")
+    zterm_core::paths::cache_dir().join("docker-sandbox")
 }
 
 /// Resolves the absolute path to the `sbx` CLI binary using the Warp
 /// process's `PATH`.
 ///
-/// Warp's process `PATH` is minimal and often misses user-shell-installed
+/// Zterm's process `PATH` is minimal and often misses user-shell-installed
 /// tools (e.g. homebrew on Apple Silicon when Warp is launched from Finder,
 /// or `~/.local/bin`). Prefer [`resolve_sbx_path_from_user_shell`], which
 /// captures the PATH from the user's interactive login shell, the same way

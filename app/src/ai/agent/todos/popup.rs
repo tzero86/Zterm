@@ -1,15 +1,15 @@
-use crate::ai::blocklist::{BlocklistAIContextEvent, BlocklistAIContextModel};
+﻿use crate::ai::blocklist::{BlocklistAIContextEvent, BlocklistAIContextModel};
 use pathfinder_color::ColorU;
-use warp_core::ui::appearance::Appearance;
-use warp_core::ui::theme::Fill;
-use warpui::elements::{
+use zterm_core::ui::appearance::Appearance;
+use zterm_core::ui::theme::Fill;
+use zterm_ui::elements::{
     ClippedScrollStateHandle, ClippedScrollable, Dismiss, Empty, Expanded, ParentElement,
     SavePosition, ScrollTarget, ScrollToPositionMode, ScrollbarWidth, Shrinkable,
 };
-use warpui::fonts::FamilyId;
-use warpui::ModelHandle;
-use warpui::SingletonEntity;
-use warpui::{
+use zterm_ui::fonts::FamilyId;
+use zterm_ui::ModelHandle;
+use zterm_ui::SingletonEntity;
+use zterm_ui::{
     elements::{
         Border, ConstrainedBox, Container, CornerRadius, CrossAxisAlignment, DropShadow, Flex,
         MainAxisSize, Radius, Text,
@@ -50,7 +50,7 @@ struct Styles {
 }
 
 pub fn init(app: &mut AppContext) {
-    use warpui::keymap::macros::*;
+    use zterm_ui::keymap::macros::*;
 
     app.register_fixed_bindings([FixedBinding::new(
         "escape",
@@ -124,9 +124,9 @@ impl AgentTodosPopupView {
 
     fn render_header(
         &self,
-        app: &warpui::AppContext,
+        app: &zterm_ui::AppContext,
         todo_list: &AIAgentTodoList,
-    ) -> Box<dyn warpui::Element> {
+    ) -> Box<dyn zterm_ui::Element> {
         let appearance = Appearance::as_ref(app);
         let styles = self.styles(appearance);
         let theme = appearance.theme();
@@ -159,7 +159,7 @@ impl View for AgentTodosPopupView {
         "AgentTodosPopup"
     }
 
-    fn render(&self, app: &warpui::AppContext) -> Box<dyn warpui::Element> {
+    fn render(&self, app: &zterm_ui::AppContext) -> Box<dyn zterm_ui::Element> {
         let Some(todo_list) = self
             .ai_context_model
             .as_ref(app)
@@ -271,7 +271,7 @@ impl View for AgentTodosPopupView {
             ScrollbarWidth::Auto,
             theme.nonactive_ui_detail().into(),
             theme.active_ui_detail().into(),
-            warpui::elements::Fill::None,
+            zterm_ui::elements::Fill::None,
         )
         .with_overlayed_scrollbar()
         .finish();

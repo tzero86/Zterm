@@ -1,4 +1,4 @@
-use super::history_model::{BlocklistAIHistoryEvent, BlocklistAIHistoryModel};
+﻿use super::history_model::{BlocklistAIHistoryEvent, BlocklistAIHistoryModel};
 use super::telemetry::{
     BlocklistOrchestrationTelemetryEvent, TeamAgentCommunicationFailedEvent,
     TeamAgentCommunicationFailureReason, TeamAgentCommunicationKind,
@@ -12,10 +12,10 @@ use crate::ai::agent::{
 };
 use std::collections::{HashMap, HashSet};
 use uuid::Uuid;
-use warp_core::features::FeatureFlag;
-use warp_core::send_telemetry_from_ctx;
+use zterm_core::features::FeatureFlag;
+use zterm_core::send_telemetry_from_ctx;
 use warp_multi_agent_api as api;
-use warpui::{Entity, ModelContext, SingletonEntity};
+use zterm_ui::{Entity, ModelContext, SingletonEntity};
 
 const MAX_RETRY_ATTEMPTS: i32 = 3;
 const MAX_PENDING_LIFECYCLE_EVENTS_PER_TARGET: usize = 200;

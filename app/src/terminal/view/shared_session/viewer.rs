@@ -1,4 +1,4 @@
-use crate::menu::{Menu, MenuItem, MenuItemFields};
+﻿use crate::menu::{Menu, MenuItem, MenuItemFields};
 use crate::pane_group::PaneHeaderAction;
 use crate::pane_group::PaneHeaderCustomAction;
 
@@ -6,7 +6,7 @@ use crate::terminal::view::{TerminalAction, TerminalView};
 use crate::ui_components::icons::Icon;
 
 use session_sharing_protocol::common::{Role, WindowSize};
-use warpui::{elements::MouseStateHandle, ViewContext, ViewHandle};
+use zterm_ui::{elements::MouseStateHandle, ViewContext, ViewHandle};
 
 use super::adapter::Participant;
 

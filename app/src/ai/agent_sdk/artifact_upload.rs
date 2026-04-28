@@ -1,4 +1,4 @@
-use std::env;
+﻿use std::env;
 use std::fs::File;
 use std::io::Read as _;
 use std::path::{Path, PathBuf};
@@ -7,7 +7,7 @@ use std::sync::Arc;
 use anyhow::{anyhow, bail, Context, Result};
 use blocking::unblock;
 use mime_guess::from_path;
-use warp_cli::artifact::UploadArtifactArgs;
+use zterm_cli::artifact::UploadArtifactArgs;
 
 use super::common::parse_ambient_task_id;
 use crate::ai::agent::api::ServerConversationToken;

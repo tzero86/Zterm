@@ -16,7 +16,7 @@ use crate::{
         safe_mode_settings::get_secret_obfuscation_mode,
         TerminalModel,
     },
-    themes::theme::WarpTheme,
+    themes::theme::ZtermTheme,
     ui_components::icons::Icon,
     util::bindings::CustomAction,
     view_components::ToastFlavor,
@@ -37,10 +37,10 @@ use pathfinder_geometry::{
 };
 use serde::Serialize;
 use std::{ops::RangeInclusive, sync::Arc};
-use warp_core::features::FeatureFlag;
-use warp_core::ui::theme::Fill;
-use warpui::r#async::SpawnedFutureHandle;
-use warpui::{
+use zterm_core::features::FeatureFlag;
+use zterm_core::ui::theme::Fill;
+use zterm_ui::r#async::SpawnedFutureHandle;
+use zterm_ui::{
     clipboard::ClipboardContent,
     elements::{
         try_rect_with_z, Align, Border, ConstrainedBox, Container, CornerRadius,
@@ -157,7 +157,7 @@ pub enum ShareBlockModalAction {
 }
 
 pub fn init(app: &mut AppContext) {
-    use warpui::keymap::macros::*;
+    use zterm_ui::keymap::macros::*;
 
     app.register_fixed_bindings(vec![
         FixedBinding::custom(
@@ -670,7 +670,7 @@ impl ShareBlockModal {
             } else {
                 text_label.to_string()
             },
-            icon.to_warpui_icon(appearance.theme().active_ui_text_color()),
+            icon.to_zterm_ui_icon(appearance.theme().active_ui_text_color()),
             MainAxisSize::Max,
             MainAxisAlignment::Center,
             vec2f(16., 16.),
@@ -797,7 +797,7 @@ impl ShareBlockModal {
         let text_and_icon = TextAndIcon::new(
             TextAndIconAlignment::TextFirst,
             "Copy".to_string(),
-            Icon::Copy.to_warpui_icon(appearance.theme().active_ui_text_color()),
+            Icon::Copy.to_zterm_ui_icon(appearance.theme().active_ui_text_color()),
             MainAxisSize::Max,
             MainAxisAlignment::Center,
             vec2f(16., 16.),
@@ -849,7 +849,7 @@ impl ShareBlockModal {
         let link_generated = matches!(self.request_state, ShareRequestState::Succeeded { .. });
         let mut column = Flex::column().with_cross_axis_alignment(CrossAxisAlignment::Stretch);
 
-        // If we're using the combined prompt/command grid, then "show prompt" should only be configurable if using Warp prompt!
+        // If we're using the combined prompt/command grid, then "show prompt" should only be configurable if using Zterm prompt!
         // Otherwise, we MUST always render the prompt alongside the command (since they're in the same combined grid for PS1).
         let show_prompt_configurable = self
             .model
@@ -1164,7 +1164,7 @@ fn should_send_title_gen_request(ctx: &ViewContext<ShareBlockModal>) -> bool {
 
 struct SingleBlock {
     terminal_model: Arc<FairMutex<TerminalModel>>,
-    theme: WarpTheme,
+    theme: ZtermTheme,
     font_family: FamilyId,
     font_size: f32,
     line_height_ratio: f32,
@@ -1188,7 +1188,7 @@ impl SingleBlock {
     #[allow(clippy::too_many_arguments)]
     fn new(
         terminal_model: Arc<FairMutex<TerminalModel>>,
-        theme: WarpTheme,
+        theme: ZtermTheme,
         font_family: FamilyId,
         font_size: f32,
         line_height_ratio: f32,

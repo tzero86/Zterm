@@ -6,18 +6,18 @@ use std::sync::Arc;
 use pathfinder_geometry::vector::{vec2f, Vector2F};
 use serde_yaml::Mapping;
 use uuid::Uuid;
-use warp_editor::content::markdown::MarkdownStyle;
-use warp_editor::editor::EmbeddedItemModel;
-use warp_editor::render::element::{RenderContext, RenderableBlock};
-use warp_editor::render::layout::TextLayout;
+use zterm_editor::content::markdown::MarkdownStyle;
+use zterm_editor::editor::EmbeddedItemModel;
+use zterm_editor::render::element::{RenderContext, RenderableBlock};
+use zterm_editor::render::layout::TextLayout;
 
-use warp_editor::render::model::{
+use zterm_editor::render::model::{
     viewport::ViewportItem, BlockSpacing, EmbeddedItem, EmbeddedItemHTMLRepresentation,
     EmbeddedItemRichFormat, LaidOutEmbeddedItem, RenderState,
 };
-use warpui::event::DispatchedEvent;
-use warpui::units::Pixels;
-use warpui::{AppContext, EntityId, EventContext, LayoutContext, ViewHandle, WindowId};
+use zterm_ui::event::DispatchedEvent;
+use zterm_ui::units::Pixels;
+use zterm_ui::{AppContext, EntityId, EventContext, LayoutContext, ViewHandle, WindowId};
 
 use crate::code::editor::comment_editor::CommentEditor;
 use crate::code_review::comments::CommentId;

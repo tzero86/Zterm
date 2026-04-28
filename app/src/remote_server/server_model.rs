@@ -1,20 +1,20 @@
-use crate::terminal::shell::ShellType;
+﻿use crate::terminal::shell::ShellType;
 use repo_metadata::repositories::{DetectedRepositories, RepoDetectionSource};
 use repo_metadata::{RepoMetadataEvent, RepoMetadataModel, RepositoryIdentifier};
 use std::collections::{HashMap, HashSet};
 use std::future::Future;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
-use warp_core::channel::ChannelState;
-use warp_core::SessionId;
-use warp_util::standardized_path::StandardizedPath;
-use warpui::platform::TerminationMode;
-use warpui::r#async::{Spawnable, SpawnableOutput, SpawnedFutureHandle};
-use warpui::{Entity, ModelContext, SingletonEntity};
+use zterm_core::channel::ChannelState;
+use zterm_core::SessionId;
+use zterm_util::standardized_path::StandardizedPath;
+use zterm_ui::platform::TerminationMode;
+use zterm_ui::r#async::{Spawnable, SpawnableOutput, SpawnedFutureHandle};
+use zterm_ui::{Entity, ModelContext, SingletonEntity};
 
-use warp_files::{FileModel, FileModelEvent};
-use warp_util::content_version::ContentVersion;
-use warp_util::file::FileId;
+use zterm_files::{FileModel, FileModelEvent};
+use zterm_util::content_version::ContentVersion;
+use zterm_util::file::FileId;
 
 use super::proto::{
     client_message, delete_file_response, run_command_response, server_message,

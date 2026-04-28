@@ -1,4 +1,4 @@
-pub mod text {
+﻿pub mod text {
     use std::{
         collections::HashSet,
         fmt,
@@ -1289,7 +1289,7 @@ pub mod json {
 use crate::ai::agent::{AIAgentText, AIAgentTextSection};
 use crate::code::editor_management::CodeSource;
 use std::io::{self, BufWriter, Write};
-use warp_core::channel::ChannelState;
+use zterm_core::channel::ChannelState;
 
 /// Constructs the Oz dashboard URL for a given run ID.
 fn run_url(run_id: &str) -> String {

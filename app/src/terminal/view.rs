@@ -45,7 +45,7 @@ mod tooltips;
 pub mod use_agent_footer;
 mod zero_state_block;
 
-use warpui::clipboard_utils::get_image_filepaths_from_paths;
+use zterm_ui::clipboard_utils::get_image_filepaths_from_paths;
 
 use std::ops::Deref as _;
 
@@ -184,10 +184,10 @@ use session_sharing_protocol::common::LongRunningCommandAgentInteractionState;
 use session_sharing_protocol::sharer::{RoleUpdateReason, SessionEndedReason, SessionSourceType};
 use ssh_file_upload::{FileUpload, FileUploadEvent};
 use uuid::Uuid;
-use warp_core::channel::ChannelState;
-use warpui::elements::{shimmering_text::ShimmeringTextStateHandle, Border, ChildView};
-use warpui::fonts::Properties;
-use warpui::{ViewHandle, WeakModelHandle};
+use zterm_core::channel::ChannelState;
+use zterm_ui::elements::{shimmering_text::ShimmeringTextStateHandle, Border, ChildView};
+use zterm_ui::fonts::Properties;
+use zterm_ui::{ViewHandle, WeakModelHandle};
 
 use crate::ai::agent::conversation::{AIConversation, AIConversationId, ConversationStatus};
 
@@ -238,7 +238,7 @@ use crate::code::editor_management::CodeSource;
 use crate::context_chips::prompt::Prompt;
 use crate::context_chips::prompt_type::PromptType;
 use crate::context_chips::ContextChipKind;
-use crate::drive::settings::WarpDriveSettings;
+use crate::drive::settings::ZtermDriveSettings;
 use crate::drive::sharing::ShareableObject;
 use crate::drive::CloudObjectTypeAndId;
 use crate::env_vars::{
@@ -310,7 +310,7 @@ use crate::terminal::shared_session::{
 use crate::terminal::ssh::ssh_detection::SshInteractiveSessionDetected;
 use crate::terminal::view::block_onboarding::onboarding_prompt_block::OnboardingPromptBlock;
 use crate::terminal::warpify::{
-    render::render_subshell_separator, settings::WarpifySettings, SubshellSource,
+    render::render_subshell_separator, settings::ZtermifySettings, SubshellSource,
 };
 use crate::terminal::ShellLaunchData;
 use crate::terminal::{element_size_at_last_frame, HistoryEntry};
@@ -318,7 +318,7 @@ use crate::terminal::{height_in_range_approx, heights_approx_gt, SizeUpdate};
 use crate::terminal::{heights_approx_eq, CellSizeAndWindowPadding};
 use crate::terminal::{AudibleBell, SizeUpdateReason};
 use crate::terminal::{BlockListSettings, BlockListSettingsChangedEvent};
-use crate::themes::theme::WarpTheme;
+use crate::themes::theme::ZtermTheme;
 use crate::ui_components::icons::{self};
 use crate::util::bindings::{
     custom_tag_to_keystroke, keybinding_name_to_display_string, keybinding_name_to_keystroke,
@@ -375,35 +375,35 @@ use std::thread::JoinHandle;
 use std::time::Duration;
 use sum_tree::SeekBias;
 use vec1::vec1;
-use warp_core::context_flag::ContextFlag;
-use warp_core::user_preferences::GetUserPreferences as _;
+use zterm_core::context_flag::ContextFlag;
+use zterm_core::user_preferences::GetUserPreferences as _;
 #[cfg(feature = "local_fs")]
-use warp_util::path::LineAndColumnArg;
-use warp_util::path::ShellFamily;
-use warpui::clipboard::ClipboardContent;
-use warpui::elements::new_scrollable::{
+use zterm_util::path::LineAndColumnArg;
+use zterm_util::path::ShellFamily;
+use zterm_ui::clipboard::ClipboardContent;
+use zterm_ui::elements::new_scrollable::{
     AxisConfiguration, ClippedAxisConfiguration, DualAxisConfig, NewScrollableElement,
     ScrollableAppearance, SingleAxisConfig,
 };
-use warpui::elements::{
+use zterm_ui::elements::{
     get_rich_content_position_id, ChildAnchor, ClippedScrollStateHandle, Container,
     CrossAxisAlignment, DispatchEventResult, DropTarget, DropTargetData, Empty, EventHandler,
     Expanded, Flex, NewScrollable, OffsetPositioning, ParentAnchor, ParentElement,
     ParentOffsetBounds, PositionedElementAnchor, PositionedElementOffsetBounds, Radius,
     ScrollableElement, ScrollbarWidth, Shrinkable, Text,
 };
-use warpui::event::ModifiersState;
-use warpui::keymap::Keystroke;
-use warpui::notification::{NotificationSendError, RequestPermissionsOutcome, UserNotification};
-use warpui::platform::{Cursor, OperatingSystem};
-use warpui::r#async::executor::Background;
-use warpui::r#async::{SpawnedFutureHandle, Timer};
-use warpui::windowing::WindowManager;
+use zterm_ui::event::ModifiersState;
+use zterm_ui::keymap::Keystroke;
+use zterm_ui::notification::{NotificationSendError, RequestPermissionsOutcome, UserNotification};
+use zterm_ui::platform::{Cursor, OperatingSystem};
+use zterm_ui::r#async::executor::Background;
+use zterm_ui::r#async::{SpawnedFutureHandle, Timer};
+use zterm_ui::windowing::WindowManager;
 
-use warpui::assets::asset_cache::{AssetCache, AssetCacheEvent};
-use warpui::image_cache::ImageType;
-use warpui::units::{IntoLines, IntoPixels, Lines, Pixels};
-use warpui::{
+use zterm_ui::assets::asset_cache::{AssetCache, AssetCacheEvent};
+use zterm_ui::image_cache::ImageType;
+use zterm_ui::units::{IntoLines, IntoPixels, Lines, Pixels};
+use zterm_ui::{
     accessibility::{AccessibilityContent, ActionAccessibilityContent, WarpA11yRole},
     elements::SavePosition,
     elements::{
@@ -415,14 +415,14 @@ use warpui::{
     AccessibilityData, AppContext, BlurContext, Element, Entity, FocusContext, ModelHandle,
     TypedActionView, UpdateView, View, ViewAsRef, ViewContext, WeakViewHandle,
 };
-use warpui::{
+use zterm_ui::{
     elements::Stack,
     end_trace_after_next,
     geometry::vector::{vec2f, Vector2F},
     record_trace_event, WindowId,
 };
 
-use warpui::{windowing, CursorInfo, EntityId, EventContext, ModelAsRef, SingletonEntity, Tracked};
+use zterm_ui::{windowing, CursorInfo, EntityId, EventContext, ModelAsRef, SingletonEntity, Tracked};
 
 use crate::ai_assistant::{AskAIType, ASK_AI_ASSISTANT_TEXT};
 use crate::appearance::{Appearance, AppearanceEvent};
@@ -507,8 +507,8 @@ use crate::terminal::{
 };
 use crate::view_components::find::{Event as FindEvent, Find, FindDirection, FindWithinBlockState};
 use settings::{Setting, ToggleableSetting};
-use warp_core::semantic_selection::SemanticSelection;
-use warpui::text::SelectionType;
+use zterm_core::semantic_selection::SemanticSelection;
+use zterm_ui::text::SelectionType;
 
 use crate::menu::{Event as MenuEvent, Menu, MenuItem, MenuItemFields};
 use crate::server::telemetry::{BlockLatencyInfo, BootstrappingInfo};
@@ -545,22 +545,22 @@ use super::ssh::root_access::RootAccess;
 use super::ssh::ssh_detection::evaluate_warpify_ssh_host;
 use super::ssh::util::{
     convert_script_to_one_line, parse_interactive_ssh_command, InteractiveSshCommand,
-    SshWarpifyCommand,
+    SshZtermifyCommand,
 };
 use super::ssh::warpify::{
-    begin_warpify_ssh_session_command, warpify_ssh_session_command, SshWarpifyBlock,
-    SshWarpifyBlockEvent,
+    begin_warpify_ssh_session_command, warpify_ssh_session_command, SshZtermifyBlock,
+    SshZtermifyBlockEvent,
 };
 use super::ssh::SSH_WARPIFY_TIMEOUT_DURATION;
-use super::warpify::success_block::{WarpifySuccessBlock, WarpifySuccessBlockEvent};
-use super::warpify::trigger_state::{SshBlockState, WarpifyState};
+use super::warpify::success_block::{ZtermifySuccessBlock, ZtermifySuccessBlockEvent};
+use super::warpify::trigger_state::{SshBlockState, ZtermifyState};
 use super::warpify::WarpificationSource;
 use super::{GridType, HistoryEvent};
 use crate::antivirus::AntivirusInfo;
 use crate::terminal::links::should_directly_open_link;
 use crate::terminal::model_events::{AnsiHandlerEvent, ModelEvent, ModelEventDispatcher};
 use action::RememberForWarpification;
-use block_banner::{render_warpification_banner, WarpificationMode, WarpifyBannerState};
+use block_banner::{render_warpification_banner, WarpificationMode, ZtermifyBannerState};
 use bookmarks::render_floating_block_snapshot;
 use command_corrections::rules::generic::history::History as CommandCorrectionsHistoryRule;
 use init::{INPUT_BOX_VISIBLE_KEY, TOGGLE_BLOCK_FILTER_KEYBINDING};
@@ -575,7 +575,7 @@ use inline_banner::{
     AwsCliNotInstalledBannerAction, AwsCliNotInstalledBannerState, ByoLlmAuthBannerSessionState,
     OpenInWarpBannerState, SSHBannerAction, SSHBannerState, VimModeBannerAction,
 };
-use warp_core::command::ExitCode;
+use zterm_core::command::ExitCode;
 
 lazy_static! {
     // A set of commands that perform minimal work that we use as a baseline to measure the latency of blocks.
@@ -643,7 +643,7 @@ pub const WAKEUP_THROTTLE_PERIOD: Duration =
 
 pub const EXECUTE_PENDING_COMMAND_DELAY: Duration = Duration::from_millis(100);
 
-pub const WARP_PROMPT_HEIGHT_LINES: f32 = 0.9;
+pub const ZTERM_PROMPT_HEIGHT_LINES: f32 = 0.9;
 
 const SCROLLBAR_WIDTH: ScrollbarWidth = ScrollbarWidth::Auto;
 
@@ -716,7 +716,7 @@ const DEFAULT_AI_BLOCK_HEIGHT: f32 = 96.;
 
 pub const DEFAULT_ASK_AI_AUTOSUGGESTION_TEXT: &str = "What happened here?";
 
-const WARP_MD_PATH: &str = "WARP.md";
+const ZTERM_MD_PATH: &str = "WARP.md";
 
 pub const LONG_RUNNING_AGENT_REQUESTED_COMMAND_CONTEXT_KEY: &str = "LongRunningRequestedCommand";
 pub const LONG_RUNNING_AGENT_REQUESTED_COMMAND_USER_TOOK_OVER_CONTEXT_KEY: &str =
@@ -1457,7 +1457,7 @@ pub enum InputContextMenuAction {
     Paste,
     ShowCommandSearch,
     ShowAICommandSearch,
-    AskWarpAI,
+    AskZtermAI,
     SaveAsWorkflow,
     ToggleInputHintText,
 }
@@ -1542,7 +1542,7 @@ impl fmt::Debug for InputContextMenuAction {
             Paste => f.write_str("Paste"),
             ShowCommandSearch => f.write_str("CommandSearch"),
             ShowAICommandSearch => f.write_str("AICommandSearch"),
-            AskWarpAI => f.write_str("AskWarpAI"),
+            AskZtermAI => f.write_str("AskZtermAI"),
             SaveAsWorkflow => f.write_str("SaveAsWorkflow"),
             ToggleInputHintText => f.write_str("ToggleInputHintText"),
         }
@@ -1673,7 +1673,7 @@ pub enum Event {
     OpenWorkflowModalWithCloudWorkflow(SyncId),
     // Tell the pane group to open the workflow modal with an unsaved workflow.
     OpenWorkflowModalWithTemporary(Box<Workflow>),
-    OpenWarpDriveObjectInPane(ObjectUid),
+    OpenZtermDriveObjectInPane(ObjectUid),
     OpenSuggestedAgentModeWorkflowModal {
         workflow_and_id: SuggestedAgentModeWorkflowAndId,
     },
@@ -1983,7 +1983,7 @@ pub enum Event {
 #[derive(Clone, Copy, Debug)]
 pub enum LeftPanelTargetView {
     FileTree,
-    WarpDrive,
+    ZtermDrive,
 }
 
 #[derive(Clone)]
@@ -2213,7 +2213,7 @@ impl BlocklistAIRenderContext {
     }
 
     /// Returns the AI context stripe color to use for a block, if any.
-    pub fn context_color_for_block(&self, block: &Block, theme: &WarpTheme) -> Option<ColorU> {
+    pub fn context_color_for_block(&self, block: &Block, theme: &ZtermTheme) -> Option<ColorU> {
         match self.context_inclusion_state_for_block(block) {
             Some(AIContextInclusionState::Active) => self.context_color(theme),
             _ => None,
@@ -2224,7 +2224,7 @@ impl BlocklistAIRenderContext {
     pub fn context_color_for_rich_content(
         &self,
         rich_content: &RichContentMetadata,
-        theme: &WarpTheme,
+        theme: &ZtermTheme,
     ) -> Option<ColorU> {
         match rich_content {
             RichContentMetadata::AIBlock(ai_metadata)
@@ -2243,7 +2243,7 @@ impl BlocklistAIRenderContext {
 
     /// The context color to use for a block, given its conversation phase.
     /// This assumes the block is part of the active conversation.
-    fn context_color(&self, theme: &WarpTheme) -> Option<ColorU> {
+    fn context_color(&self, theme: &ZtermTheme) -> Option<ColorU> {
         (self.is_ai_input_enabled && self.should_highlight_context).then(|| ai_brand_color(theme))
     }
 }
@@ -2498,7 +2498,7 @@ pub struct TerminalView {
     control_master_error_banner_state: ControlMasterErrorBannerState,
 
     /// Banner to show if we detect a configuration in the user's rc files that
-    /// is incompatible with Warp.
+    /// is incompatible with Zterm.
     incompatible_configuration_banner: ViewHandle<Banner<TerminalAction>>,
     is_incompatible_configuration_banner_open: bool,
 
@@ -2558,14 +2558,14 @@ pub struct TerminalView {
     ///   2. Whether this View's window is the active window.
     ///
     /// We need to derive and cache this state on this View in order to correctly implement focus
-    /// reporting. Because focus is window-scoped, i.e. warpui does not consider activating a
+    /// reporting. Because focus is window-scoped, i.e. zterm_ui does not consider activating a
     /// different window as blurring the focused View in the previously active window, we cannot
-    /// simply rely on the warpui::View::on_blur and on_focus methods to report focus-in/out to the
+    /// simply rely on the zterm_ui::View::on_blur and on_focus methods to report focus-in/out to the
     /// PTY, as those methods will not trigger when changing active windows. The singleton model
-    /// [`warpui::windowing::State`] will allow us to subscribe to active window change. So, we can
+    /// [`zterm_ui::windowing::State`] will allow us to subscribe to active window change. So, we can
     /// subscribe to that and have that callback also report focus-in/out. However, that will still
     /// leave cases for potential double-reporting, as a single click can trigger both
-    /// [`warpui::View::on_focus`] and emit a [`warpui::windowing::StateEvent`]. This field will
+    /// [`zterm_ui::View::on_focus`] and emit a [`zterm_ui::windowing::StateEvent`]. This field will
     /// guard against that double- reporting case, though it needs to be kept in sync with the
     /// focused view and active window.
     is_focused_and_active: bool,
@@ -2656,7 +2656,7 @@ pub struct TerminalView {
 
     find_model: ModelHandle<TerminalFindModel>,
 
-    warpify_state: WarpifyState,
+    warpify_state: ZtermifyState,
 
     /// The keystroke bound to canceling a command.
     ///
@@ -2746,9 +2746,9 @@ pub struct TerminalView {
     /// Mouse state handle for the cloud mode details panel toggle button in the pane header.
     /// Only available on non-WASM platforms (WASM uses a per-window button instead).
     #[cfg(not(target_arch = "wasm32"))]
-    cloud_mode_details_panel_toggle_mouse_state: warpui::elements::MouseStateHandle,
+    cloud_mode_details_panel_toggle_mouse_state: zterm_ui::elements::MouseStateHandle,
     /// Mouse state handle for the ambient agent cancel button in the pane header.
-    ambient_agent_cancel_mouse_state: warpui::elements::MouseStateHandle,
+    ambient_agent_cancel_mouse_state: zterm_ui::elements::MouseStateHandle,
 
     /// First-time cloud agent setup view (full-screen overlay for creating initial environment).
     first_time_cloud_agent_setup_view: ViewHandle<ambient_agent::FirstTimeCloudAgentSetupView>,
@@ -3704,7 +3704,7 @@ impl TerminalView {
                 FormattedTextFragment::plain_text("). Enabling tmux warpification in "),
                 FormattedTextFragment::hyperlink_action(
                     "settings",
-                    TerminalAction::ShowWarpifySettings,
+                    TerminalAction::ShowZtermifySettings,
                 ),
                 FormattedTextFragment::plain_text(" may resolve this issue."),
             ]))
@@ -3717,7 +3717,7 @@ impl TerminalView {
         let incompatible_configuration_banner = ctx.add_typed_action_view(|_| {
             Banner::new(BannerTextContent::formatted_text(vec![
                 FormattedTextFragment::plain_text(
-                    "Your shell configuration is incompatible with Warp...  ",
+                    "Your shell configuration is incompatible with Zterm...  ",
                 ),
                 FormattedTextFragment::hyperlink("More info", KNOWN_ISSUES_URL),
             ]))
@@ -4007,7 +4007,7 @@ impl TerminalView {
                 ConversationDetailsPanelEvent::OpenPlanNotebook { notebook_uid } => {
                     // Convert NotebookId -> SyncId -> ObjectUid (String)
                     let object_uid = SyncId::from(*notebook_uid).uid();
-                    ctx.emit(Event::OpenWarpDriveObjectInPane(object_uid));
+                    ctx.emit(Event::OpenZtermDriveObjectInPane(object_uid));
                 }
             }
         });
@@ -6166,7 +6166,7 @@ impl TerminalView {
                             .requested_command_copied_from_doc(action_id, ctx)
                     })
                     .and_then(|citation| {
-                        if let AIAgentCitation::WarpDriveObject { uid } = citation {
+                        if let AIAgentCitation::ZtermDriveObject { uid } = citation {
                             CloudModel::as_ref(ctx).get_workflow_by_uid(&uid)
                         } else {
                             None
@@ -6429,7 +6429,7 @@ impl TerminalView {
     }
 
     #[cfg(any(test, feature = "integration_tests"))]
-    pub fn sessions<'a, A: warpui::ModelAsRef>(&self, ctx: &'a A) -> &'a Sessions {
+    pub fn sessions<'a, A: zterm_ui::ModelAsRef>(&self, ctx: &'a A) -> &'a Sessions {
         self.sessions.as_ref(ctx)
     }
 
@@ -7413,7 +7413,7 @@ impl TerminalView {
         });
     }
 
-    /// Receiving the warpui::Event::KeyDown event from a child element.
+    /// Receiving the zterm_ui::Event::KeyDown event from a child element.
     /// Generally, this should be control characters rather than printable characters.
     fn keydown_on_terminal(&mut self, characters: &str, ctx: &mut ViewContext<Self>) {
         if self.is_long_running() {
@@ -7457,7 +7457,7 @@ impl TerminalView {
 
         was_bootstrap_script_echoed || is_shared_session_executor
     }
-    /// Receiving a warpui::Event::TypedCharacters event from a child element.
+    /// Receiving a zterm_ui::Event::TypedCharacters event from a child element.
     /// We can assume `characters` consists of all printable characters, and therefore,
     /// can go into the input box.
     fn typed_characters_on_terminal(&mut self, characters: &str, ctx: &mut ViewContext<Self>) {
@@ -8021,7 +8021,7 @@ impl TerminalView {
     ) {
         if self.warpify_state.ssh_block_state().is_some() {
             if key_event.is_some_and(|key| key.is_ctrl_c()) {
-                send_telemetry_from_ctx!(TelemetryEvent::SshTmuxWarpifyBlockDismissed, ctx);
+                send_telemetry_from_ctx!(TelemetryEvent::SshTmuxZtermifyBlockDismissed, ctx);
                 self.cancel_bootstrap_workflow(ctx);
             } else if self.warpify_state.should_prevent_input() {
                 self.warpify_state.focus(ctx);
@@ -8107,7 +8107,7 @@ impl TerminalView {
     ) {
         self.clear_ssh_blocks(ctx);
         self.handle_action(
-            &TerminalAction::ShowWarpifySshBanner(command.to_owned(), ssh_host),
+            &TerminalAction::ShowZtermifySshBanner(command.to_owned(), ssh_host),
             ctx,
         );
     }
@@ -8137,7 +8137,7 @@ impl TerminalView {
         };
 
         let ssh_warpify_block_handle =
-            ctx.add_typed_action_view(|_| SshWarpifyBlock::new(full_ssh_command));
+            ctx.add_typed_action_view(|_| SshZtermifyBlock::new(full_ssh_command));
         ctx.subscribe_to_view(&ssh_warpify_block_handle, move |me, _, event, ctx| {
             me.handle_ssh_warpify_block_event(event, ctx);
         });
@@ -8145,7 +8145,7 @@ impl TerminalView {
         self.insert_rich_content(
             None,
             ssh_warpify_block_handle.clone(),
-            Some(RichContentMetadata::SshWarpifyBlock {
+            Some(RichContentMetadata::SshZtermifyBlock {
                 ssh_warpify_block_handle: ssh_warpify_block_handle.clone(),
             }),
             RichContentInsertionPosition::Append {
@@ -8158,7 +8158,7 @@ impl TerminalView {
 
         self.warpify_state.set_block_id(hidden_ssh_block_id);
         self.warpify_state
-            .set_ssh_block_state(SshBlockState::Warpifying {
+            .set_ssh_block_state(SshBlockState::Ztermifying {
                 handle: ssh_warpify_block_handle,
             });
 
@@ -8310,7 +8310,7 @@ impl TerminalView {
             && matches!(warpification_source, WarpificationSource::Ssh)
             && { !self.model.lock().tmux_control_mode_active() };
         let ssh_success_block_handle = ctx.add_typed_action_view(|ctx| {
-            WarpifySuccessBlock::new(
+            ZtermifySuccessBlock::new(
                 warpification_source,
                 spawning_command,
                 subshell_info,
@@ -8325,9 +8325,9 @@ impl TerminalView {
 
         self.clear_ssh_blocks(ctx);
         self.insert_rich_content(
-            Some(RichContentType::WarpifySuccessBlock),
+            Some(RichContentType::ZtermifySuccessBlock),
             ssh_success_block_handle.clone(),
-            Some(RichContentMetadata::WarpifySuccessBlock {
+            Some(RichContentMetadata::ZtermifySuccessBlock {
                 bootstrap_success_block_handle: ssh_success_block_handle.clone(),
             }),
             RichContentInsertionPosition::Append {
@@ -8336,7 +8336,7 @@ impl TerminalView {
             ctx,
         );
         self.warpify_state
-            .set_ssh_block_state(SshBlockState::WarpifySuccess {
+            .set_ssh_block_state(SshBlockState::ZtermifySuccess {
                 handle: ssh_success_block_handle,
             });
         let active_session_id = self.active_block_session_id();
@@ -8346,26 +8346,26 @@ impl TerminalView {
 
     fn handle_ssh_warpify_block_event(
         &mut self,
-        event: &SshWarpifyBlockEvent,
+        event: &SshZtermifyBlockEvent,
         ctx: &mut ViewContext<Self>,
     ) {
         fn dismiss_ssh_warpify_block(me: &mut TerminalView, ctx: &mut ViewContext<TerminalView>) {
-            send_telemetry_from_ctx!(TelemetryEvent::SshTmuxWarpifyBlockDismissed, ctx);
+            send_telemetry_from_ctx!(TelemetryEvent::SshTmuxZtermifyBlockDismissed, ctx);
             me.cancel_bootstrap_workflow(ctx);
         }
 
         match event {
-            SshWarpifyBlockEvent::Cancel => {
+            SshZtermifyBlockEvent::Cancel => {
                 self.warpify_state.replace_timeout_id();
                 dismiss_ssh_warpify_block(self, ctx);
             }
-            SshWarpifyBlockEvent::Interrupt => {
+            SshZtermifyBlockEvent::Interrupt => {
                 dismiss_ssh_warpify_block(self, ctx);
                 self.warpify_state.abort_ssh_warpify_timeout();
                 self.user_write_ctrl_c_to_pty(ctx);
             }
-            SshWarpifyBlockEvent::WarpifySession => {
-                send_telemetry_from_ctx!(TelemetryEvent::SshTmuxWarpifyBlockAccepted, ctx);
+            SshZtermifyBlockEvent::ZtermifySession => {
+                send_telemetry_from_ctx!(TelemetryEvent::SshTmuxZtermifyBlockAccepted, ctx);
                 self.add_ssh_warpifying_block(ctx);
                 self.update_scroll_position_locking(
                     ScrollPositionUpdate::AfterRichBlockUpdated,
@@ -8395,7 +8395,7 @@ impl TerminalView {
                 self.warpify_state.abort_ssh_warpify_timeout();
                 self.user_write_ctrl_c_to_pty(ctx);
             }
-            SshInstallTmuxBlockEvent::InstallTmuxAndWarpify(install_method) => {
+            SshInstallTmuxBlockEvent::InstallTmuxAndZtermify(install_method) => {
                 send_telemetry_from_ctx!(TelemetryEvent::SshInstallTmuxBlockAccepted, ctx);
                 self.clear_ssh_blocks(ctx);
                 self.install_tmux_and_warpify(ctx, install_method);
@@ -8446,7 +8446,7 @@ impl TerminalView {
         ctx: &mut ViewContext<Self>,
     ) {
         match event {
-            SshErrorBlockEvent::WarpifyWithoutTmux => {
+            SshErrorBlockEvent::ZtermifyWithoutTmux => {
                 let shell_type = self.warpify_state.get_shell_type();
                 self.clear_ssh_blocks(ctx);
                 self.trigger_subshell_bootstrap(shell_type, false, ctx);
@@ -8459,12 +8459,12 @@ impl TerminalView {
 
     fn handle_ssh_success_block_events(
         &mut self,
-        event: &WarpifySuccessBlockEvent,
+        event: &ZtermifySuccessBlockEvent,
         ctx: &mut ViewContext<Self>,
     ) {
         match event {
-            WarpifySuccessBlockEvent::OpenWarpifySettings => {
-                ctx.emit(Event::OpenSettings(SettingsSection::Warpify));
+            ZtermifySuccessBlockEvent::OpenZtermifySettings => {
+                ctx.emit(Event::OpenSettings(SettingsSection::Ztermify));
             }
         }
     }
@@ -8481,7 +8481,7 @@ impl TerminalView {
 
         // Also clear the warpify footer so it doesn't linger after warpification
         // starts, fails, or is cancelled.
-        if FeatureFlag::WarpifyFooter.is_enabled() {
+        if FeatureFlag::ZtermifyFooter.is_enabled() {
             self.use_agent_footer.update(ctx, |footer, ctx| {
                 footer.clear_warpify_mode(ctx);
             });
@@ -8489,12 +8489,12 @@ impl TerminalView {
 
         match remember_command {
             RememberForWarpification::RememberSubshellCommand(command) => {
-                WarpifySettings::handle(ctx).update(ctx, |warpify, ctx| {
+                ZtermifySettings::handle(ctx).update(ctx, |warpify, ctx| {
                     warpify.denylist_subshell_command(command, ctx);
                 });
             }
             RememberForWarpification::RememberSSHHost(host) => {
-                WarpifySettings::handle(ctx).update(ctx, |warpify, ctx| {
+                ZtermifySettings::handle(ctx).update(ctx, |warpify, ctx| {
                     warpify.denylist_ssh_host(host, ctx);
                 });
             }
@@ -8512,7 +8512,7 @@ impl TerminalView {
         telemetry_event: TelemetryEvent,
         ctx: &mut ViewContext<Self>,
     ) {
-        if FeatureFlag::WarpifyFooter.is_enabled() {
+        if FeatureFlag::ZtermifyFooter.is_enabled() {
             return;
         }
 
@@ -8528,17 +8528,17 @@ impl TerminalView {
 
         let a11y_message = match &warpify_keybinding {
             Some(keystroke) => format!(
-                "You can press {} to Warpify this {} for more Warp features.",
+                "You can press {} to Ztermify this {} for more Warp features.",
                 keystroke.displayed(),
                 lowercase_title
             ),
-            None => format!("You can Warpify this {lowercase_title} for more Warp features."),
+            None => format!("You can Ztermify this {lowercase_title} for more Warp features."),
         };
 
         model
             .block_list_mut()
-            .set_active_block_banner(Some(WithinBlockBanner::WarpifyBanner(
-                WarpifyBannerState::new(input, warpify_keybinding),
+            .set_active_block_banner(Some(WithinBlockBanner::ZtermifyBanner(
+                ZtermifyBannerState::new(input, warpify_keybinding),
             )));
 
         let a11y_content = AccessibilityContent::new(
@@ -8695,7 +8695,7 @@ impl TerminalView {
 
         let a11y_content = AccessibilityContent::new(
             banner_title,
-            "Make sure you have enabled access for Warp notifications in System Preferences.",
+            "Make sure you have enabled access for Zterm notifications in System Preferences.",
             WarpA11yRole::TextRole,
         );
         ctx.emit_a11y_content(a11y_content);
@@ -9857,7 +9857,7 @@ impl TerminalView {
         };
         let escape_char = session.shell_family().escape_char();
         let Some(top_level_command) =
-            warp_completer::parsers::simple::top_level_command(command, escape_char)
+            zterm_completer::parsers::simple::top_level_command(command, escape_char)
         else {
             return false;
         };
@@ -10274,9 +10274,9 @@ impl TerminalView {
                     });
                 let warpify_command = expanded_command.as_deref().unwrap_or(command.as_str());
 
-                // Check if the current running command spawns a subshell eligible for Warpification.
+                // Check if the current running command spawns a subshell eligible for Ztermification.
                 let shell_family = self.shell_family(ctx);
-                let warpify_settings = WarpifySettings::as_ref(ctx);
+                let warpify_settings = ZtermifySettings::as_ref(ctx);
                 let is_compatible_subshell_command = warpify_settings
                     .is_compatible_subshell_command(command, shell_family)
                     || warpify_settings
@@ -10317,7 +10317,7 @@ impl TerminalView {
                             .add_subshell_banner_abort_handle(ctx.spawn_abortable(
                                 Timer::after(*SUBSHELL_BANNER_DELAY_DURATION),
                                 |view, _, ctx| {
-                                    if FeatureFlag::WarpifyFooter.is_enabled() {
+                                    if FeatureFlag::ZtermifyFooter.is_enabled() {
                                         view.show_warpify_footer(
                                             WarpificationMode::subshell(command),
                                             ctx,
@@ -10562,7 +10562,7 @@ impl TerminalView {
                 if self.is_login_shell_bootstrapped {
                     let _ = ctx.spawn(
                         async move {
-                            warpui::r#async::Timer::after(EXECUTE_PENDING_COMMAND_DELAY).await;
+                            zterm_ui::r#async::Timer::after(EXECUTE_PENDING_COMMAND_DELAY).await;
                         },
                         Self::execute_pending_command,
                     );
@@ -11110,7 +11110,7 @@ impl TerminalView {
 
                 ctx.spawn(
                     async {
-                        warpui::r#async::Timer::after(*TRIGGER_RC_FILE_SUBSHELL_BOOTSTRAP_DELAY)
+                        zterm_ui::r#async::Timer::after(*TRIGGER_RC_FILE_SUBSHELL_BOOTSTRAP_DELAY)
                             .await
                     },
                     move |me, _, ctx| {
@@ -11325,8 +11325,8 @@ impl TerminalView {
                 me.remove_ssh_remote_server_choice_block(session_id, ctx);
                 ctx.emit(Event::RemoteServerSkipRequested { session_id });
             }
-            SshRemoteServerChoiceViewEvent::OpenWarpifySettings => {
-                ctx.emit(Event::OpenSettings(SettingsSection::Warpify));
+            SshRemoteServerChoiceViewEvent::OpenZtermifySettings => {
+                ctx.emit(Event::OpenSettings(SettingsSection::Ztermify));
             }
         });
 
@@ -12027,7 +12027,7 @@ impl TerminalView {
     ) {
         self.reset_onboarding_blocks(ctx);
 
-        WarpDriveSettings::handle(ctx).update(ctx, |settings, ctx| {
+        ZtermDriveSettings::handle(ctx).update(ctx, |settings, ctx| {
             report_if_error!(settings.sharing_onboarding_block_shown.set_value(true, ctx));
         });
 
@@ -13404,7 +13404,7 @@ impl TerminalView {
         // https://github.com/warpdotdev/command-corrections/blob/df7848d4fb3da7883623e959889a296a07d88053/src/rules/cd/mod.rs#L31-L36
         // We don't currently support dynamic rules over SSH, so we should not attempt to correct commands if
         // inside ssh session.
-        let is_ssh_command = SshWarpifyCommand::matches(input).is_some();
+        let is_ssh_command = SshZtermifyCommand::matches(input).is_some();
         if is_ssh_command {
             return vec![];
         }
@@ -14372,7 +14372,7 @@ impl TerminalView {
     fn start_bootstrap_timer(&self, duration: Duration, ctx: &mut ViewContext<Self>) {
         let _ = ctx.spawn(
             async move {
-                warpui::r#async::Timer::after(duration).await;
+                zterm_ui::r#async::Timer::after(duration).await;
             },
             Self::on_bootstrap_failed_timer_complete,
         );
@@ -15130,7 +15130,7 @@ impl TerminalView {
                     );
                 }
 
-                if WarpDriveSettings::is_warp_drive_enabled(ctx) {
+                if ZtermDriveSettings::is_warp_drive_enabled(ctx) {
                     items.push(MenuItem::Separator);
                     items.push(
                         MenuItemFields::new("Save as workflow")
@@ -15790,7 +15790,7 @@ impl TerminalView {
                 items.push(
                     MenuItemFields::new("Ask Warp AI")
                         .with_on_select_action(TerminalAction::InputContextMenuItem(
-                            InputContextMenuAction::AskWarpAI,
+                            InputContextMenuAction::AskZtermAI,
                         ))
                         .into_item(),
                 );
@@ -15798,7 +15798,7 @@ impl TerminalView {
         }
 
         // Section 3: Teams related
-        if !all_current_input_text.is_empty() && WarpDriveSettings::is_warp_drive_enabled(ctx) {
+        if !all_current_input_text.is_empty() && ZtermDriveSettings::is_warp_drive_enabled(ctx) {
             items.extend([
                 MenuItem::Separator,
                 MenuItemFields::new("Save as workflow")
@@ -15936,7 +15936,7 @@ impl TerminalView {
 
         send_telemetry_from_ctx!(
             TelemetryEvent::SaveAsWorkflowModal {
-                source: SaveAsWorkflowModalSource::WarpAIWorkflowCard,
+                source: SaveAsWorkflowModalSource::ZtermAIWorkflowCard,
             },
             ctx
         );
@@ -17936,7 +17936,7 @@ impl TerminalView {
                     return;
                 }
 
-                send_telemetry_from_ctx!(TelemetryEvent::InputAskWarpAI, ctx);
+                send_telemetry_from_ctx!(TelemetryEvent::InputAskZtermAI, ctx);
                 AskAIType::FromTextSelection {
                     text: Arc::new(selected_input_text),
                     populate_input_box: true,
@@ -18542,9 +18542,9 @@ impl TerminalView {
                         env_var_collection_block.clear_selection(ctx);
                     });
                 }
-                Some(RichContentMetadata::WarpifySuccessBlock { .. }) => {
-                    // TODO(Simon): We should be checking for WarpifySuccessBlocks here as well.
-                    // The `WarpifySuccessBlock` implements a `SelectableArea`.
+                Some(RichContentMetadata::ZtermifySuccessBlock { .. }) => {
+                    // TODO(Simon): We should be checking for ZtermifySuccessBlocks here as well.
+                    // The `ZtermifySuccessBlock` implements a `SelectableArea`.
                 }
                 _ => {}
             }
@@ -18775,8 +18775,8 @@ impl TerminalView {
                 ctx.notify();
             }
             AIBlockEvent::OpenCitation(citation) => match citation {
-                AIAgentCitation::WarpDriveObject { uid } => {
-                    ctx.emit(Event::OpenWarpDriveObjectInPane(uid.clone()));
+                AIAgentCitation::ZtermDriveObject { uid } => {
+                    ctx.emit(Event::OpenZtermDriveObjectInPane(uid.clone()));
                 }
                 AIAgentCitation::WarpDocumentation { path } => {
                     ctx.open_url(&format!("https://docs.warp.dev/{path}"));
@@ -18790,7 +18790,7 @@ impl TerminalView {
             }
             AIBlockEvent::OpenWorkflow { sync_id } => {
                 if let Some(object) = CloudModel::as_ref(ctx).get_workflow(sync_id) {
-                    ctx.emit(Event::OpenWarpDriveObjectInPane(object.uid()));
+                    ctx.emit(Event::OpenZtermDriveObjectInPane(object.uid()));
                 }
             }
             AIBlockEvent::OpenSuggestedAgentModeWorkflowModal { workflow_and_id } => {
@@ -21402,11 +21402,11 @@ impl TerminalView {
         let icon = Container::new(
             ConstrainedBox::new(if has_active_filter {
                 icons::Icon::FilterFunnelFilled
-                    .to_warpui_icon(appearance.theme().accent())
+                    .to_zterm_ui_icon(appearance.theme().accent())
                     .finish()
             } else {
                 icons::Icon::FilterFunnel
-                    .to_warpui_icon(
+                    .to_zterm_ui_icon(
                         appearance
                             .theme()
                             .sub_text_color(appearance.theme().surface_2()),
@@ -21597,7 +21597,7 @@ impl TerminalView {
         let prompt = Text::new_inline(
             Self::block_prompt(model, sessions, index),
             appearance.monospace_font_family(),
-            appearance.monospace_font_size() * WARP_PROMPT_HEIGHT_LINES,
+            appearance.monospace_font_size() * ZTERM_PROMPT_HEIGHT_LINES,
         )
         .with_style(Properties::default().weight(appearance.monospace_font_weight()))
         .with_color(terminal_theme_prompt)
@@ -21609,7 +21609,7 @@ impl TerminalView {
             let duration = Text::new_inline(
                 duration_string,
                 appearance.monospace_font_family(),
-                appearance.monospace_font_size() * WARP_PROMPT_HEIGHT_LINES,
+                appearance.monospace_font_size() * ZTERM_PROMPT_HEIGHT_LINES,
             )
             .with_style(Properties::default().weight(appearance.monospace_font_weight()))
             .with_color(terminal_theme_prompt)
@@ -22046,7 +22046,7 @@ impl TerminalView {
             .active_block()
             .block_banner()
             .map(|banner| match banner {
-                WithinBlockBanner::WarpifyBanner(state) => {
+                WithinBlockBanner::ZtermifyBanner(state) => {
                     render_warpification_banner(state, appearance, app)
                 }
             });
@@ -23039,7 +23039,7 @@ impl TerminalView {
             SelectAll => self.select_all_text_from_input(ctx),
             Paste => self.paste_in_input(ctx),
             ShowCommandSearch => self.command_search_from_input(ctx),
-            AskWarpAI => self.ask_ai(&AskAISource::SelectedInputText, ctx),
+            AskZtermAI => self.ask_ai(&AskAISource::SelectedInputText, ctx),
             ShowAICommandSearch => self.ai_command_search_from_input(ctx),
             SaveAsWorkflow => self.save_as_workflow_from_input(ctx),
             ToggleInputHintText => self.toggle_input_hint_text(ctx),
@@ -23227,7 +23227,7 @@ impl TerminalView {
             }
             Settings => {
                 if FeatureFlag::SSHTmuxWrapper.is_enabled() {
-                    ctx.emit(Event::OpenSettings(SettingsSection::Warpify));
+                    ctx.emit(Event::OpenSettings(SettingsSection::Ztermify));
                 } else {
                     ctx.emit(Event::OpenSettings(SettingsSection::Features));
                 }
@@ -23703,7 +23703,7 @@ impl TerminalView {
                 && session.shell_family() == ShellFamily::Posix
                 && is_in_long_running_command;
             if is_msys2_long_running {
-                let input = warpui::clipboard_utils::escaped_paths_str(paths, None);
+                let input = zterm_ui::clipboard_utils::escaped_paths_str(paths, None);
                 self.typed_characters_on_terminal(&input, ctx);
                 return;
             }
@@ -23714,7 +23714,7 @@ impl TerminalView {
             let paths = if session.is_wsl() {
                 paths_converted = paths
                     .iter()
-                    .map(|p| warp_util::path::convert_windows_path_to_wsl(p))
+                    .map(|p| zterm_util::path::convert_windows_path_to_wsl(p))
                     .collect::<Vec<_>>();
                 paths_converted.as_slice()
             } else {
@@ -23722,7 +23722,7 @@ impl TerminalView {
             };
 
             let input =
-                warpui::clipboard_utils::escaped_paths_str(paths, Some(self.shell_family(ctx)));
+                zterm_ui::clipboard_utils::escaped_paths_str(paths, Some(self.shell_family(ctx)));
             self.typed_characters_on_terminal(&input, ctx);
         }
     }
@@ -23854,7 +23854,7 @@ impl TerminalView {
         ctx: &mut ViewContext<TerminalView>,
     ) {
         match check_type {
-            SshLoginStatus::RecheckBeforeWarpifying => {
+            SshLoginStatus::RecheckBeforeZtermifying => {
                 // After we receive a line of output from ssh that is NOT prompting for user input (unlike "Enter passphrase: "),
                 // we wait and repeat the check after a small delay in case the state returned to something that's user-input bound.
                 // For example, say the output that kicked off this event was "Permission denied, please try again." and
@@ -23865,7 +23865,7 @@ impl TerminalView {
                 let active_block_id = self.model.lock().block_list().active_block_id().clone();
                 ctx.spawn(
                     async {
-                        warpui::r#async::Timer::after(Duration::from_secs(3)).await;
+                        zterm_ui::r#async::Timer::after(Duration::from_secs(3)).await;
                         active_block_id
                     },
                     move |terminal_view, active_block_id, _| {
@@ -23876,7 +23876,7 @@ impl TerminalView {
                     },
                 );
             }
-            SshLoginStatus::ReadyToWarpify => {
+            SshLoginStatus::ReadyToZtermify => {
                 // After the confirmation check, we are confident enough to auto-warpify or offer warpification.
                 let Some(command) = &self.warpify_state.get_pending_ssh_command() else {
                     return;
@@ -23884,7 +23884,7 @@ impl TerminalView {
                 let ssh_host = &self.warpify_state.get_pending_ssh_host();
 
                 let shell_family = self.shell_family(ctx);
-                let warpify_settings = WarpifySettings::as_ref(ctx);
+                let warpify_settings = ZtermifySettings::as_ref(ctx);
 
                 let ssh_interactive_session_event = evaluate_warpify_ssh_host(
                     command,
@@ -23898,7 +23898,7 @@ impl TerminalView {
                     ref command,
                 } = ssh_interactive_session_event
                 {
-                    if FeatureFlag::WarpifyFooter.is_enabled() {
+                    if FeatureFlag::ZtermifyFooter.is_enabled() {
                         self.show_warpify_footer(
                             WarpificationMode::ssh(command.clone(), host.to_owned()),
                             ctx,
@@ -23963,7 +23963,7 @@ impl TerminalView {
         });
         self.maybe_show_use_agent_footer_in_blocklist(ctx);
 
-        send_telemetry_from_ctx!(TelemetryEvent::WarpifyFooterShown { is_ssh }, ctx);
+        send_telemetry_from_ctx!(TelemetryEvent::ZtermifyFooterShown { is_ssh }, ctx);
     }
 
     fn show_initialization_block(&mut self) {
@@ -24196,8 +24196,8 @@ impl TypedActionView for TerminalView {
                 "Showed initialization block",
                 WarpA11yRole::TextareaRole,
             )),
-            ShowWarpifySettings => Custom(AccessibilityContent::new_without_help(
-                "Opened Warpify Settings",
+            ShowZtermifySettings => Custom(AccessibilityContent::new_without_help(
+                "Opened Ztermify Settings",
                 WarpA11yRole::ButtonRole,
             )),
             OpenFilesPalette { .. } => Custom(AccessibilityContent::new_without_help(
@@ -24246,7 +24246,7 @@ impl TypedActionView for TerminalView {
             | ControlSequence(_)
             | TriggerSubshellBootstrap
             | ShowSubshellBanner(_)
-            | DismissWarpifyBanner(_)
+            | DismissZtermifyBanner(_)
             | OpenBlockListContextMenu
             | AliasExpansionBanner(_)
             | VimModeBanner(_)
@@ -24256,8 +24256,8 @@ impl TypedActionView for TerminalView {
             | OnboardingFlow(_)
             | ImportSettings
             | DragAndDropFiles(_)
-            | WarpifySSHSession
-            | ShowWarpifySshBanner(_, _)
+            | ZtermifySSHSession
+            | ShowZtermifySshBanner(_, _)
             | NotifySshErrorBlock(_)
             | ToggleBlockFilterOnSelectedOrLastBlock(_)
             | SetMarkedText { .. }
@@ -24743,7 +24743,7 @@ impl TypedActionView for TerminalView {
                     ctx,
                 );
             }
-            ShowWarpifySshBanner(command, host) => {
+            ShowZtermifySshBanner(command, host) => {
                 let warpify_keybinding =
                     keybinding_name_to_keystroke("terminal:warpify_ssh_session", ctx);
                 self.show_warpify_banner(
@@ -24751,14 +24751,14 @@ impl TypedActionView for TerminalView {
                     "SSH Session",
                     "SSH session",
                     warpify_keybinding,
-                    TelemetryEvent::SshTmuxWarpifyBannerDisplayed,
+                    TelemetryEvent::SshTmuxZtermifyBannerDisplayed,
                     ctx,
                 );
             }
-            DismissWarpifyBanner(remember) => {
+            DismissZtermifyBanner(remember) => {
                 self.dismiss_warpify_banner(remember, ctx);
                 if remember.is_ssh() {
-                    send_telemetry_from_ctx!(TelemetryEvent::SshTmuxWarpifyBlockDismissed, ctx);
+                    send_telemetry_from_ctx!(TelemetryEvent::SshTmuxZtermifyBlockDismissed, ctx);
                 } else {
                     send_telemetry_from_ctx!(
                         TelemetryEvent::DeclineSubshellBootstrap {
@@ -24838,7 +24838,7 @@ impl TypedActionView for TerminalView {
             DragAndDropFiles(paths) => {
                 self.drag_and_drop_files(paths, ctx);
             }
-            WarpifySSHSession => self.add_ssh_warpifying_block(ctx),
+            ZtermifySSHSession => self.add_ssh_warpifying_block(ctx),
             NotifySshErrorBlock(action) => {
                 if let Some(SshBlockState::Error {
                     handle: ssh_error_block_handle,
@@ -25023,7 +25023,7 @@ impl TypedActionView for TerminalView {
             LoadAgentModeConversation => {
                 self.load_agent_mode_conversation(ctx);
             }
-            ShowWarpifySettings => ctx.emit(Event::OpenSettings(SettingsSection::Warpify)),
+            ShowZtermifySettings => ctx.emit(Event::OpenSettings(SettingsSection::Ztermify)),
             DeleteAttachment { index } => {
                 self.ai_context_model.update(ctx, |context_model, ctx| {
                     context_model.remove_pending_attachment(*index, ctx);
@@ -25222,7 +25222,7 @@ impl TypedActionView for TerminalView {
             OpenProjectRulesPane => {
                 if let Some(current_dir) = self.pwd() {
                     let mut warp_md_path = PathBuf::from(&current_dir);
-                    warp_md_path.push(WARP_MD_PATH);
+                    warp_md_path.push(ZTERM_MD_PATH);
                     #[cfg(feature = "local_fs")]
                     ctx.emit(Event::OpenCodeInWarp {
                         source: CodeSource::ProjectRules { path: warp_md_path },
@@ -25931,7 +25931,7 @@ impl View for TerminalView {
 
             Container::new(
                 Flex::row()
-                    .with_main_axis_size(warpui::elements::MainAxisSize::Max)
+                    .with_main_axis_size(zterm_ui::elements::MainAxisSize::Max)
                     .with_cross_axis_alignment(CrossAxisAlignment::Stretch)
                     .with_child(Shrinkable::new(1., final_element).finish())
                     .with_child(panel_with_background)
@@ -25970,7 +25970,7 @@ impl View for TerminalView {
         }
     }
 
-    fn keymap_context(&self, app: &AppContext) -> warpui::keymap::Context {
+    fn keymap_context(&self, app: &AppContext) -> zterm_ui::keymap::Context {
         let mut context = Self::default_keymap_context();
         context.map.insert(
             "TerminalView_BlockSelectionCardinality",
@@ -26059,7 +26059,7 @@ impl View for TerminalView {
             context.set.insert(init::ROOT_CLOUD_MODE_PANE_KEY);
         }
 
-        if let Some(WithinBlockBanner::WarpifyBanner(state)) =
+        if let Some(WithinBlockBanner::ZtermifyBanner(state)) =
             model_lock.block_list().active_block().block_banner()
         {
             if state.is_ssh() {
@@ -26500,7 +26500,7 @@ fn maybe_wrap_terminal_element_in_scrollable(
     vertical_scroll_handle: ScrollStateHandle,
     horizontal_scroll_handle: ClippedScrollStateHandle,
     required_terminal_width: f32,
-    theme: &WarpTheme,
+    theme: &ZtermTheme,
     element: impl NewScrollableElement + 'static,
 ) -> Box<dyn Element> {
     let nonactive_thumb_background = theme.disabled_text_color(theme.background()).into();

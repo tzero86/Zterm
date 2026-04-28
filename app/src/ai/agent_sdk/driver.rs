@@ -76,13 +76,13 @@ use futures::{
 };
 use oneshot::{Canceled, Receiver, Sender};
 use uuid::Uuid;
-use warp_cli::agent::{Harness, OutputFormat};
-use warp_cli::mcp::MCPSpec;
-use warp_cli::share::ShareRequest;
-use warp_core::{features::FeatureFlag, report_error, report_if_error, safe_debug, safe_info};
-use warp_graphql::ai::AgentTaskState;
-use warp_managed_secrets::ManagedSecretValue;
-use warpui::{
+use zterm_cli::agent::{Harness, OutputFormat};
+use zterm_cli::mcp::MCPSpec;
+use zterm_cli::share::ShareRequest;
+use zterm_core::{features::FeatureFlag, report_error, report_if_error, safe_debug, safe_info};
+use zterm_graphql::ai::AgentTaskState;
+use zterm_managed_secrets::ManagedSecretValue;
+use zterm_ui::{
     r#async::{FutureExt, TimeoutError},
     AppContext, Entity, ModelContext, ModelHandle, ModelSpawner, SingletonEntity,
 };
@@ -101,7 +101,7 @@ use terminal::TerminalDriverEvent;
 
 const MCP_SERVER_STARTUP_TIMEOUT: Duration = Duration::from_secs(60);
 const HARNESS_SAVE_INTERVAL: Duration = Duration::from_secs(30);
-pub(crate) const WARP_DRIVE_SYNC_TIMEOUT: Duration = Duration::from_secs(60);
+pub(crate) const ZTERM_DRIVE_SYNC_TIMEOUT: Duration = Duration::from_secs(60);
 const SETUP_FAILED_IDLE_TIMEOUT: Duration = Duration::from_secs(120);
 /// Maximum time to wait for an automatic error resume before propagating the error.
 /// If no follow-up status arrives within this window, the driver terminates with the
@@ -357,7 +357,7 @@ pub enum AgentDriverError {
     #[error("Agent profile \"{0}\" not found")]
     ProfileError(String),
     #[error(
-        "Failed to authenticate with server - please log in via 'oz login', provide an API key via '--api-key <key>', or set the WARP_API_KEY environment variable"
+        "Failed to authenticate with server - please log in via 'oz login', provide an API key via '--api-key <key>', or set the ZTERM_API_KEY environment variable"
     )]
     NotLoggedIn,
     #[error("Saved prompt not found for id {0}")]
@@ -369,8 +369,8 @@ pub enum AgentDriverError {
         #[source]
         error: terminal::ShareSessionError,
     },
-    #[error("Error syncing Warp Drive")]
-    WarpDriveSyncFailed,
+    #[error("Error syncing Zterm Drive")]
+    ZtermDriveSyncFailed,
     #[error("Requested environment not found: {0}")]
     EnvironmentNotFound(String),
     #[error("Environment setup failed: {0}")]
@@ -441,8 +441,8 @@ pub enum AgentDriverError {
     },
 }
 
-impl From<warpui::ModelDropped> for AgentDriverError {
-    fn from(_: warpui::ModelDropped) -> Self {
+impl From<zterm_ui::ModelDropped> for AgentDriverError {
+    fn from(_: zterm_ui::ModelDropped) -> Self {
         AgentDriverError::InvalidRuntimeState
     }
 }
@@ -596,7 +596,7 @@ impl AgentDriver {
 
         // Signal to third-party harnesses (e.g. Claude Code) that we're in a sandbox
         // so they allow root execution with permissive flags.
-        if warp_isolation_platform::detect().is_some() {
+        if zterm_isolation_platform::detect().is_some() {
             env_vars.insert(OsString::from("IS_SANDBOX"), OsString::from("1"));
         }
 
@@ -729,7 +729,7 @@ impl AgentDriver {
                 ) {
                     let timeout = idle_timeout.min(SETUP_FAILED_IDLE_TIMEOUT);
                     log::info!("Environment setup failed; keeping session alive for {timeout:?}");
-                    warpui::r#async::Timer::after(timeout).await;
+                    zterm_ui::r#async::Timer::after(timeout).await;
                 }
             }
 
@@ -1402,7 +1402,7 @@ impl AgentDriver {
                 // and then call stop_sharing_session when they're done. To know when streams are finished, we would need to modify start_ordered_terminal_events_listener
                 // to send a message when the streams are finished, flushed, and the websocket is disconnected. For now, we'll just sleep for a second, as this seems
                 // to be enough time for the streams to be finished and the events to be flushed.
-                warpui::r#async::Timer::after(Duration::from_secs(1)).await;
+                zterm_ui::r#async::Timer::after(Duration::from_secs(1)).await;
 
                 conversation_status.into_result()
             }
@@ -1569,7 +1569,7 @@ impl AgentDriver {
         let command_result = loop {
             futures::select! {
                 exit_code = command_handle => break exit_code,
-                _ = warpui::r#async::Timer::after(HARNESS_SAVE_INTERVAL).fuse() => {
+                _ = zterm_ui::r#async::Timer::after(HARNESS_SAVE_INTERVAL).fuse() => {
                     log::debug!("Triggering periodic save of harness conversation data");
                     report_if_error!(runner
                         .save_conversation(SavePoint::Periodic, foreground)
@@ -1869,7 +1869,7 @@ impl AgentDriver {
             }
         });
 
-        // Subscribe to document model events to emit artifact_created when plans sync to Warp Drive.
+        // Subscribe to document model events to emit artifact_created when plans sync to Zterm Drive.
         ctx.subscribe_to_model(&AIDocumentModel::handle(ctx), move |me, event, ctx| {
             let AIDocumentModelEvent::DocumentSaveStatusUpdated(document_id) = event else {
                 return;

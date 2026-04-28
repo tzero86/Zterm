@@ -1,4 +1,4 @@
-//! The `BlocklistAIActionModel` is responsible for managing state related to `AIAgentAction`s
+﻿//! The `BlocklistAIActionModel` is responsible for managing state related to `AIAgentAction`s
 //! received in AI responses.
 //!
 //! Notably, this model manages the "action queue", which is used to support receiving multiple
@@ -49,7 +49,7 @@ use std::{
 use crate::ai::agent::conversation::AIConversationId;
 use itertools::Itertools;
 use parking_lot::FairMutex;
-use warpui::{AppContext, Entity, EntityId, ModelContext, ModelHandle, SingletonEntity};
+use zterm_ui::{AppContext, Entity, EntityId, ModelContext, ModelHandle, SingletonEntity};
 
 use crate::{
     ai::{

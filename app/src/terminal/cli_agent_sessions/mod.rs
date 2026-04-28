@@ -1,11 +1,11 @@
-pub mod event;
+﻿pub mod event;
 pub mod listener;
 #[cfg(not(target_family = "wasm"))]
 pub(crate) mod plugin_manager;
 
 use std::collections::{HashMap, HashSet};
 
-use warpui::{Entity, EntityId, ModelContext, ModelHandle, SingletonEntity};
+use zterm_ui::{Entity, EntityId, ModelContext, ModelHandle, SingletonEntity};
 
 use crate::ai::blocklist::InputConfig;
 

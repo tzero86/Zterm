@@ -1,8 +1,8 @@
-use std::sync::mpsc::SyncSender;
+﻿use std::sync::mpsc::SyncSender;
 use std::sync::Arc;
 
 use parking_lot::FairMutex;
-use warpui::{AppContext, ModelHandle, SingletonEntity};
+use zterm_ui::{AppContext, ModelHandle, SingletonEntity};
 
 use crate::persistence::StartedCommandMetadata;
 use crate::terminal::{view::ExecuteCommandEvent, TerminalModel};

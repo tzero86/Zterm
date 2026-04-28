@@ -1,9 +1,9 @@
-use std::borrow::Cow;
+﻿use std::borrow::Cow;
 
 use itertools::Itertools;
 use lazy_static::lazy_static;
 use memo_map::MemoMap;
-use warpui::{AppContext, AssetProvider, SingletonEntity};
+use zterm_ui::{AppContext, AssetProvider, SingletonEntity};
 
 use crate::{
     env_vars::EnvVar,
@@ -215,7 +215,7 @@ pub fn init_subshell_command(
         Some(shell_type) => {
             let subshell_script =
                 init_subshell_script_for_shell(shell_type, &crate::ASSETS, vars, ctx);
-            format!(r#" [ -z $WARP_BOOTSTRAPPED ] && eval '{subshell_script}'"#)
+            format!(r#" [ -z $ZTERM_BOOTSTRAPPED ] && eval '{subshell_script}'"#)
         }
         None => init_subshell_script_for_unknown_shell(&crate::ASSETS),
     }
@@ -237,7 +237,7 @@ fn init_subshell_script_for_shell(
 
     // Prepend environment variable settings to the script
     let env_setup_script = format!(
-        "export WARP_HONOR_PS1={}; {}",
+        "export ZTERM_HONOR_PS1={}; {}",
         honor_ps1_env_var_value,
         env_vars
             .iter()

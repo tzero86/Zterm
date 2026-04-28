@@ -20,8 +20,8 @@ use super::{
     referrals_page::ReferralsPageView,
     show_blocks_view::ShowBlocksView,
     teams_page::TeamsPageView,
-    warp_drive_page::WarpDriveSettingsPageView,
-    warpify_page::WarpifyPageView,
+    warp_drive_page::ZtermDriveSettingsPageView,
+    warpify_page::ZtermifyPageView,
     SettingsSection,
 };
 use crate::{
@@ -32,11 +32,11 @@ use crate::{
     view_components::{Dropdown, SubmittableTextInput},
 };
 use settings::Setting;
-use warp_core::{
+use zterm_core::{
     settings::SyncToCloud,
     ui::{color::blend::Blend, theme::color::internal_colors},
 };
-use warpui::{
+use zterm_ui::{
     elements::{
         new_scrollable::{ClippedAxisConfiguration, DualAxisConfig, SingleAxisConfig},
         Align, Border, ChildView, ClippedScrollStateHandle, ConstrainedBox, Container,
@@ -113,13 +113,13 @@ pub enum SettingsPageViewHandle {
     Teams(ViewHandle<TeamsPageView>),
     OzCloudAPIKeys(ViewHandle<super::platform_page::PlatformPageView>),
     Privacy(ViewHandle<PrivacyPageView>),
-    Warpify(ViewHandle<WarpifyPageView>),
+    Ztermify(ViewHandle<ZtermifyPageView>),
     Referrals(ViewHandle<ReferralsPageView>),
     AI(ViewHandle<AISettingsPageView>),
     CloudEnvironments(ViewHandle<EnvironmentsPageView>),
     BillingAndUsage(ViewHandle<BillingAndUsagePageView>),
     MCPServers(ViewHandle<MCPServersSettingsPageView>),
-    WarpDrive(ViewHandle<WarpDriveSettingsPageView>),
+    ZtermDrive(ViewHandle<ZtermDriveSettingsPageView>),
 }
 
 impl SettingsPageViewHandle {
@@ -136,13 +136,13 @@ impl SettingsPageViewHandle {
             Teams(view_handle) => ChildView::new(view_handle).finish(),
             OzCloudAPIKeys(view_handle) => ChildView::new(view_handle).finish(),
             Privacy(view_handle) => ChildView::new(view_handle).finish(),
-            Warpify(view_handle) => ChildView::new(view_handle).finish(),
+            Ztermify(view_handle) => ChildView::new(view_handle).finish(),
             Referrals(view_handle) => ChildView::new(view_handle).finish(),
             AI(view_handle) => ChildView::new(view_handle).finish(),
             CloudEnvironments(view_handle) => ChildView::new(view_handle).finish(),
             BillingAndUsage(view_handle) => ChildView::new(view_handle).finish(),
             MCPServers(view_handle) => ChildView::new(view_handle).finish(),
-            WarpDrive(view_handle) => ChildView::new(view_handle).finish(),
+            ZtermDrive(view_handle) => ChildView::new(view_handle).finish(),
         }
     }
 }
@@ -434,7 +434,7 @@ pub fn render_full_pane_width_ai_button(
                 .with_child(
                     ConstrainedBox::new(
                         Icon::ChevronRight
-                            .to_warpui_icon(appearance.theme().main_text_color(icon_bg))
+                            .to_zterm_ui_icon(appearance.theme().main_text_color(icon_bg))
                             .finish(),
                     )
                     .with_width(16.)
@@ -654,7 +654,7 @@ pub fn render_body_item_label_internal<T: Clone + Action>(
     if let Some(icon) = label_icon {
         label.add_child(
             Container::new(
-                ConstrainedBox::new(icon.to_warpui_icon(label_color).finish())
+                ConstrainedBox::new(icon.to_zterm_ui_icon(label_color).finish())
                     .with_width(16.)
                     .with_height(16.)
                     .finish(),
@@ -942,7 +942,7 @@ pub(crate) fn render_settings_info_banner(
     let icon = Container::new(
         ConstrainedBox::new(
             Icon::AlertCircle
-                .to_warpui_icon(appearance.theme().active_ui_text_color())
+                .to_zterm_ui_icon(appearance.theme().active_ui_text_color())
                 .finish(),
         )
         .with_width(16.)
@@ -1179,7 +1179,7 @@ where
 
 /// Structured contents of a settings tab page. This type breaks all the content into
 /// [`SettingsWidget`]s.
-pub(super) enum PageType<V: warpui::View> {
+pub(super) enum PageType<V: zterm_ui::View> {
     /// A page where the contents cannot be separated for showing search results. If any part
     /// matches the search query, the whole page must show. The whole page is one big
     /// [`SettingsWidget`].
@@ -1259,7 +1259,7 @@ impl From<usize> for MatchData {
     }
 }
 
-impl<V: warpui::View> PageType<V> {
+impl<V: zterm_ui::View> PageType<V> {
     /// A page where the contents cannot be separated for showing search results. If any part
     /// matches the search query, the whole page must show. The whole page is one big
     /// [`SettingsWidget`].
@@ -1680,7 +1680,7 @@ impl<V: warpui::View> PageType<V> {
                 },
                 theme.nonactive_ui_detail().into(),
                 theme.active_ui_detail().into(),
-                warpui::elements::Fill::None,
+                zterm_ui::elements::Fill::None,
             )
             .finish(),
             vec![(
@@ -1707,7 +1707,7 @@ impl<V: warpui::View> PageType<V> {
                     },
                     theme.nonactive_ui_detail().into(),
                     theme.active_ui_detail().into(),
-                    warpui::elements::Fill::None,
+                    zterm_ui::elements::Fill::None,
                 )
                 .finish(),
             )],
@@ -1731,7 +1731,7 @@ impl<V: warpui::View> PageType<V> {
 }
 
 /// The results from a [`PageType`] with only matching [`SettingsWidget`]s.
-pub(super) enum FilteredPageType<'a, V: warpui::View> {
+pub(super) enum FilteredPageType<'a, V: zterm_ui::View> {
     Monolith {
         widget: Option<&'a dyn SettingsWidget<View = V>>,
         title: Option<&'static str>,
@@ -1755,13 +1755,13 @@ pub(super) enum FilteredPageType<'a, V: warpui::View> {
 }
 
 /// A grouping of related [`SettingsWidget`]s that fall under the same sub-header.
-pub(super) struct Category<V: warpui::View> {
+pub(super) struct Category<V: zterm_ui::View> {
     title: &'static str,
     subtitle: Option<&'static str>,
     widgets: Vec<Box<dyn SettingsWidget<View = V>>>,
 }
 
-impl<V: warpui::View> Category<V> {
+impl<V: zterm_ui::View> Category<V> {
     pub(super) fn new(
         title: &'static str,
         widgets: Vec<Box<dyn SettingsWidget<View = V>>>,
@@ -1780,7 +1780,7 @@ impl<V: warpui::View> Category<V> {
 }
 
 /// A [`Category`] with only the results which match a search query.
-pub(super) struct FilteredCategory<'a, V: warpui::View> {
+pub(super) struct FilteredCategory<'a, V: zterm_ui::View> {
     pub(super) title: &'static str,
     pub(super) subtitle: Option<&'static str>,
     pub(super) widgets: Vec<&'a dyn SettingsWidget<View = V>>,
@@ -1790,7 +1790,7 @@ pub(super) struct FilteredCategory<'a, V: warpui::View> {
 /// content to match against.
 pub(super) trait SettingsWidget {
     /// Which View (settings page) this widget belongs to.
-    type View: warpui::View;
+    type View: zterm_ui::View;
 
     fn static_widget_id() -> &'static str
     where

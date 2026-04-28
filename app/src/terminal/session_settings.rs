@@ -1,4 +1,4 @@
-pub mod new_session_shell;
+﻿pub mod new_session_shell;
 pub mod startup_shell;
 pub mod working_directory_config;
 
@@ -9,7 +9,7 @@ use serde::{Deserialize, Serialize};
 pub use startup_shell::*;
 pub use working_directory_config::*;
 
-use warp_core::settings::{
+use zterm_core::settings::{
     macros::define_settings_group, RespectUserSyncSetting, SupportedPlatforms, SyncToCloud,
 };
 

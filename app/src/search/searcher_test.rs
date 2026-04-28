@@ -1,9 +1,9 @@
-use crate::define_search_schema;
+﻿use crate::define_search_schema;
 use crate::search::searcher::{CustomTokenizer, MIN_MEMORY_BUDGET};
 use itertools::Itertools;
 use std::sync::Arc;
 use tantivy::tokenizer::{TextAnalyzer, Token};
-use warpui::r#async::executor::Background;
+use zterm_ui::r#async::executor::Background;
 
 fn token_stream_helper(text: &str) -> Vec<Token> {
     let mut a = TextAnalyzer::from(CustomTokenizer::default());

@@ -1,18 +1,18 @@
 mod items;
 pub use items::Items;
-use warp_core::context_flag::ContextFlag;
-use warp_core::features::FeatureFlag;
+use zterm_core::context_flag::ContextFlag;
+use zterm_core::features::FeatureFlag;
 
 use crate::appearance::Appearance;
 use crate::search::command_palette::FilterChipRenderer;
 
-use crate::drive::settings::WarpDriveSettings;
+use crate::drive::settings::ZtermDriveSettings;
 use crate::search::QueryFilter;
 use crate::settings::AISettings;
 use crate::workspace::Workspace;
 use std::collections::HashMap;
-use warpui::elements::{Container, Flex, MouseStateHandle, ParentElement, Shrinkable, Wrap};
-use warpui::{
+use zterm_ui::elements::{Container, Flex, MouseStateHandle, ParentElement, Shrinkable, Wrap};
+use zterm_ui::{
     AppContext, Element, Entity, ModelHandle, SingletonEntity, TypedActionView, View, ViewContext,
     WindowId,
 };
@@ -81,7 +81,7 @@ impl ZeroState {
         app: &AppContext,
         window_id: WindowId,
     ) -> impl Iterator<Item = QueryFilter> {
-        let show_warp_drive = WarpDriveSettings::is_warp_drive_enabled(app);
+        let show_warp_drive = ZtermDriveSettings::is_warp_drive_enabled(app);
 
         let mut valid_filters = vec![];
         if show_warp_drive {

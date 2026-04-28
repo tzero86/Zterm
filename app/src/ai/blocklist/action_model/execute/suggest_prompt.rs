@@ -1,6 +1,6 @@
-use futures::{channel::oneshot, future::BoxFuture, FutureExt};
-use warp_core::features::FeatureFlag;
-use warpui::{Entity, ModelContext};
+﻿use futures::{channel::oneshot, future::BoxFuture, FutureExt};
+use zterm_core::features::FeatureFlag;
+use zterm_ui::{Entity, ModelContext};
 
 use crate::{
     ai::{

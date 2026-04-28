@@ -1,4 +1,4 @@
-use crate::modal::Modal;
+﻿use crate::modal::Modal;
 
 use crate::modal::ModalEvent;
 use crate::pane_group::TerminalPaneId;
@@ -10,16 +10,16 @@ use std::sync::Arc;
 
 use parking_lot::FairMutex;
 use style::{DENIED_MODAL_WIDTH, MODAL_HEIGHT, MODAL_WIDTH};
-use warp_core::ui::appearance::Appearance;
-use warpui::keymap::FixedBinding;
-use warpui::EntityId;
+use zterm_core::ui::appearance::Appearance;
+use zterm_ui::keymap::FixedBinding;
+use zterm_ui::EntityId;
 
-use warpui::presenter::ChildView;
-use warpui::ui_components::components::UiComponentStyles;
-use warpui::AppContext;
-use warpui::SingletonEntity;
-use warpui::ViewHandle;
-use warpui::{Element, Entity, TypedActionView, View, ViewContext};
+use zterm_ui::presenter::ChildView;
+use zterm_ui::ui_components::components::UiComponentStyles;
+use zterm_ui::AppContext;
+use zterm_ui::SingletonEntity;
+use zterm_ui::ViewHandle;
+use zterm_ui::{Element, Entity, TypedActionView, View, ViewContext};
 
 mod body;
 mod denied_body;
@@ -60,7 +60,7 @@ pub enum ShareSessionModalEvent {
 }
 
 pub fn init(app: &mut AppContext) {
-    use warpui::keymap::macros::*;
+    use zterm_ui::keymap::macros::*;
 
     app.register_fixed_bindings([FixedBinding::new(
         "escape",

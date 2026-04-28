@@ -1,4 +1,4 @@
-use crate::ai::agent::conversation::{AIConversation, AIConversationId};
+﻿use crate::ai::agent::conversation::{AIConversation, AIConversationId};
 use crate::ai::conversation_navigation::ConversationNavigationData;
 use crate::search::command_palette::conversations::search::{
     ConversationMatchResult, ConversationSearcher, FuzzyConversationSearcher, MatchedConversation,
@@ -14,7 +14,7 @@ use crate::search::SyncDataSource;
 use crate::workspace::Workspace;
 use itertools::Itertools;
 use std::collections::HashMap;
-use warpui::{AppContext, Entity};
+use zterm_ui::{AppContext, Entity};
 
 /// Sections for grouping conversations in the command palette.
 #[derive(Debug, PartialEq, Eq, Hash)]

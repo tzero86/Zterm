@@ -1,4 +1,4 @@
-use ai::skills::SkillProvider;
+﻿use ai::skills::SkillProvider;
 use fuzzy_match::FuzzyMatchResult;
 use ordered_float::OrderedFloat;
 
@@ -7,12 +7,12 @@ use crate::search::ai_context_menu::mixer::AIContextMenuSearchableAction;
 use crate::search::ai_context_menu::styles;
 use crate::search::item::SearchItem;
 use crate::search::result_renderer::ItemHighlightState;
-use warp_core::ui::icons::Icon;
-use warpui::elements::{
+use zterm_core::ui::icons::Icon;
+use zterm_ui::elements::{
     ConstrainedBox, Container, CrossAxisAlignment, Flex, Highlight, ParentElement, Shrinkable, Text,
 };
-use warpui::fonts::{Properties, Weight};
-use warpui::{AppContext, Element, SingletonEntity};
+use zterm_ui::fonts::{Properties, Weight};
+use zterm_ui::{AppContext, Element, SingletonEntity};
 
 const MAX_DESCRIPTION_LEN: usize = 60;
 
@@ -36,11 +36,11 @@ impl SearchItem for SkillSearchItem {
         let icon_color = highlight_state.icon_fill(appearance).into_solid();
 
         let icon_element = if let Some(override_icon) = self.icon_override {
-            override_icon.to_warpui_icon(icon_color.into()).finish()
+            override_icon.to_zterm_ui_icon(icon_color.into()).finish()
         } else {
             self.provider
                 .icon()
-                .to_warpui_icon(self.provider.icon_fill(icon_color.into()))
+                .to_zterm_ui_icon(self.provider.icon_fill(icon_color.into()))
                 .finish()
         };
 

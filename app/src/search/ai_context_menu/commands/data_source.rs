@@ -1,11 +1,11 @@
-use super::search_item::CommandSearchItem;
+﻿use super::search_item::CommandSearchItem;
 use crate::search::ai_context_menu::mixer::AIContextMenuSearchableAction;
 use crate::search::data_source::{Query, QueryResult};
 use crate::search::mixer::{DataSourceRunErrorWrapper, SyncDataSource};
 use crate::terminal::History;
 use fuzzy_match::FuzzyMatchResult;
 use std::collections::HashSet;
-use warpui::{AppContext, SingletonEntity};
+use zterm_ui::{AppContext, SingletonEntity};
 
 const MAX_RESULTS: usize = 50;
 
@@ -118,6 +118,6 @@ impl SyncDataSource for CommandDataSource {
     }
 }
 
-impl warpui::Entity for CommandDataSource {
+impl zterm_ui::Entity for CommandDataSource {
     type Event = ();
 }

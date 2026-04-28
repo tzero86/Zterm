@@ -1,4 +1,4 @@
-//! End-of-run snapshot upload pipeline invoked from `AgentDriver::run_snapshot_upload`.
+﻿//! End-of-run snapshot upload pipeline invoked from `AgentDriver::run_snapshot_upload`.
 //!
 //! Reads a JSONL declarations file listing repos and files, gathers git-diff patches or file
 //! contents for each, and uploads them (plus a `snapshot_state.json` manifest) to presigned GCS
@@ -34,8 +34,8 @@ use anyhow::Result;
 use command::r#async::Command;
 use command::Stdio;
 use futures::future::join_all;
-use warp_core::report_error;
-use warpui::r#async::FutureExt as _;
+use zterm_core::report_error;
+use zterm_ui::r#async::FutureExt as _;
 
 use crate::ai::agent_sdk::retry::with_bounded_retry;
 use crate::ai::ambient_agents::AmbientAgentTaskId;

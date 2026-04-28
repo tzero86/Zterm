@@ -1,6 +1,6 @@
-use std::sync::Arc;
+﻿use std::sync::Arc;
 
-use warpui::{
+use zterm_ui::{
     platform::WindowStyle, presenter::ChildView, App, Element, Entity, TypedActionView, View,
     ViewHandle, WindowId,
 };
@@ -45,7 +45,7 @@ impl View for TestView {
         "CommentEditorTestView"
     }
 
-    fn render(&self, _app: &warpui::AppContext) -> Box<dyn warpui::Element> {
+    fn render(&self, _app: &zterm_ui::AppContext) -> Box<dyn zterm_ui::Element> {
         ChildView::new(&self.editor).finish()
     }
 }

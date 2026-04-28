@@ -28,7 +28,7 @@ use warp::{
         shell::ShellType,
     },
 };
-use warpui::{
+use zterm_ui::{
     async_assert, async_assert_eq,
     integration::{AssertionCallback, AssertionOutcome, TestStep},
 };
@@ -240,7 +240,7 @@ macro_rules! generate_can_bootstrap_tmux_ssh_test_for_shell {
             // Quit SSH Session once we validate warpificaiton works with Tmux Install
             let builder = assert_warpification(builder).with_step(run_exit_command());
 
-            // Validate we can Warpify when Tmux is already installed
+            // Validate we can Ztermify when Tmux is already installed
             assert_warpification(warpify(builder))
         }
     };

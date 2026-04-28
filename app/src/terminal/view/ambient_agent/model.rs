@@ -1,12 +1,12 @@
-use std::time::Duration;
+﻿use std::time::Duration;
 
 use instant::Instant;
 use session_sharing_protocol::common::SessionId;
-use warp_cli::agent::Harness;
-use warp_core::features::FeatureFlag;
-use warp_core::send_telemetry_from_ctx;
-use warpui::r#async::{SpawnedFutureHandle, Timer};
-use warpui::{Entity, EntityId, ModelContext, SingletonEntity};
+use zterm_cli::agent::Harness;
+use zterm_core::features::FeatureFlag;
+use zterm_core::send_telemetry_from_ctx;
+use zterm_ui::r#async::{SpawnedFutureHandle, Timer};
+use zterm_ui::{Entity, EntityId, ModelContext, SingletonEntity};
 
 use crate::ai::active_agent_views_model::ActiveAgentViewsModel;
 use crate::ai::agent::conversation::AIConversationId;
@@ -129,7 +129,7 @@ impl AmbientAgentViewModel {
             me.handle_cloud_model_event(event, ctx);
         });
 
-        // Validate the default environment once Warp Drive sync completes.
+        // Validate the default environment once Zterm Drive sync completes.
         // The environment ID may be restored from settings before environments are synced,
         // so we need to validate it once the initial load is complete.
         let initial_load_complete = UpdateManager::as_ref(ctx).initial_load_complete();
@@ -210,7 +210,7 @@ impl AmbientAgentViewModel {
         }
     }
 
-    /// Validates the environment ID after Warp Drive initial load completes.
+    /// Validates the environment ID after Zterm Drive initial load completes.
     /// If the environment no longer exists, clears the selection.
     fn validate_environment_after_initial_load(&mut self, ctx: &mut ModelContext<Self>) {
         if let Some(id) = &self.environment_id {
@@ -490,7 +490,7 @@ impl AmbientAgentViewModel {
             ComputerUsePermission::resolve_cloud_agent_state(ctx);
         let computer_use_enabled = Some(enabled);
 
-        let default_host = std::env::var("WARP_CLOUD_MODE_DEFAULT_HOST")
+        let default_host = std::env::var("ZTERM_CLOUD_MODE_DEFAULT_HOST")
             .ok()
             .filter(|s| !s.is_empty());
 

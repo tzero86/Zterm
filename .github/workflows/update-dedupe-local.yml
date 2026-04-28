@@ -1,4 +1,4 @@
-name: Update Dedupe Skill (Local)
+﻿name: Update Dedupe Skill (Local)
 on:
   schedule:
     - cron: '30 9 * * 1'  # Every Monday at 09:30 UTC
@@ -20,4 +20,4 @@ jobs:
     secrets:
       OZ_MGMT_GHA_APP_ID: ${{ secrets.OZ_MGMT_GHA_APP_ID }}
       OZ_MGMT_GHA_PRIVATE_KEY: ${{ secrets.OZ_MGMT_GHA_PRIVATE_KEY }}
-      OSS_WARP_API_KEY: ${{ secrets.OSS_WARP_API_KEY }}
+      OSS_ZTERM_API_KEY: ${{ secrets.OSS_ZTERM_API_KEY }}

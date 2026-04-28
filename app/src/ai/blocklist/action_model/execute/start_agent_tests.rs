@@ -1,4 +1,4 @@
-use super::*;
+﻿use super::*;
 use crate::ai::agent::conversation::ConversationStatus;
 use crate::ai::agent::task::TaskId;
 use crate::ai::agent::{
@@ -7,8 +7,8 @@ use crate::ai::agent::{
 };
 use crate::ai::blocklist::BlocklistAIHistoryModel;
 use ai::agent::action_result::StartAgentVersion;
-use warp_core::features::FeatureFlag;
-use warpui::{App, EntityId};
+use zterm_core::features::FeatureFlag;
+use zterm_ui::{App, EntityId};
 fn build_start_agent_action(
     version: StartAgentVersion,
     execution_mode: StartAgentExecutionMode,

@@ -160,8 +160,8 @@ use server::voice_transcriber::ServerVoiceTranscriber;
 #[cfg(feature = "local_fs")]
 use settings::import::model::ImportedConfigModel;
 use voice::transcriber::VoiceTranscriber;
-use warp_cli::GlobalOptions;
-use warp_cli::{agent::AgentCommand, CliCommand};
+use zterm_cli::GlobalOptions;
+use zterm_cli::{agent::AgentCommand, CliCommand};
 
 #[cfg(feature = "local_fs")]
 use repo_metadata::{
@@ -183,15 +183,15 @@ pub mod workspace;
 pub use persistence::testing as sqlite_testing;
 
 use ::settings::{Setting, ToggleableSetting};
-pub use warp_core::errors::{report_error, report_if_error};
+pub use zterm_core::errors::{report_error, report_if_error};
 
 #[cfg(feature = "plugin_host")]
 pub use plugin::{run_plugin_host, PLUGIN_HOST_FLAG};
-use warp_core::user_preferences::GetUserPreferences as _;
-use warpui::modals::{AlertDialogWithCallbacks, AppModalCallback};
-use warpui::platform::app::ApproveTerminateResult;
 use window_settings::WindowSettings;
 use workflows::manager::WorkflowManager;
+use zterm_core::user_preferences::GetUserPreferences as _;
+use zterm_ui::modals::{AlertDialogWithCallbacks, AppModalCallback};
+use zterm_ui::platform::app::ApproveTerminateResult;
 
 use crate::ai::ambient_agents::github_auth_notifier::GitHubAuthNotifier;
 use crate::ai::document::ai_document_model::AIDocumentModel;
@@ -239,9 +239,9 @@ use crate::terminal::resizable_data::ResizableData;
 use crate::terminal::view::inline_banner::ByoLlmAuthBannerSessionState;
 use crate::terminal::{AudibleBell, History};
 use crate::undo_close::UndoCloseStack;
-use crate::user_config::WarpConfig;
+use crate::user_config::ZtermConfig;
 use crate::vim_registers::VimRegisters;
-use crate::warp_managed_paths_watcher::{ensure_warp_watch_roots_exist, WarpManagedPathsWatcher};
+use crate::warp_managed_paths_watcher::{ensure_warp_watch_roots_exist, ZtermManagedPathsWatcher};
 use crate::workflows::aliases::WorkflowAliases;
 use crate::workflows::local_workflows::LocalWorkflows;
 use crate::workspace::{ActiveSession, OneTimeModalModel, ToastStack};
@@ -265,11 +265,11 @@ use std::sync::Arc;
 use terminal::input;
 use terminal::session_settings::SessionSettings;
 use url::Url;
-use warp_core::execution_mode::{AppExecutionMode, ExecutionMode};
-use warp_managed_secrets::ManagedSecretManager;
 use workspace::sync_inputs::SyncedInputState;
+use zterm_core::execution_mode::{AppExecutionMode, ExecutionMode};
+use zterm_managed_secrets::ManagedSecretManager;
 
-use warpui::{integration::TestDriver, App, AssetProvider, Event};
+use zterm_ui::{integration::TestDriver, App, AssetProvider, Event};
 
 use self::features::FeatureFlag;
 use crate::app_state::AppState;
@@ -291,21 +291,21 @@ use crate::util::bindings::is_binding_cross_platform;
 use crate::workspace::{PaneViewLocator, Workspace, WorkspaceAction};
 use crate::workspaces::update_manager::TeamUpdateManager;
 use crate::workspaces::user_workspaces::UserWorkspaces;
-use warp_logging::LogDestination;
+use zterm_logging::LogDestination;
 
 // Re-export the send_telemetry_from_ctx macro at the crate root level
-pub use warp_core::send_telemetry_from_app_ctx;
-pub use warp_core::send_telemetry_from_ctx;
+pub use zterm_core::send_telemetry_from_app_ctx;
+pub use zterm_core::send_telemetry_from_ctx;
 
 // Re-export the safe logging macros at the crate root level for backwards compatibility
-pub use warp_core::{safe_debug, safe_error, safe_info, safe_warn};
+pub use zterm_core::{safe_debug, safe_error, safe_info, safe_warn};
 
 use crate::antivirus::AntivirusInfo;
 #[cfg(feature = "local_fs")]
-use warp_files::FileModel;
-use warpui::platform::TerminationMode;
-use warpui::windowing::state::ApplicationStage;
-use warpui::{AppContext, SingletonEntity, WindowId};
+use zterm_files::FileModel;
+use zterm_ui::platform::TerminationMode;
+use zterm_ui::windowing::state::ApplicationStage;
+use zterm_ui::{AppContext, SingletonEntity, WindowId};
 
 #[derive(Clone, Copy, RustEmbed)]
 #[folder = "assets"]
@@ -344,15 +344,15 @@ fn determine_agent_source(
 pub enum LaunchMode {
     /// Run the regular GUI application.
     App {
-        args: warp_cli::AppArgs,
-        /// API key for server authentication, if provided via `--api-key` or `WARP_API_KEY`.
+        args: zterm_cli::AppArgs,
+        /// API key for server authentication, if provided via `--api-key` or `ZTERM_API_KEY`.
         /// Only used on dogfood channels.
         api_key: Option<String>,
     },
 
     /// Run the Warp command-line SDK.
     CommandLine {
-        command: warp_cli::CliCommand,
+        command: zterm_cli::CliCommand,
         global_options: GlobalOptions,
         debug: bool,
         /// Whether this CLI invocation is running in a sandboxed environment.
@@ -368,10 +368,10 @@ pub enum LaunchMode {
 }
 
 impl LaunchMode {
-    fn args(&self) -> Cow<'_, warp_cli::AppArgs> {
+    fn args(&self) -> Cow<'_, zterm_cli::AppArgs> {
         match self {
             LaunchMode::App { args, .. } => Cow::Borrowed(args),
-            _ => Cow::Owned(warp_cli::AppArgs::default()),
+            _ => Cow::Owned(zterm_cli::AppArgs::default()),
         }
     }
 
@@ -506,11 +506,11 @@ pub fn run() -> Result<()> {
     init_feature_flags();
 
     // Parse command-line arguments.
-    let args = warp_cli::Args::from_env();
+    let args = zterm_cli::Args::from_env();
 
     // Server URL overrides are only honored on internal dev channels. Release channels silently
     // ignore `--server-root-url` / `--ws-server-url` / `--session-sharing-server-url` (and their
-    // `WARP_*` env-var equivalents) so shipped builds can't be redirected away from their
+    // `ZTERM_*` env-var equivalents) so shipped builds can't be redirected away from their
     // baked-in server URLs. See `Channel::allows_server_url_overrides`.
     if ChannelState::channel().allows_server_url_overrides() {
         if let Some(url) = args.server_root_url() {
@@ -536,11 +536,11 @@ pub fn run() -> Result<()> {
         #[cfg(windows)]
         if command.prints_to_stdout() {
             // We attach a console to ensure that all standard output gets printed correctly.
-            warp_util::windows::attach_to_parent_console();
+            zterm_util::windows::attach_to_parent_console();
         }
         match command {
             #[cfg(all(feature = "local_tty", unix))]
-            warp_cli::Command::Worker(warp_cli::WorkerCommand::TerminalServer(args)) => {
+            zterm_cli::Command::Worker(zterm_cli::WorkerCommand::TerminalServer(args)) => {
                 // If we were asked to run as a terminal server (as opposed to the main
                 // GUI application), do so immediately.  Ideally, the terminal server would
                 // be a separate binary, but it's much easier to distribute a single binary,
@@ -550,11 +550,13 @@ pub fn run() -> Result<()> {
                 return Ok(());
             }
             #[cfg(feature = "plugin_host")]
-            warp_cli::Command::Worker(warp_cli::WorkerCommand::PluginHost { .. }) => {
+            zterm_cli::Command::Worker(zterm_cli::WorkerCommand::PluginHost { .. }) => {
                 return crate::run_plugin_host();
             }
             #[cfg(feature = "local_tty")]
-            warp_cli::Command::Worker(warp_cli::WorkerCommand::MinidumpServer { socket_name }) => {
+            zterm_cli::Command::Worker(zterm_cli::WorkerCommand::MinidumpServer {
+                socket_name,
+            }) => {
                 cfg_if::cfg_if! {
                     if #[cfg(all(linux_or_windows, feature = "crash_reporting"))] {
                         return crate::crash_reporting::run_minidump_server(socket_name);
@@ -565,22 +567,22 @@ pub fn run() -> Result<()> {
                 }
             }
             #[cfg(not(target_family = "wasm"))]
-            warp_cli::Command::Worker(warp_cli::WorkerCommand::RemoteServerProxy) => {
+            zterm_cli::Command::Worker(zterm_cli::WorkerCommand::RemoteServerProxy) => {
                 return crate::remote_server::run_proxy();
             }
             #[cfg(not(target_family = "wasm"))]
-            warp_cli::Command::Worker(warp_cli::WorkerCommand::RemoteServerDaemon) => {
+            zterm_cli::Command::Worker(zterm_cli::WorkerCommand::RemoteServerDaemon) => {
                 return crate::remote_server::run_daemon();
             }
             #[cfg(not(target_family = "wasm"))]
-            warp_cli::Command::Worker(warp_cli::WorkerCommand::RipgrepSearch {
+            zterm_cli::Command::Worker(zterm_cli::WorkerCommand::RipgrepSearch {
                 parent,
                 ignore_case,
                 multiline,
                 pattern,
                 paths,
             }) => {
-                warp_ripgrep::search::run_search_subprocess(
+                zterm_ripgrep::search::run_search_subprocess(
                     std::slice::from_ref(pattern),
                     paths.clone(),
                     *ignore_case,
@@ -595,23 +597,25 @@ pub fn run() -> Result<()> {
                 feature = "plugin_host",
                 not(target_family = "wasm")
             )))]
-            warp_cli::Command::Worker(worker) => {
+            zterm_cli::Command::Worker(worker) => {
                 // Need this case to handle platforms where there are no enum variants in
-                // warp_cli::WorkerCommand, as we still need to check Command::Worker.
+                // zterm_cli::WorkerCommand, as we still need to check Command::Worker.
 
                 // On wasm, specifically, we should fail spectacularly if we get here.
                 #[cfg(target_family = "wasm")]
                 panic!("Worker process not supported on WASM: {worker:?}")
             }
-            warp_cli::Command::Completions { shell } => {
-                return warp_cli::completions::generate_to_stdout(*shell);
+            zterm_cli::Command::Completions { shell } => {
+                return zterm_cli::completions::generate_to_stdout(*shell);
             }
-            warp_cli::Command::CommandLine(cmd) => {
+            zterm_cli::Command::CommandLine(cmd) => {
                 let (is_sandboxed, computer_use_override) = match cmd.as_ref() {
-                    warp_cli::CliCommand::Agent(warp_cli::agent::AgentCommand::Run(run_args)) => (
-                        run_args.sandboxed,
-                        run_args.computer_use.computer_use_override(),
-                    ),
+                    zterm_cli::CliCommand::Agent(zterm_cli::agent::AgentCommand::Run(run_args)) => {
+                        (
+                            run_args.sandboxed,
+                            run_args.computer_use.computer_use_override(),
+                        )
+                    }
                     _ => (false, None),
                 };
 
@@ -626,11 +630,11 @@ pub fn run() -> Result<()> {
                     computer_use_override,
                 });
             }
-            warp_cli::Command::DumpDebugInfo => {
+            zterm_cli::Command::DumpDebugInfo => {
                 return debug_dump::run();
             }
             #[cfg(not(target_family = "wasm"))]
-            warp_cli::Command::PrintTelemetryEvents => {
+            zterm_cli::Command::PrintTelemetryEvents => {
                 return TelemetryEvent::print_telemetry_events_json();
             }
         }
@@ -639,10 +643,10 @@ pub fn run() -> Result<()> {
     // If running as a standalone CLI binary or invoked as "oz", print help
     // instead of launching the GUI app.
     let is_cli_binary = cfg!(feature = "standalone")
-        || warp_cli::binary_name().is_some_and(|name| name.starts_with("oz"))
-        || std::env::var_os("WARP_CLI_MODE").is_some();
+        || zterm_cli::binary_name().is_some_and(|name| name.starts_with("oz"))
+        || std::env::var_os("ZTERM_CLI_MODE").is_some();
     if is_cli_binary {
-        warp_cli::Args::clap_command().print_help()?;
+        zterm_cli::Args::clap_command().print_help()?;
         return Ok(());
     }
 
@@ -655,7 +659,7 @@ pub fn run() -> Result<()> {
 
 /// Runs an integration test using the provided test driver.
 pub fn run_integration_test(driver: TestDriver) -> Result<()> {
-    let is_integration_test = std::env::var("WARP_INTEGRATION").is_ok();
+    let is_integration_test = std::env::var("ZTERM_INTEGRATION").is_ok();
     let launch = LaunchMode::Test {
         driver: Box::new(Some(driver)),
         is_integration_test,
@@ -704,12 +708,12 @@ fn run_internal(mut launch_mode: LaunchMode) -> Result<()> {
     cfg_if::cfg_if! {
         if #[cfg(enable_crash_recovery)] {
             if crash_recovery::is_crash_recovery_process(launch_mode.args().as_ref()) {
-                warp_logging::init_for_crash_recovery_process()?;
+                zterm_logging::init_for_crash_recovery_process()?;
             } else {
-                warp_logging::init(warp_logging::LogConfig { is_cli, log_destination })?;
+                zterm_logging::init(zterm_logging::LogConfig { is_cli, log_destination })?;
             }
         } else {
-            warp_logging::init(warp_logging::LogConfig { is_cli, log_destination })?;
+            zterm_logging::init(zterm_logging::LogConfig { is_cli, log_destination })?;
         }
     }
 
@@ -745,7 +749,7 @@ fn run_internal(mut launch_mode: LaunchMode) -> Result<()> {
             launch_mode.args().as_ref(),
         ) {
             // If we were able to contact an existing application instance, quit -
-            // we only want to run a single instance of Warp at a time.
+            // we only want to run a single instance of Zterm at a time.
             Ok(_) => std::process::exit(0),
             // If Warp isn't already running, we're good to go.
             Err(app_services::linux::StartupArgsForwardingError::NoExistingInstance) => {}
@@ -768,7 +772,7 @@ fn run_internal(mut launch_mode: LaunchMode) -> Result<()> {
             launch_mode.args().as_ref(),
         ) {
             // If we were able to contact an existing application instance, quit -
-            // we only want to run a single instance of Warp at a time.
+            // we only want to run a single instance of Zterm at a time.
             Ok(_) => std::process::exit(0),
             // If Warp isn't already running, we're good to go.
             Err(app_services::windows::StartupArgsForwardingError::NoExistingInstance) => {}
@@ -806,7 +810,7 @@ fn run_internal(mut launch_mode: LaunchMode) -> Result<()> {
     // the TOML-backed store. When disabled, they live in the platform-native
     // store (same backend as private). Use the correct one for pre-app reads.
     #[cfg_attr(not(any(enable_crash_recovery, target_os = "linux")), expect(unused))]
-    let prefs_for_public_settings: &dyn warpui_extras::user_preferences::UserPreferences =
+    let prefs_for_public_settings: &dyn zterm_ui_extras::user_preferences::UserPreferences =
         if FeatureFlag::SettingsFile.is_enabled() {
             public_preferences.as_ref()
         } else {
@@ -826,13 +830,13 @@ fn run_internal(mut launch_mode: LaunchMode) -> Result<()> {
         terminal::local_tty::spawner::PtySpawner::new().context("Failed to create pty spawner")?;
 
     let mut app_builder = if launch_mode.is_headless() {
-        warpui::platform::AppBuilder::new_headless(
+        zterm_ui::platform::AppBuilder::new_headless(
             app_callbacks(launch_mode.is_integration_test()),
             Box::new(ASSETS),
             launch_mode.take_test_driver(),
         )
     } else {
-        warpui::platform::AppBuilder::new(
+        zterm_ui::platform::AppBuilder::new(
             app_callbacks(launch_mode.is_integration_test()),
             Box::new(ASSETS),
             launch_mode.take_test_driver(),
@@ -841,7 +845,7 @@ fn run_internal(mut launch_mode: LaunchMode) -> Result<()> {
 
     #[cfg(target_os = "macos")]
     {
-        use warpui::platform::mac::AppExt;
+        use zterm_ui::platform::mac::AppExt;
 
         let activate_on_launch = !launch_mode.is_integration_test()
             || std::env::var("WARPUI_USE_REAL_DISPLAY_IN_INTEGRATION_TESTS").is_ok();
@@ -857,20 +861,20 @@ fn run_internal(mut launch_mode: LaunchMode) -> Result<()> {
     #[cfg(target_os = "linux")]
     {
         use crate::settings::ForceX11;
-        use warpui::platform::linux::{self, AppBuilderExt};
+        use zterm_ui::platform::linux::{self, AppBuilderExt};
 
         app_builder.set_window_class(ChannelState::app_id().to_string());
 
         let force_x11 = ForceX11::read_from_preferences(prefs_for_public_settings)
             .unwrap_or(ForceX11::default_value());
-        // Force use of wayland if the user has passed the `WARP_ENABLE_WAYLAND` env var.
+        // Force use of wayland if the user has passed the `ZTERM_ENABLE_WAYLAND` env var.
         let allow_wayland = linux::is_wayland_env_var_set() || !force_x11;
         app_builder.force_x11(!allow_wayland);
     }
 
     #[cfg(target_os = "windows")]
     {
-        use warpui::platform::windows::AppBuilderExt;
+        use zterm_ui::platform::windows::AppBuilderExt;
         app_builder.set_app_user_model_id(ChannelState::app_id().to_string());
 
         // Only use DXC for DirectX shader compilation if we're not running in a Parallels VM
@@ -878,7 +882,7 @@ fn run_internal(mut launch_mode: LaunchMode) -> Result<()> {
         let is_parallels_vm = crate::util::vm_detection::is_running_in_windows_parallels_vm();
         if !is_parallels_vm {
             log::info!("Using DXC for DirectX shader compilation");
-            use warpui::platform::windows::DXCPath;
+            use zterm_ui::platform::windows::DXCPath;
 
             app_builder.use_dxc_for_directx_shader_compilation(DXCPath {
                 dxc_path: "dxcompiler.dll".to_string(),
@@ -907,7 +911,7 @@ fn run_internal(mut launch_mode: LaunchMode) -> Result<()> {
         #[cfg(not(target_family = "wasm"))]
         // Rotate the log files in the background.
         ctx.background_executor()
-            .spawn(warp_logging::rotate_log_files())
+            .spawn(zterm_logging::rotate_log_files())
             .detach();
 
         ctx.add_singleton_model(|ctx| {
@@ -966,8 +970,8 @@ pub struct UpdateQuakeModeEventArg {
 fn initialize_app(
     launch_mode: &LaunchMode,
     mut timer: IntervalTimer,
-    startup_toml_parse_error: Option<warpui_extras::user_preferences::Error>,
-    ctx: &mut warpui::AppContext,
+    startup_toml_parse_error: Option<zterm_ui_extras::user_preferences::Error>,
+    ctx: &mut zterm_ui::AppContext,
     _pre_sentry_errors: impl IntoIterator<Item = anyhow::Error>,
 ) -> Option<AppState> {
     // WARNING: Errors that happen here before crash_reporting::init will not be collected in
@@ -978,13 +982,13 @@ fn initialize_app(
     // Register an implementation of the secure storage service.
     cfg_if::cfg_if! {
         if #[cfg(feature = "integration_tests")] {
-            warpui_extras::secure_storage::register_noop(&data_domain, ctx);
+            zterm_ui_extras::secure_storage::register_noop(&data_domain, ctx);
         } else if #[cfg(target_os = "linux")] {
-            warpui_extras::secure_storage::register_with_fallback(&data_domain, warp_core::paths::state_dir(), ctx)
+            zterm_ui_extras::secure_storage::register_with_fallback(&data_domain, zterm_core::paths::state_dir(), ctx)
         } else if #[cfg(target_os = "windows")] {
-            warpui_extras::secure_storage::register_with_dir(&data_domain, warp_core::paths::state_dir(), ctx)
+            zterm_ui_extras::secure_storage::register_with_dir(&data_domain, zterm_core::paths::state_dir(), ctx)
         } else {
-            warpui_extras::secure_storage::register(&data_domain, ctx);
+            zterm_ui_extras::secure_storage::register(&data_domain, ctx);
         }
     }
 
@@ -995,9 +999,9 @@ fn initialize_app(
     preview_config_migration::migrate_preview_config_dir_if_needed();
 
     ensure_warp_watch_roots_exist();
-    ctx.add_singleton_model(WarpManagedPathsWatcher::new);
+    ctx.add_singleton_model(ZtermManagedPathsWatcher::new);
 
-    ctx.add_singleton_model(WarpConfig::new);
+    ctx.add_singleton_model(ZtermConfig::new);
     ctx.add_singleton_model(|_ctx| SettingsManager::default());
 
     let user_defaults_on_startup = settings::init(startup_toml_parse_error, ctx);
@@ -1317,8 +1321,10 @@ fn initialize_app(
             });
 
             GPUState::handle(ctx).update(ctx, |gpu_state, ctx| {
-                gpu_state
-                    .set_has_lower_power_gpu(warpui::rendering::is_low_power_gpu_available(), ctx);
+                gpu_state.set_has_lower_power_gpu(
+                    zterm_ui::rendering::is_low_power_gpu_available(),
+                    ctx,
+                );
             });
 
             for window_id in ctx.window_ids().collect_vec() {
@@ -1364,7 +1370,7 @@ fn initialize_app(
         let imported_config_model = ctx.add_singleton_model(ImportedConfigModel::new);
 
         if FeatureFlag::SettingsImport.is_enabled()
-            && ChannelState::channel() != warp_core::channel::Channel::Integration
+            && ChannelState::channel() != zterm_core::channel::Channel::Integration
         {
             imported_config_model.update(ctx, |model, ctx| {
                 model.search_for_settings_to_import(ctx);
@@ -1566,7 +1572,7 @@ fn initialize_app(
     ctx.add_singleton_model(BlocklistAIPermissions::new);
     ctx.add_singleton_model(ai::blocklist::orchestration_events::OrchestrationEventService::new);
     ctx.add_singleton_model(ai::blocklist::task_status_sync_model::TaskStatusSyncModel::new);
-    if warp_core::features::FeatureFlag::OrchestrationV2.is_enabled() {
+    if zterm_core::features::FeatureFlag::OrchestrationV2.is_enabled() {
         ctx.add_singleton_model(
             ai::blocklist::orchestration_event_poller::OrchestrationEventPoller::new,
         );
@@ -1574,7 +1580,7 @@ fn initialize_app(
 
     ctx.add_singleton_model(RepoOutlines::new);
     ctx.add_singleton_model(|ctx| {
-        warp_core::sync_queue::SyncQueue::<SyncTask>::new_with_rate_limit(
+        zterm_core::sync_queue::SyncQueue::<SyncTask>::new_with_rate_limit(
             &ctx.background_executor(),
             Some(DEFAULT_SYNC_REQUESTS_PER_MIN),
         )
@@ -1784,8 +1790,8 @@ fn initialize_app(
     app_state
 }
 
-fn app_callbacks(is_integration_test: bool) -> warpui::platform::AppCallbacks {
-    warpui::platform::AppCallbacks {
+fn app_callbacks(is_integration_test: bool) -> zterm_ui::platform::AppCallbacks {
+    zterm_ui::platform::AppCallbacks {
         on_internet_reachability_changed: Some(Box::new(move |reachable, ctx| {
             NetworkStatus::handle(ctx)
                 .update(ctx, move |me, ctx| me.reachability_changed(reachable, ctx));
@@ -2217,7 +2223,7 @@ fn on_close_window_cancelled(
     }
 }
 
-fn launch(ctx: &mut warpui::AppContext, app_state: Option<AppState>, launch_mode: LaunchMode) {
+fn launch(ctx: &mut zterm_ui::AppContext, app_state: Option<AppState>, launch_mode: LaunchMode) {
     IntervalTimer::handle(ctx).update(ctx, |timer, _ctx| {
         timer.mark_interval_end("APP_LAUNCHED");
     });
@@ -2303,7 +2309,7 @@ fn launch(ctx: &mut warpui::AppContext, app_state: Option<AppState>, launch_mode
 #[cfg(test)]
 fn init_logging_for_unit_tests_glue() {
     // Initialize terminal-friendly logging for tests from the shared logger crate.
-    warp_logging::init_logging_for_unit_tests();
+    zterm_logging::init_logging_for_unit_tests();
 }
 
 /// Mark all features which should be enabled on the current channel as enabled.
@@ -2432,7 +2438,7 @@ pub fn enabled_features() -> HashSet<FeatureFlag> {
         FeatureFlag::AutoupdateUIRevamp,
         #[cfg(all(not(windows), feature = "kitty_images"))]
         FeatureFlag::KittyImages,
-        #[cfg(feature = "warp_packs")]
+        #[cfg(feature = "zterm_packs")]
         FeatureFlag::WarpPacks,
         #[cfg(feature = "global_ai_analytics_banner")]
         FeatureFlag::GlobalAIAnalyticsBanner,
@@ -2646,8 +2652,8 @@ pub fn enabled_features() -> HashSet<FeatureFlag> {
         FeatureFlag::AgentView,
         #[cfg(feature = "agent_view_block_context")]
         FeatureFlag::AgentViewBlockContext,
-        #[cfg(feature = "warp_managed_secrets")]
-        FeatureFlag::WarpManagedSecrets,
+        #[cfg(feature = "zterm_managed_secrets")]
+        FeatureFlag::ZtermManagedSecrets,
         #[cfg(feature = "v4a_file_diffs")]
         FeatureFlag::V4AFileDiffs,
         #[cfg(feature = "interactive_conversation_management_view")]
@@ -2708,7 +2714,7 @@ pub fn enabled_features() -> HashSet<FeatureFlag> {
         FeatureFlag::BundledSkills,
         #[cfg(feature = "oz_launch_modal")]
         FeatureFlag::OzLaunchModal,
-        #[cfg(feature = "open_warp_launch_modal")]
+        #[cfg(feature = "open_zterm_launch_modal")]
         FeatureFlag::OpenWarpLaunchModal,
         #[cfg(feature = "new_tab_styling")]
         FeatureFlag::NewTabStyling,
@@ -2736,7 +2742,7 @@ pub fn enabled_features() -> HashSet<FeatureFlag> {
         FeatureFlag::InlineMenuHeaders,
         #[cfg(feature = "directory_tab_colors")]
         FeatureFlag::DirectoryTabColors,
-        #[cfg(feature = "open_warp_new_settings_modes")]
+        #[cfg(feature = "open_zterm_new_settings_modes")]
         FeatureFlag::OpenWarpNewSettingsModes,
         #[cfg(feature = "hoa_code_review")]
         FeatureFlag::HoaCodeReview,
@@ -2759,7 +2765,7 @@ pub fn enabled_features() -> HashSet<FeatureFlag> {
         #[cfg(feature = "transfer_control_tool")]
         FeatureFlag::TransferControlTool,
         #[cfg(feature = "warpify_footer")]
-        FeatureFlag::WarpifyFooter,
+        FeatureFlag::ZtermifyFooter,
         #[cfg(feature = "solo_user_byok")]
         FeatureFlag::SoloUserByok,
         #[cfg(feature = "skip_firebase_anonymous_user")]

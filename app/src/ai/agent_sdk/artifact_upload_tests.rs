@@ -1,10 +1,10 @@
-use std::env;
+﻿use std::env;
 use std::fs;
 use std::path::PathBuf;
 
 use chrono::Utc;
 use tempfile::tempdir;
-use warp_cli::artifact::UploadArtifactArgs;
+use zterm_cli::artifact::UploadArtifactArgs;
 
 use super::*;
 use crate::ai::agent::api::ServerConversationToken;

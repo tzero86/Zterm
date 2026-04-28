@@ -1,4 +1,4 @@
-//! This module defines HeaderGrid, a struct which manages the prompt and command grid's within
+﻿//! This module defines HeaderGrid, a struct which manages the prompt and command grid's within
 //! Warp. This struct is abstracted away from Block, for the purposes of enabling same-line prompt,
 //! utilizing a combined prompt/command grid, with helper methods to expose the prompt and command.
 use std::{cmp::max, io};
@@ -9,7 +9,7 @@ use super::{
 };
 use instant::Instant;
 use pathfinder_color::ColorU;
-use warpui::units::{IntoLines as _, Lines};
+use zterm_ui::units::{IntoLines as _, Lines};
 
 use crate::terminal::event::Event;
 
@@ -25,7 +25,7 @@ use super::{
     ObfuscateSecrets, RespectObfuscatedSecrets,
 };
 use crate::terminal::{event_listener::ChannelEventListener, SizeInfo};
-use warp_terminal::model::{KeyboardModes, KeyboardModesApplyBehavior};
+use zterm_terminal::model::{KeyboardModes, KeyboardModesApplyBehavior};
 
 macro_rules! delegate {
     ($self:ident.$method:ident( $( $arg:expr ),* )) => {
@@ -315,7 +315,7 @@ impl HeaderGrid {
     /// the command to be finished.
     fn is_command_finished_and_empty(&self) -> bool {
         if !self.honor_ps1 {
-            // If we are using Warp prompt, we expect the combined grid cursor to be at the start, if
+            // If we are using Zterm prompt, we expect the combined grid cursor to be at the start, if
             // the command is truly empty.
             return self.prompt_and_command_grid.finished()
                 && self.prompt_and_command_grid.grid_handler().cursor_point() == Point::new(0, 0);
@@ -1154,13 +1154,13 @@ impl ansi::Handler for HeaderGrid {
                     honor_ps1
                 );
                 // We send a terminal event which will result in bindkeys being issued to the shell session, to
-                // switch the prompt mode via the $WARP_HONOR_PS1 environment variable.
+                // switch the prompt mode via the $ZTERM_HONOR_PS1 environment variable.
                 self.event_proxy
                     .send_terminal_event(Event::HonorPS1OutOfSync);
 
                 // We synchronize the state of our `honor_ps1` setting with the value passed from the shell.
                 // Note that we ALWAYS want this to be synced properly since the shell determines the prompt
-                // to be emitted. This may be de-synced from Warp settings in particular niche cases (which are
+                // to be emitted. This may be de-synced from Zterm settings in particular niche cases (which are
                 // bugs), however, we still want consistent behavior for the prompt in the blocklist (we want to
                 // avoid double prompt or empty prompt issues).
                 self.honor_ps1 = honor_ps1;

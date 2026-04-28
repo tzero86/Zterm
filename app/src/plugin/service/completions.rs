@@ -1,10 +1,10 @@
-//! This module contains defines an IPC service to register JS Command Signatures in the global
+﻿//! This module contains defines an IPC service to register JS Command Signatures in the global
 //! CommandRegistry.
 //!
 //! This IPC is hosted by the rust app process and called by the plugin process when plugins
 //! register command signatures.
 use serde::{Deserialize, Serialize};
-use warp_completer::signatures::CommandSignature;
+use zterm_completer::signatures::CommandSignature;
 
 #[derive(Clone, Serialize, Deserialize, Debug)]
 pub struct RegisterCommandSignatureRequest {

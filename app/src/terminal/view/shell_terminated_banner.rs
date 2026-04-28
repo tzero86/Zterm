@@ -1,11 +1,11 @@
 use std::{borrow::Cow, cell::RefCell};
 
-use warp_core::ui::{
+use zterm_core::ui::{
     appearance::Appearance,
     builder::UiBuilder,
-    theme::{color::internal_colors, WarpTheme},
+    theme::{color::internal_colors, ZtermTheme},
 };
-use warpui::{
+use zterm_ui::{
     clipboard::ClipboardContent,
     elements::*,
     text_layout::ClipConfig,
@@ -152,7 +152,7 @@ impl TerminationType {
         Container::new(
             ConstrainedBox::new(
                 icon_type
-                    .to_warpui_icon(appearance.theme().background())
+                    .to_zterm_ui_icon(appearance.theme().background())
                     .finish(),
             )
             .with_width(ICON_SIZE)
@@ -183,8 +183,8 @@ impl TerminationType {
                 format!("{pty_spawn_error:#}").into()
             }
             TerminationType::Premature { shell_detail, .. } => format!(
-                "Something went wrong while starting {shell_detail} and Warpifying it, causing the \
-                process to terminate. Warpify script output is displayed here, which may point at \
+                "Something went wrong while starting {shell_detail} and Ztermifying it, causing the \
+                process to terminate. Ztermify script output is displayed here, which may point at \
                 a cause."
             )
             .into(),
@@ -276,7 +276,7 @@ impl TerminationType {
 
 fn inverted_color_ui_builder(appearance: &Appearance) -> UiBuilder {
     let theme = appearance.theme();
-    let theme = WarpTheme::new(
+    let theme = ZtermTheme::new(
         theme.foreground(),
         theme.background().into_solid(),
         theme.background(),

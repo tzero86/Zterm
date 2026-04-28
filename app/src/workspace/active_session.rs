@@ -1,10 +1,10 @@
-use std::{
+﻿use std::{
     collections::HashMap,
     path::{Path, PathBuf},
     sync::{Arc, Weak},
 };
 
-use warpui::{Entity, EntityId, ModelContext, SingletonEntity, WindowId};
+use zterm_ui::{Entity, EntityId, ModelContext, SingletonEntity, WindowId};
 
 use crate::terminal::model::session::Session;
 

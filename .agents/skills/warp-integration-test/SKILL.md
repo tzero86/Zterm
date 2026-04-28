@@ -1,9 +1,9 @@
----
+﻿---
 name: warp-integration-test
 description: Writes, runs, and debugs Warp integration tests using the custom Builder/TestStep framework in `crates/integration`. Use when adding a new integration test, fixing a failing integration test, wiring a test into the manual runner or nextest suite, or verifying end-to-end UI and terminal behavior in Warp.
 ---
 
-# Warp Integration Tests
+# Zterm Integration Tests
 
 Use this skill for Rust integration tests in Warp's custom framework under `crates/integration/`.
 
@@ -20,7 +20,7 @@ The core pieces are:
 - `crates/integration/tests/common/mod.rs`
   - The outer Rust test harness used by `cargo test` and `cargo nextest`.
   - Shells out to the integration binary.
-  - Forwards a limited set of env vars (`PATH`, `RUST_*`, `WARP_*`, `WARPUI_*`, `WGPU_*`, display-related vars).
+  - Forwards a limited set of env vars (`PATH`, `RUST_*`, `ZTERM_*`, `WARPUI_*`, `WGPU_*`, display-related vars).
   - Re-runs tests up to 10 times when the integration binary exits with the special rerun code.
 - `crates/integration/src/test.rs`
   - Module hub for integration tests.
@@ -30,11 +30,11 @@ The core pieces are:
 - `crates/integration/tests/integration/shell_integration_tests.rs`
   - List of tests that must run against every shell or a specific shell matrix.
 - `crates/integration/src/builder.rs`
-  - Warp-specific wrapper around the lower-level WarpUI integration builder.
+  - Warp-specific wrapper around the lower-level ZtermUI integration builder.
   - Sets default timeout, hermetic home directory, shell rc files, user prefs, and real-display mode when requested.
-- `crates/warpui_core/src/integration/driver.rs`
+- `crates/zterm_ui_core/src/integration/driver.rs`
   - Executes steps, handles retries, precondition reruns, screenshots, video capture, artifact export, and `on_finish`.
-- `crates/warpui_core/src/integration/step.rs`
+- `crates/zterm_ui_core/src/integration/step.rs`
   - Defines `TestStep`, input/event APIs, assertion polling, step-to-step data passing, and screenshot/recording hooks.
 - `app/src/integration_testing/`
   - High-level helpers and assertions for common Warp behaviors.
@@ -89,8 +89,8 @@ The normal shape is:
 
 ```rust
 use crate::Builder;
-use warp::integration_testing::step::new_step_with_default_assertions;
-use warp::integration_testing::terminal::{
+use zterm::integration_testing::step::new_step_with_default_assertions;
+use zterm::integration_testing::terminal::{
     clear_blocklist_to_remove_bootstrapped_blocks,
     execute_command_for_single_terminal_in_tab,
     wait_until_bootstrapped_single_pane_for_tab,
@@ -111,7 +111,7 @@ pub fn test_example() -> Builder {
             new_step_with_default_assertions("Assert some UI state")
                 .add_named_assertion("specific assertion name", |app, window_id| {
                     // inspect app state and return AssertionOutcome
-                    warpui::integration::AssertionOutcome::Success
+                    zterm_ui::integration::AssertionOutcome::Success
                 }),
         )
 }

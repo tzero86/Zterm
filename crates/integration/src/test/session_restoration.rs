@@ -23,7 +23,7 @@ use warp::{
     },
     workspace::Workspace,
 };
-use warpui::{
+use zterm_ui::{
     async_assert_eq,
     integration::{AssertionOutcome, TestStep},
     SingletonEntity, ViewHandle,

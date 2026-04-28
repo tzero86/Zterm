@@ -1,4 +1,4 @@
-use std::{
+﻿use std::{
     collections::HashSet,
     path::{Path, PathBuf},
     sync::LazyLock,
@@ -10,7 +10,7 @@ use ai::skills::{
 use anyhow::Error;
 use regex::Regex;
 use repo_metadata::{local_model::GetContentsArgs, RepoContent, RepoMetadataModel};
-use warpui::AppContext;
+use zterm_ui::AppContext;
 
 use crate::warp_managed_paths_watcher::warp_managed_skill_dirs;
 

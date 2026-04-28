@@ -1,4 +1,4 @@
-use std::sync::LazyLock;
+﻿use std::sync::LazyLock;
 
 use async_trait::async_trait;
 
@@ -33,7 +33,7 @@ impl CliAgentPluginManager for OpenCodePluginManager {
 
 static INSTALL_INSTRUCTIONS: LazyLock<PluginInstructions> = LazyLock::new(|| {
     PluginInstructions {
-        title: "Install Warp Plugin for OpenCode",
+        title: "Install Zterm Plugin for OpenCode",
         subtitle:
             "Add the Warp plugin to your OpenCode configuration, then restart OpenCode.",
         steps: &[

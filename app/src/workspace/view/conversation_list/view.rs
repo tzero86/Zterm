@@ -29,25 +29,25 @@ use crate::workspace::view::conversation_list::item::{
 };
 use crate::workspace::ToastStack;
 use crate::workspace::WorkspaceAction;
-use warp_core::features::FeatureFlag;
-use warp_core::send_telemetry_from_ctx;
-use warp_core::ui::Icon;
+use zterm_core::features::FeatureFlag;
+use zterm_core::send_telemetry_from_ctx;
+use zterm_core::ui::Icon;
 
 use super::view_model::{ConversationEntry, ConversationListViewModel};
-use warp_editor::editor::NavigationKey;
-use warpui::elements::{
+use zterm_editor::editor::NavigationKey;
+use zterm_ui::elements::{
     Border, ChildAnchor, ChildView, Clipped, ConstrainedBox, Container, CornerRadius,
     CrossAxisAlignment, Element, Fill, Flex, FormattedTextElement, Hoverable, MainAxisAlignment,
     MainAxisSize, MouseStateHandle, OffsetPositioning, Padding, ParentAnchor, ParentElement,
     ParentOffsetBounds, Radius, SavePosition, ScrollStateHandle, Scrollable, ScrollableElement,
     ScrollbarWidth, Shrinkable, Stack, Text, UniformList, UniformListState,
 };
-use warpui::fonts::{Properties, Weight};
-use warpui::keymap::macros::*;
-use warpui::keymap::FixedBinding;
-use warpui::platform::Cursor;
-use warpui::text_layout::TextAlignment;
-use warpui::{
+use zterm_ui::fonts::{Properties, Weight};
+use zterm_ui::keymap::macros::*;
+use zterm_ui::keymap::FixedBinding;
+use zterm_ui::platform::Cursor;
+use zterm_ui::text_layout::TextAlignment;
+use zterm_ui::{
     AppContext, BlurContext, Entity, EntityId, ModelHandle, SingletonEntity, TypedActionView, View,
     ViewContext, ViewHandle, WindowId,
 };
@@ -649,7 +649,7 @@ fn render_zero_state(
 
     let chat_icon = ConstrainedBox::new(
         Icon::ChatDashed
-            .to_warpui_icon(theme.sub_text_color(theme.background()))
+            .to_zterm_ui_icon(theme.sub_text_color(theme.background()))
             .finish(),
     )
     .with_width(24.)
@@ -693,7 +693,7 @@ fn render_zero_state(
                 .with_child(
                     ConstrainedBox::new(
                         Icon::Plus
-                            .to_warpui_icon(theme.main_text_color(theme.background()))
+                            .to_zterm_ui_icon(theme.main_text_color(theme.background()))
                             .finish(),
                     )
                     .with_width(14.)
@@ -776,7 +776,7 @@ fn render_section_header(
     };
     let chevron = ConstrainedBox::new(
         chevron_icon
-            .to_warpui_icon(theme.sub_text_color(theme.background()))
+            .to_zterm_ui_icon(theme.sub_text_color(theme.background()))
             .finish(),
     )
     .with_width(12.)

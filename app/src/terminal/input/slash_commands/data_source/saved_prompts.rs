@@ -1,10 +1,10 @@
-use std::sync::Arc;
+﻿use std::sync::Arc;
 
 use futures_lite::future::yield_now;
 use ordered_float::OrderedFloat;
-use warp_core::ui::appearance::Appearance;
-use warpui::fonts::FamilyId;
-use warpui::{AppContext, SingletonEntity};
+use zterm_core::ui::appearance::Appearance;
+use zterm_ui::fonts::FamilyId;
+use zterm_ui::{AppContext, SingletonEntity};
 
 use crate::cloud_object::model::persistence::CloudModel;
 use crate::cloud_object::CloudObject;

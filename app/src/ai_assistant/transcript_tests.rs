@@ -1,9 +1,9 @@
-use crate::{
+﻿use crate::{
     appearance, test_util::settings::initialize_settings_for_tests,
     workspaces::user_workspaces::UserWorkspaces,
 };
 
-use warpui::{platform::WindowStyle, App};
+use zterm_ui::{platform::WindowStyle, App};
 
 use crate::ai_assistant::{
     requests::Requests,

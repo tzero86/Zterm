@@ -1,4 +1,4 @@
-use std::{path::PathBuf, str::FromStr};
+﻿use std::{path::PathBuf, str::FromStr};
 
 use serde::{Deserialize, Serialize};
 
@@ -157,7 +157,7 @@ impl WorkingDirectoryConfig {
     pub fn update_and_save_value<F>(
         &mut self,
         update_fn: F,
-        ctx: &mut warpui::ModelContext<<Self as Setting>::Group>,
+        ctx: &mut zterm_ui::ModelContext<<Self as Setting>::Group>,
     ) -> anyhow::Result<()>
     where
         F: FnOnce(&mut <Self as Setting>::Value),

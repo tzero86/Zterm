@@ -1,4 +1,4 @@
-pub mod accept_autosuggestion_keybinding_view;
+﻿pub mod accept_autosuggestion_keybinding_view;
 pub mod autosuggestion_ignore_view;
 mod soft_wrap;
 mod view;
@@ -7,10 +7,10 @@ mod view;
 /// They should _not_ be able to interface with the internal
 /// details of the editor (e.g. the [`Buffer`]).
 pub use view::*;
-pub use warpui::text::point::Point;
+pub use zterm_ui::text::point::Point;
 
 use std::{cmp, ops::Range};
-use warpui::AppContext;
+use zterm_ui::AppContext;
 
 pub fn init(app: &mut AppContext) {
     view::init(app);

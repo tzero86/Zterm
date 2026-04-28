@@ -50,15 +50,15 @@ use std::collections::HashMap;
 use std::path::PathBuf;
 use std::str::FromStr;
 use teams_page::{TeamsPageView, TeamsPageViewEvent};
-use warp_core::send_telemetry_from_ctx;
-use warp_core::{
+use zterm_core::send_telemetry_from_ctx;
+use zterm_core::{
     channel::ChannelState, context_flag::ContextFlag, features::FeatureFlag,
     settings::ToggleableSetting as _, ui::theme::color::internal_colors,
 };
-use warp_editor::editor::NavigationKey;
-use warpify_page::{WarpifyPageAction, WarpifyPageView};
-use warpui::Element;
-use warpui::{
+use zterm_editor::editor::NavigationKey;
+use warpify_page::{ZtermifyPageAction, ZtermifyPageView};
+use zterm_ui::Element;
+use zterm_ui::{
     elements::{
         Align, Border, ChildAnchor, ChildView, Clipped, ClippedScrollStateHandle,
         ClippedScrollable, ConstrainedBox, Container, CornerRadius, CrossAxisAlignment,
@@ -166,7 +166,7 @@ pub enum SettingsViewEvent {
     StartResize,
     CheckForUpdate,
     LaunchNetworkLogging,
-    OpenWarpDrive,
+    OpenZtermDrive,
     SignupAnonymousUser,
     ShowToast {
         message: String,
@@ -198,8 +198,8 @@ pub enum SettingsSection {
     Referrals,
     SharedBlocks,
     Teams,
-    WarpDrive,
-    Warpify,
+    ZtermDrive,
+    Ztermify,
     /// Internal backing-page identifier for AISettingsPageView. Multiple subpages
     /// (WarpAgent, AgentProfiles, Knowledge, ThirdPartyCLIAgents) share this single
     /// backing page, so this variant is needed as the key in `settings_pages`.
@@ -234,7 +234,7 @@ impl Display for SettingsSection {
             SettingsSection::Keybindings => write!(f, "Keyboard shortcuts"),
             SettingsSection::SharedBlocks => write!(f, "Shared blocks"),
             SettingsSection::MCPServers => write!(f, "MCP Servers"),
-            SettingsSection::WarpDrive => write!(f, "Warp Drive"),
+            SettingsSection::ZtermDrive => write!(f, "Zterm Drive"),
             SettingsSection::WarpAgent => write!(f, "Warp Agent"),
             SettingsSection::AgentProfiles => write!(f, "Profiles"),
             SettingsSection::AgentMCPServers => write!(f, "MCP servers"),
@@ -333,8 +333,8 @@ impl FromStr for SettingsSection {
             "Referrals" => Ok(Self::Referrals),
             "Shared blocks" => Ok(Self::SharedBlocks),
             "Teams" => Ok(Self::Teams),
-            "Warpify" => Ok(Self::Warpify),
-            "WarpDrive" | "Warp Drive" => Ok(Self::WarpDrive),
+            "Ztermify" => Ok(Self::Ztermify),
+            "ZtermDrive" | "Zterm Drive" => Ok(Self::ZtermDrive),
             // This page was called "Oz" at one point, keep for backward compatibility.
             "Oz" | "Warp Agent" => Ok(Self::WarpAgent),
             "Profiles" | "AgentProfiles" => Ok(Self::AgentProfiles),
@@ -441,7 +441,7 @@ pub mod flags {
     pub const IN_BAND_COMMAND_BLOCKS_FLAG: &str = "In_Band_Command_Blocks_Visible";
     pub const RECORDING_MODE_FLAG: &str = "Recording_Mode_Enabled";
     pub const IN_BAND_GENERATORS_FLAG: &str = "In_Band_Generators_Enabled";
-    pub const WARP_SAME_LINE_PROMPT_FLAG: &str = "Warp_Same_Line_Prompt_Enabled";
+    pub const ZTERM_SAME_LINE_PROMPT_FLAG: &str = "Warp_Same_Line_Prompt_Enabled";
     pub const DEBUG_NETWORK_ONLINE_FLAG: &str = "Network_Status_Online";
     pub const AI_INPUT_AUTODETECTION_FLAG: &str = "AI_Input_Autodetection";
     pub const NLD_IN_TERMINAL_FLAG: &str = "NLD_In_Terminal";
@@ -464,7 +464,7 @@ pub mod flags {
     pub const UNIVERSAL_DEVELOPER_INPUT_ENABLED: &str = "UniversalDeveloperInputEnabled";
     pub const AGENT_MODE_INPUT: &str = "InputAgentMode";
     pub const TERMINAL_MODE_INPUT: &str = "InputTerminalMode";
-    pub const WARP_IS_DEFAULT_TERMINAL: &str = "WarpIsDefaultTerminal";
+    pub const ZTERM_IS_DEFAULT_TERMINAL: &str = "WarpIsDefaultTerminal";
     pub const PASSIVE_CODE_DIFF_KEYBINDINGS_ENABLED: &str = "PassiveCodeDiffKeybindingsEnabled";
     /// When set, ctrl-enter should accept a prompt suggestion rather than insert a newline.
     /// This flag is set by the terminal Input when there's a pending passive code diff.
@@ -483,7 +483,7 @@ pub mod flags {
     pub const CLI_AGENT_RICH_INPUT_OPEN: &str = "CLIAgentRichInputOpen";
     pub const CLI_AGENT_FOOTER_ENABLED: &str = "CLIAgentFooterEnabled";
     pub const CLI_AGENT_RICH_INPUT_CHIP_ENABLED: &str = "CLIAgentRichInputChipEnabled";
-    pub const ENABLE_WARP_DRIVE: &str = "EnableWarpDrive";
+    pub const ENABLE_ZTERM_DRIVE: &str = "EnableZtermDrive";
     // Tools panel settings
     pub const SHOW_CONVERSATION_HISTORY: &str = "ShowConversationHistory";
     pub const SHOW_PROJECT_EXPLORER: &str = "ShowProjectExplorer";
@@ -657,7 +657,7 @@ impl<T: Action + Clone> ToggleSettingActionPair<T> {
         context_prefix: &ContextPredicate,
         context_boolean_flag: &'static str,
     ) -> Self {
-        use warpui::keymap::macros::id;
+        use zterm_ui::keymap::macros::id;
 
         ToggleSettingActionPair {
             descriptions: SettingActionPairDescriptions {
@@ -812,8 +812,8 @@ pub enum SettingsAction {
     PrivacyPageToggle(PrivacyPageAction),
     AI(AISettingsPageAction),
     Code(CodeSettingsPageAction),
-    WarpDrive(warp_drive_page::WarpDriveSettingsPageAction),
-    WarpifyPageToggle(WarpifyPageAction),
+    ZtermDrive(warp_drive_page::ZtermDriveSettingsPageAction),
+    ZtermifyPageToggle(ZtermifyPageAction),
     Tab,
     Split(Direction),
     ToggleMaximizePane,
@@ -959,7 +959,7 @@ macro_rules! update_page {
             SettingsPageViewHandle::SharedBlocks(handle) => $ctx.update_view(handle, $update),
             SettingsPageViewHandle::Keybindings(handle) => $ctx.update_view(handle, $update),
             SettingsPageViewHandle::Teams(handle) => $ctx.update_view(handle, $update),
-            SettingsPageViewHandle::Warpify(handle) => $ctx.update_view(handle, $update),
+            SettingsPageViewHandle::Ztermify(handle) => $ctx.update_view(handle, $update),
             SettingsPageViewHandle::OzCloudAPIKeys(handle) => $ctx.update_view(handle, $update),
             SettingsPageViewHandle::Privacy(handle) => $ctx.update_view(handle, $update),
             SettingsPageViewHandle::Referrals(handle) => $ctx.update_view(handle, $update),
@@ -969,7 +969,7 @@ macro_rules! update_page {
             SettingsPageViewHandle::Code(handle) => $ctx.update_view(handle, $update),
             SettingsPageViewHandle::BillingAndUsage(handle) => $ctx.update_view(handle, $update),
             SettingsPageViewHandle::MCPServers(handle) => $ctx.update_view(handle, $update),
-            SettingsPageViewHandle::WarpDrive(handle) => $ctx.update_view(handle, $update),
+            SettingsPageViewHandle::ZtermDrive(handle) => $ctx.update_view(handle, $update),
         }
     };
 }
@@ -1084,7 +1084,7 @@ impl SettingsView {
         let teams_page_handle = ctx.add_typed_action_view(TeamsPageView::new);
         ctx.subscribe_to_view(&teams_page_handle, |_, _, event, ctx| match event {
             TeamsPageViewEvent::TeamsChanged => ctx.notify(),
-            TeamsPageViewEvent::OpenWarpDrive => ctx.emit(SettingsViewEvent::OpenWarpDrive),
+            TeamsPageViewEvent::OpenZtermDrive => ctx.emit(SettingsViewEvent::OpenZtermDrive),
             TeamsPageViewEvent::ShowToast { message, flavor } => {
                 ctx.emit(SettingsViewEvent::ShowToast {
                     message: message.clone(),
@@ -1093,7 +1093,7 @@ impl SettingsView {
             }
         });
 
-        let warpify_page_handle = ctx.add_typed_action_view(WarpifyPageView::new);
+        let warpify_page_handle = ctx.add_typed_action_view(ZtermifyPageView::new);
         ctx.subscribe_to_view(&warpify_page_handle, |me, _, event, ctx| {
             me.handle_warpify_page_event(event, ctx);
         });
@@ -1111,9 +1111,9 @@ impl SettingsView {
             me.handle_referrals_page_event(event, ctx);
         });
 
-        // Warp Drive page
+        // Zterm Drive page
         let warp_drive_page_handle =
-            ctx.add_typed_action_view(warp_drive_page::WarpDriveSettingsPageView::new);
+            ctx.add_typed_action_view(warp_drive_page::ZtermDriveSettingsPageView::new);
         ctx.subscribe_to_view(&warp_drive_page_handle, |me, _, event, ctx| {
             me.handle_warp_drive_page_event(event, ctx);
         });
@@ -1207,10 +1207,10 @@ impl SettingsView {
             SettingsNavItem::Page(SettingsSection::Appearance),
             SettingsNavItem::Page(SettingsSection::Features),
             SettingsNavItem::Page(SettingsSection::Keybindings),
-            SettingsNavItem::Page(SettingsSection::Warpify),
+            SettingsNavItem::Page(SettingsSection::Ztermify),
             SettingsNavItem::Page(SettingsSection::Referrals),
             SettingsNavItem::Page(SettingsSection::SharedBlocks),
-            SettingsNavItem::Page(SettingsSection::WarpDrive),
+            SettingsNavItem::Page(SettingsSection::ZtermDrive),
             SettingsNavItem::Page(SettingsSection::Privacy),
             SettingsNavItem::Page(SettingsSection::About),
         ];
@@ -1766,11 +1766,11 @@ impl SettingsView {
 
     fn handle_warp_drive_page_event(
         &mut self,
-        event: &warp_drive_page::WarpDriveSettingsPageEvent,
+        event: &warp_drive_page::ZtermDriveSettingsPageEvent,
         ctx: &mut ViewContext<Self>,
     ) {
         match event {
-            warp_drive_page::WarpDriveSettingsPageEvent::SignUp => {
+            warp_drive_page::ZtermDriveSettingsPageEvent::SignUp => {
                 ctx.emit(SettingsViewEvent::SignupAnonymousUser)
             }
         }
@@ -1955,13 +1955,13 @@ impl SettingsView {
             SettingsPageViewHandle::About(v) => v.as_ref(app).should_render(app),
             SettingsPageViewHandle::OzCloudAPIKeys(v) => v.as_ref(app).should_render(app),
             SettingsPageViewHandle::Privacy(v) => v.as_ref(app).should_render(app),
-            SettingsPageViewHandle::Warpify(v) => v.as_ref(app).should_render(app),
+            SettingsPageViewHandle::Ztermify(v) => v.as_ref(app).should_render(app),
             SettingsPageViewHandle::Referrals(v) => v.as_ref(app).should_render(app),
             SettingsPageViewHandle::AI(v) => v.as_ref(app).should_render(app),
             SettingsPageViewHandle::CloudEnvironments(v) => v.as_ref(app).should_render(app),
             SettingsPageViewHandle::MCPServers(v) => v.as_ref(app).should_render(app),
             SettingsPageViewHandle::Code(v) => v.as_ref(app).should_render(app),
-            SettingsPageViewHandle::WarpDrive(v) => v.as_ref(app).should_render(app),
+            SettingsPageViewHandle::ZtermDrive(v) => v.as_ref(app).should_render(app),
         }
     }
 
@@ -2193,7 +2193,7 @@ impl SettingsView {
                     Container::new(
                         ConstrainedBox::new(
                             icons::Icon::SearchSmall
-                                .to_warpui_icon(appearance.theme().active_ui_text_color())
+                                .to_zterm_ui_icon(appearance.theme().active_ui_text_color())
                                 .finish(),
                         )
                         .with_width(16.)
@@ -2579,18 +2579,18 @@ impl TypedActionView for SettingsView {
                     }
                 }
             }
-            SettingsAction::WarpDrive(warp_drive_action) => {
-                if let Some(warp_drive_page) = self.settings_page(SettingsSection::WarpDrive) {
-                    if let SettingsPageViewHandle::WarpDrive(view) = &warp_drive_page.view_handle {
+            SettingsAction::ZtermDrive(warp_drive_action) => {
+                if let Some(warp_drive_page) = self.settings_page(SettingsSection::ZtermDrive) {
+                    if let SettingsPageViewHandle::ZtermDrive(view) = &warp_drive_page.view_handle {
                         view.update(ctx, |view, ctx| {
                             view.handle_action(warp_drive_action, ctx);
                         })
                     }
                 }
             }
-            SettingsAction::WarpifyPageToggle(warpify_action) => {
-                if let Some(warpify_page) = self.settings_page(SettingsSection::Warpify) {
-                    if let SettingsPageViewHandle::Warpify(view) = &warpify_page.view_handle {
+            SettingsAction::ZtermifyPageToggle(warpify_action) => {
+                if let Some(warpify_page) = self.settings_page(SettingsSection::Ztermify) {
+                    if let SettingsPageViewHandle::Ztermify(view) = &warpify_page.view_handle {
                         view.update(ctx, |view, ctx| {
                             view.handle_action(warpify_action, ctx);
                         })
@@ -2636,16 +2636,16 @@ impl BackingView for SettingsView {
     fn handle_pane_header_overflow_menu_action(
         &mut self,
         action: &Self::PaneHeaderOverflowMenuAction,
-        ctx: &mut warpui::ViewContext<Self>,
+        ctx: &mut zterm_ui::ViewContext<Self>,
     ) {
         self.handle_action(action, ctx)
     }
 
-    fn close(&mut self, ctx: &mut warpui::ViewContext<Self>) {
+    fn close(&mut self, ctx: &mut zterm_ui::ViewContext<Self>) {
         ctx.emit(SettingsViewEvent::Pane(PaneEvent::Close));
     }
 
-    fn focus_contents(&mut self, ctx: &mut warpui::ViewContext<Self>) {
+    fn focus_contents(&mut self, ctx: &mut zterm_ui::ViewContext<Self>) {
         ctx.focus(&self.search_editor)
     }
 

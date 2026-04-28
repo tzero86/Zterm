@@ -1,4 +1,4 @@
-mod js_api;
+﻿mod js_api;
 mod logging;
 mod plugin;
 mod plugin_caller;
@@ -14,7 +14,7 @@ use std::{
 };
 
 use anyhow::{anyhow, Context, Result};
-use warpui::r#async::executor::Background;
+use zterm_ui::r#async::executor::Background;
 
 use crate::plugin::host::runners::PluginRunners;
 
@@ -31,7 +31,7 @@ use super::{
 use logging::initialize_logging;
 
 pub fn run() -> Result<()> {
-    warpui::r#async::block_on(async move {
+    zterm_ui::r#async::block_on(async move {
         let executor = Arc::new(Background::default());
 
         // Initialize a client connection to the warp app process.

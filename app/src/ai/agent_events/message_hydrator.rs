@@ -1,11 +1,11 @@
-use std::sync::Arc;
+﻿use std::sync::Arc;
 use std::time::Duration;
 
 use anyhow::{anyhow, Context, Result};
 #[cfg(not(target_family = "wasm"))]
 use futures::future::Either;
 #[cfg(not(target_family = "wasm"))]
-use warpui::r#async::Timer;
+use zterm_ui::r#async::Timer;
 
 use crate::ai::agent::ReceivedMessageInput;
 use crate::server::server_api::ai::{AIClient, AgentRunEvent, ReadAgentMessageResponse};

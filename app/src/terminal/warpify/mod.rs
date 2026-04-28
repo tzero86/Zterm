@@ -1,4 +1,4 @@
-pub mod render;
+﻿pub mod render;
 pub mod settings;
 pub mod success_block;
 pub mod trigger_state;
@@ -7,7 +7,7 @@ use crate::terminal::model::terminal_model::SubshellInitializationInfo;
 use crate::terminal::shell::ShellType;
 use crate::ASSETS;
 use channel_versions::overrides::TargetOS;
-use warpui::AssetProvider;
+use zterm_ui::AssetProvider;
 
 #[derive(Debug)]
 pub enum WarpificationSource {

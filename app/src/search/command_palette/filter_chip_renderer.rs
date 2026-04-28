@@ -5,12 +5,12 @@ use crate::search::FilterChipRenderer as CommonFilterChipRenderer;
 use crate::search::QueryFilter;
 use crate::util::color::{ContrastingColor, MinimumAllowedContrast};
 use pathfinder_color::ColorU;
-use warpui::elements::{
+use zterm_ui::elements::{
     ConstrainedBox, Container, CornerRadius, CrossAxisAlignment, Flex, Hoverable, Icon,
     MouseStateHandle, ParentElement, Radius, Text,
 };
-use warpui::platform::Cursor;
-use warpui::{Element, EventContext};
+use zterm_ui::platform::Cursor;
+use zterm_ui::{Element, EventContext};
 
 /// Trait to render filter chips for the command palette.
 pub trait FilterChipRenderer: crate::search::FilterChipRenderer {
@@ -146,8 +146,8 @@ impl FilterChipRenderer for QueryFilter {
 }
 
 mod styles {
-    use crate::themes::theme::{Blend, Fill, WarpTheme};
-    use warpui::elements::{Border, MouseState};
+    use crate::themes::theme::{Blend, Fill, ZtermTheme};
+    use zterm_ui::elements::{Border, MouseState};
 
     /// Size of the border when the query filter is hovered.
     const HOVERED_BORDER_SIZE: f32 = 2.;
@@ -181,7 +181,7 @@ mod styles {
     }
 
     /// Returns the border that should be applied to the query filter.
-    pub fn border(mouse_state: &MouseState, theme: &WarpTheme) -> Border {
+    pub fn border(mouse_state: &MouseState, theme: &ZtermTheme) -> Border {
         if mouse_state.is_hovered() {
             Border::all(HOVERED_BORDER_SIZE).with_border_fill(theme.accent())
         } else {
@@ -190,7 +190,7 @@ mod styles {
     }
 
     /// Returns the background [`Fill`] that should be applied to the query filter.
-    pub fn background_fill(mouse_state: &MouseState, theme: &WarpTheme) -> Fill {
+    pub fn background_fill(mouse_state: &MouseState, theme: &ZtermTheme) -> Fill {
         if mouse_state.is_hovered() {
             theme
                 .surface_2()

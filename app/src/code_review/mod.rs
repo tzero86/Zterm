@@ -1,4 +1,4 @@
-pub mod code_review_view;
+﻿pub mod code_review_view;
 pub mod comment_list_view;
 pub mod context;
 pub mod diff_size_limits;
@@ -22,7 +22,7 @@ pub(crate) mod file_invalidation_queue;
 
 use code_review_view::CodeReviewAction;
 use std::path::{Path, PathBuf};
-use warpui::{
+use zterm_ui::{
     id,
     keymap::{EditableBinding, FixedBinding},
     AppContext, Entity, EntityId, ModelContext, SingletonEntity, WeakViewHandle, WindowId,

@@ -1,4 +1,4 @@
-//! Claude Code transcript layout + rehydration helpers.
+﻿//! Claude Code transcript layout + rehydration helpers.
 //!
 //! This module owns:
 //! - [`ClaudeTranscriptEnvelope`] — the on-wire/on-GCS shape of a saved Claude session
@@ -22,7 +22,7 @@ use anyhow::{Context, Result};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use uuid::Uuid;
-use warp_core::safe_warn;
+use zterm_core::safe_warn;
 
 use crate::ai::agent::conversation::AIConversationId;
 

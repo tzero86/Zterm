@@ -1,5 +1,5 @@
-use warp_editor::editor::NavigationKey;
-use warpui::{
+use zterm_editor::editor::NavigationKey;
+use zterm_ui::{
     elements::{
         Align, ConstrainedBox, Container, Flex, ParentElement, SavePosition, Shrinkable, Stack,
     },

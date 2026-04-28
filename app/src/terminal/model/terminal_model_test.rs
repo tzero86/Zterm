@@ -1,4 +1,4 @@
-use super::*;
+﻿use super::*;
 use crate::terminal::model::ansi::{Handler, Processor};
 use crate::terminal::model::block::BlockId;
 use crate::terminal::model::bootstrap::BootstrapStage;
@@ -7,10 +7,10 @@ use crate::terminal::model::index::Side;
 use crate::terminal::model::selection::ExpandedSelectionRange;
 use chrono::{DateTime, Local};
 use vec1::vec1;
-use warp_core::command::ExitCode;
-use warp_terminal::model::ansi::ClearMode;
-use warpui::text::str_to_byte_vec;
-use warpui::text::SelectionType;
+use zterm_core::command::ExitCode;
+use zterm_terminal::model::ansi::ClearMode;
+use zterm_ui::text::str_to_byte_vec;
+use zterm_ui::text::SelectionType;
 
 /// Helper function to create a SerializedBlock with default values,
 /// including the new is_local field.

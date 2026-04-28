@@ -1,8 +1,8 @@
-use std::sync::Arc;
+﻿use std::sync::Arc;
 
 use pathfinder_color::ColorU;
 use pathfinder_geometry::vector::vec2f;
-use warpui::{
+use zterm_ui::{
     elements::{
         Border, ChildAnchor, ChildView, OffsetPositioning, ParentAnchor, ParentElement as _,
         ParentOffsetBounds, Stack,
@@ -11,9 +11,9 @@ use warpui::{
     AppContext, Element, Entity, SingletonEntity, TypedActionView, View, ViewContext, ViewHandle,
 };
 
-use warp_core::ui::appearance::Appearance;
-use warp_core::ui::theme::color::internal_colors;
-use warp_core::ui::theme::Fill;
+use zterm_core::ui::appearance::Appearance;
+use zterm_core::ui::theme::color::internal_colors;
+use zterm_core::ui::theme::Fill;
 
 use crate::menu::{Event as MenuEvent, Menu, MenuItem, MenuItemFields};
 use crate::terminal::input::{MenuPositioning, MenuPositioningProvider};
@@ -45,7 +45,7 @@ pub enum Host {
 impl Host {
     fn display_name(self) -> &'static str {
         match self {
-            Host::Warp => "Warp",
+            Host::Warp => "Zterm",
         }
     }
 }

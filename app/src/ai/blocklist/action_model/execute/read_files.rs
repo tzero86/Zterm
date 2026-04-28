@@ -1,7 +1,7 @@
-use std::path::{Path, PathBuf};
+﻿use std::path::{Path, PathBuf};
 
 use futures::{future::BoxFuture, FutureExt};
-use warpui::{Entity, EntityId, ModelContext, ModelHandle, SingletonEntity};
+use zterm_ui::{Entity, EntityId, ModelContext, ModelHandle, SingletonEntity};
 
 use crate::{
     ai::{

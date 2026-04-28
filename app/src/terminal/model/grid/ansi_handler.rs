@@ -1,4 +1,4 @@
-// path attribute needed due to current non-fs-based nesting of ansi_handler
+﻿// path attribute needed due to current non-fs-based nesting of ansi_handler
 // under grid_handler.
 #[path = "ansi_handler/tab_stops.rs"]
 mod tab_stops;
@@ -14,12 +14,12 @@ use bounded_vec_deque::BoundedVecDeque;
 use pathfinder_geometry::vector::Vector2F;
 use rand::Rng;
 use unicode_width::{UnicodeWidthChar, UnicodeWidthStr};
-use warp_core::channel::ChannelState;
-use warp_core::features::FeatureFlag;
-use warp_terminal::model::ansi::CharsetIndex;
-use warp_terminal::model::grid::cell;
-use warp_terminal::model::{KeyboardModes, KeyboardModesApplyBehavior};
-use warpui::image_cache::{resize_dimensions, FitType};
+use zterm_core::channel::ChannelState;
+use zterm_core::features::FeatureFlag;
+use zterm_terminal::model::ansi::CharsetIndex;
+use zterm_terminal::model::grid::cell;
+use zterm_terminal::model::{KeyboardModes, KeyboardModesApplyBehavior};
+use zterm_ui::image_cache::{resize_dimensions, FitType};
 
 use crate::server::telemetry::ImageProtocol;
 use crate::terminal::event::Event;
@@ -408,7 +408,7 @@ impl ansi::Handler for GridHandler {
                 // was introduced[2] - version 277.
                 //
                 // Since we didn't want to claim xterm functionalities that we haven't yet implemnted in
-                // Warp, rather than passing the higher `Pv` value, we decided to use one of the
+                // Zterm, rather than passing the higher `Pv` value, we decided to use one of the
                 // hardcoded ones. `0;95;0` is set what iTerm2 sends.
 
                 // [1] https://github.com/vim/vim/blob/20c370d9f2ee89cb854054edf71f5004f6efff77/src/term.c#L4630
@@ -1133,7 +1133,7 @@ impl ansi::Handler for GridHandler {
         self.grid.cursor.charsets[index] = charset;
     }
 
-    fn set_color(&mut self, _: usize, _: warpui::color::ColorU) {
+    fn set_color(&mut self, _: usize, _: zterm_ui::color::ColorU) {
         log::error!("Handler method GridHandler::set_color should never be called. This should be handled by TerminalModel.");
     }
 

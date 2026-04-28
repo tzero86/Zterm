@@ -1,4 +1,4 @@
-use super::{display_working_directory, format_session_location, should_render_oz_updates_section};
+﻿use super::{display_working_directory, format_session_location, should_render_oz_updates_section};
 use crate::ai::blocklist::agent_view::zero_state_block::current_working_directory_for_zero_state;
 use crate::terminal::model::ansi::{Handler, InitShellValue, PrecmdValue, SSHValue};
 use crate::terminal::model::test_utils::block_size;
@@ -8,7 +8,7 @@ use crate::terminal::{
     event_listener::ChannelEventListener,
 };
 use std::{path::PathBuf, sync::Arc};
-use warpui::r#async::executor::Background;
+use zterm_ui::r#async::executor::Background;
 
 fn terminal_with_startup_path(startup_path: Option<&str>) -> TerminalModel {
     TerminalModel::new_for_test(

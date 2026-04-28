@@ -1,6 +1,6 @@
 use ui_components::Component;
-use warp_core::ui::appearance::Appearance;
-use warpui::{
+use zterm_core::ui::appearance::Appearance;
+use zterm_ui::{
     elements::Empty,
     keymap::{macros::*, FixedBinding, Keystroke},
     AppContext, Element, Entity, EventContext, ModelHandle, SingletonEntity, TypedActionView, View,

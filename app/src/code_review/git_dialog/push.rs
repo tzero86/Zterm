@@ -1,4 +1,4 @@
-//! Push / publish mode for [`GitDialog`].
+﻿//! Push / publish mode for [`GitDialog`].
 //!
 //! Renders the branch's unpushed commit list with lazy per-commit file
 //! expansion. A single `publish: bool` flag toggles between pushing an
@@ -7,8 +7,8 @@
 
 use std::collections::HashMap;
 
-use warp_core::ui::appearance::Appearance;
-use warpui::{
+use zterm_core::ui::appearance::Appearance;
+use zterm_ui::{
     elements::{
         Border, ClippedScrollStateHandle, ClippedScrollable, ConstrainedBox, Container,
         CornerRadius, CrossAxisAlignment, Element, Flex, Hoverable, MainAxisAlignment,
@@ -356,7 +356,7 @@ fn render_commits_section(state: &PushState, appearance: &Appearance) -> Box<dyn
             ScrollbarWidth::Auto,
             theme.nonactive_ui_detail().into(),
             theme.active_ui_detail().into(),
-            warpui::elements::Fill::None,
+            zterm_ui::elements::Fill::None,
         )
         .finish(),
     )

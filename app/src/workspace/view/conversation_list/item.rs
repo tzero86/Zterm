@@ -11,21 +11,21 @@ use crate::util::time_format::format_approx_duration_from_now_utc;
 use crate::util::truncation::truncate_from_end;
 use crate::workspace::view::conversation_list::view::ConversationListViewAction;
 use pathfinder_geometry::vector::vec2f;
-use warp_core::ui::color::coloru_with_opacity;
-use warp_core::ui::theme::color::internal_colors;
-use warp_util::path::user_friendly_path;
-use warpui::elements::{
+use zterm_core::ui::color::coloru_with_opacity;
+use zterm_core::ui::theme::color::internal_colors;
+use zterm_util::path::user_friendly_path;
+use zterm_ui::elements::{
     AnchorPair, ChildAnchor, ChildView, ConstrainedBox, Container, CornerRadius,
     CrossAxisAlignment, DispatchEventResult, Element, EventHandler, Flex, Highlight, Hoverable,
     MainAxisAlignment, MainAxisSize, MouseInBehavior, MouseStateHandle, OffsetPositioning,
     OffsetType, ParentAnchor, ParentElement, ParentOffsetBounds, PositionedElementOffsetBounds,
     PositioningAxis, Radius, SavePosition, Shrinkable, Stack, Text, XAxisAnchor, YAxisAnchor,
 };
-use warpui::fonts::{Properties, Weight};
-use warpui::platform::Cursor;
-use warpui::text_layout::TextStyle;
-use warpui::ui_components::components::{UiComponent, UiComponentStyles};
-use warpui::{AppContext, SingletonEntity, ViewHandle};
+use zterm_ui::fonts::{Properties, Weight};
+use zterm_ui::platform::Cursor;
+use zterm_ui::text_layout::TextStyle;
+use zterm_ui::ui_components::components::{UiComponent, UiComponentStyles};
+use zterm_ui::{AppContext, SingletonEntity, ViewHandle};
 
 /// Maximum length for tooltip text before truncation
 const MAX_TOOLTIP_LENGTH: usize = 80;
@@ -98,7 +98,7 @@ pub fn render_static_item(props: StaticItemProps<'_>, app: &AppContext) -> Box<d
 
     let icon_color = theme.main_text_color(theme.background());
     let icon = Container::new(
-        ConstrainedBox::new(Icon::Plus.to_warpui_icon(icon_color).finish())
+        ConstrainedBox::new(Icon::Plus.to_zterm_ui_icon(icon_color).finish())
             .with_width(appearance.ui_font_size())
             .with_height(appearance.ui_font_size())
             .finish(),
@@ -198,7 +198,7 @@ pub fn render_item(props: ItemProps<'_>, app: &AppContext) -> Box<dyn Element> {
     let icon_element: Box<dyn Element> = if conversation.is_ambient_agent_conversation() {
         ConstrainedBox::new(
             Icon::Cloud
-                .to_warpui_icon(theme.sub_text_color(theme.background()))
+                .to_zterm_ui_icon(theme.sub_text_color(theme.background()))
                 .finish(),
         )
         .with_width(status_element_size)

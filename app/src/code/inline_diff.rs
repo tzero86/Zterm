@@ -1,18 +1,18 @@
-use std::rc::Rc;
+﻿use std::rc::Rc;
 
 #[cfg(not(target_family = "wasm"))]
 use crate::ai::blocklist::inline_action::code_diff_view::DiffSessionType;
 use ai::diff_validation::DiffType;
 #[cfg(not(target_family = "wasm"))]
-use warp_files::{FileModel, FileModelEvent};
-use warp_util::file::FileId;
+use zterm_files::{FileModel, FileModelEvent};
+use zterm_util::file::FileId;
 #[cfg(not(target_family = "wasm"))]
-use warp_util::file::FileSaveError;
-use warp_util::standardized_path::StandardizedPath;
-use warpui::elements::ChildView;
+use zterm_util::file::FileSaveError;
+use zterm_util::standardized_path::StandardizedPath;
+use zterm_ui::elements::ChildView;
 #[cfg(not(target_family = "wasm"))]
-use warpui::SingletonEntity;
-use warpui::{AppContext, Element, Entity, TypedActionView, View, ViewContext, ViewHandle};
+use zterm_ui::SingletonEntity;
+use zterm_ui::{AppContext, Element, Entity, TypedActionView, View, ViewContext, ViewHandle};
 
 use super::diff_viewer::DiffViewer;
 use super::diff_viewer::DisplayMode;

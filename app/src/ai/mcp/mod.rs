@@ -18,7 +18,7 @@ use crate::{
         JsonObjectType, Revision, ServerCloudObject,
     },
     drive::{
-        items::{mcp_server::WarpDriveMCPServer, WarpDriveItem},
+        items::{mcp_server::ZtermDriveMCPServer, ZtermDriveItem},
         CloudObjectTypeAndId,
     },
     server::{ids::SyncId, sync_queue::QueueItem},
@@ -28,8 +28,8 @@ use diesel::{QueryDsl, RunQueryDsl, SqliteConnection};
 use serde::{Deserialize, Serialize};
 use strum::IntoEnumIterator;
 use strum_macros::EnumIter;
-use warp_core::ui::appearance::Appearance;
-use warp_core::ui::Icon;
+use zterm_core::ui::appearance::Appearance;
+use zterm_core::ui::Icon;
 
 pub mod manager;
 pub mod templatable_manager;
@@ -48,7 +48,7 @@ cfg_if::cfg_if! {
 
 pub(crate) fn home_config_file_path(provider: MCPProvider) -> Option<PathBuf> {
     match provider {
-        MCPProvider::Warp => warp_core::paths::warp_home_mcp_config_file_path(),
+        MCPProvider::Warp => zterm_core::paths::warp_home_mcp_config_file_path(),
         _ => dirs::home_dir().map(|home_dir| home_dir.join(provider.home_config_path())),
     }
 }
@@ -73,7 +73,7 @@ pub enum MCPProvider {
 impl MCPProvider {
     pub fn display_name(&self) -> &str {
         match self {
-            MCPProvider::Warp => "Warp",
+            MCPProvider::Warp => "Zterm",
             MCPProvider::Claude => "Claude",
             MCPProvider::Codex => "Codex",
             MCPProvider::Agents => "Other Agents",
@@ -147,7 +147,7 @@ mod tests {
     #[test]
     fn mcp_provider_from_file_path_recognizes_warp_home_path() {
         if let Some(warp_home_mcp_config_file_path) =
-            warp_core::paths::warp_home_mcp_config_file_path()
+            zterm_core::paths::warp_home_mcp_config_file_path()
         {
             assert_eq!(
                 mcp_provider_from_file_path(&warp_home_mcp_config_file_path),
@@ -159,7 +159,7 @@ mod tests {
 
 pub mod gallery;
 pub use gallery::MCPGalleryManager;
-use warpui::{AppContext, SingletonEntity as _};
+use zterm_ui::{AppContext, SingletonEntity as _};
 pub mod templatable;
 pub use templatable::JsonTemplate;
 pub use templatable::{TemplatableMCPServer, TemplateVariable};
@@ -348,8 +348,8 @@ impl StringModel for MCPServer {
         id: SyncId,
         _appearance: &Appearance,
         mcp_server: &CloudMCPServer,
-    ) -> Option<Box<dyn WarpDriveItem>> {
-        Some(Box::new(WarpDriveMCPServer::new(
+    ) -> Option<Box<dyn ZtermDriveItem>> {
+        Some(Box::new(ZtermDriveMCPServer::new(
             CloudObjectTypeAndId::GenericStringObject {
                 object_type: GenericStringObjectFormat::Json(JsonObjectType::MCPServer),
                 id,

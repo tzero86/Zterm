@@ -1,4 +1,4 @@
-//! Generates a TOML settings file containing all registered public settings
+﻿//! Generates a TOML settings file containing all registered public settings
 //! with their default values.
 //!
 //! Unlike a runtime `SettingsManager` walk, this binary iterates the
@@ -17,9 +17,9 @@ use std::collections::HashSet;
 use std::path::PathBuf;
 
 use settings::schema::SettingSchemaEntry;
-use warp_core::features::{FeatureFlag, DEBUG_FLAGS, DOGFOOD_FLAGS, PREVIEW_FLAGS, RELEASE_FLAGS};
-use warpui_extras::user_preferences::toml_backed::TomlBackedUserPreferences;
-use warpui_extras::user_preferences::UserPreferences as _;
+use zterm_core::features::{FeatureFlag, DEBUG_FLAGS, DOGFOOD_FLAGS, PREVIEW_FLAGS, RELEASE_FLAGS};
+use zterm_ui_extras::user_preferences::toml_backed::TomlBackedUserPreferences;
+use zterm_ui_extras::user_preferences::UserPreferences as _;
 
 /// Ensures all `inventory::submit!` registrations from the app crate's
 /// dependency tree are linked into the binary.

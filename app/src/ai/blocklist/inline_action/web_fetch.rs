@@ -1,6 +1,6 @@
-use warp_core::ui::appearance::Appearance;
-use warpui::elements::{Container, CrossAxisAlignment, Element, Flex, ParentElement, Text};
-use warpui::{AppContext, Entity, SingletonEntity, TypedActionView, View, ViewContext};
+﻿use zterm_core::ui::appearance::Appearance;
+use zterm_ui::elements::{Container, CrossAxisAlignment, Element, Flex, ParentElement, Text};
+use zterm_ui::{AppContext, Entity, SingletonEntity, TypedActionView, View, ViewContext};
 
 use super::search_results_common::{
     render_collapsible_search_results, CollapsibleSearchResultsState,

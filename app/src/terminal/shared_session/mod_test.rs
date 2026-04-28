@@ -1,4 +1,4 @@
-use super::{decode_scrollback, SharedSessionScrollbackType};
+﻿use super::{decode_scrollback, SharedSessionScrollbackType};
 
 use crate::ai::blocklist::agent_view::AgentViewState;
 use crate::assert_lines_approx_eq;
@@ -15,8 +15,8 @@ use serde_json::Value;
 use session_sharing_protocol::common::{Scrollback, ScrollbackBlock};
 use std::sync::Arc;
 use url::Url;
-use warpui::r#async::executor::Background;
-use warpui::units::Lines;
+use zterm_ui::r#async::executor::Background;
+use zterm_ui::units::Lines;
 
 pub const MAX_BYTES_SHAREABLE: usize = 5000;
 

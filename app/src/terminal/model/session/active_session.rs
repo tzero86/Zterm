@@ -1,5 +1,5 @@
-use std::sync::Arc;
-use warpui::{AppContext, Entity, ModelContext, ModelHandle};
+﻿use std::sync::Arc;
+use zterm_ui::{AppContext, Entity, ModelContext, ModelHandle};
 
 use crate::{
     ai_assistant::execution_context::WarpAiExecutionContext,

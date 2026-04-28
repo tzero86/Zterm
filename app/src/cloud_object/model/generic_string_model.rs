@@ -9,7 +9,7 @@ use crate::{
         GenericStringObjectUniqueKey, ObjectType, Revision, ServerCloudObject,
         UpdateCloudObjectResult,
     },
-    drive::{items::WarpDriveItem, CloudObjectTypeAndId},
+    drive::{items::ZtermDriveItem, CloudObjectTypeAndId},
     persistence::ModelEvent,
     server::{
         ids::{ObjectUid, ServerId, SyncId},
@@ -70,7 +70,7 @@ pub trait StringModel: Clone + Debug + PartialEq + Send + Sync + 'static {
     /// Returns the display name for this model.
     fn display_name(&self) -> String;
 
-    /// Returns whether to render this model as a WarpDriveItem.
+    /// Returns whether to render this model as a ZtermDriveItem.
     fn renders_in_warp_drive(&self) -> bool {
         false
     }
@@ -89,13 +89,13 @@ pub trait StringModel: Clone + Debug + PartialEq + Send + Sync + 'static {
     fn set_display_name(&mut self, _name: &str) {}
 
     /// Creates a new warp drive item for this model type. Returns None
-    /// if this object does not render in Warp Drive.
+    /// if this object does not render in Zterm Drive.
     fn to_warp_drive_item(
         &self,
         _id: SyncId,
         _appearance: &Appearance,
         _object: &Self::CloudObjectType,
-    ) -> Option<Box<dyn WarpDriveItem>> {
+    ) -> Option<Box<dyn ZtermDriveItem>> {
         None
     }
 
@@ -345,7 +345,7 @@ where
         id: SyncId,
         appearance: &Appearance,
         object: &GenericCloudObject<GenericStringObjectId, Self>,
-    ) -> Option<Box<dyn WarpDriveItem>> {
+    ) -> Option<Box<dyn ZtermDriveItem>> {
         self.string_model.to_warp_drive_item(id, appearance, object)
     }
 }

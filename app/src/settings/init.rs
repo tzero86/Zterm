@@ -1,13 +1,13 @@
 use settings::{Setting as _, SettingsManager};
-use warp_core::features::FeatureFlag;
-use warpui::{rendering::GPUPowerPreference, AppContext, SingletonEntity};
-use warpui_extras::user_preferences;
+use zterm_core::features::FeatureFlag;
+use zterm_ui::{rendering::GPUPowerPreference, AppContext, SingletonEntity};
+use zterm_ui_extras::user_preferences;
 
 use crate::{
     ai::cloud_agent_settings::CloudAgentSettings,
     appearance,
     banner::BannerState,
-    drive::settings::WarpDriveSettings,
+    drive::settings::ZtermDriveSettings,
     report_if_error,
     resource_center::TipsCompleted,
     search::command_search::settings::CommandSearchSettings,
@@ -20,7 +20,7 @@ use crate::{
         session_settings::{SessionSettings, SessionSettingsChangedEvent},
         settings::TerminalSettings,
         shared_session::settings::SharedSessionSettings,
-        warpify::settings::WarpifySettings,
+        warpify::settings::ZtermifySettings,
         BlockListSettings,
     },
     undo_close::UndoCloseSettings,
@@ -29,7 +29,7 @@ use crate::{
     workspace::tab_settings::TabSettings,
 };
 
-use warp_core::semantic_selection::SemanticSelection;
+use zterm_core::semantic_selection::SemanticSelection;
 
 use super::{
     app_icon::AppIconSettings, app_installation_detection::UserAppInstallDetectionSettings,
@@ -39,7 +39,7 @@ use super::{
     CodeSettings, DebugSettings, EmacsBindingsSettings, FontSettings, FontSettingsChangedEvent,
     GPUSettings, InputBoxType, InputModeSettings, InputSettings, PaneSettings,
     SameLinePromptBlockSettings, ScrollSettings, SelectionSettings, SshSettings, ThemeSettings,
-    VimBannerSettings, WarpDrivePrivacySettings,
+    VimBannerSettings, ZtermDrivePrivacySettings,
 };
 
 pub struct UserDefaultsOnStartup {
@@ -82,18 +82,18 @@ pub fn register_all_settings(ctx: &mut AppContext) {
     AccessibilitySettings::register(ctx);
     NativePreferenceSettings::register(ctx);
     CloudPreferencesSettings::register(ctx);
-    WarpDrivePrivacySettings::register(ctx);
+    ZtermDrivePrivacySettings::register(ctx);
     UserAppInstallDetectionSettings::register(ctx);
     AppIconSettings::register(ctx);
     AppEditorSettings::register(ctx);
     InputSettings::register(ctx);
-    WarpifySettings::register(ctx);
+    ZtermifySettings::register(ctx);
     AltScreenReporting::register(ctx);
     UndoCloseSettings::register(ctx);
     SshSettings::register(ctx);
     VimBannerSettings::register(ctx);
     SharedSessionSettings::register(ctx);
-    WarpDriveSettings::register(ctx);
+    ZtermDriveSettings::register(ctx);
     WorkflowAliases::register(ctx);
     EmacsBindingsSettings::register(ctx);
     SameLinePromptBlockSettings::register(ctx);
@@ -201,15 +201,15 @@ pub fn init(
 
     appearance::register(ctx);
 
-    // Set up hot-reload for the settings file. When the WarpConfig watcher
+    // Set up hot-reload for the settings file. When the ZtermConfig watcher
     // detects a change to settings.toml, reload preferences from disk and
     // push changed values into setting models.
     #[cfg(feature = "local_fs")]
     {
-        let prefs = <settings::PublicPreferences as warpui::SingletonEntity>::as_ref(ctx);
+        let prefs = <settings::PublicPreferences as zterm_ui::SingletonEntity>::as_ref(ctx);
         if prefs.is_settings_file() {
             ctx.subscribe_to_model(
-                &crate::user_config::WarpConfig::handle(ctx),
+                &crate::user_config::ZtermConfig::handle(ctx),
                 handle_warp_config_change,
             );
         }
@@ -218,24 +218,24 @@ pub fn init(
     user_defaults_on_startup
 }
 
-/// Handles a `WarpConfig` change event, reloading settings from disk when
+/// Handles a `ZtermConfig` change event, reloading settings from disk when
 /// the settings file is modified, created, or deleted.
 #[cfg(feature = "local_fs")]
 fn handle_warp_config_change(
-    _: warpui::ModelHandle<crate::user_config::WarpConfig>,
-    event: &crate::user_config::WarpConfigUpdateEvent,
+    _: zterm_ui::ModelHandle<crate::user_config::ZtermConfig>,
+    event: &crate::user_config::ZtermConfigUpdateEvent,
     ctx: &mut AppContext,
 ) {
-    use crate::user_config::{WarpConfig, WarpConfigUpdateEvent};
+    use crate::user_config::{ZtermConfig, ZtermConfigUpdateEvent};
 
-    if !matches!(event, WarpConfigUpdateEvent::Settings) {
+    if !matches!(event, ZtermConfigUpdateEvent::Settings) {
         return;
     }
-    let prefs = <settings::PublicPreferences as warpui::SingletonEntity>::as_ref(ctx);
+    let prefs = <settings::PublicPreferences as zterm_ui::SingletonEntity>::as_ref(ctx);
     if let Err(err) = prefs.reload_from_disk() {
         log::warn!("Settings file reload failed: {err}");
-        WarpConfig::handle(ctx).update(ctx, |_, ctx| {
-            ctx.emit(WarpConfigUpdateEvent::SettingsErrors(
+        ZtermConfig::handle(ctx).update(ctx, |_, ctx| {
+            ctx.emit(ZtermConfigUpdateEvent::SettingsErrors(
                 super::SettingsFileError::FileParseFailed(err.to_string()),
             ));
         });
@@ -243,11 +243,11 @@ fn handle_warp_config_change(
     }
     let failed_keys = settings::SettingsManager::handle(ctx)
         .update(ctx, |manager, ctx| manager.reload_all_public_settings(ctx));
-    WarpConfig::handle(ctx).update(ctx, |_, ctx| {
+    ZtermConfig::handle(ctx).update(ctx, |_, ctx| {
         if failed_keys.is_empty() {
-            ctx.emit(WarpConfigUpdateEvent::SettingsErrorsCleared);
+            ctx.emit(ZtermConfigUpdateEvent::SettingsErrorsCleared);
         } else {
-            ctx.emit(WarpConfigUpdateEvent::SettingsErrors(
+            ctx.emit(ZtermConfigUpdateEvent::SettingsErrors(
                 super::SettingsFileError::InvalidSettings(failed_keys),
             ));
         }
@@ -270,11 +270,11 @@ fn init_platform_native_preferences() -> user_preferences::Model {
                 }
             }
         } else if #[cfg(target_os = "windows")] {
-            let app_id = warp_core::channel::ChannelState::app_id();
+            let app_id = zterm_core::channel::ChannelState::app_id();
             Box::new(user_preferences::registry_backed::RegistryBackedPreferences::new(app_id.application_name()))
         } else if #[cfg(target_os = "macos")] {
             Box::new(user_preferences::user_defaults::UserDefaultsPreferencesStorage::new(
-                warp_core::channel::ChannelState::data_domain_if_not_default()
+                zterm_core::channel::ChannelState::data_domain_if_not_default()
             ))
         } else if #[cfg(target_family = "wasm")] {
             Box::<user_preferences::local_storage::LocalStoragePreferences>::default()
@@ -309,7 +309,7 @@ pub fn init_public_user_preferences() -> (user_preferences::Model, Option<user_p
         } else if #[cfg(target_family = "wasm")] {
             (Box::<user_preferences::local_storage::LocalStoragePreferences>::default(), None)
         } else {
-            if warp_core::features::FeatureFlag::SettingsFile.is_enabled() {
+            if zterm_core::features::FeatureFlag::SettingsFile.is_enabled() {
                 let (prefs, parse_error) =
                     user_preferences::toml_backed::TomlBackedUserPreferences::new(
                         super::user_preferences_toml_file_path(),
@@ -342,7 +342,7 @@ fn needs_settings_file_migration(ctx: &AppContext) -> bool {
         return false;
     }
 
-    use warp_core::user_preferences::GetUserPreferences as _;
+    use zterm_core::user_preferences::GetUserPreferences as _;
     ctx.private_user_preferences()
         .read_value(SETTINGS_FILE_MIGRATION_COMPLETE_KEY)
         .unwrap_or_default()
@@ -359,7 +359,7 @@ fn needs_settings_file_migration(ctx: &AppContext) -> bool {
 /// the in-memory setting, and writes to the TOML file with the correct
 /// hierarchy, `serialize_for_file` transforms, and `max_table_depth`.
 fn migrate_native_settings_to_settings_file(ctx: &mut AppContext) {
-    use warp_core::user_preferences::GetUserPreferences as _;
+    use zterm_core::user_preferences::GetUserPreferences as _;
 
     log::info!("Migrating public settings from native store to settings.toml");
 

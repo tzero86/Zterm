@@ -1,6 +1,6 @@
-use std::path::{Path, PathBuf};
+﻿use std::path::{Path, PathBuf};
 
-use warpui::{Entity, ModelContext, SingletonEntity};
+use zterm_ui::{Entity, ModelContext, SingletonEntity};
 
 use super::OutlineStatus;
 

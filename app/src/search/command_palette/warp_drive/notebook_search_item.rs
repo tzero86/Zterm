@@ -13,9 +13,9 @@ use crate::search::notebooks::fuzzy_match::{
 use crate::search::result_renderer::ItemHighlightState;
 use crate::ui_components::icons::Icon;
 use ordered_float::OrderedFloat;
-use warpui::elements::{Container, Flex, Highlight, ParentElement, Text};
-use warpui::fonts::{Properties, Weight};
-use warpui::{AppContext, Element, SingletonEntity};
+use zterm_ui::elements::{Container, Flex, Highlight, ParentElement, Text};
+use zterm_ui::fonts::{Properties, Weight};
+use zterm_ui::{AppContext, Element, SingletonEntity};
 
 /// Search item result for a cloud notebook.
 #[derive(Debug)]
@@ -135,7 +135,7 @@ impl SearchItem for NotebookSearchItem {
     }
 
     fn execute_result(&self) -> Self::Action {
-        CommandPaletteItemAction::ViewInWarpDrive {
+        CommandPaletteItemAction::ViewInZtermDrive {
             id: CloudObjectTypeAndId::Notebook(self.cloud_notebook.id),
         }
     }

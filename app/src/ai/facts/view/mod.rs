@@ -1,4 +1,4 @@
-use crate::cloud_object::{
+﻿use crate::cloud_object::{
     CloudObject, CloudObjectSyncStatus, GenericStringObjectFormat, JsonObjectType,
 };
 use crate::drive::CloudObjectTypeAndId;
@@ -8,8 +8,8 @@ use crate::pane_group::{pane::view, BackingView, PaneConfiguration, PaneEvent};
 use crate::server::ids::SyncId;
 use crate::server::sync_queue::SyncQueue;
 use std::path::PathBuf;
-use warp_core::ui::appearance::Appearance;
-use warpui::{
+use zterm_core::ui::appearance::Appearance;
+use zterm_ui::{
     elements::{
         Align, ClippedScrollStateHandle, ClippedScrollable, ConstrainedBox, Container,
         CrossAxisAlignment, Expanded, Flex, MainAxisAlignment, MainAxisSize, ParentElement,
@@ -20,8 +20,8 @@ use warpui::{
 };
 
 use crate::ui_components::icons::Icon;
-use warpui::elements::ChildView;
-use warpui::{SingletonEntity, ViewHandle};
+use zterm_ui::elements::ChildView;
+use zterm_ui::{SingletonEntity, ViewHandle};
 
 use super::{AIFact, CloudAIFact, CloudAIFactModel};
 
@@ -192,7 +192,7 @@ impl AIFactView {
                 .with_child(
                     ConstrainedBox::new(
                         Icon::CloudOffline
-                            .to_warpui_icon(
+                            .to_zterm_ui_icon(
                                 appearance
                                     .theme()
                                     .sub_text_color(appearance.theme().surface_2()),
@@ -277,7 +277,7 @@ impl View for AIFactView {
             ScrollbarWidth::Auto,
             appearance.theme().nonactive_ui_detail().into(),
             appearance.theme().active_ui_detail().into(),
-            warpui::elements::Fill::None,
+            zterm_ui::elements::Fill::None,
         )
         .finish()
     }
@@ -307,16 +307,16 @@ impl BackingView for AIFactView {
     fn handle_pane_header_overflow_menu_action(
         &mut self,
         _action: &Self::PaneHeaderOverflowMenuAction,
-        _ctx: &mut warpui::ViewContext<Self>,
+        _ctx: &mut zterm_ui::ViewContext<Self>,
     ) {
         self.handle_action(_action, _ctx)
     }
 
-    fn close(&mut self, ctx: &mut warpui::ViewContext<Self>) {
+    fn close(&mut self, ctx: &mut zterm_ui::ViewContext<Self>) {
         ctx.emit(AIFactViewEvent::Pane(PaneEvent::Close));
     }
 
-    fn focus_contents(&mut self, ctx: &mut warpui::ViewContext<Self>) {
+    fn focus_contents(&mut self, ctx: &mut zterm_ui::ViewContext<Self>) {
         self.focus(ctx);
     }
 

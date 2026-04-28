@@ -1,6 +1,6 @@
-use hex;
-use warp_core::command::ExitCode;
-use warpui::color::ColorU;
+﻿use hex;
+use zterm_core::command::ExitCode;
+use zterm_ui::color::ColorU;
 
 use super::*;
 use crate::terminal::model::index::VisibleRow;

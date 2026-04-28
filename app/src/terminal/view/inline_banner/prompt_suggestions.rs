@@ -1,4 +1,4 @@
-use serde::Serialize;
+﻿use serde::Serialize;
 use std::rc::Rc;
 
 use crate::ai::agent::api::ServerConversationToken;
@@ -13,28 +13,28 @@ use crate::settings::InputSettings;
 use crate::terminal::view::passive_suggestions::PromptSuggestionResolution;
 use crate::util::bindings::keybinding_name_to_keystroke;
 use pathfinder_geometry::vector::vec2f;
-use warpui::elements::{
+use zterm_ui::elements::{
     ChildAnchor, ChildView, ConstrainedBox, Container, CornerRadius, CrossAxisAlignment, Empty,
     Fill, Flex, HighlightedHyperlink, Hoverable, Icon, MainAxisAlignment, MainAxisSize,
     OffsetPositioning, ParentAnchor, ParentElement, ParentOffsetBounds, Radius, Shrinkable, Stack,
     Text,
 };
-use warpui::keymap::Keystroke;
-use warpui::platform::Cursor;
-use warpui::ui_components::components::{Coords, UiComponent, UiComponentStyles};
-use warpui::{elements::MouseStateHandle, Element};
-use warpui::{
+use zterm_ui::keymap::Keystroke;
+use zterm_ui::platform::Cursor;
+use zterm_ui::ui_components::components::{Coords, UiComponent, UiComponentStyles};
+use zterm_ui::{elements::MouseStateHandle, Element};
+use zterm_ui::{
     AppContext, Entity, EventContext, ModelHandle, TypedActionView, ViewContext, ViewHandle,
 };
-use warpui::{SingletonEntity, View};
+use zterm_ui::{SingletonEntity, View};
 
 use crate::terminal::view::{ContextMenuAction, InputType, PromptSuggestion};
 use crate::ui_components::blended_colors;
 use crate::{appearance::Appearance, terminal::view::TerminalAction};
-use warp_core::channel::ChannelState;
-use warp_core::ui::theme::color::internal_colors::{neutral_2, neutral_3};
+use zterm_core::channel::ChannelState;
+use zterm_core::ui::theme::color::internal_colors::{neutral_2, neutral_3};
 
-use crate::ui_components::icons::Icon as WarpUIIcon;
+use crate::ui_components::icons::Icon as ZtermUIIcon;
 
 use crate::ai::agent::{PassiveSuggestionTrigger, StaticQueryType};
 use crate::server::ids::ServerId;
@@ -123,7 +123,7 @@ pub struct PromptSuggestionBannerState {
 #[allow(clippy::too_many_arguments)]
 fn render_button(
     text: String,
-    icon: WarpUIIcon,
+    icon: ZtermUIIcon,
     button_index: usize,
     keystroke: Option<Keystroke>,
     mouse_state: MouseStateHandle,
@@ -408,11 +408,11 @@ impl View for PromptSuggestionsView {
                 1.0,
                 render_button(
                     prompt_suggestion.label().clone(),
-                    WarpUIIcon::Oz,
+                    ZtermUIIcon::Oz,
                     0,
                     keybinding_name_to_keystroke(ACCEPT_PROMPT_SUGGESTION_KEYBINDING, app),
                     banner_state.accept_button_mouse_state.clone(),
-                    Rc::new(move |ctx: &mut warpui::EventContext<'_>| {
+                    Rc::new(move |ctx: &mut zterm_ui::EventContext<'_>| {
                         ctx.dispatch_typed_action(TerminalAction::ResolvePromptSuggestion(
                             PromptSuggestionResolution::Accept {
                                 interaction_source: InteractionSource::Button,

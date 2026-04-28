@@ -2,7 +2,7 @@ use std::collections::HashMap;
 use std::path::PathBuf;
 use std::sync::Arc;
 
-use warp_util::path::LineAndColumnArg;
+use zterm_util::path::LineAndColumnArg;
 
 use crate::ai::agent::api::ServerConversationToken;
 use crate::ai::agent::conversation::AIConversationId;
@@ -10,7 +10,7 @@ use crate::ai::agent::AIAgentExchangeId;
 use crate::ai::ambient_agents::AmbientAgentTaskId;
 use crate::ai::document::ai_document_model::{AIDocumentId, AIDocumentVersion};
 use crate::auth::auth_manager::LoginGatedFeature;
-use crate::drive::items::WarpDriveItemId;
+use crate::drive::items::ZtermDriveItemId;
 use crate::drive::CloudObjectTypeAndId;
 use crate::palette::PaletteMode;
 use crate::pane_group::PaneGroup;
@@ -32,11 +32,11 @@ use crate::workspace::PaneViewLocator;
 use session_sharing_protocol::common::SessionId;
 
 use ui_components::lightbox;
-use warpui::accessibility::AccessibilityVerbosity;
-use warpui::geometry::rect::RectF;
-use warpui::geometry::vector::Vector2F;
-use warpui::platform::Cursor;
-use warpui::{EntityId, WeakViewHandle, WindowId};
+use zterm_ui::accessibility::AccessibilityVerbosity;
+use zterm_ui::geometry::rect::RectF;
+use zterm_ui::geometry::vector::Vector2F;
+use zterm_ui::platform::Cursor;
+use zterm_ui::{EntityId, WeakViewHandle, WindowId};
 
 use super::global_actions::{ForkFromExchange, ForkedConversationDestination};
 use super::tab_settings::{
@@ -204,7 +204,7 @@ pub enum WorkspaceAction {
     ToggleErrorUnderlining,
     ToggleSyntaxHighlighting,
     CheckForUpdate,
-    ExportAllWarpDriveObjects,
+    ExportAllZtermDriveObjects,
     SetA11yVerbosityLevel(AccessibilityVerbosity),
     ToggleNotifications,
     ToggleTabColor {
@@ -250,15 +250,15 @@ pub enum WorkspaceAction {
     },
     DropTab,
     FinalizeDropTab,
-    /// Toggles the left panel. In Code Mode V1 this toggles Warp Drive.
+    /// Toggles the left panel. In Code Mode V1 this toggles Zterm Drive.
     /// In Code Mode V2 this toggles the left panel which contains both the project explorer and
-    /// Warp Drive. This happens as explicit action from the user.
+    /// Zterm Drive. This happens as explicit action from the user.
     ToggleLeftPanel,
-    /// Toggles directly to the Warp Drive tab of the left panel in Code Mode V2
-    ToggleWarpDrive,
-    /// Unconditionally opens Warp Drive. This is used in the case of user lifecycle
+    /// Toggles directly to the Zterm Drive tab of the left panel in Code Mode V2
+    ToggleZtermDrive,
+    /// Unconditionally opens Zterm Drive. This is used in the case of user lifecycle
     /// events like new user onboarding or when the user joins a team.
-    OpenWarpDrive,
+    OpenZtermDrive,
     /// Toggles the right panel. This happens as an explicit action from the user.
     ToggleRightPanel,
     /// Opens the code review panel (right panel) without toggling. If already open,
@@ -342,7 +342,7 @@ pub enum WorkspaceAction {
     /// Moves focus to the panel on the right
     FocusRightPanel,
     /// An action to view a newly created/edited workflow in WD from the toast
-    ViewObjectInWarpDrive(WarpDriveItemId),
+    ViewObjectInZtermDrive(ZtermDriveItemId),
     /// Open the object's sharing settings in WD.
     OpenObjectSharingSettings {
         object_id: CloudObjectTypeAndId,
@@ -759,7 +759,7 @@ impl WorkspaceAction {
             | CopyVersion(_)
             | DownloadNewVersion
             | ConfigureKeybindingSettings { .. }
-            | ExportAllWarpDriveObjects
+            | ExportAllZtermDriveObjects
             | ShowSettings
             | ShowSettingsPage(_)
             | ShowSettingsPageWithSearch { .. }
@@ -825,8 +825,8 @@ impl WorkspaceAction {
             | StartTabDrag
             | FinalizeDropTab
             | ToggleLeftPanel
-            | ToggleWarpDrive
-            | OpenWarpDrive
+            | ToggleZtermDrive
+            | OpenZtermDrive
             | ClosePanel
             | ToggleRightPanel
             | OpenCodeReviewPanel(..)
@@ -890,7 +890,7 @@ impl WorkspaceAction {
             | AttemptLoginGatedAIUpgrade
             | UndoTrash(_)
             | OpenFilePath { .. }
-            | ViewObjectInWarpDrive(_)
+            | ViewObjectInZtermDrive(_)
             | OpenObjectSharingSettings { .. }
             | TerminateApp
             | SignInAnonymousWebUser

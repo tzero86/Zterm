@@ -1,6 +1,6 @@
-use itertools::Itertools;
+﻿use itertools::Itertools;
 use ordered_float::OrderedFloat;
-use warpui::{
+use zterm_ui::{
     elements::{
         ConstrainedBox, Container, CrossAxisAlignment, Flex, Highlight, Icon, MainAxisAlignment,
         MainAxisSize, ParentElement, Text,

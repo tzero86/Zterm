@@ -1,4 +1,4 @@
-use async_channel::Sender;
+﻿use async_channel::Sender;
 use async_io::Timer;
 use instant::Instant;
 use session_sharing_protocol::viewer::UpstreamMessage;
@@ -6,7 +6,7 @@ use std::{sync::Arc, time::Duration};
 
 use parking_lot::FairMutex;
 
-use warpui::{App, ModelHandle};
+use zterm_ui::{App, ModelHandle};
 
 use crate::{
     terminal::{event_listener::ChannelEventListener, TerminalModel},

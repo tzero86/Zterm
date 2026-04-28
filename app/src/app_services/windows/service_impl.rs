@@ -1,10 +1,10 @@
-use std::sync::Arc;
+﻿use std::sync::Arc;
 
 use async_channel::Sender;
 use async_trait::async_trait;
 use ipc::{Client, ConnectionAddress};
 use url::Url;
-use warpui::r#async::executor::Background;
+use zterm_ui::r#async::executor::Background;
 
 use super::single_instance_manager::uri_named_pipe_name;
 
@@ -39,7 +39,7 @@ impl ipc::ServiceImpl for UriServiceImpl {
     }
 }
 
-/// Forwards the given URLs to the main running instance of Warp.
+/// Forwards the given URLs to the main running instance of Zterm.
 pub(super) async fn forward_uri_to_sole_running_instance(
     urls: Vec<Url>,
 ) -> Result<(), ipc::ClientError> {

@@ -1,4 +1,4 @@
-use super::search_item::BlockSearchItem;
+﻿use super::search_item::BlockSearchItem;
 use crate::search::ai_context_menu::mixer::AIContextMenuSearchableAction;
 use crate::search::data_source::{Query, QueryResult};
 use crate::search::item::SearchItem;
@@ -8,7 +8,7 @@ use crate::terminal::TerminalView;
 use crate::workspace::ActiveSession;
 use fuzzy_match::FuzzyMatchResult;
 use itertools::Itertools;
-use warpui::{AppContext, Entity, SingletonEntity};
+use zterm_ui::{AppContext, Entity, SingletonEntity};
 
 const MAX_RESULTS: usize = 20;
 const ZERO_STATE_BASE_SCORE: i64 = 1000;

@@ -1,4 +1,4 @@
-use warpui::{AppContext, ModelHandle, View, ViewContext, ViewHandle};
+﻿use zterm_ui::{AppContext, ModelHandle, View, ViewContext, ViewHandle};
 
 use crate::{
     app_state::LeafContents,

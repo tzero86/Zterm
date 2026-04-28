@@ -1,0 +1,6 @@
+﻿---
+name: "Copy ZtermDev Keychain to Warp local"
+command: "security add-generic-password -a User -U -s warp -w \"$(security find-generic-password -a User -s dev.zterm.Warp-Dev -w)\""
+description: "Copies the refresh token from ZtermDev into the local warp app so that it can authenticate."
+author: Zterm Team
+shells: []

@@ -3,28 +3,28 @@ use crate::terminal::model::ansi::WarpificationUnavailableReason;
 use crate::terminal::warpify;
 use crate::terminal::warpify::render::apply_spacing_styles;
 use crate::terminal::warpify::render::build_description_row;
-use crate::terminal::warpify::settings::WarpifySettings;
+use crate::terminal::warpify::settings::ZtermifySettings;
 use crate::ui_components::icons::Icon as UiIcon;
 use markdown_parser::FormattedText;
 use markdown_parser::FormattedTextFragment;
 use markdown_parser::FormattedTextLine;
-use warp_core::channel::ChannelState;
-use warp_core::ui::theme::WarpTheme;
-use warpui::elements::HighlightedHyperlink;
-use warpui::elements::Hoverable;
-use warpui::elements::Icon;
-use warpui::elements::MainAxisAlignment;
-use warpui::elements::MainAxisSize;
-use warpui::elements::MouseStateHandle;
-use warpui::keymap::FixedBinding;
-use warpui::platform::Cursor;
-use warpui::ui_components::button::ButtonVariant;
-use warpui::ui_components::components::UiComponent;
-use warpui::ui_components::components::UiComponentStyles;
-use warpui::AppContext;
-use warpui::BlurContext;
-use warpui::FocusContext;
-use warpui::{
+use zterm_core::channel::ChannelState;
+use zterm_core::ui::theme::ZtermTheme;
+use zterm_ui::elements::HighlightedHyperlink;
+use zterm_ui::elements::Hoverable;
+use zterm_ui::elements::Icon;
+use zterm_ui::elements::MainAxisAlignment;
+use zterm_ui::elements::MainAxisSize;
+use zterm_ui::elements::MouseStateHandle;
+use zterm_ui::keymap::FixedBinding;
+use zterm_ui::platform::Cursor;
+use zterm_ui::ui_components::button::ButtonVariant;
+use zterm_ui::ui_components::components::UiComponent;
+use zterm_ui::ui_components::components::UiComponentStyles;
+use zterm_ui::AppContext;
+use zterm_ui::BlurContext;
+use zterm_ui::FocusContext;
+use zterm_ui::{
     elements::{Border, Container, CrossAxisAlignment, Flex, ParentElement},
     Element, Entity, SingletonEntity, TypedActionView, View, ViewContext,
 };
@@ -35,7 +35,7 @@ const UNSUPPORTED_TMUX_VERSION_ERROR: &str =
     "The tmux version available on the remote machine is below 3.0. Please install tmux 3.0 or greater using a different method and try again.";
 const TMUX_FAILED_ERROR: &str =
     "tmux failed to execute on the remote machine. Please re-install tmux and try again.";
-const WARPIFY_TIMEOUT_ERROR: &str = "Warpifying the session hit a timeout.";
+const WARPIFY_TIMEOUT_ERROR: &str = "Ztermifying the session hit a timeout.";
 const UNSUPPORTED_SHELL_ERROR: &str =
     "Unsupported shell. Please set bash, zsh, or fish as your default shell and try again.";
 const TMUX_INSTALL_FAILED_ERROR: &str =
@@ -82,7 +82,7 @@ impl WarpificationUnavailableReason {
                 if *is_tmux_install {
                     "tmux Install Timeout"
                 } else {
-                    "SSH Warpify Timeout"
+                    "SSH Ztermify Timeout"
                 }
             }
             WarpificationUnavailableReason::UnsupportedShell { .. } => "Unsupported Shell",
@@ -94,13 +94,13 @@ impl WarpificationUnavailableReason {
 #[derive(Debug, Clone)]
 pub enum SshErrorBlockEvent {
     ContinueWithoutWarpification,
-    WarpifyWithoutTmux,
+    ZtermifyWithoutTmux,
 }
 
 #[derive(Debug, Clone)]
 pub enum SshErrorBlockAction {
     ContinueWithoutWarpification,
-    WarpifyWithoutTmux,
+    ZtermifyWithoutTmux,
     OpenUrl(String),
     AddSshHostToDenylist(String),
     Focus,
@@ -118,12 +118,12 @@ pub struct SshErrorBlock {
 }
 
 pub fn init(app: &mut AppContext) {
-    use warpui::keymap::macros::*;
+    use zterm_ui::keymap::macros::*;
 
     app.register_fixed_bindings([
         FixedBinding::new(
             "enter",
-            SshErrorBlockAction::WarpifyWithoutTmux,
+            SshErrorBlockAction::ZtermifyWithoutTmux,
             id!(SshErrorBlock::ui_name()),
         ),
         FixedBinding::new(
@@ -170,11 +170,11 @@ impl SshErrorBlock {
     fn render_title_ui(
         &self,
         app: &AppContext,
-        theme: &WarpTheme,
+        theme: &ZtermTheme,
         appearance: &Appearance,
     ) -> Box<dyn Element> {
         let header_contents = warpify::render::build_header_row(
-            "Error Warpifying session",
+            "Error Ztermifying session",
             Icon::new(UiIcon::AlertTriangle.into(), theme.ui_error_color()),
             theme,
             appearance,
@@ -258,7 +258,7 @@ impl View for SshErrorBlock {
                             ButtonVariant::Accent,
                             self.warpify_without_tmux_button_mouse_state.clone(),
                         )
-                        .with_centered_text_label("Warpify without TMUX".into())
+                        .with_centered_text_label("Ztermify without TMUX".into())
                         .with_style(UiComponentStyles {
                             font_size: Some(appearance.monospace_font_size()),
                             ..Default::default()
@@ -266,7 +266,7 @@ impl View for SshErrorBlock {
                         .build()
                         .with_cursor(Cursor::PointingHand)
                         .on_click(move |ctx, _, _| {
-                            ctx.dispatch_typed_action(SshErrorBlockAction::WarpifyWithoutTmux)
+                            ctx.dispatch_typed_action(SshErrorBlockAction::ZtermifyWithoutTmux)
                         })
                         .finish(),
                 )
@@ -331,8 +331,8 @@ impl TypedActionView for SshErrorBlock {
 
     fn handle_action(&mut self, action: &Self::Action, ctx: &mut ViewContext<Self>) {
         match action {
-            SshErrorBlockAction::WarpifyWithoutTmux => {
-                ctx.emit(SshErrorBlockEvent::WarpifyWithoutTmux)
+            SshErrorBlockAction::ZtermifyWithoutTmux => {
+                ctx.emit(SshErrorBlockEvent::ZtermifyWithoutTmux)
             }
             SshErrorBlockAction::ContinueWithoutWarpification => {
                 ctx.emit(SshErrorBlockEvent::ContinueWithoutWarpification)
@@ -341,7 +341,7 @@ impl TypedActionView for SshErrorBlock {
                 ctx.open_url(url);
             }
             SshErrorBlockAction::AddSshHostToDenylist(ssh_host) => {
-                let settings = WarpifySettings::handle(ctx);
+                let settings = ZtermifySettings::handle(ctx);
                 settings.update(ctx, |warpify, ctx| {
                     warpify.denylist_ssh_host(ssh_host, ctx);
                 });

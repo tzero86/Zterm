@@ -1,4 +1,4 @@
-//! State management for a selection in the grid.
+﻿//! State management for a selection in the grid.
 //!
 //! A selection should start when the mouse is clicked, and it should be
 //! finalized when the button is released. The selection should be cleared
@@ -6,7 +6,7 @@
 //! also be cleared if the user clicks off of the selection.
 use std::fmt::Debug;
 use vec1::Vec1;
-use warp_terminal::model::grid::cell;
+use zterm_terminal::model::grid::cell;
 
 use crate::terminal::model::ansi::CursorShape;
 use crate::terminal::model::cell::Flags;
@@ -19,9 +19,9 @@ use std::cmp::{max, min};
 use std::mem;
 use std::ops::RangeInclusive;
 pub use std::ops::{Range, RangeBounds};
-use warp_core::semantic_selection::SemanticSelection;
-use warpui::text::SelectionType;
-use warpui::units::Lines;
+use zterm_core::semantic_selection::SemanticSelection;
+use zterm_ui::text::SelectionType;
+use zterm_ui::units::Lines;
 
 use super::index::{Direction, VisibleRow};
 

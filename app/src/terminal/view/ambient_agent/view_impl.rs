@@ -1,15 +1,15 @@
-//! [`TerminalView`]-specific implementation for ambient agent functionality.
+﻿//! [`TerminalView`]-specific implementation for ambient agent functionality.
 
 use std::cell::Cell;
 use std::rc::Rc;
-use warp_cli::agent::Harness;
-use warp_terminal::model::BlockId;
+use zterm_cli::agent::Harness;
+use zterm_terminal::model::BlockId;
 
 use crate::ai::agent::conversation::{AIConversationId, ConversationStatus};
 use crate::ai::AIRequestUsageModel;
-use warp_core::features::FeatureFlag;
-use warp_core::send_telemetry_from_ctx;
-use warpui::prelude::{Empty, Vector2F};
+use zterm_core::features::FeatureFlag;
+use zterm_core::send_telemetry_from_ctx;
+use zterm_ui::prelude::{Empty, Vector2F};
 
 use crate::ai::ambient_agents::telemetry::{CloudAgentTelemetryEvent, CloudModeEntryPoint};
 use crate::ai::blocklist::{agent_view::AgentViewEntryOrigin, BlocklistAIHistoryModel};
@@ -22,9 +22,9 @@ use crate::terminal::view::TerminalView;
 use crate::terminal::CLIAgent;
 use crate::workspace::view::cloud_agent_capacity_modal::CloudAgentCapacityModalVariant;
 use crate::workspaces::user_workspaces::UserWorkspaces;
-use warp_core::ui::appearance::Appearance;
-use warpui::elements::Align;
-use warpui::{AppContext, Element, EntityId, SingletonEntity, ViewContext};
+use zterm_core::ui::appearance::Appearance;
+use zterm_ui::elements::Align;
+use zterm_ui::{AppContext, Element, EntityId, SingletonEntity, ViewContext};
 
 use super::loading_screen::{
     render_cloud_mode_cancelled_screen, render_cloud_mode_error_screen,

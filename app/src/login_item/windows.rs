@@ -1,4 +1,4 @@
-//! Windows implementation of login-item registration via the HKCU
+﻿//! Windows implementation of login-item registration via the HKCU
 //! `Software\Microsoft\Windows\CurrentVersion\Run` registry key.
 //!
 //! This is the standard user-scope startup mechanism surfaced by
@@ -10,8 +10,8 @@ use crate::report_if_error;
 use crate::terminal::general_settings::GeneralSettings;
 use ::settings::Setting;
 use std::path::{Path, PathBuf};
-use warp_core::channel::ChannelState;
-use warpui::{AppContext, SingletonEntity};
+use zterm_core::channel::ChannelState;
+use zterm_ui::{AppContext, SingletonEntity};
 use winreg::enums::{HKEY_CURRENT_USER, KEY_SET_VALUE};
 use winreg::RegKey;
 
@@ -80,7 +80,7 @@ fn current_exe_path() -> Option<PathBuf> {
 /// Returns the per-channel registry value name used under the `Run` subkey.
 ///
 /// Using the channel's application name keeps Dogfood / Preview / Stable installs
-/// isolated (`Warp`, `WarpPreview`, `WarpDev`, etc.) so installing multiple
+/// isolated (`Warp`, `ZtermPreview`, `ZtermDev`, etc.) so installing multiple
 /// channels doesn't cause one to overwrite another's startup entry.
 fn login_item_value_name() -> String {
     ChannelState::app_id().application_name().to_owned()
@@ -174,9 +174,9 @@ mod tests {
     fn register_writes_quoted_path() {
         let scratch = ScratchSubkey::new("register_writes_quoted_path");
         let exe = PathBuf::from(r"C:\Program Files\Warp\warp.exe");
-        register_in(HKEY_CURRENT_USER, &scratch.path, "Warp", &exe).unwrap();
+        register_in(HKEY_CURRENT_USER, &scratch.path, "Zterm", &exe).unwrap();
         assert_eq!(
-            scratch.read("Warp").as_deref(),
+            scratch.read("Zterm").as_deref(),
             Some(r#""C:\Program Files\Warp\warp.exe""#)
         );
     }
@@ -187,19 +187,19 @@ mod tests {
         register_in(
             HKEY_CURRENT_USER,
             &scratch.path,
-            "Warp",
+            "Zterm",
             &PathBuf::from(r"C:\old\warp.exe"),
         )
         .unwrap();
         register_in(
             HKEY_CURRENT_USER,
             &scratch.path,
-            "Warp",
+            "Zterm",
             &PathBuf::from(r"C:\new\warp.exe"),
         )
         .unwrap();
         assert_eq!(
-            scratch.read("Warp").as_deref(),
+            scratch.read("Zterm").as_deref(),
             Some(r#""C:\new\warp.exe""#)
         );
     }
@@ -208,18 +208,18 @@ mod tests {
     fn unregister_is_idempotent() {
         let scratch = ScratchSubkey::new("unregister_is_idempotent");
         // Never registered: unregister should be Ok.
-        unregister_in(HKEY_CURRENT_USER, &scratch.path, "Warp").unwrap();
+        unregister_in(HKEY_CURRENT_USER, &scratch.path, "Zterm").unwrap();
         // Register, then unregister twice.
         register_in(
             HKEY_CURRENT_USER,
             &scratch.path,
-            "Warp",
+            "Zterm",
             &PathBuf::from(r"C:\warp.exe"),
         )
         .unwrap();
-        unregister_in(HKEY_CURRENT_USER, &scratch.path, "Warp").unwrap();
-        unregister_in(HKEY_CURRENT_USER, &scratch.path, "Warp").unwrap();
-        assert!(scratch.read("Warp").is_none());
+        unregister_in(HKEY_CURRENT_USER, &scratch.path, "Zterm").unwrap();
+        unregister_in(HKEY_CURRENT_USER, &scratch.path, "Zterm").unwrap();
+        assert!(scratch.read("Zterm").is_none());
     }
 
     #[test]
@@ -228,23 +228,23 @@ mod tests {
         register_in(
             HKEY_CURRENT_USER,
             &scratch.path,
-            "Warp",
+            "Zterm",
             &PathBuf::from(r"C:\warp.exe"),
         )
         .unwrap();
         register_in(
             HKEY_CURRENT_USER,
             &scratch.path,
-            "WarpPreview",
+            "ZtermPreview",
             &PathBuf::from(r"C:\warp-preview.exe"),
         )
         .unwrap();
 
-        unregister_in(HKEY_CURRENT_USER, &scratch.path, "Warp").unwrap();
+        unregister_in(HKEY_CURRENT_USER, &scratch.path, "Zterm").unwrap();
 
-        assert!(scratch.read("Warp").is_none());
+        assert!(scratch.read("Zterm").is_none());
         assert_eq!(
-            scratch.read("WarpPreview").as_deref(),
+            scratch.read("ZtermPreview").as_deref(),
             Some(r#""C:\warp-preview.exe""#)
         );
     }
@@ -254,7 +254,7 @@ mod tests {
         unregister_in(
             HKEY_CURRENT_USER,
             r"Software\Warp\LoginItemTests\does-not-exist",
-            "Warp",
+            "Zterm",
         )
         .unwrap();
     }

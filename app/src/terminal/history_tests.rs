@@ -1,4 +1,4 @@
-use crate::{
+﻿use crate::{
     ai::agent::conversation::AIConversationId,
     terminal::{
         model::{
@@ -18,8 +18,8 @@ use futures::future::join_all;
 use futures::Future;
 use futures_lite::StreamExt;
 use itertools::Itertools;
-use warp_core::command::ExitCode;
-use warpui::{App, ModelHandle};
+use zterm_core::command::ExitCode;
+use zterm_ui::{App, ModelHandle};
 
 use std::path::PathBuf;
 use std::pin::pin;

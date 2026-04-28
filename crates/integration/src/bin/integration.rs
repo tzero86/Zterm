@@ -4,13 +4,13 @@ use anyhow::Result;
 use clap::Parser;
 use integration::test::*;
 use integration::Builder;
-use warp_cli::WorkerCommand;
-use warp_core::channel::{Channel, ChannelConfig, ChannelState, OzConfig, WarpServerConfig};
-use warp_core::AppId;
+use zterm_cli::WorkerCommand;
+use zterm_core::channel::{Channel, ChannelConfig, ChannelState, OzConfig, ZtermServerConfig};
+use zterm_core::AppId;
 
 /// The Warp integration test runner.
 #[derive(Debug, Default, Parser, Clone)]
-#[command(name = "warp-integration-test")]
+#[command(name = "zterm-integration-test")]
 #[clap(args_conflicts_with_subcommands = true)]
 pub struct Args {
     #[command(subcommand)]
@@ -36,7 +36,7 @@ pub fn main() -> Result<()> {
                 },
             ),
             logfile_name: "warp_integration.log".into(),
-            server_config: WarpServerConfig {
+            server_config: ZtermServerConfig {
                 firebase_auth_api_key: "".into(),
                 // Use an IP in the IANA testing range, with the TCP discard port, to
                 // black-hole server traffic.

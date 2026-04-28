@@ -1,4 +1,4 @@
-//! Data source for the inline history menu, providing both conversations and commands.
+﻿//! Data source for the inline history menu, providing both conversations and commands.
 //!
 //! Ordering semantics match the legacy up-arrow history menu:
 //! - Items from different sessions appear before items from the current session
@@ -24,7 +24,7 @@ use crate::terminal::model::session::SessionId;
 use chrono::{DateTime, Local};
 use fuzzy_match::FuzzyMatchResult;
 use ordered_float::OrderedFloat;
-use warpui::{AppContext, Entity, EntityId, ModelHandle, SingletonEntity};
+use zterm_ui::{AppContext, Entity, EntityId, ModelHandle, SingletonEntity};
 
 #[derive(Clone, Debug)]
 pub enum AcceptHistoryItem {

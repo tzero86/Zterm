@@ -1,6 +1,6 @@
-use vim::vim::VimMode;
-use warp_core::features::FeatureFlag;
-use warpui::{keymap::Keystroke, platform::WindowStyle, App};
+﻿use vim::vim::VimMode;
+use zterm_core::features::FeatureFlag;
+use zterm_ui::{keymap::Keystroke, platform::WindowStyle, App};
 
 use crate::editor::{DisplayPoint, EditorOptions, EditorView};
 

@@ -1,17 +1,17 @@
-//! `warp harness-support` CLI dispatch and the singleton model all subcommands run async work on.
+﻿//! `warp harness-support` CLI dispatch and the singleton model all subcommands run async work on.
 //!
 //! Subcommands:
 //! - [`ping`] — fetches the current run by task ID and prints its info.
 //! - [`report_artifact`] — reports an artifact (e.g. a PR) back to the Oz platform.
 use anyhow::Result;
-use warp_cli::agent::OutputFormat;
-use warp_cli::harness_support::{
+use zterm_cli::agent::OutputFormat;
+use zterm_cli::harness_support::{
     FinishTaskArgs, HarnessSupportArgs, HarnessSupportCommand, NotifyUserArgs, ReportArtifactArgs,
     ReportArtifactCommand, TaskStatus,
 };
-use warp_cli::GlobalOptions;
-use warp_core::features::FeatureFlag;
-use warpui::{platform::TerminationMode, AppContext, ModelHandle, SingletonEntity};
+use zterm_cli::GlobalOptions;
+use zterm_core::features::FeatureFlag;
+use zterm_ui::{platform::TerminationMode, AppContext, ModelHandle, SingletonEntity};
 
 use super::common::set_ambient_task_context_from_run_id;
 use crate::ai::ambient_agents::AmbientAgentTaskId;
@@ -206,7 +206,7 @@ fn finish_task(
 /// Singleton model for running async harness-support operations.
 struct HarnessSupportRunner;
 
-impl warpui::Entity for HarnessSupportRunner {
+impl zterm_ui::Entity for HarnessSupportRunner {
     type Event = ();
 }
 

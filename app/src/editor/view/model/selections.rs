@@ -1,11 +1,11 @@
-use std::{cmp::Ordering, mem, ops::Range};
+﻿use std::{cmp::Ordering, mem, ops::Range};
 
 use pathfinder_geometry::vector::Vector2F;
 use serde::{Deserialize, Serialize};
 use string_offset::{ByteOffset, CharOffset};
 use vec1::Vec1;
-use warpui::text::point::Point;
-use warpui::AppContext;
+use zterm_ui::text::point::Point;
+use zterm_ui::AppContext;
 
 use super::{
     buffer::{Anchor, Buffer, LamportValue, ToBufferOffset, ToCharOffset, ToPoint},

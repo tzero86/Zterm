@@ -1,6 +1,6 @@
-use warp_core::ui::appearance::Appearance;
-use warp_editor::editor::NavigationKey;
-use warpui::{
+use zterm_core::ui::appearance::Appearance;
+use zterm_editor::editor::NavigationKey;
+use zterm_ui::{
     elements::{
         Border, ConstrainedBox, Container, CornerRadius, Flex, MouseStateHandle, ParentElement,
         Radius, Shrinkable,
@@ -201,7 +201,7 @@ impl EnvVarCommandDialog {
             .with_centered_text_label(label_text.to_owned())
             .with_style(UiComponentStyles {
                 font_size: Some(BUTTON_FONT_SIZE),
-                font_weight: Some(warpui::fonts::Weight::Normal),
+                font_weight: Some(zterm_ui::fonts::Weight::Normal),
                 ..Default::default()
             });
 
@@ -212,7 +212,7 @@ impl EnvVarCommandDialog {
         button
             .build()
             .on_click(move |ctx, _, _| ctx.dispatch_typed_action(action.clone()))
-            .with_cursor(warpui::platform::Cursor::PointingHand)
+            .with_cursor(zterm_ui::platform::Cursor::PointingHand)
             .finish()
     }
 

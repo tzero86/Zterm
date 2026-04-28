@@ -1,4 +1,4 @@
-pub mod block;
+﻿pub mod block;
 pub mod cloud_objects;
 pub mod datetime_ext;
 pub mod experiments;
@@ -14,4 +14,4 @@ pub mod telemetry;
 pub(crate) mod telemetry_ext;
 pub mod voice_transcriber;
 
-pub use warp_core::operating_system_info::OperatingSystemInfo;
+pub use zterm_core::operating_system_info::OperatingSystemInfo;

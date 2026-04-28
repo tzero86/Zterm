@@ -22,7 +22,7 @@ use crate::search::files::model::FileSearchModel;
 use crate::terminal::cli_agent_sessions::CLIAgentSessionsModel;
 use crate::terminal::input::slash_command_model::SlashCommandEntryState;
 use crate::terminal::input::slash_commands::SlashCommandsEvent;
-use crate::warp_managed_paths_watcher::WarpManagedPathsWatcher;
+use crate::warp_managed_paths_watcher::ZtermManagedPathsWatcher;
 use repo_metadata::repositories::DetectedRepositories;
 use repo_metadata::watcher::DirectoryWatcher;
 use repo_metadata::RepoMetadataModel;
@@ -60,7 +60,7 @@ use crate::terminal::model::session::{BootstrapSessionType, SessionInfo};
 use crate::terminal::model::terminal_model::BlockIndex;
 use ai::index::full_source_code_embedding::manager::CodebaseIndexManager;
 use chrono::Local;
-use warpui::text::SelectionType;
+use zterm_ui::text::SelectionType;
 
 use crate::terminal::shell::ShellType;
 use crate::test_util::settings::initialize_settings_for_tests;
@@ -74,22 +74,22 @@ use crate::{experiments, AgentNotificationsModel};
 use fuzzy_match::FuzzyMatchResult;
 use session_sharing_protocol::common::Role;
 use smol_str::SmolStr;
-use warp_completer::completer::{
+use zterm_completer::completer::{
     EngineFileType, Match, MatchStrategy, MatchedSuggestion, Priority, Suggestion,
     SuggestionResults, SuggestionType,
 };
-use warp_completer::meta::Span;
+use zterm_completer::meta::Span;
 
 use unindent::Unindent;
 
 #[cfg(feature = "voice_input")]
 use voice_input::VoiceInputToggledFrom;
-use warpui::platform::WindowStyle;
-use warpui::{App, ReadModel, UpdateView};
+use zterm_ui::platform::WindowStyle;
+use zterm_ui::{App, ReadModel, UpdateView};
 
 use crate::terminal::universal_developer_input::UniversalDeveloperInputButtonBarEvent;
 
-use warp_util::user_input::UserInput;
+use zterm_util::user_input::UserInput;
 use workflows::workflow::{Argument, ArgumentType, Workflow};
 
 use crate::context_chips::prompt::Prompt;
@@ -161,7 +161,7 @@ pub fn initialize_app(app: &mut App) {
         crate::ai::document::ai_document_model::AIDocumentModel::new_for_test()
     });
     app.add_singleton_model(HomeDirectoryWatcher::new_for_test);
-    app.add_singleton_model(WarpManagedPathsWatcher::new_for_testing);
+    app.add_singleton_model(ZtermManagedPathsWatcher::new_for_testing);
     app.add_singleton_model(SkillManager::new);
 
     // Add GlobalResourceHandlesProvider for persistence

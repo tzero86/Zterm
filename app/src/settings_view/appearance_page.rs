@@ -45,8 +45,8 @@ use crate::terminal::settings::{
 };
 use crate::terminal::{BlockListSettings, ShowBlockDividers};
 use crate::terminal::{ShowJumpToBottomOfBlockButton, SizeInfo};
-use crate::themes::theme::{self, RespectSystemTheme, SelectedSystemThemes, ThemeKind, WarpTheme};
-use crate::user_config::WarpConfig;
+use crate::themes::theme::{self, RespectSystemTheme, SelectedSystemThemes, ThemeKind, ZtermTheme};
+use crate::user_config::ZtermConfig;
 use crate::util::bindings;
 use crate::window_settings::{
     BackgroundBlurRadius, BackgroundBlurTexture, BackgroundOpacity, LeftPanelVisibilityAcrossTabs,
@@ -74,25 +74,25 @@ use std::cell::RefCell;
 use std::collections::HashMap;
 use std::path::PathBuf;
 use std::rc::Rc;
-use warp_core::ui::theme::color::internal_colors;
-use warp_util::path::user_friendly_path;
-use warpui::elements::{
+use zterm_core::ui::theme::color::internal_colors;
+use zterm_util::path::user_friendly_path;
+use zterm_ui::elements::{
     Clipped, Empty, FormattedTextElement, MainAxisAlignment, MainAxisSize, Text, Wrap,
 };
-use warpui::fonts::{FamilyId, FontInfo, Weight};
-use warpui::keymap::{ContextPredicate, FixedBinding};
-use warpui::platform::{Cursor, FilePickerConfiguration, GraphicsBackend};
-use warpui::ui_components::button::ButtonVariant;
-use warpui::ui_components::components::{Coords, UiComponent, UiComponentStyles};
-use warpui::ui_components::radio_buttons::{
+use zterm_ui::fonts::{FamilyId, FontInfo, Weight};
+use zterm_ui::keymap::{ContextPredicate, FixedBinding};
+use zterm_ui::platform::{Cursor, FilePickerConfiguration, GraphicsBackend};
+use zterm_ui::ui_components::button::ButtonVariant;
+use zterm_ui::ui_components::components::{Coords, UiComponent, UiComponentStyles};
+use zterm_ui::ui_components::radio_buttons::{
     RadioButtonItem, RadioButtonLayout, RadioButtonStateHandle,
 };
-use warpui::ui_components::slider::SliderStateHandle;
-use warpui::ui_components::switch::SwitchStateHandle;
-use warpui::units::IntoPixels;
+use zterm_ui::ui_components::slider::SliderStateHandle;
+use zterm_ui::ui_components::switch::SwitchStateHandle;
+use zterm_ui::units::IntoPixels;
 
-use warpui::id;
-use warpui::{
+use zterm_ui::id;
+use zterm_ui::{
     elements::{
         Align, Border, ChildView, ConstrainedBox, Container, CornerRadius, CrossAxisAlignment,
         Dismiss, Element, Fill, Flex, Hoverable, MouseStateHandle, ParentElement, Radius,
@@ -100,8 +100,8 @@ use warpui::{
     },
     rendering::ThinStrokes,
 };
-use warpui::{platform::SystemTheme, Action};
-use warpui::{
+use zterm_ui::{platform::SystemTheme, Action};
+use zterm_ui::{
     AppContext, Entity, ModelHandle, SingletonEntity, TypedActionView, UpdateModel, View,
     ViewContext, ViewHandle, WindowId,
 };
@@ -975,7 +975,7 @@ impl AppearanceSettingsPageView {
             // `all_system_fonts` API doesn't exist.
             #[cfg(not(target_family = "wasm"))]
             {
-                let all_system_fonts = warpui::fonts::Cache::handle(ctx)
+                let all_system_fonts = zterm_ui::fonts::Cache::handle(ctx)
                     .update(ctx, |font_cache, ctx| font_cache.all_system_fonts(ctx));
                 ctx.spawn(all_system_fonts, Self::set_system_fonts);
             }
@@ -2613,7 +2613,7 @@ impl ThemeSelectWidget {
         is_selected: bool,
         app: &AppContext,
     ) -> Box<dyn Element> {
-        let theme: WarpTheme = WarpConfig::as_ref(app).theme_config().theme(&theme_kind);
+        let theme: ZtermTheme = ZtermConfig::as_ref(app).theme_config().theme(&theme_kind);
         let mode_ui_label = match theme_chooser_mode {
             ThemeChooserMode::SystemLight => "Light",
             ThemeChooserMode::SystemDark => "Dark",
@@ -3323,7 +3323,7 @@ impl SettingsWidget for InputTypeWidget {
             .radio_buttons(
                 self.radio_buttons_states.clone(),
                 vec![
-                    RadioButtonItem::text("Warp"),
+                    RadioButtonItem::text("Zterm"),
                     RadioButtonItem::text("Shell (PS1)"),
                 ],
                 view.input_type_radio_state.clone(),

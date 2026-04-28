@@ -1,5 +1,5 @@
 use pathfinder_color::ColorU;
-use warpui::{
+use zterm_ui::{
     elements::{
         Align, ConstrainedBox, Container, CrossAxisAlignment, Flex, HighlightedHyperlink,
         MouseStateHandle, ParentElement, Shrinkable,
@@ -64,7 +64,7 @@ impl WarpificationMode {
     }
 }
 
-pub struct WarpifyBannerState {
+pub struct ZtermifyBannerState {
     pub mode: WarpificationMode,
     pub height: f32,
     pub accept_button_mouse_state: MouseStateHandle,
@@ -78,7 +78,7 @@ pub struct WarpifyBannerState {
     pub hover_state: MouseStateHandle,
 }
 
-impl WarpifyBannerState {
+impl ZtermifyBannerState {
     pub fn new(mode: WarpificationMode, initialize_warpify_keybinding: Option<Keystroke>) -> Self {
         Self {
             mode,
@@ -97,14 +97,14 @@ impl WarpifyBannerState {
 
     pub fn title(&self) -> &str {
         match &self.mode {
-            WarpificationMode::Ssh { .. } => "Warpify SSH session",
-            WarpificationMode::Subshell { .. } => "Warpify subshell",
+            WarpificationMode::Ssh { .. } => "Ztermify SSH session",
+            WarpificationMode::Subshell { .. } => "Ztermify subshell",
         }
     }
 
     pub fn action(&self) -> TerminalAction {
         match &self.mode {
-            WarpificationMode::Ssh { .. } => TerminalAction::WarpifySSHSession,
+            WarpificationMode::Ssh { .. } => TerminalAction::ZtermifySSHSession,
             WarpificationMode::Subshell { .. } => TerminalAction::TriggerSubshellBootstrap,
         }
     }
@@ -141,7 +141,7 @@ impl WarpifyBannerState {
 /// command. It asks if they want to boostrap a subshell and, if so, whether we should ask again
 /// next time they run the same command.
 pub fn render_warpification_banner(
-    state: &WarpifyBannerState,
+    state: &ZtermifyBannerState,
     appearance: &Appearance,
     app: &AppContext,
 ) -> Box<dyn Element> {
@@ -163,7 +163,7 @@ pub fn render_warpification_banner(
             .with_text_label("Do not show again".to_owned())
             .build()
             .on_click(move |ctx, _, _| {
-                ctx.dispatch_typed_action(TerminalAction::DismissWarpifyBanner(
+                ctx.dispatch_typed_action(TerminalAction::DismissZtermifyBanner(
                     remember.to_owned(),
                 ));
             })
@@ -181,7 +181,7 @@ pub fn render_warpification_banner(
         )
         .build()
         .on_click(move |ctx, _, _| {
-            ctx.dispatch_typed_action(TerminalAction::DismissWarpifyBanner(
+            ctx.dispatch_typed_action(TerminalAction::DismissZtermifyBanner(
                 do_not_remember.to_owned(),
             ));
         })
@@ -227,7 +227,7 @@ pub fn render_warpification_banner(
 }
 
 fn render_yes_button(
-    state: &WarpifyBannerState,
+    state: &ZtermifyBannerState,
     initialize_warpification_keybinding: &Option<Keystroke>,
     mouse_state: &MouseStateHandle,
     appearance: &Appearance,

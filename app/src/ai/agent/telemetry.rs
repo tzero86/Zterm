@@ -1,5 +1,5 @@
 use serde::Serialize;
-use warpui::{AppContext, SingletonEntity};
+use zterm_ui::{AppContext, SingletonEntity};
 
 use crate::ai::llms::LLMId;
 use crate::CloudModel;
@@ -25,9 +25,9 @@ impl ForTelemetry for AIAgentCitation {
 
     fn for_telemetry(&self, ctx: &AppContext) -> Option<Self::Output> {
         match self {
-            Self::WarpDriveObject { uid } => {
+            Self::ZtermDriveObject { uid } => {
                 CloudModel::as_ref(ctx).get_by_uid(uid).map(|object| {
-                    CitationForTelemetry::WarpDriveObject {
+                    CitationForTelemetry::ZtermDriveObject {
                         object_type: object.object_type(),
                         uid: object.uid(),
                     }

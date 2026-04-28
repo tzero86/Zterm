@@ -1,5 +1,5 @@
-use pathfinder_color::ColorU;
-use warpui::{
+﻿use pathfinder_color::ColorU;
+use zterm_ui::{
     elements::{
         Border, Container, CornerRadius, CrossAxisAlignment, Flex, MainAxisAlignment, MainAxisSize,
         MouseStateHandle, ParentElement, Radius, Shrinkable,

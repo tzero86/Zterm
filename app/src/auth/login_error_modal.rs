@@ -1,7 +1,7 @@
-use std::borrow::Cow;
+﻿use std::borrow::Cow;
 
 use pathfinder_color::ColorU;
-use warpui::{
+use zterm_ui::{
     elements::{
         Align, Border, ConstrainedBox, Container, CornerRadius, Flex, ParentElement, Shrinkable,
     },

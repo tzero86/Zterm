@@ -1,4 +1,4 @@
-pub(crate) mod app;
+﻿pub(crate) mod app;
 pub(crate) mod service;
 
 #[cfg_attr(not(target_family = "wasm"), path = "host/native/mod.rs")]
@@ -14,4 +14,4 @@ pub const PLUGIN_HOST_FLAG: &str = "--plugin_host";
 
 /// The name of the environment variable used to pass connection address for the app server to the
 /// plugin host process.
-const PLUGIN_HOST_ADDRESS_ENV_VAR: &str = "WARP_PLUGIN_HOST_ADDRESS";
+const PLUGIN_HOST_ADDRESS_ENV_VAR: &str = "ZTERM_PLUGIN_HOST_ADDRESS";

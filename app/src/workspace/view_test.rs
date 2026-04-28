@@ -68,7 +68,7 @@ use crate::resource_center::Tip;
 use crate::terminal::cli_agent_sessions::CLIAgentSessionsModel;
 use crate::test_util::settings::initialize_settings_for_tests;
 use crate::undo_close::UndoCloseSettings;
-use crate::warp_managed_paths_watcher::WarpManagedPathsWatcher;
+use crate::warp_managed_paths_watcher::ZtermManagedPathsWatcher;
 use crate::workflows::local_workflows::LocalWorkflows;
 use crate::{experiments, workspace, GlobalResourceHandlesProvider};
 use crate::{AgentNotificationsModel, ObjectActions};
@@ -80,9 +80,9 @@ use pane_group::{NotebookPane, PaneState, SplitPaneState, TerminalPaneId};
 use session_sharing_protocol::common::SessionId;
 use terminal::shared_session::permissions_manager::SessionPermissionsManager;
 use terminal::view::ActiveSessionState;
-use warp_editor::editor::NavigationKey;
-use warpui::AddSingletonModel;
-use warpui::{platform::WindowStyle, App, ViewHandle};
+use zterm_editor::editor::NavigationKey;
+use zterm_ui::AddSingletonModel;
+use zterm_ui::{platform::WindowStyle, App, ViewHandle};
 
 fn initialize_app(app: &mut App) {
     initialize_settings_for_tests(app);
@@ -147,7 +147,7 @@ fn initialize_app(app: &mut App) {
     app.add_singleton_model(|_| DetectedRepositories::default());
     app.add_singleton_model(HomeDirectoryWatcher::new_for_test);
     app.add_singleton_model(DirectoryWatcher::new);
-    app.add_singleton_model(WarpManagedPathsWatcher::new_for_testing);
+    app.add_singleton_model(ZtermManagedPathsWatcher::new_for_testing);
     app.add_singleton_model(FileMCPWatcher::new);
     app.add_singleton_model(|_| FileBasedMCPManager::default());
 
@@ -208,7 +208,7 @@ fn initialize_app(app: &mut App) {
     // binding descriptions eagerly, and `workspace:send_feedback`'s dynamic
     // label calls `is_feedback_skill_available`, which reads `SkillManager`.
     // Registered after `HomeDirectoryWatcher`, `DirectoryWatcher`,
-    // `WarpManagedPathsWatcher`, `DetectedRepositories`, and `RepoMetadataModel`
+    // `ZtermManagedPathsWatcher`, `DetectedRepositories`, and `RepoMetadataModel`
     // because `SkillWatcher::new` subscribes to all of them.
     app.add_singleton_model(SkillManager::new);
 
@@ -1307,7 +1307,7 @@ fn test_notebook_pane_tracking() {
                     owner: Owner::mock_current_user(),
                     initial_folder_id: None,
                 },
-                &OpenWarpDriveObjectSettings::default(),
+                &OpenZtermDriveObjectSettings::default(),
                 ctx,
                 true,
             );
@@ -1347,7 +1347,7 @@ fn test_notebook_pane_tracking() {
             // Re-opening the notebook should not create a new view.
             workspace.open_notebook(
                 &NotebookSource::Existing(notebook_id),
-                &OpenWarpDriveObjectSettings::default(),
+                &OpenZtermDriveObjectSettings::default(),
                 ctx,
                 true,
             );
@@ -1458,14 +1458,14 @@ fn test_terminal_model_isnt_leaked() {
 }
 
 #[test]
-fn test_open_or_toggle_warp_drive() {
+fn test_open_or_toggle_zterm_drive() {
     App::test((), |mut app| async move {
         initialize_app(&mut app);
 
         let workspace = mock_workspace(&mut app);
         workspace.update(&mut app, |workspace, ctx| {
             // First, unconditionally open Warp Drive as a system action. WD should be open and welcome tips should not have opening warp drive.
-            workspace.open_or_toggle_warp_drive(
+            workspace.open_or_toggle_zterm_drive(
                 false, /* toggle */
                 false, /* explicit_user_action */
                 ctx,
@@ -1479,12 +1479,12 @@ fn test_open_or_toggle_warp_drive() {
                     .tips_completed
                     .as_ref(ctx)
                     .features_used
-                    .contains(&Tip::Action(TipAction::OpenWarpDrive)),
+                    .contains(&Tip::Action(TipAction::OpenZtermDrive)),
                 "Warp drive welcome tip should not be completed"
             );
 
             // Next, toggle warp drive as a user action. WD should be closed and tip should not be filled out.
-            workspace.open_or_toggle_warp_drive(
+            workspace.open_or_toggle_zterm_drive(
                 true, /* toggle */
                 true, /* explicit_user_action */
                 ctx,
@@ -1498,12 +1498,12 @@ fn test_open_or_toggle_warp_drive() {
                     .tips_completed
                     .as_ref(ctx)
                     .features_used
-                    .contains(&Tip::Action(TipAction::OpenWarpDrive)),
+                    .contains(&Tip::Action(TipAction::OpenZtermDrive)),
                 "Warp drive welcome tip should not be completed"
             );
 
             // Finally, toggle warp drive again as a user action. WD should be open and tip filled out.
-            workspace.open_or_toggle_warp_drive(
+            workspace.open_or_toggle_zterm_drive(
                 true, /* toggle */
                 true, /* explicit_user_action */
                 ctx,
@@ -1517,7 +1517,7 @@ fn test_open_or_toggle_warp_drive() {
                     .tips_completed
                     .as_ref(ctx)
                     .features_used
-                    .contains(&Tip::Action(TipAction::OpenWarpDrive)),
+                    .contains(&Tip::Action(TipAction::OpenZtermDrive)),
                 "Warp drive welcome tip should not be completed"
             );
         });
@@ -2719,11 +2719,11 @@ fn test_worktree_sidecar_hides_linked_worktrees_from_repo_list() {
             let external_git_dir_canon = CanonicalizedPath::try_from(external_git_dir.as_path())
                 .expect("canonical external git dir");
 
-            let main_repo_std: warp_util::standardized_path::StandardizedPath =
+            let main_repo_std: zterm_util::standardized_path::StandardizedPath =
                 main_repo_canon.into();
-            let linked_worktree_std: warp_util::standardized_path::StandardizedPath =
+            let linked_worktree_std: zterm_util::standardized_path::StandardizedPath =
                 linked_worktree_canon.into();
-            let external_git_dir_std: warp_util::standardized_path::StandardizedPath =
+            let external_git_dir_std: zterm_util::standardized_path::StandardizedPath =
                 external_git_dir_canon.into();
 
             DetectedRepositories::handle(ctx).update(ctx, |repos, _ctx| {

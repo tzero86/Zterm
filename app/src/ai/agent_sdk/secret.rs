@@ -8,7 +8,7 @@ use chrono::{DateTime, Utc};
 use comfy_table::Cell;
 use inquire::{Confirm, InquireError, Password};
 use serde::Serialize;
-use warp_cli::{
+use zterm_cli::{
     agent::OutputFormat,
     scope::ObjectScope,
     secret::{
@@ -17,13 +17,13 @@ use warp_cli::{
     },
     GlobalOptions,
 };
-use warp_core::features::FeatureFlag;
-use warp_graphql::{
+use zterm_core::features::FeatureFlag;
+use zterm_graphql::{
     managed_secrets::{ManagedSecret, ManagedSecretType},
     object::SpaceType,
 };
-use warp_managed_secrets::{client::SecretOwner, ManagedSecretManager, ManagedSecretValue};
-use warpui::{platform::TerminationMode, AppContext, SingletonEntity as _};
+use zterm_managed_secrets::{client::SecretOwner, ManagedSecretManager, ManagedSecretValue};
+use zterm_ui::{platform::TerminationMode, AppContext, SingletonEntity as _};
 
 use crate::{
     auth::UserUid, cloud_object::Owner, server::ids::ServerId,
@@ -72,7 +72,7 @@ pub fn run(
     global_options: GlobalOptions,
     command: SecretCommand,
 ) -> Result<()> {
-    if !FeatureFlag::WarpManagedSecrets.is_enabled() {
+    if !FeatureFlag::ZtermManagedSecrets.is_enabled() {
         return Err(anyhow::anyhow!("This feature is not enabled"));
     }
 

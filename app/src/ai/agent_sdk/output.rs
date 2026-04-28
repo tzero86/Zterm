@@ -1,4 +1,4 @@
-use std::io::Write as _;
+﻿use std::io::Write as _;
 
 use anyhow::Context;
 use comfy_table::modifiers::UTF8_ROUND_CORNERS;
@@ -11,8 +11,8 @@ use jaq_all::fmts::Format;
 use jaq_json::{write as jaq_write, Val};
 use serde::Serialize;
 use tabwriter::TabWriter;
-use warp_cli::agent::OutputFormat;
-use warp_cli::json_filter::{JqFilter, JsonOutput};
+use zterm_cli::agent::OutputFormat;
+use zterm_cli::json_filter::{JqFilter, JsonOutput};
 
 pub fn standard_table() -> Table {
     let mut table = Table::new();

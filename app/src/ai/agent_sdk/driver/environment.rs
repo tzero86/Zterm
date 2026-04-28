@@ -14,12 +14,12 @@ use ai::index::full_source_code_embedding::manager::{
 };
 use futures::{channel::oneshot, future::join_all};
 use repo_metadata::repositories::{DetectedRepositories, RepoDetectionSource};
-use warp_completer::completer::CommandExitStatus;
-use warp_core::{command::ExitCode, safe_info, safe_warn};
-use warpui::{r#async::FutureExt, ModelContext, ModelSpawner, SingletonEntity};
+use zterm_completer::completer::CommandExitStatus;
+use zterm_core::{command::ExitCode, safe_info, safe_warn};
+use zterm_ui::{r#async::FutureExt, ModelContext, ModelSpawner, SingletonEntity};
 
 use super::{terminal::TerminalDriver, AgentDriverError};
-use warp_cli::agent::Harness;
+use zterm_cli::agent::Harness;
 
 const CODEBASE_INDEX_SYNC_TIMEOUT: Duration = Duration::from_secs(60);
 
@@ -260,10 +260,10 @@ async fn prepare_environment_impl(
         // We also skip this in Namespace to reduce startup time.
         #[cfg(not(target_family = "wasm"))]
         let should_wait_for_indexing = !matches!(
-            warp_isolation_platform::detect(),
+            zterm_isolation_platform::detect(),
             Some(
-                warp_isolation_platform::IsolationPlatformType::DockerSandbox
-                    | warp_isolation_platform::IsolationPlatformType::Namespace
+                zterm_isolation_platform::IsolationPlatformType::DockerSandbox
+                    | zterm_isolation_platform::IsolationPlatformType::Namespace
             )
         );
         #[cfg(target_family = "wasm")]

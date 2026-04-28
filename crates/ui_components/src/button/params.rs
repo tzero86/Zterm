@@ -1,8 +1,8 @@
 use std::borrow::Cow;
 
-use warp_core::ui::Icon;
-use warp_core::ui::appearance::Appearance;
-use warpui::{fonts, keymap::Keystroke, prelude::stack};
+use zterm_core::ui::Icon;
+use zterm_core::ui::appearance::Appearance;
+use zterm_ui::{fonts, keymap::Keystroke, prelude::stack};
 
 use crate::{keyboard_shortcut, tooltip};
 

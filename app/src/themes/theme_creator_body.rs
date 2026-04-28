@@ -14,18 +14,18 @@ use std::path::PathBuf;
 #[cfg(feature = "local_fs")]
 use std::{fs::copy, io::Write};
 #[cfg(feature = "local_fs")]
-use warp_core::ui::theme::WarpTheme;
-use warpui::elements::{
+use zterm_core::ui::theme::ZtermTheme;
+use zterm_ui::elements::{
     Border, ConstrainedBox, Container, CornerRadius, CrossAxisAlignment, DispatchEventResult,
     EventHandler, Fill, Flex, Icon, MainAxisAlignment, MainAxisSize, MouseStateHandle,
     ParentElement, Radius, Rect, SavePosition, Shrinkable, Text,
 };
-use warpui::fonts::Weight;
-use warpui::ui_components::button::{ButtonVariant, TextAndIcon, TextAndIconAlignment};
-use warpui::ui_components::components::{Coords, UiComponent, UiComponentStyles};
-use warpui::ui_components::text_input::TextInput;
-use warpui::ViewHandle;
-use warpui::{
+use zterm_ui::fonts::Weight;
+use zterm_ui::ui_components::button::{ButtonVariant, TextAndIcon, TextAndIconAlignment};
+use zterm_ui::ui_components::components::{Coords, UiComponent, UiComponentStyles};
+use zterm_ui::ui_components::text_input::TextInput;
+use zterm_ui::ViewHandle;
+use zterm_ui::{
     platform::Cursor, AppContext, Element, Entity, SingletonEntity, TypedActionView, View,
     ViewContext,
 };
@@ -220,7 +220,7 @@ impl ThemeCreatorBody {
     /// Note: the image option should be (original_theme_image_path, theme_name, image_extension).
     #[cfg(feature = "local_fs")]
     pub fn write_theme<T>(
-        theme: &WarpTheme,
+        theme: &ZtermTheme,
         dir: PathBuf,
         theme_yaml_file_name: String,
         image_option: Option<(PathBuf, String, &str)>,

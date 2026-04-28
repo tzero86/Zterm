@@ -1,4 +1,4 @@
-use warpui::{
+use zterm_ui::{
     elements::{Flex, MouseStateHandle, ParentElement},
     fonts::Weight,
     ui_components::components::{UiComponent, UiComponentStyles},
@@ -13,16 +13,16 @@ use crate::{
     themes::theme::Fill,
 };
 
-use super::{WarpDriveItem, WarpDriveItemId};
+use super::{ZtermDriveItem, ZtermDriveItemId};
 
 #[derive(Clone)]
-pub struct WarpDriveNotebook {
+pub struct ZtermDriveNotebook {
     id: CloudObjectTypeAndId,
     notebook: CloudNotebook,
     is_ai_document: bool,
 }
 
-impl WarpDriveNotebook {
+impl ZtermDriveNotebook {
     pub fn new(id: CloudObjectTypeAndId, notebook: CloudNotebook, is_ai_document: bool) -> Self {
         Self {
             id,
@@ -32,7 +32,7 @@ impl WarpDriveNotebook {
     }
 }
 
-impl WarpDriveItem for WarpDriveNotebook {
+impl ZtermDriveItem for ZtermDriveNotebook {
     fn display_name(&self) -> Option<String> {
         if self.notebook.model().title.is_empty() {
             None
@@ -86,8 +86,8 @@ impl WarpDriveItem for WarpDriveNotebook {
         Some(Flex::column().with_child(title).finish())
     }
 
-    fn warp_drive_id(&self) -> WarpDriveItemId {
-        WarpDriveItemId::Object(self.id)
+    fn warp_drive_id(&self) -> ZtermDriveItemId {
+        ZtermDriveItemId::Object(self.id)
     }
 
     fn sync_status_icon(
@@ -107,7 +107,7 @@ impl WarpDriveItem for WarpDriveNotebook {
         None
     }
 
-    fn clone_box(&self) -> Box<dyn WarpDriveItem> {
+    fn clone_box(&self) -> Box<dyn ZtermDriveItem> {
         Box::new(self.clone())
     }
 }

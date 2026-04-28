@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+﻿use std::collections::HashMap;
 use std::io;
 use std::ops::{Range, RangeInclusive};
 
@@ -32,10 +32,10 @@ use parking_lot::Mutex;
 use pathfinder_color::ColorU;
 use std::sync::Arc;
 use vec1::Vec1;
-use warp_core::semantic_selection::SemanticSelection;
-use warp_terminal::model::{KeyboardModes, KeyboardModesApplyBehavior};
-use warpui::text::SelectionType;
-use warpui::units::Lines;
+use zterm_core::semantic_selection::SemanticSelection;
+use zterm_terminal::model::{KeyboardModes, KeyboardModesApplyBehavior};
+use zterm_ui::text::SelectionType;
+use zterm_ui::units::Lines;
 
 pub struct AltScreen {
     grid_handler: GridHandler,

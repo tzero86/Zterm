@@ -2,7 +2,7 @@ use ai::index::full_source_code_embedding::manager::CodebaseIndexManager;
 use repo_metadata::repositories::DetectedRepositories;
 #[cfg(feature = "local_fs")]
 use repo_metadata::RepoMetadataModel;
-use warp_core::ui::appearance::Appearance;
+use zterm_core::ui::appearance::Appearance;
 
 use crate::ai::active_agent_views_model::ActiveAgentViewsModel;
 use crate::ai::agent_conversations_model::AgentConversationsModel;
@@ -15,9 +15,9 @@ use crate::ai::persisted_workspace::PersistedWorkspace;
 use crate::ai::skills::SkillManager;
 use crate::code_review::git_status_update::GitStatusUpdateModel;
 use crate::terminal::cli_agent_sessions::CLIAgentSessionsModel;
-use crate::warp_managed_paths_watcher::WarpManagedPathsWatcher;
-use warpui::SingletonEntity;
-use warpui::{platform::WindowStyle, App, ViewHandle, WindowId};
+use crate::warp_managed_paths_watcher::ZtermManagedPathsWatcher;
+use zterm_ui::SingletonEntity;
+use zterm_ui::{platform::WindowStyle, App, ViewHandle, WindowId};
 use watcher::HomeDirectoryWatcher;
 
 use super::settings::initialize_settings_for_tests;
@@ -116,7 +116,7 @@ pub fn initialize_app_for_terminal_view(app: &mut App) {
     app.add_singleton_model(|_| GitStatusUpdateModel::new());
     app.add_singleton_model(RepoOutlines::new_for_test);
     app.add_singleton_model(HomeDirectoryWatcher::new_for_test);
-    app.add_singleton_model(WarpManagedPathsWatcher::new_for_testing);
+    app.add_singleton_model(ZtermManagedPathsWatcher::new_for_testing);
     app.add_singleton_model(SkillManager::new);
     app.add_singleton_model(|ctx| {
         CodebaseIndexManager::new_for_test(ServerApiProvider::as_ref(ctx).get(), ctx)

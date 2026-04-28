@@ -1,8 +1,8 @@
-use warp_core::ui::appearance::Appearance;
-use warpui::elements::Element;
-use warpui::prelude::Container;
-use warpui::scene::Border;
-use warpui::{AppContext, Entity, ModelHandle, SingletonEntity, View, ViewContext};
+﻿use zterm_core::ui::appearance::Appearance;
+use zterm_ui::elements::Element;
+use zterm_ui::prelude::Container;
+use zterm_ui::scene::Border;
+use zterm_ui::{AppContext, Entity, ModelHandle, SingletonEntity, View, ViewContext};
 
 use crate::ai::blocklist::agent_view::{AgentViewController, AgentViewControllerEvent};
 use crate::terminal::input::inline_menu::model::InlineMenuModel;

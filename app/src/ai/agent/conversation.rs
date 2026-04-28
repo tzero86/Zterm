@@ -26,17 +26,17 @@ use std::{collections::HashMap, fmt::Display};
 use super::task_store::TaskStore;
 use uuid::Uuid;
 use vec1::{Size0Error, Vec1};
-use warp_core::command::ExitCode;
-use warp_core::execution_mode::AppExecutionMode;
-use warp_core::features::FeatureFlag;
-use warp_core::send_telemetry_from_ctx;
-use warp_core::ui::appearance::Appearance;
-use warp_core::ui::theme::color::internal_colors;
-use warp_core::ui::theme::WarpTheme;
+use zterm_core::command::ExitCode;
+use zterm_core::execution_mode::AppExecutionMode;
+use zterm_core::features::FeatureFlag;
+use zterm_core::send_telemetry_from_ctx;
+use zterm_core::ui::appearance::Appearance;
+use zterm_core::ui::theme::color::internal_colors;
+use zterm_core::ui::theme::ZtermTheme;
 use warp_multi_agent_api::response_event::stream_finished;
 use warp_multi_agent_api::{self as api, response_event::stream_finished::TokenUsage};
-use warpui::color::ColorU;
-use warpui::{EntityId, ModelContext, SingletonEntity};
+use zterm_ui::color::ColorU;
+use zterm_ui::{EntityId, ModelContext, SingletonEntity};
 
 use crate::ai::agent::{AIIdentifiers, CancellationReason};
 use crate::{
@@ -1167,7 +1167,7 @@ impl AIConversation {
         });
     }
 
-    /// Updates the notebook_uid for a plan artifact when it's synced to Warp Drive.
+    /// Updates the notebook_uid for a plan artifact when it's synced to Zterm Drive.
     pub fn update_plan_notebook_uid(
         &mut self,
         document_uid: AIDocumentId,
@@ -3683,7 +3683,7 @@ impl std::fmt::Display for ConversationStatus {
 }
 
 impl ConversationStatus {
-    pub fn render_icon(&self, appearance: &Appearance) -> warpui::elements::Icon {
+    pub fn render_icon(&self, appearance: &Appearance) -> zterm_ui::elements::Icon {
         match self {
             ConversationStatus::InProgress => in_progress_icon(appearance),
             ConversationStatus::Success => succeeded_icon(appearance),
@@ -3693,7 +3693,7 @@ impl ConversationStatus {
         }
     }
 
-    pub fn status_icon_and_color(&self, theme: &WarpTheme) -> (Icon, ColorU) {
+    pub fn status_icon_and_color(&self, theme: &ZtermTheme) -> (Icon, ColorU) {
         match self {
             ConversationStatus::InProgress => (Icon::ClockLoader, theme.ansi_fg_magenta()),
             ConversationStatus::Success => (Icon::Check, theme.ansi_fg_green()),

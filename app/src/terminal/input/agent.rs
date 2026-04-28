@@ -22,10 +22,10 @@ use crate::{
     terminal::{settings::TerminalSettings, view::TerminalAction},
     BlocklistAIHistoryModel,
 };
-use warp_core::settings::Setting;
-use warp_core::ui::theme::color::internal_colors;
-use warpui::elements::Expanded;
-use warpui::{
+use zterm_core::settings::Setting;
+use zterm_core::ui::theme::color::internal_colors;
+use zterm_ui::elements::Expanded;
+use zterm_ui::{
     elements::{
         Align, AnchorPair, Border, ConstrainedBox, Container, CornerRadius, CrossAxisAlignment,
         DispatchEventResult, DropTarget, Element, EventHandler, Flex, Hoverable, MainAxisSize,
@@ -600,11 +600,11 @@ impl Input {
 
 pub mod styles {
     use pathfinder_color::ColorU;
-    use warp_core::ui::theme::WarpTheme;
+    use zterm_core::ui::theme::ZtermTheme;
 
     use crate::ui_components::blended_colors;
 
-    pub fn default_border_color(theme: &WarpTheme) -> ColorU {
+    pub fn default_border_color(theme: &ZtermTheme) -> ColorU {
         blended_colors::neutral_2(theme)
     }
 }

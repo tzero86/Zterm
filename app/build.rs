@@ -1,4 +1,4 @@
-// We can use `std::process:Command` here because this is invoked within a build script,
+﻿// We can use `std::process:Command` here because this is invoked within a build script,
 // _not_ within the Warp binary (where it could cause a terminal to temporarily flash on
 // Windows).
 #![allow(clippy::disallowed_types)]
@@ -10,11 +10,11 @@ use sha2::Digest;
 use std::path::{Path, PathBuf};
 use std::{env, fs, process::Command};
 use walkdir::WalkDir;
-use warp_util::assets::{
+use zterm_util::assets::{
     ASSETS_DIR, ASYNC_ASSETS_DIR, CONPTY_DLL_FILE, DXCOMPILER_DLL_FILE, DXIL_DLL_FILE,
     OPEN_CONSOLE_EXE_FILE, REMOTE_ASSETS_DIR, WINDOWS_ASSETS_DIR,
 };
-use warp_util::path::app_target_dir;
+use zterm_util::path::app_target_dir;
 
 fn main() -> Result<()> {
     cfg_aliases! {
@@ -147,7 +147,7 @@ fn main() -> Result<()> {
     Ok(())
 }
 
-/// If `warp-channel-config` is available on PATH and the `release_bundle` feature is enabled,
+/// If `zterm-channel-config` is available on PATH and the `release_bundle` feature is enabled,
 /// invoke the config generator binary and write the JSON output to `OUT_DIR` so it can be
 /// embedded via `include_str!` in the binary entry points.
 fn generate_channel_config_if_needed(target_family: &str, target_os: &str) {
@@ -156,7 +156,7 @@ fn generate_channel_config_if_needed(target_family: &str, target_os: &str) {
         return;
     }
 
-    let config_bin = "warp-channel-config";
+    let config_bin = "zterm-channel-config";
 
     // Check if the config binary is available on PATH. If not, we can't generate embedded
     // configs. This is expected for external contributors building Warp OSS.
@@ -385,7 +385,7 @@ fn copy_async_assets() {
                 let mut hasher = sha2::Sha256::new();
                 hasher.update(&contents);
                 let hash: [u8; 32] = hasher.finalize().into();
-                let new_relative_path = warp_util::assets::hashed_asset_path(
+                let new_relative_path = zterm_util::assets::hashed_asset_path(
                     asset_path
                         .strip_prefix(&asset_dir)
                         .expect("asset in unexpected location"),
@@ -401,7 +401,7 @@ fn copy_async_assets() {
     }
 }
 
-/// Copies the DLLs needed to run Warp on Windows.
+/// Copies the DLLs needed to run Zterm on Windows.
 ///
 /// They are organized as follows:
 /// - `conpty.dll`
@@ -461,7 +461,7 @@ fn embed_resource_file(target_dir: &Path) {
     use std::io::Write;
 
     let version = env::var("GIT_RELEASE_TAG").unwrap_or("v0".to_owned());
-    let app_name = env::var("WARP_APP_NAME").unwrap_or("Warp".to_owned());
+    let app_name = env::var("ZTERM_APP_NAME").unwrap_or("Zterm".to_owned());
     let bin_name = env::var("CARGO_BIN_NAME").unwrap_or("local".to_owned());
 
     let icon_path = Path::new("channels")

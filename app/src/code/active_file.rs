@@ -1,9 +1,9 @@
-//! Module containing the definition of [`ActiveFileModel`],
+﻿//! Module containing the definition of [`ActiveFileModel`],
 //! which tracks the currently focused file across an entire PaneGroup.
 
 use std::path::PathBuf;
 
-use warpui::{Entity, ModelContext};
+use zterm_ui::{Entity, ModelContext};
 
 /// Events emitted by the ActiveFileModel.
 #[derive(Debug, Clone)]

@@ -1,7 +1,7 @@
-use pathfinder_color::ColorU;
+﻿use pathfinder_color::ColorU;
 use pathfinder_geometry::vector::Vector2F;
-use warp_core::features::FeatureFlag;
-use warpui::{
+use zterm_core::features::FeatureFlag;
+use zterm_ui::{
     elements::{
         Align, ConstrainedBox, Container, CrossAxisAlignment, Empty, Flex, MainAxisAlignment,
         MainAxisSize, ParentElement, Rect, Shrinkable, Stack,
@@ -73,7 +73,7 @@ impl EnvVarCollectionView {
                     .with_children([
                         ConstrainedBox::new(
                             Icon::Trash
-                                .to_warpui_icon(appearance.theme().foreground())
+                                .to_zterm_ui_icon(appearance.theme().foreground())
                                 .finish(),
                         )
                         .with_width(16.)
@@ -247,7 +247,7 @@ impl EnvVarCollectionView {
                 TextAndIcon::new(
                     TextAndIconAlignment::TextFirst,
                     "Load",
-                    Icon::TerminalInput.to_warpui_icon(appearance.theme().active_ui_text_color()),
+                    Icon::TerminalInput.to_zterm_ui_icon(appearance.theme().active_ui_text_color()),
                     MainAxisSize::Min,
                     MainAxisAlignment::SpaceBetween,
                     Vector2F::new(10., 10.),

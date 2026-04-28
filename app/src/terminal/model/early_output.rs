@@ -1,4 +1,4 @@
-use std::collections::VecDeque;
+﻿use std::collections::VecDeque;
 use std::mem;
 
 use pathfinder_color::ColorU;
@@ -13,7 +13,7 @@ use super::block::Block;
 use super::blocks::BlockList;
 use super::selection::ScrollDelta;
 use super::session::SessionInfo;
-use warp_terminal::model::{KeyboardModes, KeyboardModesApplyBehavior};
+use zterm_terminal::model::{KeyboardModes, KeyboardModesApplyBehavior};
 
 #[cfg(test)]
 #[path = "early_output_tests.rs"]
@@ -24,7 +24,7 @@ mod tests;
 pub enum TypeaheadMode {
     /// The shell reports its input buffer to Warp, and we use that for typeahead.
     ShellReported,
-    /// Warp matches user input against characters echoed to the PTY to estimate typeahead.
+    /// Zterm matches user input against characters echoed to the PTY to estimate typeahead.
     /// This is only used on bash 3.2 and should be removed if we stop supporting
     /// such old bash versions.
     InputMatching,
@@ -148,8 +148,8 @@ impl EarlyOutput {
                 full: ("Matched {ch:?} as typeahead")
             );
 
-            if warp_core::channel::ChannelState::channel()
-                == warp_core::channel::Channel::Integration
+            if zterm_core::channel::ChannelState::channel()
+                == zterm_core::channel::Channel::Integration
             {
                 log::info!(
                     "Sending input-matched typeahead event for {:?}",
@@ -168,8 +168,8 @@ impl EarlyOutput {
     /// internal count is then updated to match the new typeahead length.
     pub fn advance_typeahead(&mut self) -> Option<(&str, CharOffset)> {
         if self.typeahead.is_empty() {
-            if warp_core::channel::ChannelState::channel()
-                == warp_core::channel::Channel::Integration
+            if zterm_core::channel::ChannelState::channel()
+                == zterm_core::channel::Channel::Integration
             {
                 log::warn!("Tried to advance typeahead, but it was empty");
             }
@@ -207,7 +207,7 @@ impl EarlyOutput {
             // For most user-entered commands, we know when to switch from background
             // output to the active block's command grid because the input editor
             // marks the block as started right before it sends the command to the pty.
-            // When the command doesn't come from Warp, however, the active block isn't
+            // When the command doesn't come from Zterm, however, the active block isn't
             // started until we receive the preexec hook. At this point, the shell has
             // already written the command to the pty, resulting in Warp treating it as
             // background output.
@@ -316,8 +316,8 @@ impl ansi::Handler for EarlyOutputHandler<'_> {
     /// information, such as when the shell reports its input buffer.
     fn input_buffer(&mut self, data: ansi::InputBufferValue) {
         if data.buffer.is_empty() {
-            if warp_core::channel::ChannelState::channel()
-                == warp_core::channel::Channel::Integration
+            if zterm_core::channel::ChannelState::channel()
+                == zterm_core::channel::Channel::Integration
             {
                 log::info!("Ignoring empty input buffer");
             }
@@ -338,8 +338,8 @@ impl ansi::Handler for EarlyOutputHandler<'_> {
         let me = self.inner();
         if me.mode == TypeaheadMode::ShellReported {
             me.typeahead = data.buffer;
-            if warp_core::channel::ChannelState::channel()
-                == warp_core::channel::Channel::Integration
+            if zterm_core::channel::ChannelState::channel()
+                == zterm_core::channel::Channel::Integration
             {
                 log::info!(
                     "Sending shell-reported typeahead event for {:?}",

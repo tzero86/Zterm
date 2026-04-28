@@ -1,4 +1,4 @@
-use std::fmt::{Display, Formatter};
+﻿use std::fmt::{Display, Formatter};
 
 use enum_iterator::{all, Sequence};
 use serde::{Deserialize, Serialize};
@@ -6,7 +6,7 @@ use settings::{
     macros::define_settings_group, RespectUserSyncSetting, Setting as _, SupportedPlatforms,
     SyncToCloud,
 };
-use warpui::ModelContext;
+use zterm_ui::ModelContext;
 
 #[derive(
     Clone,

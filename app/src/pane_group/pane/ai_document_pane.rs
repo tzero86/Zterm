@@ -1,4 +1,4 @@
-use warpui::{AppContext, ModelHandle, SingletonEntity, ViewContext, ViewHandle};
+use zterm_ui::{AppContext, ModelHandle, SingletonEntity, ViewContext, ViewHandle};
 
 use crate::{
     ai::ai_document_view::{AIDocumentEvent, AIDocumentView},
@@ -94,8 +94,8 @@ impl PaneContent for AIDocumentPane {
                 AIDocumentEvent::CloseRequested => {
                     group.close_pane_with_confirmation(pane_id, ctx);
                 }
-                AIDocumentEvent::ViewInWarpDrive(id) => {
-                    ctx.emit(crate::pane_group::Event::ViewInWarpDrive(*id));
+                AIDocumentEvent::ViewInZtermDrive(id) => {
+                    ctx.emit(crate::pane_group::Event::ViewInZtermDrive(*id));
                 }
                 #[cfg(feature = "local_fs")]
                 AIDocumentEvent::OpenCodeInWarp {

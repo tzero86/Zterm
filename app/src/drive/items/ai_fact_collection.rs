@@ -1,4 +1,4 @@
-use warpui::{elements::MouseStateHandle, AppContext, Element};
+use zterm_ui::{elements::MouseStateHandle, AppContext, Element};
 
 use crate::{
     appearance::Appearance,
@@ -8,14 +8,14 @@ use crate::{
     themes::theme::Fill,
 };
 
-use super::{WarpDriveItem, WarpDriveItemId};
+use super::{ZtermDriveItem, ZtermDriveItemId};
 
 #[derive(Clone)]
-pub struct WarpDriveAIFactCollection {
+pub struct ZtermDriveAIFactCollection {
     id: ClientId,
 }
 
-impl WarpDriveAIFactCollection {
+impl ZtermDriveAIFactCollection {
     pub fn new(id: ClientId) -> Self {
         Self { id }
     }
@@ -25,7 +25,7 @@ impl WarpDriveAIFactCollection {
     }
 }
 
-impl WarpDriveItem for WarpDriveAIFactCollection {
+impl ZtermDriveItem for ZtermDriveAIFactCollection {
     fn display_name(&self) -> Option<String> {
         Some("Rules".to_string())
     }
@@ -50,8 +50,8 @@ impl WarpDriveItem for WarpDriveAIFactCollection {
         None
     }
 
-    fn warp_drive_id(&self) -> WarpDriveItemId {
-        WarpDriveItemId::AIFactCollection
+    fn warp_drive_id(&self) -> ZtermDriveItemId {
+        ZtermDriveItemId::AIFactCollection
     }
 
     fn sync_status_icon(
@@ -67,7 +67,7 @@ impl WarpDriveItem for WarpDriveAIFactCollection {
         None
     }
 
-    fn clone_box(&self) -> Box<dyn WarpDriveItem> {
+    fn clone_box(&self) -> Box<dyn ZtermDriveItem> {
         Box::new(self.clone())
     }
 }

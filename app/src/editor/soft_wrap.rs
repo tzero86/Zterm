@@ -1,8 +1,8 @@
-use anyhow::anyhow;
+﻿use anyhow::anyhow;
 use parking_lot::Mutex;
 use std::sync::Arc;
 
-use warpui::text_layout;
+use zterm_ui::text_layout;
 
 use crate::editor::{view::DisplayPoint, Point};
 

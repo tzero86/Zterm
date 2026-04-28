@@ -29,12 +29,12 @@ use crate::{
 use anyhow::Result;
 use regex::Regex;
 use std::sync::Arc;
-use warp_core::{
+use zterm_core::{
     features::FeatureFlag,
     settings::{ChangeEventReason, Setting},
 };
-use warp_graphql::workspace::FeatureModelChoice;
-use warpui::{AppContext, Entity, ModelContext, SingletonEntity, Tracked};
+use zterm_graphql::workspace::FeatureModelChoice;
+use zterm_ui::{AppContext, Entity, ModelContext, SingletonEntity, Tracked};
 
 #[cfg(test)]
 use crate::server::server_api::{team::MockTeamClient, workspace::MockWorkspaceClient};
@@ -122,7 +122,7 @@ pub struct WorkspacesMetadataResponse {
 // independent queries.
 pub struct WorkspacesMetadataWithPricing {
     pub metadata: WorkspacesMetadataResponse,
-    pub pricing_info: Option<warp_graphql::billing::PricingInfo>,
+    pub pricing_info: Option<zterm_graphql::billing::PricingInfo>,
 }
 
 pub struct CreateTeamResponse {

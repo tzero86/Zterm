@@ -1,4 +1,4 @@
-use crate::ai::mcp::{Author, MCPServerUpdate};
+﻿use crate::ai::mcp::{Author, MCPServerUpdate};
 use crate::appearance::Appearance;
 use crate::settings_view::mcp_servers::style::{
     INSTALLATION_MODAL_BUTTON_GAP, INSTALLATION_MODAL_PADDING,
@@ -8,16 +8,16 @@ use crate::ui_components::blended_colors;
 use crate::util::time_format::format_approx_duration_from_now;
 use chrono::{Local, TimeZone};
 use uuid::Uuid;
-use warp_core::ui::color::coloru_with_opacity;
-use warp_core::ui::external_product_icon::ExternalProductIcon;
-use warp_core::ui::icons::Icon;
-use warp_core::ui::theme::color::internal_colors;
-use warpui::elements::{Align, Empty, Padding, Shrinkable};
-use warpui::fonts::{Properties, Weight};
-use warpui::ui_components::button::ButtonVariant;
-use warpui::ui_components::components::{Coords, UiComponent, UiComponentStyles};
-use warpui::SingletonEntity;
-use warpui::{
+use zterm_core::ui::color::coloru_with_opacity;
+use zterm_core::ui::external_product_icon::ExternalProductIcon;
+use zterm_core::ui::icons::Icon;
+use zterm_core::ui::theme::color::internal_colors;
+use zterm_ui::elements::{Align, Empty, Padding, Shrinkable};
+use zterm_ui::fonts::{Properties, Weight};
+use zterm_ui::ui_components::button::ButtonVariant;
+use zterm_ui::ui_components::components::{Coords, UiComponent, UiComponentStyles};
+use zterm_ui::SingletonEntity;
+use zterm_ui::{
     elements::{
         Border, ConstrainedBox, Container, CornerRadius, CrossAxisAlignment, Flex, Hoverable,
         MainAxisAlignment, MouseStateHandle, ParentElement, Radius, Text,
@@ -129,7 +129,7 @@ impl UpdateModalBody {
                     let mut icon = Container::new(
                         ConstrainedBox::new(
                             Icon::X
-                                .to_warpui_icon(theme.active_ui_text_color())
+                                .to_zterm_ui_icon(theme.active_ui_text_color())
                                 .finish(),
                         )
                         .with_width(16.)
@@ -320,7 +320,7 @@ impl UpdateModalBody {
         let corner_down_left_icon = Container::new(
             ConstrainedBox::new(
                 Icon::CornerDownLeft
-                    .to_warpui_icon(appearance.theme().active_ui_text_color())
+                    .to_zterm_ui_icon(appearance.theme().active_ui_text_color())
                     .finish(),
             )
             .with_width(appearance.monospace_font_size())

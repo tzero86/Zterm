@@ -16,11 +16,11 @@ use markdown_parser::{FormattedText, FormattedTextInline, TableAlignment};
 use pathfinder_color::ColorU;
 use pathfinder_geometry::vector::vec2f;
 use std::sync::Arc;
-use warp_core::{
+use zterm_core::{
     features::FeatureFlag,
     ui::{appearance::Appearance, color::blend::Blend, theme::color::internal_colors},
 };
-use warpui::{
+use zterm_ui::{
     assets::asset_cache::{AssetCache, AssetSource, AssetState},
     elements::{
         new_scrollable::{ScrollableAppearance, SingleAxisConfig},
@@ -113,13 +113,13 @@ use crate::{
     search::slash_command_menu::static_commands::commands,
     settings::{FontSettings, InputSettings},
 };
-use warp_core::channel::ChannelState;
-use warp_editor::content::{
+use zterm_core::channel::ChannelState;
+use zterm_editor::content::{
     edit::resolve_asset_source_relative_to_directory, mermaid_diagram::mermaid_asset_source,
 };
-use warp_util::path::to_relative_path;
-use warpui::elements::shimmering_text::ShimmeringTextStateHandle;
-use warpui::elements::{Highlight, HighlightedRange};
+use zterm_util::path::to_relative_path;
+use zterm_ui::elements::shimmering_text::ShimmeringTextStateHandle;
+use zterm_ui::elements::{Highlight, HighlightedRange};
 
 pub const STATUS_ICON_SIZE_DELTA: f32 = 4.;
 pub const STATUS_FOOTER_VERTICAL_PADDING: f32 = 4.;
@@ -127,7 +127,7 @@ pub const WAITING_FOR_USER_INPUT_MESSAGE: &str = "Agent waiting for instructions
 const IMAGE_SOURCE_LINK_LINE_INDEX: usize = 1;
 
 const ERROR_APOLOGY_TEXT: &str = "I'm sorry, I couldn't complete that request.";
-const INTERNAL_WARP_ERROR: &str = "Internal Warp error.";
+const INTERNAL_ZTERM_ERROR: &str = "Internal Warp error.";
 
 pub const LOAD_OUTPUT_MESSAGE: &str = "Warping...";
 pub const LOAD_OUTPUT_MESSAGE_FOR_ADJUSTING: &str = "Adjusting tasks...";
@@ -554,7 +554,7 @@ pub fn render_warping_indicator_base(
     // Unicode code point for the Warp glyph that is embedded in the version of Roboto we bundle
     // into the app. This code point MUST be rendered using Roboto (the default ui font) or else the
     // glyph may not be rendered.
-    const WARP_GLYPH: &str = "\u{E500}";
+    const ZTERM_GLYPH: &str = "\u{E500}";
 
     let appearance = Appearance::as_ref(app);
 
@@ -605,7 +605,7 @@ pub fn render_warping_indicator_base(
         let sub_element = if should_indent_tip_for_warp_glyph {
             let font_size = appearance.monospace_font_size() - 3.;
             let glyph_indent = Text::new_inline(
-                format!("{WARP_GLYPH} "),
+                format!("{ZTERM_GLYPH} "),
                 appearance.ui_font_family(),
                 font_size,
             )
@@ -854,7 +854,7 @@ fn render_queue_next_prompt_button(
     };
     let icon_size = get_icon_size(appearance);
     let icon = Container::new(
-        ConstrainedBox::new(Icon::ClockPlus.to_warpui_icon(icon_color).finish())
+        ConstrainedBox::new(Icon::ClockPlus.to_zterm_ui_icon(icon_color).finish())
             .with_height(icon_size)
             .with_width(icon_size)
             .finish(),
@@ -889,7 +889,7 @@ fn render_auto_approve_button(props: ButtonProps, appearance: &Appearance) -> Bo
     let icon_size = get_icon_size(appearance);
     let icon = Container::new(
         ConstrainedBox::new(
-            icon.to_warpui_icon(appearance.theme().active_ui_text_color())
+            icon.to_zterm_ui_icon(appearance.theme().active_ui_text_color())
                 .finish(),
         )
         .with_height(icon_size)
@@ -1009,7 +1009,7 @@ where
         .with_child(content)
         .with_spacing(4.0);
 
-    if !warpui::platform::is_mobile_device() {
+    if !zterm_ui::platform::is_mobile_device() {
         let keybinding_string = keybinding.map(|k| k.displayed()).unwrap_or_default();
         let keybinding_label = Text::new_inline(
             keybinding_string,
@@ -1733,7 +1733,7 @@ struct VisualMarkdownBlockOptions<A: 'static> {
     alignment: VisualMarkdownAlignment,
     lightbox_trigger: Option<VisualMarkdownLightboxTrigger>,
     /// When `Some(non_empty)`, the rendered image is wrapped in the standard
-    /// Warp tooltip primitive so hovering surfaces the CommonMark image title.
+    /// Zterm tooltip primitive so hovering surfaces the CommonMark image title.
     /// Mermaid diagrams pass `None` here because CommonMark titles do not
     /// apply to them.
     tooltip: Option<String>,
@@ -2183,8 +2183,8 @@ fn render_visual_markdown_block<A: Action>(
             tooltip,
             mouse_state,
             content,
-            warpui::elements::ParentAnchor::TopMiddle,
-            warpui::elements::ChildAnchor::BottomMiddle,
+            zterm_ui::elements::ParentAnchor::TopMiddle,
+            zterm_ui::elements::ChildAnchor::BottomMiddle,
             // Small negative Y offset keeps a hairline gap between the
             // tooltip's bottom edge and the image's top edge without
             // floating noticeably above the image.
@@ -2232,7 +2232,7 @@ fn render_visual_card(
     let theme = appearance.theme();
     let header_background = theme.surface_2();
     let header_text_color = blended_colors::text_main(theme, header_background);
-    let header_icon = ConstrainedBox::new(icon.to_warpui_icon(header_text_color.into()).finish())
+    let header_icon = ConstrainedBox::new(icon.to_zterm_ui_icon(header_text_color.into()).finish())
         .with_width(16.)
         .with_height(16.)
         .finish();
@@ -2444,7 +2444,7 @@ fn render_table_section(
             row_dividers: table_appearance.row_dividers,
             cell_padding,
             header_background: table_appearance.header_background,
-            row_background: warpui::elements::RowBackground {
+            row_background: zterm_ui::elements::RowBackground {
                 primary: table_appearance.cell_background,
                 alternating: table_appearance.alternate_row_background,
             },
@@ -2548,7 +2548,7 @@ fn render_table_cell(props: TableCellProps, app: &AppContext) -> Box<dyn Element
 struct TableCellProps {
     cell: FormattedTextInline,
     alignment: TableAlignment,
-    font_family: warpui::fonts::FamilyId,
+    font_family: zterm_ui::fonts::FamilyId,
     font_size: f32,
     font_weight: Weight,
     text_color: ColorU,
@@ -2907,7 +2907,7 @@ pub(crate) fn resolve_absolute_file_path(
     shell_launch_data: Option<&ShellLaunchData>,
     home_dir: PathBuf,
 ) -> Option<PathBuf> {
-    use warp_util::path::CleanPathResult;
+    use zterm_util::path::CleanPathResult;
 
     use crate::util::file::{absolute_path_if_valid, ShellPathType};
 
@@ -2961,7 +2961,7 @@ pub fn render_failed_output(props: FailedOutputProps, app: &AppContext) -> Box<d
             "Warp is currently overloaded. Please try again later.".to_string()
         }
         RenderableAIError::InternalWarpError => {
-            format!("{ERROR_APOLOGY_TEXT}\n\n{INTERNAL_WARP_ERROR}")
+            format!("{ERROR_APOLOGY_TEXT}\n\n{INTERNAL_ZTERM_ERROR}")
         }
         RenderableAIError::Other {
             error_message,
@@ -3015,7 +3015,7 @@ pub fn render_failed_output(props: FailedOutputProps, app: &AppContext) -> Box<d
         .with_child(
             Container::new(
                 ConstrainedBox::new(
-                    warpui::elements::Icon::new(
+                    zterm_ui::elements::Icon::new(
                         Icon::AlertTriangle.into(),
                         error_color(appearance.theme()),
                     )
@@ -3066,7 +3066,7 @@ fn render_invalid_api_key_error(
 
     let alert_icon = ConstrainedBox::new(
         Icon::AlertTriangle
-            .to_warpui_icon(error_color(appearance.theme()).into())
+            .to_zterm_ui_icon(error_color(appearance.theme()).into())
             .finish(),
     )
     .with_width(icon_size(app))
@@ -3100,7 +3100,7 @@ fn render_invalid_api_key_error(
     let settings_button = appearance
         .ui_builder()
         .button(
-            warpui::ui_components::button::ButtonVariant::Outlined,
+            zterm_ui::ui_components::button::ButtonVariant::Outlined,
             state_handle.clone(),
         )
         .with_style(UiComponentStyles {
@@ -3245,7 +3245,7 @@ pub(crate) fn render_debug_footer<V: View>(
             appearance
                 .ui_builder()
                 .button(
-                    warpui::ui_components::button::ButtonVariant::Text,
+                    zterm_ui::ui_components::button::ButtonVariant::Text,
                     props.submit_issue_button_handle,
                 )
                 .with_centered_text_label("Send Feedback".to_string())
@@ -3311,8 +3311,8 @@ pub(crate) fn render_debug_footer<V: View>(
         "Copy debug ID".to_string(),
         props.debug_copy_button_handle,
         copy_button,
-        warpui::elements::ParentAnchor::TopRight,
-        warpui::elements::ChildAnchor::BottomRight,
+        zterm_ui::elements::ParentAnchor::TopRight,
+        zterm_ui::elements::ChildAnchor::BottomRight,
         vec2f(0., -8.),
     );
 

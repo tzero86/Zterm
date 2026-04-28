@@ -1,11 +1,11 @@
-pub mod external_editor;
+﻿pub mod external_editor;
 use std::fs;
 use std::io;
 use std::path::{Path, PathBuf};
 
 #[cfg(windows)]
-use warp_util::path::is_network_resource;
-use warp_util::path::{CleanPathResult, LineAndColumnArg};
+use zterm_util::path::is_network_resource;
+use zterm_util::path::{CleanPathResult, LineAndColumnArg};
 
 use crate::terminal::model::grid::grid_handler::{ContainsPoint, Link};
 use crate::terminal::model::index::Point;

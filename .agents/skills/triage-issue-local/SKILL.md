@@ -1,4 +1,4 @@
----
+﻿---
 name: triage-issue-local
 specializes: triage-issue
 description: Repo-specific triage guidance for warp-external. Only the categories declared overridable by the core triage-issue skill may be specialized here.
@@ -38,7 +38,7 @@ Use area labels based on the user's reported surface:
 - `area:code-review` for git diff views, review UI, review comments, and PR-focused agent flows.
 - `area:mcp` for MCP server connection, tool/resource discovery, OAuth, and integration issues.
 - `area:settings-keybindings` for settings UI, preferences, keyboard shortcuts, and keybinding configuration.
-- `area:warp-drive` for Warp Drive objects, sync, sharing, workflows, notebooks, tab configs, and persisted artifacts.
+- `area:warp-drive` for Zterm Drive objects, sync, sharing, workflows, notebooks, tab configs, and persisted artifacts.
 - `area:performance:*` when the report includes CPU, memory, GPU, startup, rendering, latency, or responsiveness symptoms. Add the more specific CPU, memory, or GPU label when the evidence points to that resource.
 
 ## Information to check for before asking follow-up questions
@@ -59,7 +59,7 @@ Before asking the reporter for more information, check the issue body, comments,
 ## Recurring follow-up patterns
 
 - Visual UI/rendering issue with no media: ask for a screenshot or short screen recording first.
-- Environment-sensitive terminal issue: ask for Warp version/channel, OS/version, shell, and whether it reproduces in a fresh local session.
+- Environment-sensitive terminal issue: ask for Zterm version/channel, OS/version, shell, and whether it reproduces in a fresh local session.
 - SSH/tmux/remote issue: ask for local OS, remote OS, shell, whether tmux is involved, and the minimal command or workflow that reproduces it.
 - Agent/MCP issue: ask for the failing workflow, local vs cloud execution, relevant session link, MCP server/tool name, and any redacted error text.
 - Performance issue: ask for approximate scale, how long Warp has been running, what action triggers the spike or hang, and whether logs or a profile are available.

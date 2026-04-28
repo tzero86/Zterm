@@ -1,4 +1,4 @@
-use crate::appearance::Appearance;
+﻿use crate::appearance::Appearance;
 use crate::context_chips::prompt::Prompt;
 use crate::report_if_error;
 use crate::send_telemetry_from_ctx;
@@ -12,7 +12,7 @@ use crate::terminal::view::block_onboarding::util;
 use crate::terminal::SizeInfo;
 use markdown_parser::{FormattedText, FormattedTextFragment, FormattedTextLine};
 use settings::Setting as _;
-use warpui::{
+use zterm_ui::{
     elements::{
         Align, Border, Clipped, ConstrainedBox, Container, CornerRadius, Flex,
         FormattedTextElement, HighlightedHyperlink, Hoverable, HyperlinkUrl, MainAxisAlignment,
@@ -108,7 +108,7 @@ impl OnboardingPromptBlock {
         let mut confirm_button = appearance
             .ui_builder()
             .button(
-                warpui::ui_components::button::ButtonVariant::Accent,
+                zterm_ui::ui_components::button::ButtonVariant::Accent,
                 self.mouse_state_handle_confirm.clone(),
             )
             .with_style(UiComponentStyles {

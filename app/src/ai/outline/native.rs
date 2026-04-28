@@ -1,4 +1,4 @@
-use std::{
+﻿use std::{
     collections::{HashMap, VecDeque},
     path::{Path, PathBuf},
     time::Duration,
@@ -15,7 +15,7 @@ use repo_metadata::{
     DirectoryWatcher, Repository, RepositoryUpdate,
 };
 use settings::Setting as _;
-use warpui::{Entity, ModelContext, ModelHandle, SingletonEntity};
+use zterm_ui::{Entity, ModelContext, ModelHandle, SingletonEntity};
 
 use crate::{
     ai::persisted_workspace::all_working_directories,

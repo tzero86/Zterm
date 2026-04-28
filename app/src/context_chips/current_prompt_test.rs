@@ -1,4 +1,4 @@
-use std::{
+﻿use std::{
     any::Any,
     collections::{HashMap, VecDeque},
     sync::Arc,
@@ -9,9 +9,9 @@ use async_trait::async_trait;
 use itertools::Itertools;
 use parking_lot::Mutex;
 use settings::Setting as _;
-use warp_core::command::ExitCode;
-use warpui::{App, SingletonEntity};
-use warpui_extras::user_preferences;
+use zterm_core::command::ExitCode;
+use zterm_ui::{App, SingletonEntity};
+use zterm_ui_extras::user_preferences;
 
 #[cfg(feature = "local_fs")]
 use crate::code_review::diff_state::DiffStats;
@@ -45,7 +45,7 @@ use crate::{
 };
 #[cfg(feature = "local_fs")]
 use repo_metadata::DirectoryWatcher;
-use warp_completer::completer::{CommandExitStatus, CommandOutput};
+use zterm_completer::completer::{CommandExitStatus, CommandOutput};
 
 use super::{ChipUpdateStatus, CurrentPrompt, PromptContext};
 
@@ -1170,7 +1170,7 @@ fn test_externally_driven_chip_skips_periodic_timer() {
         let repo_handle = watcher_handle.update(&mut app, |watcher, ctx| {
             watcher
                 .add_directory(
-                    warp_util::standardized_path::StandardizedPath::from_local_canonicalized(
+                    zterm_util::standardized_path::StandardizedPath::from_local_canonicalized(
                         temp_dir.path(),
                     )
                     .unwrap(),
@@ -1231,7 +1231,7 @@ fn test_git_status_change_updates_chip_value() {
         let repo_handle = watcher_handle.update(&mut app, |watcher, ctx| {
             watcher
                 .add_directory(
-                    warp_util::standardized_path::StandardizedPath::from_local_canonicalized(
+                    zterm_util::standardized_path::StandardizedPath::from_local_canonicalized(
                         temp_dir.path(),
                     )
                     .unwrap(),

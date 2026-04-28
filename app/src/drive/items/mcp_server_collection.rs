@@ -1,4 +1,4 @@
-use warpui::{elements::MouseStateHandle, AppContext, Element};
+use zterm_ui::{elements::MouseStateHandle, AppContext, Element};
 
 use crate::{
     appearance::Appearance,
@@ -8,14 +8,14 @@ use crate::{
     themes::theme::Fill,
 };
 
-use super::{WarpDriveItem, WarpDriveItemId};
+use super::{ZtermDriveItem, ZtermDriveItemId};
 
 #[derive(Clone)]
-pub struct WarpDriveMCPServerCollection {
+pub struct ZtermDriveMCPServerCollection {
     id: ClientId,
 }
 
-impl WarpDriveMCPServerCollection {
+impl ZtermDriveMCPServerCollection {
     pub fn new(id: ClientId) -> Self {
         Self { id }
     }
@@ -25,7 +25,7 @@ impl WarpDriveMCPServerCollection {
     }
 }
 
-impl WarpDriveItem for WarpDriveMCPServerCollection {
+impl ZtermDriveItem for ZtermDriveMCPServerCollection {
     fn display_name(&self) -> Option<String> {
         Some("MCP Servers".to_string())
     }
@@ -50,8 +50,8 @@ impl WarpDriveItem for WarpDriveMCPServerCollection {
         None
     }
 
-    fn warp_drive_id(&self) -> WarpDriveItemId {
-        WarpDriveItemId::MCPServerCollection
+    fn warp_drive_id(&self) -> ZtermDriveItemId {
+        ZtermDriveItemId::MCPServerCollection
     }
 
     fn sync_status_icon(
@@ -67,7 +67,7 @@ impl WarpDriveItem for WarpDriveMCPServerCollection {
         None
     }
 
-    fn clone_box(&self) -> Box<dyn WarpDriveItem> {
+    fn clone_box(&self) -> Box<dyn ZtermDriveItem> {
         Box::new(self.clone())
     }
 }

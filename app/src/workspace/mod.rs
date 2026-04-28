@@ -36,7 +36,7 @@ use crate::settings::AISettings;
 use crate::settings_view::{self, flags, SettingsSection};
 use crate::tab::uses_vertical_tabs;
 use crate::tab_configs;
-use warpui::SingletonEntity;
+use zterm_ui::SingletonEntity;
 
 use crate::channel::ChannelState;
 
@@ -44,12 +44,12 @@ use crate::util::bindings::{self, cmd_or_ctrl_shift, is_binding_pty_compliant, C
 
 use crate::palette::PaletteMode;
 use serde::{Deserialize, Serialize};
-use warp_core::context_flag::ContextFlag;
-use warpui::accessibility::AccessibilityVerbosity;
-use warpui::elements::DropTargetData;
-use warpui::keymap::FixedBinding;
-use warpui::keymap::{BindingDescription, EditableBinding};
-use warpui::AppContext;
+use zterm_core::context_flag::ContextFlag;
+use zterm_ui::accessibility::AccessibilityVerbosity;
+use zterm_ui::elements::DropTargetData;
+use zterm_ui::keymap::FixedBinding;
+use zterm_ui::keymap::{BindingDescription, EditableBinding};
+use zterm_ui::AppContext;
 
 pub use action::{
     CommandSearchOptions, InitContent, RestoreConversationLayout, TabContextMenuAnchor,
@@ -66,8 +66,8 @@ pub use view::{
 };
 
 // Helper function to access panel header corner radius from other modules
-pub fn panel_header_corner_radius() -> warpui::elements::CornerRadius {
-    warpui::elements::CornerRadius::with_top(warpui::elements::Radius::Pixels(8.))
+pub fn panel_header_corner_radius() -> zterm_ui::elements::CornerRadius {
+    zterm_ui::elements::CornerRadius::with_top(zterm_ui::elements::Radius::Pixels(8.))
 }
 
 /// Returns `true` when `WorkspaceAction::SendFeedback` will launch the guided
@@ -86,13 +86,13 @@ pub fn is_feedback_skill_available(ctx: &AppContext) -> bool {
 
 use crate::workspace::view::{
     LEFT_PANEL_AGENT_CONVERSATIONS_BINDING_NAME, LEFT_PANEL_GLOBAL_SEARCH_BINDING_NAME,
-    LEFT_PANEL_PROJECT_EXPLORER_BINDING_NAME, LEFT_PANEL_WARP_DRIVE_BINDING_NAME,
+    LEFT_PANEL_PROJECT_EXPLORER_BINDING_NAME, LEFT_PANEL_ZTERM_DRIVE_BINDING_NAME,
     NEW_AGENT_TAB_BINDING_NAME, NEW_AMBIENT_AGENT_TAB_BINDING_NAME, NEW_TAB_BINDING_NAME,
     NEW_TERMINAL_TAB_BINDING_NAME, OPEN_GLOBAL_SEARCH_BINDING_NAME,
     TOGGLE_CONVERSATION_LIST_VIEW_BINDING_NAME, TOGGLE_NOTIFICATION_MAILBOX_BINDING_NAME,
     TOGGLE_PROJECT_EXPLORER_BINDING_NAME, TOGGLE_RIGHT_PANEL_BINDING_NAME,
     TOGGLE_TAB_CONFIGS_MENU_BINDING_NAME, TOGGLE_VERTICAL_TABS_PANEL_BINDING_NAME,
-    TOGGLE_WARP_DRIVE_BINDING_NAME,
+    TOGGLE_ZTERM_DRIVE_BINDING_NAME,
 };
 pub use one_time_modal_model::OneTimeModalModel;
 pub use registry::WorkspaceRegistry;
@@ -100,7 +100,7 @@ pub use toast_stack::ToastStack;
 
 pub fn init(app: &mut AppContext) {
     app.add_singleton_model(|_| WorkspaceRegistry::new());
-    use warpui::keymap::macros::*;
+    use zterm_ui::keymap::macros::*;
     app.register_binding_validator::<Workspace>(is_binding_pty_compliant);
 
     modal::init(app);
@@ -610,8 +610,8 @@ pub fn init(app: &mut AppContext) {
         .with_custom_action(CustomAction::NewTeamNotebook)
         .with_context_predicate(
             id!("Workspace")
-                & id!(flags::ENABLE_WARP_DRIVE)
-                & id!("WarpDrive_BelongsToTeam")
+                & id!(flags::ENABLE_ZTERM_DRIVE)
+                & id!("ZtermDrive_BelongsToTeam")
                 & id!("IsOnline"),
         )
         .with_group(bindings::BindingGroup::Notebooks.as_str()),
@@ -623,7 +623,7 @@ pub fn init(app: &mut AppContext) {
         )
         .with_group(bindings::BindingGroup::Notebooks.as_str())
         .with_custom_action(CustomAction::NewPersonalNotebook)
-        .with_context_predicate(id!("Workspace") & id!(flags::ENABLE_WARP_DRIVE)),
+        .with_context_predicate(id!("Workspace") & id!(flags::ENABLE_ZTERM_DRIVE)),
         EditableBinding::new(
             "workspace:create_team_workflow",
             BindingDescription::new("Create a new team workflow")
@@ -633,9 +633,9 @@ pub fn init(app: &mut AppContext) {
         .with_custom_action(CustomAction::NewTeamWorkflow)
         .with_context_predicate(
             id!("Workspace")
-                & id!(flags::ENABLE_WARP_DRIVE)
+                & id!(flags::ENABLE_ZTERM_DRIVE)
                 & id!("IsOnline")
-                & id!("WarpDrive_BelongsToTeam"),
+                & id!("ZtermDrive_BelongsToTeam"),
         )
         .with_group(bindings::BindingGroup::Workflow.as_str()),
         EditableBinding::new(
@@ -646,7 +646,7 @@ pub fn init(app: &mut AppContext) {
         )
         .with_group(bindings::BindingGroup::Workflow.as_str())
         .with_custom_action(CustomAction::NewPersonalWorkflow)
-        .with_context_predicate(id!("Workspace") & id!(flags::ENABLE_WARP_DRIVE)),
+        .with_context_predicate(id!("Workspace") & id!(flags::ENABLE_ZTERM_DRIVE)),
         EditableBinding::new(
             "workspace:create_team_folder",
             BindingDescription::new("Create a new team folder")
@@ -655,9 +655,9 @@ pub fn init(app: &mut AppContext) {
         )
         .with_context_predicate(
             id!("Workspace")
-                & id!(flags::ENABLE_WARP_DRIVE)
+                & id!(flags::ENABLE_ZTERM_DRIVE)
                 & id!("IsOnline")
-                & id!("WarpDrive_BelongsToTeam"),
+                & id!("ZtermDrive_BelongsToTeam"),
         )
         .with_group(bindings::BindingGroup::Folders.as_str()),
         EditableBinding::new(
@@ -667,7 +667,7 @@ pub fn init(app: &mut AppContext) {
             WorkspaceAction::CreatePersonalFolder,
         )
         .with_group(bindings::BindingGroup::Folders.as_str())
-        .with_context_predicate(id!("Workspace") & id!(flags::ENABLE_WARP_DRIVE) & id!("IsOnline")),
+        .with_context_predicate(id!("Workspace") & id!(flags::ENABLE_ZTERM_DRIVE) & id!("IsOnline")),
         EditableBinding::new(
             NEW_TAB_BINDING_NAME,
             BindingDescription::new("Create new tab"),
@@ -714,7 +714,7 @@ pub fn init(app: &mut AppContext) {
             WorkspaceAction::ToggleLeftPanel,
         )
         .with_context_predicate(id!("Workspace"))
-        .with_custom_action(CustomAction::ToggleWarpDrive),
+        .with_custom_action(CustomAction::ToggleZtermDrive),
         EditableBinding::new(
             TOGGLE_RIGHT_PANEL_BINDING_NAME,
             BindingDescription::new("Toggle code review")
@@ -762,12 +762,12 @@ pub fn init(app: &mut AppContext) {
         .with_enabled(|| FeatureFlag::GlobalSearch.is_enabled())
         .with_custom_action(CustomAction::ToggleGlobalSearch),
         EditableBinding::new(
-            LEFT_PANEL_WARP_DRIVE_BINDING_NAME,
-            BindingDescription::new("Left Panel: Warp Drive"),
-            WorkspaceAction::ToggleWarpDrive,
+            LEFT_PANEL_ZTERM_DRIVE_BINDING_NAME,
+            BindingDescription::new("Left Panel: Zterm Drive"),
+            WorkspaceAction::ToggleZtermDrive,
         )
         .with_group(bindings::BindingGroup::Navigation.as_str())
-        .with_context_predicate(id!("Workspace") & id!(flags::ENABLE_WARP_DRIVE))
+        .with_context_predicate(id!("Workspace") & id!(flags::ENABLE_ZTERM_DRIVE))
         .with_mac_key_binding("ctrl-4")
         .with_linux_or_windows_key_binding("alt-4"),
         EditableBinding::new(
@@ -788,12 +788,12 @@ pub fn init(app: &mut AppContext) {
         // we use alt because we use ctrl-shift-f for find because ctrl-f needs to be reserved for the shell
         .with_linux_or_windows_key_binding("alt-shift-F"),
         EditableBinding::new(
-            TOGGLE_WARP_DRIVE_BINDING_NAME,
-            BindingDescription::new("Toggle Warp Drive")
-                .with_custom_description(bindings::MAC_MENUS_CONTEXT, "Warp Drive"),
-            WorkspaceAction::ToggleWarpDrive,
+            TOGGLE_ZTERM_DRIVE_BINDING_NAME,
+            BindingDescription::new("Toggle Zterm Drive")
+                .with_custom_description(bindings::MAC_MENUS_CONTEXT, "Zterm Drive"),
+            WorkspaceAction::ToggleZtermDrive,
         )
-        .with_context_predicate(id!("Workspace") & id!(flags::ENABLE_WARP_DRIVE)),
+        .with_context_predicate(id!("Workspace") & id!(flags::ENABLE_ZTERM_DRIVE)),
         EditableBinding::new(
             TOGGLE_CONVERSATION_LIST_VIEW_BINDING_NAME,
             BindingDescription::new("Toggle Agent conversation list view").with_custom_description(
@@ -1020,9 +1020,9 @@ pub fn init(app: &mut AppContext) {
         EditableBinding::new(
             // If you rename this name, please update the name in command_palette/action/data_source.rs
             "workspace:search_drive",
-            "Search Warp Drive",
+            "Search Zterm Drive",
             WorkspaceAction::OpenPalette {
-                mode: PaletteMode::WarpDrive,
+                mode: PaletteMode::ZtermDrive,
                 source: PaletteSource::Keybinding,
                 query: None,
             },
@@ -1075,11 +1075,11 @@ pub fn init(app: &mut AppContext) {
     if cfg!(not(target_family = "wasm")) {
         app.register_editable_bindings([EditableBinding::new(
             "workspace:export_all_warp_drive_objects",
-            "Export all Warp Drive objects",
-            WorkspaceAction::ExportAllWarpDriveObjects,
+            "Export all Zterm Drive objects",
+            WorkspaceAction::ExportAllZtermDriveObjects,
         )
         .with_group(bindings::BindingGroup::Settings.as_str())
-        .with_context_predicate(id!("Workspace") & id!(flags::ENABLE_WARP_DRIVE))]);
+        .with_context_predicate(id!("Workspace") & id!(flags::ENABLE_ZTERM_DRIVE))]);
     }
 
     // CLI install/uninstall actions (macOS only)
@@ -1172,8 +1172,8 @@ pub fn init(app: &mut AppContext) {
         .with_custom_action(CustomAction::NewTeamEnvVars)
         .with_context_predicate(
             id!("Workspace")
-                & id!(flags::ENABLE_WARP_DRIVE)
-                & id!("WarpDrive_BelongsToTeam")
+                & id!(flags::ENABLE_ZTERM_DRIVE)
+                & id!("ZtermDrive_BelongsToTeam")
                 & id!("IsOnline"),
         )
         .with_group(bindings::BindingGroup::EnvVarCollection.as_str()),
@@ -1188,7 +1188,7 @@ pub fn init(app: &mut AppContext) {
         )
         .with_group(bindings::BindingGroup::EnvVarCollection.as_str())
         .with_custom_action(CustomAction::NewPersonalEnvVars)
-        .with_context_predicate(id!("Workspace") & id!(flags::ENABLE_WARP_DRIVE)),
+        .with_context_predicate(id!("Workspace") & id!(flags::ENABLE_ZTERM_DRIVE)),
         EditableBinding::new(
             "workspace:create_personal_ai_prompt",
             BindingDescription::new("Create a new personal prompt")
@@ -1198,7 +1198,7 @@ pub fn init(app: &mut AppContext) {
         .with_group(bindings::BindingGroup::WarpAi.as_str())
         .with_custom_action(CustomAction::NewPersonalAIPrompt)
         .with_context_predicate(
-            id!("Workspace") & id!(flags::ENABLE_WARP_DRIVE) & id!(flags::IS_ANY_AI_ENABLED),
+            id!("Workspace") & id!(flags::ENABLE_ZTERM_DRIVE) & id!(flags::IS_ANY_AI_ENABLED),
         ),
         EditableBinding::new(
             "workspace:create_team_ai_prompt",
@@ -1210,8 +1210,8 @@ pub fn init(app: &mut AppContext) {
         .with_custom_action(CustomAction::NewTeamAIPrompt)
         .with_context_predicate(
             id!("Workspace")
-                & id!(flags::ENABLE_WARP_DRIVE)
-                & id!("WarpDrive_BelongsToTeam")
+                & id!(flags::ENABLE_ZTERM_DRIVE)
+                & id!("ZtermDrive_BelongsToTeam")
                 & id!("IsOnline")
                 & id!(flags::IS_ANY_AI_ENABLED),
         ),
@@ -1240,14 +1240,14 @@ pub fn init(app: &mut AppContext) {
             "Import To Personal Drive",
             WorkspaceAction::ImportToPersonalDrive,
         )
-        .with_context_predicate(id!("Workspace") & id!(flags::ENABLE_WARP_DRIVE)),
+        .with_context_predicate(id!("Workspace") & id!(flags::ENABLE_ZTERM_DRIVE)),
         EditableBinding::new(
             "workspace:import_to_team_drive",
             "Import To Team Drive",
             WorkspaceAction::ImportToTeamDrive,
         )
         .with_context_predicate(
-            id!("Workspace") & id!(flags::ENABLE_WARP_DRIVE) & id!("WarpDrive_BelongsToTeam"),
+            id!("Workspace") & id!(flags::ENABLE_ZTERM_DRIVE) & id!("ZtermDrive_BelongsToTeam"),
         ),
     ]);
 
@@ -1336,7 +1336,7 @@ pub fn init(app: &mut AppContext) {
 }
 
 fn add_open_setting_pages_as_editable_binding(app: &mut AppContext) {
-    use warpui::keymap::macros::*;
+    use zterm_ui::keymap::macros::*;
 
     // Add the ability to open setting modals to the command palette.
     app.register_editable_bindings([
@@ -1420,9 +1420,9 @@ fn add_open_setting_pages_as_editable_binding(app: &mut AppContext) {
         .with_context_predicate(id!("Workspace")),
         EditableBinding::new(
             "workspace:show_settings_warpify_page",
-            BindingDescription::new("Open Settings: Warpify")
-                .with_custom_description(bindings::MAC_MENUS_CONTEXT, "Configure Warpify..."),
-            WorkspaceAction::ShowSettingsPage(SettingsSection::Warpify),
+            BindingDescription::new("Open Settings: Ztermify")
+                .with_custom_description(bindings::MAC_MENUS_CONTEXT, "Configure Ztermify..."),
+            WorkspaceAction::ShowSettingsPage(SettingsSection::Ztermify),
         )
         .with_group(bindings::BindingGroup::Settings.as_str())
         .with_context_predicate(id!("Workspace")),
@@ -1481,7 +1481,7 @@ fn add_open_setting_pages_as_editable_binding(app: &mut AppContext) {
 }
 
 fn add_overflow_menu_items_as_editable_binding(app: &mut AppContext) {
-    use warpui::keymap::macros::*;
+    use zterm_ui::keymap::macros::*;
 
     // Add the ability to open all overflow menu items to the command palette.
     app.register_editable_bindings([

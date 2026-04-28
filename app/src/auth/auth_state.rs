@@ -7,9 +7,9 @@ use anyhow::anyhow;
 use chrono::{DateTime, Duration, Utc};
 use parking_lot::RwLock;
 use uuid::Uuid;
-use warp_core::channel::{Channel, ChannelState};
-use warp_graphql::object_permissions::OwnerType;
-use warpui::{AppContext, Entity, SingletonEntity};
+use zterm_core::channel::{Channel, ChannelState};
+use zterm_graphql::object_permissions::OwnerType;
+use zterm_ui::{AppContext, Entity, SingletonEntity};
 
 use crate::{
     cloud_object::{GenericStringObjectFormat, JsonObjectType, ObjectType},
@@ -76,7 +76,7 @@ impl AuthState {
     /// Creates and initializes auth state. Checks, in order:
     /// 1. Test user (test/integration/skip_login builds)
     /// 2. Provided API key
-    /// 3. WARP_USER_SECRET environment variable
+    /// 3. ZTERM_USER_SECRET environment variable
     /// 4. Persisted user from secure storage
     #[cfg_attr(target_family = "wasm", allow(dead_code))]
     pub fn initialize(ctx: &AppContext, api_key: Option<String>) -> Self {
@@ -103,8 +103,8 @@ impl AuthState {
             return state;
         }
 
-        // Try WARP_USER_SECRET environment variable.
-        if let Some(persisted) = option_env!("WARP_USER_SECRET")
+        // Try ZTERM_USER_SECRET environment variable.
+        if let Some(persisted) = option_env!("ZTERM_USER_SECRET")
             .and_then(|s| serde_json::from_str::<PersistedUser>(s).ok())
         {
             state.apply_persisted_user(persisted);
@@ -325,7 +325,7 @@ impl AuthState {
         })
     }
 
-    /// Returns whether or not the anonymous user is past any of their Warp Drive object limits.
+    /// Returns whether or not the anonymous user is past any of their Zterm Drive object limits.
     pub fn is_anonymous_user_past_object_limit(
         &self,
         object_type: ObjectType,
@@ -466,8 +466,8 @@ impl AuthState {
     }
 }
 
-// Adapter for the [`warp_managed_secrets`] crate, which needs to access the current user.
-impl warp_managed_secrets::ActorProvider for AuthState {
+// Adapter for the [`zterm_managed_secrets`] crate, which needs to access the current user.
+impl zterm_managed_secrets::ActorProvider for AuthState {
     fn actor_uid(&self) -> Option<String> {
         self.user_id().map(|uid| uid.as_string())
     }

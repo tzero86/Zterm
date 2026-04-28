@@ -56,15 +56,15 @@ use pathfinder_geometry::rect::RectF;
 use pathfinder_geometry::vector::{vec2f, Vector2F};
 use settings::Setting as _;
 use std::path::{Path, PathBuf};
-use warp_core::context_flag::ContextFlag;
-use warp_core::telemetry::TelemetryEvent as _;
-use warp_core::ui::color::blend::Blend;
-use warp_core::ui::color::coloru_with_opacity;
-use warp_core::ui::theme::color::internal_colors;
-use warp_core::ui::theme::{AnsiColorIdentifier, Fill as WarpThemeFill, WarpTheme};
-use warp_core::ui::Icon as WarpIcon;
-use warpui::elements::DispatchEventResult;
-use warpui::elements::{
+use zterm_core::context_flag::ContextFlag;
+use zterm_core::telemetry::TelemetryEvent as _;
+use zterm_core::ui::color::blend::Blend;
+use zterm_core::ui::color::coloru_with_opacity;
+use zterm_core::ui::theme::color::internal_colors;
+use zterm_core::ui::theme::{AnsiColorIdentifier, Fill as ZtermThemeFill, ZtermTheme};
+use zterm_core::ui::Icon as WarpIcon;
+use zterm_ui::elements::DispatchEventResult;
+use zterm_ui::elements::{
     resizable_state_handle, Border, ChildAnchor, Clipped, ClippedScrollStateHandle,
     ClippedScrollable, ConstrainedBox, Container, CornerRadius, CrossAxisAlignment, DragAxis,
     DragBarSide, Draggable, DropShadow, DropTarget, Element, Empty, EventHandler, Expanded,
@@ -73,13 +73,13 @@ use warpui::elements::{
     PositionedElementOffsetBounds, Radius, Resizable, ResizableStateHandle, SavePosition,
     ScrollTarget, ScrollToPositionMode, ScrollbarWidth, Shrinkable, Stack, Text,
 };
-use warpui::fonts::{Properties, Weight};
-use warpui::platform::Cursor;
-use warpui::prelude::{Align, MainAxisAlignment};
-use warpui::text_layout::ClipConfig;
-use warpui::ui_components::components::{UiComponent, UiComponentStyles};
-use warpui::ui_components::text_input::TextInput;
-use warpui::{AppContext, EntityId, SingletonEntity, ViewHandle, WindowId};
+use zterm_ui::fonts::{Properties, Weight};
+use zterm_ui::platform::Cursor;
+use zterm_ui::prelude::{Align, MainAxisAlignment};
+use zterm_ui::text_layout::ClipConfig;
+use zterm_ui::ui_components::components::{UiComponent, UiComponentStyles};
+use zterm_ui::ui_components::text_input::TextInput;
+use zterm_ui::{AppContext, EntityId, SingletonEntity, ViewHandle, WindowId};
 
 const PANEL_WIDTH: f32 = 248.;
 const MIN_PANEL_WIDTH: f32 = 200.;
@@ -254,13 +254,13 @@ enum TerminalPrimaryLineFont {
     Monospace,
 }
 
-fn oz_icon_fill(theme: &WarpTheme) -> WarpThemeFill {
+fn oz_icon_fill(theme: &ZtermTheme) -> ZtermThemeFill {
     theme.main_text_color(theme.background())
 }
 
 fn render_pane_icon_with_status(
     variant: IconWithStatusVariant,
-    theme: &WarpTheme,
+    theme: &ZtermTheme,
 ) -> Box<dyn Element> {
     let sizing = match &variant {
         IconWithStatusVariant::OzAgent { .. } => &VERTICAL_TABS_AGENT_SIZING,
@@ -286,7 +286,7 @@ fn pane_row_background(
     is_selected: bool,
     is_hovered: bool,
     is_being_dragged: bool,
-    theme: &WarpTheme,
+    theme: &ZtermTheme,
 ) -> Option<ThemeFill> {
     if let Some(color) = pane_color {
         let opacity = if is_selected || is_hovered {
@@ -309,7 +309,7 @@ fn render_pane_row_element(
     padding: Padding,
     defer_events_to_children: bool,
     content: Box<dyn Element>,
-    theme: &WarpTheme,
+    theme: &ZtermTheme,
 ) -> Box<dyn Element> {
     let detail_target = supports_vertical_tabs_detail_sidecar(&props.typed).then(|| {
         detail_target_for_hovered_row(
@@ -1087,7 +1087,7 @@ fn vertical_tabs_tab_bar_location(insert_index: usize, tab_count: usize) -> TabB
     }
 }
 
-fn render_vertical_tab_hover_indicator(theme: &WarpTheme) -> Box<dyn Element> {
+fn render_vertical_tab_hover_indicator(theme: &ZtermTheme) -> Box<dyn Element> {
     ConstrainedBox::new(
         Container::new(Empty::new().finish())
             .with_background(ThemeFill::Solid(theme.accent().into()))
@@ -1118,7 +1118,7 @@ fn render_vertical_tab_insertion_target(
     insert_index: usize,
     tab_count: usize,
     is_drag_target: bool,
-    theme: &WarpTheme,
+    theme: &ZtermTheme,
 ) -> Box<dyn Element> {
     let content = if is_drag_target {
         render_vertical_tab_hover_indicator(theme)
@@ -1143,7 +1143,7 @@ fn add_vertical_tab_insertion_target_overlay(
     is_drag_target: bool,
     parent_anchor: ParentAnchor,
     child_anchor: ChildAnchor,
-    theme: &WarpTheme,
+    theme: &ZtermTheme,
 ) {
     stack.add_positioned_overlay_child(
         render_vertical_tab_insertion_target(insert_index, tab_count, is_drag_target, theme),
@@ -1166,7 +1166,7 @@ fn render_control_bar(
     let theme = appearance.theme();
     let sub_text = theme.sub_text_color(theme.background());
 
-    let search_icon = ConstrainedBox::new(WarpIcon::Search.to_warpui_icon(sub_text).finish())
+    let search_icon = ConstrainedBox::new(WarpIcon::Search.to_zterm_ui_icon(sub_text).finish())
         .with_width(SEARCH_ICON_SIZE)
         .with_height(SEARCH_ICON_SIZE)
         .finish();
@@ -1226,9 +1226,9 @@ fn render_detail_kind_badge_icon(
             if let Some(icon) = cli_agent_session.and_then(|session| session.agent.icon()) {
                 let color = cli_agent_session
                     .and_then(|session| session.agent.brand_color())
-                    .map(WarpThemeFill::Solid)
+                    .map(ZtermThemeFill::Solid)
                     .unwrap_or_else(|| theme.accent());
-                return icon.to_warpui_icon(color).finish();
+                return icon.to_zterm_ui_icon(color).finish();
             }
 
             let icon = if terminal_view.is_ambient_agent_session(app) {
@@ -1246,18 +1246,18 @@ fn render_detail_kind_badge_icon(
                 WarpIcon::Terminal => disabled_text,
                 _ => sub_text,
             };
-            icon.to_warpui_icon(color).finish()
+            icon.to_zterm_ui_icon(color).finish()
         }
         TypedPane::Code(_) => icon_from_file_path(&props.title, appearance)
-            .unwrap_or_else(|| WarpIcon::Code2.to_warpui_icon(sub_text).finish()),
+            .unwrap_or_else(|| WarpIcon::Code2.to_zterm_ui_icon(sub_text).finish()),
         typed => {
             let fill = typed
                 .warp_drive_object_type()
                 .map(|object_type| {
-                    WarpThemeFill::Solid(warp_drive_icon_color(appearance, object_type))
+                    ZtermThemeFill::Solid(warp_drive_icon_color(appearance, object_type))
                 })
                 .unwrap_or(sub_text);
-            typed.icon().to_warpui_icon(fill).finish()
+            typed.icon().to_zterm_ui_icon(fill).finish()
         }
     }
 }
@@ -1277,7 +1277,7 @@ fn render_settings_button(
         move |hover_state| {
             let icon = ConstrainedBox::new(
                 WarpIcon::Settings
-                    .to_warpui_icon(if is_popup_open { main_text } else { sub_text })
+                    .to_zterm_ui_icon(if is_popup_open { main_text } else { sub_text })
                     .finish(),
             )
             .with_width(16.)
@@ -2084,13 +2084,13 @@ fn render_group_action_buttons(
     action_buttons_mouse_state: MouseStateHandle,
     kebab_mouse_state: MouseStateHandle,
     close_mouse_state: MouseStateHandle,
-    theme: &WarpTheme,
+    theme: &ZtermTheme,
 ) -> Box<dyn Element> {
     let meta_color = theme.sub_text_color(theme.background());
 
     let kebab_button = Hoverable::new(kebab_mouse_state, move |button_state| {
         let mut container = Container::new(
-            ConstrainedBox::new(WarpIcon::DotsVertical.to_warpui_icon(meta_color).finish())
+            ConstrainedBox::new(WarpIcon::DotsVertical.to_zterm_ui_icon(meta_color).finish())
                 .with_width(GROUP_ACTION_BUTTON_ICON_SIZE)
                 .with_height(GROUP_ACTION_BUTTON_ICON_SIZE)
                 .finish(),
@@ -2113,7 +2113,7 @@ fn render_group_action_buttons(
 
     let close_button = Hoverable::new(close_mouse_state, move |button_state| {
         let mut container = Container::new(
-            ConstrainedBox::new(WarpIcon::X.to_warpui_icon(meta_color).finish())
+            ConstrainedBox::new(WarpIcon::X.to_zterm_ui_icon(meta_color).finish())
                 .with_width(GROUP_ACTION_BUTTON_ICON_SIZE)
                 .with_height(GROUP_ACTION_BUTTON_ICON_SIZE)
                 .finish(),
@@ -2231,8 +2231,8 @@ fn resolve_icon_with_status_variant(
     let main_text = theme.main_text_color(theme.background());
     let sub_text = theme.sub_text_color(theme.background());
 
-    let drive_color = |object_type: DriveObjectType| -> WarpThemeFill {
-        WarpThemeFill::Solid(warp_drive_icon_color(appearance, object_type))
+    let drive_color = |object_type: DriveObjectType| -> ZtermThemeFill {
+        ZtermThemeFill::Solid(warp_drive_icon_color(appearance, object_type))
     };
 
     match typed {
@@ -2341,10 +2341,10 @@ fn has_unread_activity(typed: &TypedPane<'_>, app: &AppContext) -> bool {
 
 const INDICATOR_DOT_SIZE: f32 = 8.;
 
-fn render_title_indicator(theme: &WarpTheme) -> Box<dyn Element> {
+fn render_title_indicator(theme: &ZtermTheme) -> Box<dyn Element> {
     ConstrainedBox::new(
         WarpIcon::CircleFilled
-            .to_warpui_icon(theme.accent())
+            .to_zterm_ui_icon(theme.accent())
             .finish(),
     )
     .with_width(INDICATOR_DOT_SIZE)
@@ -2594,7 +2594,7 @@ fn pane_display_title_and_subtitle(
             .unwrap_or_default();
         let home_dir = dirs::home_dir();
         let home_str = home_dir.as_ref().and_then(|path| path.to_str());
-        let parent = warp_util::path::user_friendly_path(&parent_raw, home_str).to_string();
+        let parent = zterm_util::path::user_friendly_path(&parent_raw, home_str).to_string();
         (filename, parent)
     } else {
         (
@@ -3333,7 +3333,7 @@ fn compact_branch_subtitle_display(
 
 fn render_git_branch_text(
     branch: &str,
-    text_color: WarpThemeFill,
+    text_color: ZtermThemeFill,
     font_size: f32,
     appearance: &Appearance,
 ) -> Box<dyn Element> {
@@ -3341,7 +3341,7 @@ fn render_git_branch_text(
         .with_cross_axis_alignment(CrossAxisAlignment::Center)
         .with_spacing(2.)
         .with_child(
-            ConstrainedBox::new(UiIcon::GitBranch.to_warpui_icon(text_color).finish())
+            ConstrainedBox::new(UiIcon::GitBranch.to_zterm_ui_icon(text_color).finish())
                 .with_width(font_size - 2.)
                 .with_height(font_size - 2.)
                 .finish(),
@@ -3366,7 +3366,7 @@ enum MetadataLeftContent {
 
 fn render_text_line(
     text: &str,
-    text_color: WarpThemeFill,
+    text_color: ZtermThemeFill,
     clip: ClipConfig,
     appearance: &Appearance,
 ) -> Box<dyn Element> {
@@ -3399,7 +3399,7 @@ fn render_inline_tab_rename_editor(
 fn render_title_override(
     props: &PaneProps<'_>,
     font_size: f32,
-    text_color: WarpThemeFill,
+    text_color: ZtermThemeFill,
     clip: ClipConfig,
     appearance: &Appearance,
     app: &AppContext,
@@ -3433,7 +3433,7 @@ fn render_pane_title_slot(
     props: &PaneProps<'_>,
     generated_title: impl FnOnce() -> Box<dyn Element>,
     font_size: f32,
-    text_color: WarpThemeFill,
+    text_color: ZtermThemeFill,
     clip: ClipConfig,
     appearance: &Appearance,
     app: &AppContext,
@@ -3634,7 +3634,7 @@ fn render_summary_pane_kind_icon_circle(
                 WarpIcon::Oz
             };
             (
-                icon.to_warpui_icon(oz_icon_fill(theme)).finish(),
+                icon.to_zterm_ui_icon(oz_icon_fill(theme)).finish(),
                 theme.background().into(),
             )
         }
@@ -3643,12 +3643,12 @@ fn render_summary_pane_kind_icon_circle(
             let icon_element = agent
                 .icon()
                 .map(|icon| {
-                    icon.to_warpui_icon(WarpThemeFill::Solid(icon_color))
+                    icon.to_zterm_ui_icon(ZtermThemeFill::Solid(icon_color))
                         .finish()
                 })
                 .unwrap_or_else(|| {
                     WarpIcon::Terminal
-                        .to_warpui_icon(theme.sub_text_color(theme.background()))
+                        .to_zterm_ui_icon(theme.sub_text_color(theme.background()))
                         .finish()
                 });
             (
@@ -3664,7 +3664,7 @@ fn render_summary_pane_kind_icon_circle(
         SummaryPaneKind::Code { title } => (
             icon_from_file_path(&title, appearance).unwrap_or_else(|| {
                 WarpIcon::Code2
-                    .to_warpui_icon(theme.sub_text_color(theme.background()))
+                    .to_zterm_ui_icon(theme.sub_text_color(theme.background()))
                     .finish()
             }),
             internal_colors::fg_overlay_2(theme).into(),
@@ -3683,7 +3683,7 @@ fn render_summary_pane_kind_icon_circle(
         | SummaryPaneKind::Other => {
             let (icon, icon_color) = summary_pane_kind_icon(kind, appearance);
             (
-                icon.to_warpui_icon(icon_color).finish(),
+                icon.to_zterm_ui_icon(icon_color).finish(),
                 internal_colors::fg_overlay_2(theme).into(),
             )
         }
@@ -3705,12 +3705,12 @@ fn render_summary_pane_kind_icon_circle(
 fn summary_pane_kind_icon(
     kind: SummaryPaneKind,
     appearance: &Appearance,
-) -> (WarpIcon, WarpThemeFill) {
+) -> (WarpIcon, ZtermThemeFill) {
     let theme = appearance.theme();
     let main_text = theme.main_text_color(theme.background());
     let sub_text = theme.sub_text_color(theme.background());
-    let drive_color = |object_type: DriveObjectType| -> WarpThemeFill {
-        WarpThemeFill::Solid(warp_drive_icon_color(appearance, object_type))
+    let drive_color = |object_type: DriveObjectType| -> ZtermThemeFill {
+        ZtermThemeFill::Solid(warp_drive_icon_color(appearance, object_type))
     };
 
     match kind {
@@ -3725,7 +3725,7 @@ fn summary_pane_kind_icon(
         ),
         SummaryPaneKind::CLIAgent { agent } => (
             agent.icon().unwrap_or(WarpIcon::Terminal),
-            WarpThemeFill::Solid(agent.brand_icon_color()),
+            ZtermThemeFill::Solid(agent.brand_icon_color()),
         ),
         SummaryPaneKind::Code { .. } => (WarpIcon::Code2, sub_text),
         SummaryPaneKind::CodeDiff => (WarpIcon::Diff, sub_text),
@@ -3817,7 +3817,7 @@ fn render_summary_branch_line(
 fn render_terminal_primary_line_for_view(
     terminal_view: &TerminalView,
     appearance: &Appearance,
-    text_color: WarpThemeFill,
+    text_color: ZtermThemeFill,
     app: &AppContext,
 ) -> Box<dyn Element> {
     let title_text = terminal_view.terminal_title_from_shell();
@@ -3853,7 +3853,7 @@ fn render_terminal_primary_line(
     primary_line: TerminalPrimaryLineData,
     terminal_view: &TerminalView,
     appearance: &Appearance,
-    text_color: WarpThemeFill,
+    text_color: ZtermThemeFill,
 ) -> Box<dyn Element> {
     let theme = appearance.theme();
 
@@ -3871,7 +3871,7 @@ fn render_terminal_primary_line(
             .with_child(
                 ConstrainedBox::new(
                     UiIcon::AlertTriangle
-                        .to_warpui_icon(error_color.into())
+                        .to_zterm_ui_icon(error_color.into())
                         .finish(),
                 )
                 .with_width(BADGE_ICON_SIZE)
@@ -4154,7 +4154,7 @@ fn render_pull_request_badge_content(label: &str, appearance: &Appearance) -> Bo
         .with_cross_axis_alignment(CrossAxisAlignment::Center)
         .with_spacing(4.)
         .with_child(
-            ConstrainedBox::new(UiIcon::Github.to_warpui_icon(main_text_color).finish())
+            ConstrainedBox::new(UiIcon::Github.to_zterm_ui_icon(main_text_color).finish())
                 .with_width(BADGE_ICON_SIZE)
                 .with_height(BADGE_ICON_SIZE)
                 .finish(),
@@ -4171,7 +4171,7 @@ fn compute_tab_group_color_mode(
     tab: &TabData,
     pane_group: &PaneGroup,
     visible_pane_ids: &[PaneId],
-    theme: &WarpTheme,
+    theme: &ZtermTheme,
     app: &AppContext,
 ) -> TabGroupColorMode {
     // Manual override applies to the whole group.
@@ -4505,7 +4505,7 @@ pub(super) fn render_settings_popup(
         .finish();
 
     // Divider between toggle and "Pane title as" section
-    let make_divider = |theme: &WarpTheme| {
+    let make_divider = |theme: &ZtermTheme| {
         Container::new(
             ConstrainedBox::new(
                 Container::new(Empty::new().finish())
@@ -4706,7 +4706,7 @@ fn render_compact_subtitle_option(
     mouse_state: MouseStateHandle,
     value: VerticalTabsCompactSubtitle,
     appearance: &Appearance,
-    theme: &WarpTheme,
+    theme: &ZtermTheme,
 ) -> Box<dyn Element> {
     const ICON_SIZE: f32 = 16.;
     const FONT_SIZE: f32 = 12.;
@@ -4716,7 +4716,7 @@ fn render_compact_subtitle_option(
     let main_text = theme.main_text_color(theme.background());
     Hoverable::new(mouse_state, move |hover_state| {
         let check_icon: Box<dyn Element> = if is_selected {
-            ConstrainedBox::new(WarpIcon::Check.to_warpui_icon(main_text).finish())
+            ConstrainedBox::new(WarpIcon::Check.to_zterm_ui_icon(main_text).finish())
                 .with_width(ICON_SIZE)
                 .with_height(ICON_SIZE)
                 .finish()
@@ -4759,7 +4759,7 @@ fn render_tab_item_mode_option(
     mouse_state: MouseStateHandle,
     value: VerticalTabsTabItemMode,
     appearance: &Appearance,
-    theme: &WarpTheme,
+    theme: &ZtermTheme,
 ) -> Box<dyn Element> {
     const ICON_SIZE: f32 = 16.;
     const FONT_SIZE: f32 = 12.;
@@ -4769,7 +4769,7 @@ fn render_tab_item_mode_option(
     let main_text = theme.main_text_color(theme.background());
     Hoverable::new(mouse_state, move |hover_state| {
         let check_icon: Box<dyn Element> = if is_selected {
-            ConstrainedBox::new(WarpIcon::Check.to_warpui_icon(main_text).finish())
+            ConstrainedBox::new(WarpIcon::Check.to_zterm_ui_icon(main_text).finish())
                 .with_width(ICON_SIZE)
                 .with_height(ICON_SIZE)
                 .finish()
@@ -4812,7 +4812,7 @@ fn render_primary_info_option(
     mouse_state: MouseStateHandle,
     value: VerticalTabsPrimaryInfo,
     appearance: &Appearance,
-    theme: &WarpTheme,
+    theme: &ZtermTheme,
 ) -> Box<dyn Element> {
     const ICON_SIZE: f32 = 16.;
     const FONT_SIZE: f32 = 12.;
@@ -4822,7 +4822,7 @@ fn render_primary_info_option(
     let main_text = theme.main_text_color(theme.background());
     Hoverable::new(mouse_state, move |hover_state| {
         let check_icon: Box<dyn Element> = if is_selected {
-            ConstrainedBox::new(WarpIcon::Check.to_warpui_icon(main_text).finish())
+            ConstrainedBox::new(WarpIcon::Check.to_zterm_ui_icon(main_text).finish())
                 .with_width(ICON_SIZE)
                 .with_height(ICON_SIZE)
                 .finish()
@@ -4871,7 +4871,7 @@ fn render_show_toggle_option(
     action: WorkspaceAction,
     info_tooltip: Option<ShowToggleInfoTooltip>,
     appearance: &Appearance,
-    theme: &WarpTheme,
+    theme: &ZtermTheme,
 ) -> Box<dyn Element> {
     const ICON_SIZE: f32 = 16.;
     const FONT_SIZE: f32 = 12.;
@@ -4889,7 +4889,7 @@ fn render_show_toggle_option(
 
     Hoverable::new(mouse_state, move |hover_state| {
         let check_icon: Box<dyn Element> = if is_enabled {
-            ConstrainedBox::new(WarpIcon::Check.to_warpui_icon(main_text).finish())
+            ConstrainedBox::new(WarpIcon::Check.to_zterm_ui_icon(main_text).finish())
                 .with_width(ICON_SIZE)
                 .with_height(ICON_SIZE)
                 .finish()
@@ -4912,7 +4912,7 @@ fn render_show_toggle_option(
         {
             let builder = ui_builder.clone();
             let info_icon = Hoverable::new(info_ms, move |info_hover| {
-                let icon = ConstrainedBox::new(UiIcon::Info.to_warpui_icon(info_color).finish())
+                let icon = ConstrainedBox::new(UiIcon::Info.to_zterm_ui_icon(info_color).finish())
                     .with_width(INFO_ICON_SIZE)
                     .with_height(INFO_ICON_SIZE)
                     .finish();
@@ -4963,8 +4963,8 @@ fn render_popup_segment(
     is_selected: bool,
     mouse_state: MouseStateHandle,
     mode: VerticalTabsViewMode,
-    theme: &WarpTheme,
-    icon_color: WarpThemeFill,
+    theme: &ZtermTheme,
+    icon_color: ZtermThemeFill,
 ) -> Box<dyn Element> {
     Hoverable::new(mouse_state, move |hover_state| {
         let background = if is_selected {
@@ -4977,7 +4977,7 @@ fn render_popup_segment(
 
         Container::new(
             Align::new(
-                ConstrainedBox::new(icon.to_warpui_icon(icon_color).finish())
+                ConstrainedBox::new(icon.to_zterm_ui_icon(icon_color).finish())
                     .with_width(COMPACT_ICON_SIZE)
                     .with_height(COMPACT_ICON_SIZE)
                     .finish(),
@@ -5002,7 +5002,7 @@ fn render_popup_text_segment(
     mouse_state: MouseStateHandle,
     granularity: VerticalTabsDisplayGranularity,
     appearance: &Appearance,
-    theme: &WarpTheme,
+    theme: &ZtermTheme,
 ) -> Box<dyn Element> {
     let label = label.to_string();
     let main_text = theme.main_text_color(theme.background());
@@ -5170,25 +5170,25 @@ fn detail_sidecar_width_and_bounds(available_width: f32) -> (f32, PositionedElem
 }
 
 struct DetailSidecarTextColors {
-    main: WarpThemeFill,
-    sub: WarpThemeFill,
-    disabled: WarpThemeFill,
+    main: ZtermThemeFill,
+    sub: ZtermThemeFill,
+    disabled: ZtermThemeFill,
 }
 
-fn detail_sidecar_background(theme: &WarpTheme) -> ColorU {
+fn detail_sidecar_background(theme: &ZtermTheme) -> ColorU {
     theme
         .background()
         .blend(&internal_colors::fg_overlay_2(theme))
         .into_solid()
 }
 
-fn detail_sidecar_border_fill(theme: &WarpTheme) -> ThemeFill {
+fn detail_sidecar_border_fill(theme: &ZtermTheme) -> ThemeFill {
     theme
         .background()
         .blend(&internal_colors::fg_overlay_4(theme))
 }
 
-fn detail_sidecar_text_colors(theme: &WarpTheme) -> DetailSidecarTextColors {
+fn detail_sidecar_text_colors(theme: &ZtermTheme) -> DetailSidecarTextColors {
     let bg = ThemeFill::Solid(detail_sidecar_background(theme));
     DetailSidecarTextColors {
         main: theme.main_text_color(bg),
@@ -5201,7 +5201,7 @@ fn render_detail_badge(
     label: impl Into<String>,
     icon: Option<Box<dyn Element>>,
     background: Option<ThemeFill>,
-    text_color: WarpThemeFill,
+    text_color: ZtermThemeFill,
     appearance: &Appearance,
 ) -> Box<dyn Element> {
     let mut content = Flex::row()
@@ -5244,14 +5244,14 @@ fn render_detail_status_pill(
             .with_cross_axis_alignment(CrossAxisAlignment::Center)
             .with_spacing(4.)
             .with_child(
-                ConstrainedBox::new(icon.to_warpui_icon(WarpThemeFill::Solid(color)).finish())
+                ConstrainedBox::new(icon.to_zterm_ui_icon(ZtermThemeFill::Solid(color)).finish())
                     .with_width(12.)
                     .with_height(12.)
                     .finish(),
             )
             .with_child(
                 Text::new_inline(status.to_string(), appearance.ui_font_family(), 10.)
-                    .with_color(WarpThemeFill::Solid(color).into())
+                    .with_color(ZtermThemeFill::Solid(color).into())
                     .finish(),
             )
             .finish(),
@@ -5265,7 +5265,7 @@ fn render_detail_status_pill(
 fn render_detail_wrapping_text(
     text: impl Into<String>,
     font_size: f32,
-    color: WarpThemeFill,
+    color: ZtermThemeFill,
     style: Option<Properties>,
     appearance: &Appearance,
 ) -> Box<dyn Element> {
@@ -5280,7 +5280,7 @@ fn render_detail_wrapping_text(
 
 fn render_terminal_detail_primary_line(
     primary_line: &TerminalPrimaryLineData,
-    color: WarpThemeFill,
+    color: ZtermThemeFill,
     appearance: &Appearance,
 ) -> Box<dyn Element> {
     let font_family = match primary_line {

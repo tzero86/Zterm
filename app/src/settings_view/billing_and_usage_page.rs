@@ -7,11 +7,11 @@ use std::cell::RefCell;
 use std::collections::HashMap;
 use std::sync::Arc;
 use thousands::Separable;
-use warp_core::ui::theme::Fill;
-use warp_core::{features::FeatureFlag, ui::appearance::Appearance};
-use warp_graphql::billing::AddonCreditsOption;
-use warpui::prelude::ChildView;
-use warpui::{
+use zterm_core::ui::theme::Fill;
+use zterm_core::{features::FeatureFlag, ui::appearance::Appearance};
+use zterm_graphql::billing::AddonCreditsOption;
+use zterm_ui::prelude::ChildView;
+use zterm_ui::{
     elements::{
         Align, Border, ChildAnchor, ConstrainedBox, Container, CornerRadius, CrossAxisAlignment,
         Empty, Flex, FormattedTextElement, HighlightedHyperlink, Hoverable, HyperlinkUrl,
@@ -1505,7 +1505,7 @@ impl UsageWidget {
         let theme = appearance.theme();
         ConstrainedBox::new(
             Icon::AlertTriangle
-                .to_warpui_icon(theme.ui_error_color().into())
+                .to_zterm_ui_icon(theme.ui_error_color().into())
                 .finish(),
         )
         .with_height(16.)
@@ -1589,10 +1589,10 @@ impl UsageWidget {
                             fragment.text,
                             None,
                             maybe_action.map(|act| {
-                                Box::new(move |ctx: &mut warpui::EventContext| {
+                                Box::new(move |ctx: &mut zterm_ui::EventContext| {
                                     ctx.dispatch_typed_action(act.clone());
                                 })
-                                    as Box<dyn Fn(&mut warpui::EventContext)>
+                                    as Box<dyn Fn(&mut zterm_ui::EventContext)>
                             }),
                             self.exceed_limit_link_mouse_state.clone(),
                         )
@@ -1655,7 +1655,7 @@ impl UsageWidget {
         .finish();
 
         let icon = Container::new(
-            ConstrainedBox::new(Icon::Credits.to_warpui_icon(fg).finish())
+            ConstrainedBox::new(Icon::Credits.to_zterm_ui_icon(fg).finish())
                 .with_height(16.)
                 .with_width(16.)
                 .finish(),
@@ -1719,10 +1719,10 @@ impl UsageWidget {
                     .with_hyperlink_font_color(theme.accent().into_solid())
                     .register_default_click_handlers_with_action_support(
                         |hyperlink_lens, event, ctx| match hyperlink_lens {
-                            warpui::elements::HyperlinkLens::Url(url) => {
+                            zterm_ui::elements::HyperlinkLens::Url(url) => {
                                 ctx.open_url(url);
                             }
-                            warpui::elements::HyperlinkLens::Action(action_ref) => {
+                            zterm_ui::elements::HyperlinkLens::Action(action_ref) => {
                                 if let Some(action) = action_ref
                                     .as_any()
                                     .downcast_ref::<BillingAndUsagePageAction>()
@@ -2267,7 +2267,7 @@ impl UsageWidget {
         workspace_is_delinquent_due_to_payment_issue: bool,
         appearance: &Appearance,
         prorated_request_limits_info: Option<ProratedRequestLimitsInfo>,
-    ) -> Box<dyn warpui::Element> {
+    ) -> Box<dyn zterm_ui::Element> {
         let mut row = Flex::row();
 
         let show_alert = workspace_is_delinquent_due_to_payment_issue
@@ -2294,7 +2294,7 @@ impl UsageWidget {
             row.add_child(
                 ConstrainedBox::new(
                     Icon::AlertTriangle
-                        .to_warpui_icon(appearance.theme().ui_error_color().into())
+                        .to_zterm_ui_icon(appearance.theme().ui_error_color().into())
                         .finish(),
                 )
                 .with_height(16.)
@@ -2361,7 +2361,7 @@ impl UsageWidget {
         workspace_is_delinquent_due_to_payment_issue: bool,
         appearance: &Appearance,
         prorated_request_limits_info: Option<ProratedRequestLimitsInfo>,
-    ) -> Box<dyn warpui::Element> {
+    ) -> Box<dyn zterm_ui::Element> {
         let request_usage_details = Flex::column()
             .with_cross_axis_alignment(CrossAxisAlignment::End)
             .with_child(self.render_request_usage_count(
@@ -2642,7 +2642,7 @@ impl UsageWidget {
                     Container::new(
                         ConstrainedBox::new(
                             Icon::Conversation
-                                .to_warpui_icon(
+                                .to_zterm_ui_icon(
                                     blended_colors::text_sub(
                                         appearance.theme(),
                                         appearance.theme().surface_1(),
@@ -2708,7 +2708,7 @@ impl UsageWidget {
         let icon = Container::new(
             ConstrainedBox::new(
                 Icon::AlertCircle
-                    .to_warpui_icon(blended_colors::text_sub(theme, theme.surface_1()).into())
+                    .to_zterm_ui_icon(blended_colors::text_sub(theme, theme.surface_1()).into())
                     .finish(),
             )
             .with_width(16.)
@@ -3243,10 +3243,10 @@ impl UsageWidget {
         } else {
             upgrade_cta = upgrade_cta.register_default_click_handlers_with_action_support(
                 |hyperlink_lens, event, ctx| match hyperlink_lens {
-                    warpui::elements::HyperlinkLens::Url(url) => {
+                    zterm_ui::elements::HyperlinkLens::Url(url) => {
                         ctx.open_url(url);
                     }
-                    warpui::elements::HyperlinkLens::Action(action_ref) => {
+                    zterm_ui::elements::HyperlinkLens::Action(action_ref) => {
                         if let Some(action) = action_ref
                             .as_any()
                             .downcast_ref::<BillingAndUsagePageAction>()
@@ -3419,7 +3419,7 @@ impl PlanWidget {
                         TextAndIcon::new(
                             TextAndIconAlignment::IconFirst,
                             "Compare plans",
-                            Icon::CoinsStacked.to_warpui_icon(appearance.theme().accent()),
+                            Icon::CoinsStacked.to_zterm_ui_icon(appearance.theme().accent()),
                             MainAxisSize::Min,
                             MainAxisAlignment::Center,
                             vec2f(14., 14.),
@@ -3487,7 +3487,7 @@ impl PlanWidget {
                     TextAndIcon::new(
                         TextAndIconAlignment::IconFirst,
                         "Manage billing",
-                        Icon::CoinsStacked.to_warpui_icon(appearance.theme().accent()),
+                        Icon::CoinsStacked.to_zterm_ui_icon(appearance.theme().accent()),
                         MainAxisSize::Min,
                         MainAxisAlignment::Center,
                         vec2f(14., 14.),
@@ -3548,7 +3548,7 @@ impl PlanWidget {
                     TextAndIcon::new(
                         TextAndIconAlignment::IconFirst,
                         "Open admin panel",
-                        Icon::Users.to_warpui_icon(appearance.theme().accent()),
+                        Icon::Users.to_zterm_ui_icon(appearance.theme().accent()),
                         MainAxisSize::Min,
                         MainAxisAlignment::Center,
                         vec2f(14., 14.),
@@ -3589,7 +3589,7 @@ impl PlanWidget {
                     TextAndIcon::new(
                         TextAndIconAlignment::IconFirst,
                         "Compare plans",
-                        Icon::CoinsStacked.to_warpui_icon(appearance.theme().accent()),
+                        Icon::CoinsStacked.to_zterm_ui_icon(appearance.theme().accent()),
                         MainAxisSize::Min,
                         MainAxisAlignment::Center,
                         vec2f(14., 14.),

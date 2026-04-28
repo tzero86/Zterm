@@ -1,15 +1,15 @@
-use std::{cmp::Ordering, collections::HashMap};
+﻿use std::{cmp::Ordering, collections::HashMap};
 
 use anyhow::Error;
 use pathfinder_geometry::vector::vec2f;
-use warp_core::{
+use zterm_core::{
     features::FeatureFlag,
     ui::{
         appearance::Appearance,
         theme::{color::internal_colors::neutral_4, Fill},
     },
 };
-use warpui::{
+use zterm_ui::{
     elements::{
         ConstrainedBox, Container, CornerRadius, CrossAxisAlignment, Dismiss, Flex, Hoverable,
         MainAxisAlignment, MainAxisSize, MouseState, MouseStateHandle, ParentElement, Radius,
@@ -472,7 +472,7 @@ impl View for AliasBar {
                 TextAndIcon::new(
                     TextAndIconAlignment::IconFirst,
                     "Add alias",
-                    Icon::Plus.to_warpui_icon(
+                    Icon::Plus.to_zterm_ui_icon(
                         appearance
                             .theme()
                             .main_text_color(appearance.theme().background()),

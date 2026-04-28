@@ -1,4 +1,4 @@
-use warpui::{
+﻿use zterm_ui::{
     elements::MouseStateHandle,
     fonts::Weight,
     platform::Cursor,

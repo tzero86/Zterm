@@ -1,4 +1,4 @@
-//! macOS implementation of login-item registration via `SMAppService`.
+﻿//! macOS implementation of login-item registration via `SMAppService`.
 //!
 //! Requires macOS 13 (Ventura) or later. When `SMAppService` isn't available
 //! at runtime, registration silently no-ops — the user-facing setting still
@@ -7,7 +7,7 @@
 use crate::report_if_error;
 use crate::terminal::general_settings::GeneralSettings;
 use ::settings::Setting;
-use warpui::{AppContext, SingletonEntity};
+use zterm_ui::{AppContext, SingletonEntity};
 
 #[allow(deprecated)]
 pub(super) fn maybe_register_app_as_login_item(ctx: &mut AppContext) {

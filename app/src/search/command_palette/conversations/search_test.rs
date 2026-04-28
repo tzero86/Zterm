@@ -1,7 +1,7 @@
-use crate::ai::{
+﻿use crate::ai::{
     agent::conversation::AIConversationId, conversation_navigation::ConversationNavigationData,
 };
-use warpui::{EntityId, WindowId};
+use zterm_ui::{EntityId, WindowId};
 
 #[test]
 fn test_conversation_navigation_data_ordering() {

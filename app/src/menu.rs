@@ -1,4 +1,4 @@
-use std::cell::OnceCell;
+﻿use std::cell::OnceCell;
 use std::sync::Arc;
 use std::{fmt, vec};
 
@@ -10,14 +10,14 @@ use chrono::{DateTime, Local};
 use pathfinder_color::ColorU;
 use pathfinder_geometry::rect::RectF;
 use pathfinder_geometry::vector::{vec2f, Vector2F};
-use warp_core::ui::color::blend::Blend;
-use warpui::elements::{
+use zterm_core::ui::color::blend::Blend;
+use zterm_ui::elements::{
     ChildAnchor, ClippedScrollStateHandle, ClippedScrollable, DropShadow, OffsetPositioning,
     ParentAnchor, ParentOffsetBounds, PositionedElementAnchor, PositionedElementOffsetBounds,
     ScrollTarget, ScrollToPositionMode, ScrollbarWidth, Stack,
 };
-use warpui::WindowId;
-use warpui::{
+use zterm_ui::WindowId;
+use zterm_ui::{
     accessibility::{AccessibilityContent, ActionAccessibilityContent, WarpA11yRole},
     elements::{
         Align, Border, ConstrainedBox, Container, CornerRadius, CrossAxisAlignment, Dismiss,
@@ -834,7 +834,7 @@ impl<A: Action + Clone> MenuItemFields<A> {
                 Shrinkable::new(
                     1.,
                     Container::new(
-                        ConstrainedBox::new(icon.to_warpui_icon(icon_color).finish())
+                        ConstrainedBox::new(icon.to_zterm_ui_icon(icon_color).finish())
                             .with_width(icon_size)
                             .with_height(icon_size)
                             .finish(),
@@ -1526,7 +1526,7 @@ pub enum MenuAction {
 }
 
 pub fn init(app: &mut AppContext) {
-    use warpui::keymap::macros::*;
+    use zterm_ui::keymap::macros::*;
 
     app.register_fixed_bindings([
         FixedBinding::new(
@@ -2006,7 +2006,7 @@ impl<A: Action + Clone> SubMenu<A> {
                         ScrollbarWidth::Auto,
                         appearance.theme().nonactive_ui_detail().into(),
                         appearance.theme().active_ui_detail().into(),
-                        warpui::elements::Fill::None,
+                        zterm_ui::elements::Fill::None,
                     )
                     .with_overlayed_scrollbar()
                     .finish(),

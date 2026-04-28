@@ -1,4 +1,4 @@
-#![allow(deprecated)]
+﻿#![allow(deprecated)]
 
 use instant::Instant;
 use std::slice;
@@ -9,7 +9,7 @@ use cocoa::{
     foundation::{NSAutoreleasePool, NSString},
 };
 use command::r#async::Command;
-use warpui::{platform::mac::make_nsstring, ApplicationBundleInfo};
+use zterm_ui::{platform::mac::make_nsstring, ApplicationBundleInfo};
 
 use super::*;
 

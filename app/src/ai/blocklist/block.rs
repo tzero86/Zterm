@@ -55,8 +55,8 @@ use crate::view_components::compactible_action_button::CompactibleActionButton;
 use crate::AIAgentTodoList;
 use crate::FileEdit;
 use pathfinder_color::ColorU;
-use warp_core::ui::theme::color::internal_colors;
-use warp_core::ui::theme::Fill;
+use zterm_core::ui::theme::color::internal_colors;
+use zterm_core::ui::theme::Fill;
 
 use cli_controller::CLISubagentController;
 use cli_controller::CLISubagentEvent;
@@ -64,11 +64,11 @@ use find::FindState;
 use model::AIBlockOutputStatus;
 use parking_lot::FairMutex;
 use settings::Setting as _;
-use warp_core::features::FeatureFlag;
-use warpui::elements::get_rich_content_position_id;
-use warpui::elements::ClippedScrollStateHandle;
-use warpui::elements::TableStateHandle;
-use warpui::ui_components::radio_buttons::RadioButtonStateHandle;
+use zterm_core::features::FeatureFlag;
+use zterm_ui::elements::get_rich_content_position_id;
+use zterm_ui::elements::ClippedScrollStateHandle;
+use zterm_ui::elements::TableStateHandle;
+use zterm_ui::ui_components::radio_buttons::RadioButtonStateHandle;
 
 use crate::ai::agent::conversation::AIConversationId;
 use crate::ai::agent::AIAgentActionResultType;
@@ -121,26 +121,26 @@ use std::ops::Range;
 use std::path::{Path, PathBuf};
 use std::rc::Rc;
 use std::{cell::OnceCell, sync::Arc};
-use warp_util::path::ShellFamily;
-use warpui::elements::MainAxisAlignment;
-use warpui::elements::MainAxisSize;
-use warpui::elements::SecretRange;
-use warpui::ui_components::button::ButtonVariant;
-use warpui::ui_components::button::TextAndIcon;
-use warpui::ui_components::button::TextAndIconAlignment;
-use warpui::ui_components::components::UiComponent;
-use warpui::ui_components::components::UiComponentStyles;
+use zterm_util::path::ShellFamily;
+use zterm_ui::elements::MainAxisAlignment;
+use zterm_ui::elements::MainAxisSize;
+use zterm_ui::elements::SecretRange;
+use zterm_ui::ui_components::button::ButtonVariant;
+use zterm_ui::ui_components::button::TextAndIcon;
+use zterm_ui::ui_components::button::TextAndIconAlignment;
+use zterm_ui::ui_components::components::UiComponent;
+use zterm_ui::ui_components::components::UiComponentStyles;
 
 use crate::util::link_detection::*;
 use chrono::Duration;
 use itertools::Itertools;
 use secret_redaction::*;
 #[cfg(feature = "local_fs")]
-use warp_editor::content::edit::resolve_asset_source_relative_to_directory;
-use warp_editor::{
+use zterm_editor::content::edit::resolve_asset_source_relative_to_directory;
+use zterm_editor::{
     content::buffer::InitialBufferState, render::element::VerticalExpansionBehavior,
 };
-use warpui::{
+use zterm_ui::{
     assets::asset_cache::AssetCache,
     clipboard::ClipboardContent,
     elements::{MouseStateHandle, SelectionBound, SelectionHandle},
@@ -247,7 +247,7 @@ pub const RICH_CONTENT_SECRET_FIRST_CHAR_POSITION_ID: &str =
     "ai_block:rich_content_secret_first_char_position";
 
 pub fn init(app: &mut AppContext) {
-    use warpui::keymap::macros::*;
+    use zterm_ui::keymap::macros::*;
 
     app.register_fixed_bindings([
         FixedBinding::new(
@@ -794,7 +794,7 @@ pub struct AIBlock {
     active_session: ModelHandle<ActiveSession>,
     ambient_agent_view_model: ModelHandle<AmbientAgentViewModel>,
     terminal_view_id: EntityId,
-    window_id: warpui::WindowId,
+    window_id: zterm_ui::WindowId,
 
     /// The current working directory at the time the AI block was created. Note that this
     /// is different from `directory_context`, which represents the directory-related contexts
@@ -2086,7 +2086,7 @@ impl AIBlock {
                         button = button.with_text_and_icon_label(TextAndIcon::new(
                             TextAndIconAlignment::TextFirst,
                             accept_text.clone(),
-                            Icon::CornerDownLeft.to_warpui_icon(appearance.theme().foreground()),
+                            Icon::CornerDownLeft.to_zterm_ui_icon(appearance.theme().foreground()),
                             MainAxisSize::Max,
                             MainAxisAlignment::SpaceBetween,
                             vec2f(
@@ -2128,7 +2128,7 @@ impl AIBlock {
                         button = button.with_text_and_icon_label(TextAndIcon::new(
                             TextAndIconAlignment::TextFirst,
                             reject_text.clone(),
-                            Icon::CornerDownLeft.to_warpui_icon(appearance.theme().foreground()),
+                            Icon::CornerDownLeft.to_zterm_ui_icon(appearance.theme().foreground()),
                             MainAxisSize::Max,
                             MainAxisAlignment::SpaceBetween,
                             vec2f(
@@ -5489,7 +5489,7 @@ pub enum AIBlockEvent {
     #[cfg(feature = "local_fs")]
     OpenDetectedFilePath {
         absolute_path: PathBuf,
-        line_and_column_num: Option<warp_util::path::LineAndColumnArg>,
+        line_and_column_num: Option<zterm_util::path::LineAndColumnArg>,
         target_override: Option<FileTarget>,
     },
     ShowLinkTooltip(RichContentLinkTooltipInfo),
@@ -5660,7 +5660,7 @@ pub enum AIBlockAction {
         is_positive: bool,
     },
     /// Clear the selections of all other views **except** for the source view that dispatched the event.
-    /// The `source_view_id` will be `None` if the event is dispatched by the [`warpui::elements::SelectableArea`]
+    /// The `source_view_id` will be `None` if the event is dispatched by the [`zterm_ui::elements::SelectableArea`]
     /// instead of a nested view (i.e. code block, requested command, etc.), which means all nested views
     /// should have their selections cleared.
     ClearOtherSelections {
@@ -6350,7 +6350,7 @@ impl TypedActionView for AIBlock {
                     });
                     images.push(ui_components::lightbox::LightboxImage {
                         source: ui_components::lightbox::LightboxImageSource::Resolved {
-                            asset_source: warpui::assets::asset_cache::AssetSource::Raw {
+                            asset_source: zterm_ui::assets::asset_cache::AssetSource::Raw {
                                 id: asset_id,
                             },
                         },

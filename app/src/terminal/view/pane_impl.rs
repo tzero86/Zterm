@@ -1,4 +1,4 @@
-//! This module contains the implementation of `BackingView` for `TerminalView`, as well as
+﻿//! This module contains the implementation of `BackingView` for `TerminalView`, as well as
 //! business logic for integrating the terminal view with the pane infra (`crate::pane_group`).
 use super::shared_session::adapter::Kind as SharedSessionKind;
 use super::{Event, PaneConfiguration, TerminalAction, TerminalViewState, Viewer};
@@ -33,19 +33,19 @@ use crate::ui_components::buttons::icon_button_with_color;
 use crate::ui_components::icons;
 use crate::workspace::tab_settings::TabSettings;
 use settings::Setting as _;
-use warp_core::context_flag::ContextFlag;
-use warp_core::ui::Icon as WarpIcon;
-use warpui::elements::{
+use zterm_core::context_flag::ContextFlag;
+use zterm_core::ui::Icon as WarpIcon;
+use zterm_ui::elements::{
     ChildAnchor, ConstrainedBox, CrossAxisAlignment, Flex, MainAxisAlignment, MainAxisSize,
     OffsetPositioning, ParentAnchor, ParentElement, ParentOffsetBounds, Shrinkable, Stack,
 };
-use warpui::prelude::{vec2f, ChildView, Container, Hoverable};
-use warpui::text_layout::ClipConfig;
-use warpui::ui_components::components::UiComponent;
+use zterm_ui::prelude::{vec2f, ChildView, Container, Hoverable};
+use zterm_ui::text_layout::ClipConfig;
+use zterm_ui::ui_components::components::UiComponent;
 #[cfg(not(target_arch = "wasm32"))]
-use warpui::ui_components::components::UiComponentStyles;
-use warpui::WeakModelHandle;
-use warpui::{AppContext, Element, ModelHandle, SingletonEntity, TypedActionView, ViewContext};
+use zterm_ui::ui_components::components::UiComponentStyles;
+use zterm_ui::WeakModelHandle;
+use zterm_ui::{AppContext, Element, ModelHandle, SingletonEntity, TypedActionView, ViewContext};
 
 impl TerminalView {
     /// Returns a reference to the focus handle if one has been set.
@@ -228,7 +228,7 @@ impl TerminalView {
     /// Renders the back button for the pane header, or an empty element if the
     /// back button should not be shown.
     fn maybe_render_header_back_button(&self, app: &AppContext) -> Box<dyn Element> {
-        if !FeatureFlag::AgentView.is_enabled() || warpui::platform::is_mobile_device() {
+        if !FeatureFlag::AgentView.is_enabled() || zterm_ui::platform::is_mobile_device() {
             return Flex::row().finish();
         }
 
@@ -304,7 +304,7 @@ impl TerminalView {
                 Some(
                     ConstrainedBox::new(
                         icons::Icon::Sharing
-                            .to_warpui_icon(shared_session_indicator_color(appearance).into())
+                            .to_zterm_ui_icon(shared_session_indicator_color(appearance).into())
                             .finish(),
                     )
                     .with_height(appearance.ui_font_size())
@@ -772,7 +772,7 @@ impl TerminalView {
         let Some(conversation) =
             BlocklistAIHistoryModel::as_ref(app).conversation(&conversation_id)
         else {
-            return warpui::elements::Empty::new().finish();
+            return zterm_ui::elements::Empty::new().finish();
         };
 
         let appearance = Appearance::as_ref(app);
@@ -800,7 +800,7 @@ impl TerminalView {
                 } else {
                     WarpIcon::Oz
                 }
-                .to_warpui_icon(blended_colors::text_sub(theme, theme.background()).into())
+                .to_zterm_ui_icon(blended_colors::text_sub(theme, theme.background()).into())
                 .finish(),
             )
             .with_height(appearance.ui_font_size())
@@ -828,7 +828,7 @@ impl TerminalView {
             return Some(
                 ConstrainedBox::new(
                     icons::Icon::AlertTriangle
-                        .to_warpui_icon(appearance.theme().ui_error_color().into())
+                        .to_zterm_ui_icon(appearance.theme().ui_error_color().into())
                         .finish(),
                 )
                 .with_height(font_size)
@@ -841,7 +841,7 @@ impl TerminalView {
         if let Some(shell_indicator_type) = self.shell_indicator_type {
             let shell_indicator_icon = shell_indicator_type
                 .to_icon()
-                .to_warpui_icon(
+                .to_zterm_ui_icon(
                     blended_colors::text_sub(appearance.theme(), appearance.theme().background())
                         .into(),
                 )
@@ -871,7 +871,7 @@ impl TerminalView {
                 .clone(),
             move |state| {
                 let mut stack = Stack::new().with_child(
-                    ConstrainedBox::new(icons::Icon::OzCloud.to_warpui_icon(icon_color).finish())
+                    ConstrainedBox::new(icons::Icon::OzCloud.to_zterm_ui_icon(icon_color).finish())
                         .with_height(font_size * 1.5)
                         .with_width(font_size * 1.5)
                         .finish(),

@@ -1,4 +1,4 @@
----
+﻿---
 name: fix-errors
 description: Fix compilation errors, linting issues, and test failures in the warp Rust codebase. Covers presubmit checks, WASM-specific errors, and running specific tests. Use when the user hits build errors, clippy or fmt failures, test failures, or needs to run or interpret presubmit before a PR.
 ---
@@ -39,8 +39,8 @@ cargo fmt -- --check
 
 **Clippy (full workspace):**
 ```bash
-cargo clippy --workspace --exclude warp_completer --all-targets --all-features --tests -- -D warnings
-cargo clippy -p warp_completer --all-targets --tests -- -D warnings
+cargo clippy --workspace --exclude zterm_completer --all-targets --all-features --tests -- -D warnings
+cargo clippy -p zterm_completer --all-targets --tests -- -D warnings
 ```
 
 **WASM Clippy:**
@@ -50,13 +50,13 @@ cargo clippy --target wasm32-unknown-unknown --profile release-wasm-debug_assert
 
 **Objective-C/C/C++ formatting:**
 ```bash
-./script/run-clang-format.py -r --extensions 'c,h,cpp,m' ./crates/warpui/src/ ./app/src/
+./script/run-clang-format.py -r --extensions 'c,h,cpp,m' ./crates/zterm_ui/src/ ./app/src/
 ```
 
 **All tests:**
 ```bash
 cargo nextest run --no-fail-fast --workspace --exclude command-signatures-v2
-cargo nextest run -p warp_completer --features v2
+cargo nextest run -p zterm_completer --features v2
 ```
 
 **Doc tests:**

@@ -1,6 +1,6 @@
-use pathfinder_geometry::vector::vec2f;
-use warp_core::ui::{self, appearance::Appearance, color::blend::Blend as _};
-use warpui::{
+﻿use pathfinder_geometry::vector::vec2f;
+use zterm_core::ui::{self, appearance::Appearance, color::blend::Blend as _};
+use zterm_ui::{
     elements::{
         Align, ChildView, ConstrainedBox, Container, CornerRadius, CrossAxisAlignment, Flex, Icon,
         MainAxisAlignment, MainAxisSize, MouseStateHandle, ParentElement as _, Radius,
@@ -34,7 +34,7 @@ use crate::{
 };
 
 pub fn init(app: &mut AppContext) {
-    use warpui::keymap::macros::*;
+    use zterm_ui::keymap::macros::*;
 
     app.register_editable_bindings([EditableBinding::new(
         "workspace:new_tab",
@@ -286,7 +286,7 @@ impl GetStartedView {
                             keybinding_name_to_display_string("workspace:new_tab", app)
                                 .unwrap_or_default()
                         ),
-                        ui::Icon::Terminal.to_warpui_icon(theme.foreground()),
+                        ui::Icon::Terminal.to_zterm_ui_icon(theme.foreground()),
                         MainAxisSize::Min,
                         MainAxisAlignment::Center,
                         vec2f(16., 16.),

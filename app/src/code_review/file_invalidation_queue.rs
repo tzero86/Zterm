@@ -1,8 +1,8 @@
-use std::future::Future;
+﻿use std::future::Future;
 use std::path::PathBuf;
 use std::pin::Pin;
 
-use warp_core::sync_queue::{IsTransientError, SyncQueueTaskTrait};
+use zterm_core::sync_queue::{IsTransientError, SyncQueueTaskTrait};
 
 use super::diff_state::{DiffMode, DiffStateModel, FileDiffAndContent};
 

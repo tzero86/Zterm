@@ -1,12 +1,12 @@
-use std::collections::HashSet;
+﻿use std::collections::HashSet;
 use std::sync::LazyLock;
 
 use pathfinder_color::ColorU;
-use warp_core::ui::appearance::Appearance;
-use warp_core::ui::theme::color::internal_colors;
-use warp_core::ui::theme::Fill;
-use warpui::elements::{ChildView, MainAxisSize};
-use warpui::{
+use zterm_core::ui::appearance::Appearance;
+use zterm_core::ui::theme::color::internal_colors;
+use zterm_core::ui::theme::Fill;
+use zterm_ui::elements::{ChildView, MainAxisSize};
+use zterm_ui::{
     AppContext, Element, Entity, EntityId, ModelHandle, SingletonEntity as _, View, ViewContext,
     ViewHandle,
 };
@@ -488,7 +488,7 @@ impl View for InlineModelSelectorView {
         "InlineModelSelectorView"
     }
 
-    fn render(&self, _app: &warpui::AppContext) -> Box<dyn Element> {
+    fn render(&self, _app: &zterm_ui::AppContext) -> Box<dyn Element> {
         ChildView::new(&self.menu_view).finish()
     }
 }

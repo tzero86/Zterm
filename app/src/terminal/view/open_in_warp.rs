@@ -1,4 +1,4 @@
-use std::{
+﻿use std::{
     collections::HashSet,
     path::{Path, PathBuf},
     sync::Arc,
@@ -6,8 +6,8 @@ use std::{
 
 use itertools::Itertools;
 use lazy_static::lazy_static;
-use warp_util::path::EscapeChar;
-use warpui::{
+use zterm_util::path::EscapeChar;
+use zterm_ui::{
     accessibility::{AccessibilityContent, ActionAccessibilityContent, WarpA11yRole},
     SingletonEntity, ViewContext,
 };
@@ -25,7 +25,7 @@ use crate::{
     util::openable_file_type::{is_file_openable_in_warp, OpenableFileType},
 };
 use settings::Setting as _;
-use warp_completer::{
+use zterm_completer::{
     completer::TopLevelCommandCaseSensitivity,
     parsers::{
         classify_command,

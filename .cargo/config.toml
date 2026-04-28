@@ -8,6 +8,11 @@
 # `script/bundle`.
 MACOSX_DEPLOYMENT_TARGET = "10.14"
 
+# Protocol Buffers compiler - required by remote_server and warp-proto-apis build scripts.
+# Update this path if protoc is installed elsewhere on your system.
+# On Windows: installed via `winget install Google.Protobuf`
+PROTOC = { value = "C:\\Users\\Zero\\AppData\\Local\\Microsoft\\WinGet\\Packages\\Google.Protobuf_Microsoft.Winget.Source_8wekyb3d8bbwe\\bin\\protoc.exe", force = false }
+
 [build]
 rustflags = ["-C", "symbol-mangling-version=v0", "-C", "link-args=-Wl,-headerpad_max_install_names"]
 

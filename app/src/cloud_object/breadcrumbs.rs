@@ -1,9 +1,9 @@
 use super::{CloudObject, Space};
 use crate::{
-    drive::{folders::CloudFolder, items::WarpDriveItemId, CloudObjectTypeAndId},
+    drive::{folders::CloudFolder, items::ZtermDriveItemId, CloudObjectTypeAndId},
     ui_components::breadcrumb::Breadcrumb,
 };
-use warpui::AppContext;
+use zterm_ui::AppContext;
 
 // Encapsulates an object that can contain other objects, and keeps
 // information necessary to show breadcrumbs.
@@ -48,10 +48,10 @@ pub enum ContainingObjectKind {
 }
 
 impl ContainingObjectKind {
-    pub fn into_item_id(self) -> WarpDriveItemId {
+    pub fn into_item_id(self) -> ZtermDriveItemId {
         match self {
-            ContainingObjectKind::Space(space) => WarpDriveItemId::Space(space),
-            ContainingObjectKind::Object(object) => WarpDriveItemId::Object(object),
+            ContainingObjectKind::Space(space) => ZtermDriveItemId::Space(space),
+            ContainingObjectKind::Object(object) => ZtermDriveItemId::Object(object),
         }
     }
 }

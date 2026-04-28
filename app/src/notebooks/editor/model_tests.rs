@@ -37,21 +37,21 @@ use markdown_parser::{
 use pathfinder_geometry::vector::Vector2F;
 use string_offset::CharOffset;
 use vec1::vec1;
-use warp_core::features::FeatureFlag;
-use warp_editor::content::buffer::{AutoScrollBehavior, BufferSelectAction, SelectionOffsets};
-use warp_editor::content::text::{BlockType, BufferBlockStyle, CodeBlockType, TextStyles};
-use warp_editor::model::{CoreEditorModel, RichTextEditorModel};
-use warp_editor::render::model::viewport::SizeInfo;
-use warp_editor::render::model::BlockItem;
-use warp_editor::render::model::RenderEvent;
-use warp_editor::selection::{TextDirection, TextUnit};
-use warpui::elements::ListIndentLevel;
-use warpui::platform::WindowStyle;
-use warpui::presenter::ChildView;
-use warpui::r#async::{block_on, FutureId};
-use warpui::text::word_boundaries::WordBoundariesPolicy;
-use warpui::{r#async::Timer, App, Entity, ModelHandle, SingletonEntity, TypedActionView};
-use warpui::{AddSingletonModel, AppContext, Element, View, ViewHandle};
+use zterm_core::features::FeatureFlag;
+use zterm_editor::content::buffer::{AutoScrollBehavior, BufferSelectAction, SelectionOffsets};
+use zterm_editor::content::text::{BlockType, BufferBlockStyle, CodeBlockType, TextStyles};
+use zterm_editor::model::{CoreEditorModel, RichTextEditorModel};
+use zterm_editor::render::model::viewport::SizeInfo;
+use zterm_editor::render::model::BlockItem;
+use zterm_editor::render::model::RenderEvent;
+use zterm_editor::selection::{TextDirection, TextUnit};
+use zterm_ui::elements::ListIndentLevel;
+use zterm_ui::platform::WindowStyle;
+use zterm_ui::presenter::ChildView;
+use zterm_ui::r#async::{block_on, FutureId};
+use zterm_ui::text::word_boundaries::WordBoundariesPolicy;
+use zterm_ui::{r#async::Timer, App, Entity, ModelHandle, SingletonEntity, TypedActionView};
+use zterm_ui::{AddSingletonModel, AppContext, Element, View, ViewHandle};
 
 /// Container for a [`RichTextEditorView`] in unit tests.
 struct TestView {
@@ -67,7 +67,7 @@ impl View for TestView {
         "TestView"
     }
 
-    fn render(&self, _app: &warpui::AppContext) -> Box<dyn warpui::Element> {
+    fn render(&self, _app: &zterm_ui::AppContext) -> Box<dyn zterm_ui::Element> {
         ChildView::new(&self.editor).finish()
     }
 }

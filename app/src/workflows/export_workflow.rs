@@ -1,4 +1,4 @@
-use serde::{
+﻿use serde::{
     de::{self, MapAccess, Visitor},
     ser::SerializeStruct,
     Deserialize, Deserializer, Serialize, Serializer,
@@ -6,7 +6,7 @@ use serde::{
 use serde_yaml::Value;
 use strum::VariantNames as _;
 use strum_macros::{Display, EnumString, VariantNames};
-use warpui::{AppContext, SingletonEntity};
+use zterm_ui::{AppContext, SingletonEntity};
 
 use std::{collections::HashMap, fmt, result::Result, str::FromStr};
 

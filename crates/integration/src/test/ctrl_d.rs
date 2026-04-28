@@ -15,7 +15,7 @@ use warp::{
     terminal::{model::bootstrap::BootstrapStage, shell::ShellType, TerminalView},
     workspace::Workspace,
 };
-use warpui::integration::TestStep;
+use zterm_ui::integration::TestStep;
 
 use super::{new_builder, Builder};
 use crate::util::write_all_rc_files_for_test;

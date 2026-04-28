@@ -1,4 +1,4 @@
-use crate::appearance::Appearance;
+﻿use crate::appearance::Appearance;
 use crate::drive::cloud_object_styling::warp_drive_icon_color;
 use crate::drive::DriveObjectType;
 use crate::features::FeatureFlag;
@@ -14,13 +14,13 @@ use fuzzy_match::FuzzyMatchResult;
 use ordered_float::OrderedFloat;
 use pathfinder_color::ColorU;
 use std::sync::Arc;
-use warpui::elements::{
+use zterm_ui::elements::{
     Align, ConstrainedBox, Container, Flex, Highlight, ParentElement, Shrinkable, Text,
 };
-use warpui::fonts::{Properties, Weight};
-use warpui::keymap::{DescriptionContext, Keystroke};
-use warpui::ui_components::components::UiComponent;
-use warpui::{AppContext, Element, SingletonEntity};
+use zterm_ui::fonts::{Properties, Weight};
+use zterm_ui::keymap::{DescriptionContext, Keystroke};
+use zterm_ui::ui_components::components::UiComponent;
+use zterm_ui::{AppContext, Element, SingletonEntity};
 
 /// A matched binding from a search query.
 #[derive(Debug)]
@@ -211,7 +211,7 @@ impl SearchItemIcon for BindingGroup {
             | Self::Terminal
             | Self::Notifications => appearance.theme().foreground().into_solid(),
             Self::WarpAi if !FeatureFlag::AgentMode.is_enabled() => {
-                ColorU::from_u32(colors::WARP_AI)
+                ColorU::from_u32(colors::ZTERM_AI)
             }
             Self::WarpAi => appearance.theme().foreground().into_solid(),
             Self::Workflow => warp_drive_icon_color(appearance, DriveObjectType::Workflow),

@@ -1,7 +1,7 @@
-use pathfinder_geometry::vector::vec2f;
+﻿use pathfinder_geometry::vector::vec2f;
 use session_sharing_protocol::sharer::SessionSourceType;
 
-use warpui::App;
+use zterm_ui::App;
 
 use crate::context_chips::prompt_type::PromptType;
 

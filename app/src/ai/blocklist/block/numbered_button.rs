@@ -1,7 +1,7 @@
-use crate::context_chips::spacing;
-use warp_core::ui::appearance::Appearance;
-use warp_core::ui::theme::color::internal_colors;
-use warpui::{
+﻿use crate::context_chips::spacing;
+use zterm_core::ui::appearance::Appearance;
+use zterm_core::ui::theme::color::internal_colors;
+use zterm_ui::{
     elements::{
         Border, Container, CornerRadius, CrossAxisAlignment, Expanded, Flex, FormattedTextElement,
         MainAxisSize, MouseStateHandle, ParentElement, Radius, Shrinkable, Text,
@@ -176,5 +176,5 @@ pub(super) fn build_text_button_content(
 pub(super) fn build_inline_input_content(
     input_view: &ViewHandle<CompactAgentInput>,
 ) -> Box<dyn Element> {
-    warpui::presenter::ChildView::new(input_view).finish()
+    zterm_ui::presenter::ChildView::new(input_view).finish()
 }

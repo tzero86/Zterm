@@ -1,6 +1,6 @@
-use std::{collections::HashMap, ffi::OsString};
+﻿use std::{collections::HashMap, ffi::OsString};
 
-use warpui::{EntityId, SingletonEntity, ViewContext, ViewHandle};
+use zterm_ui::{EntityId, SingletonEntity, ViewContext, ViewHandle};
 
 use crate::ai::agent::conversation::{AIConversationId, ConversationStatus};
 use crate::ai::blocklist::agent_view::AgentViewEntryOrigin;

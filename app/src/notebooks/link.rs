@@ -10,8 +10,8 @@ use std::{
 
 use futures_util::future::Either;
 use url::Url;
-use warp_util::path::{CleanPathResult, LineAndColumnArg};
-use warpui::{
+use zterm_util::path::{CleanPathResult, LineAndColumnArg};
+use zterm_ui::{
     r#async::SpawnedFutureHandle, AppContext, Entity, ModelContext, ModelHandle, SingletonEntity,
     WindowId,
 };
@@ -21,7 +21,7 @@ use crate::util::file::external_editor::EditorSettings;
 #[cfg(feature = "local_fs")]
 use crate::util::openable_file_type::{is_supported_image_file, resolve_file_target, FileTarget};
 use crate::{
-    drive::OpenWarpDriveObjectArgs,
+    drive::OpenZtermDriveObjectArgs,
     terminal::model::session::Session,
     uri::parse_url_paths::{get_item_data_from_warp_link, WarpWebLink},
     workspace::ActiveSession,
@@ -266,7 +266,7 @@ impl NotebookLinks {
         match link {
             LinkTarget::Url(url) => {
                 if let Some(WarpWebLink::DriveObject(args)) = get_item_data_from_warp_link(&url) {
-                    return ctx.emit(LinkEvent::OpenWarpDriveLink {
+                    return ctx.emit(LinkEvent::OpenZtermDriveLink {
                         open_warp_drive_args: *args,
                     });
                 }
@@ -409,8 +409,8 @@ pub enum LinkEvent {
         path: PathBuf,
         session: Arc<Session>,
     },
-    OpenWarpDriveLink {
-        open_warp_drive_args: OpenWarpDriveObjectArgs,
+    OpenZtermDriveLink {
+        open_warp_drive_args: OpenZtermDriveObjectArgs,
     },
     /// This event tells the parent pane group to open a new terminal session in the given
     /// directory.

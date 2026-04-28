@@ -1,4 +1,4 @@
-mod assertions;
+﻿mod assertions;
 pub mod llm_judge;
 mod step;
 mod user_defaults;
@@ -15,9 +15,9 @@ pub use assertions::*;
 pub use step::*;
 pub use user_defaults::*;
 pub use util::*;
-use warpui::integration::PersistedDataMap;
-pub use warpui::integration::RUNTIME_TAG_FAILURE_REASON;
-use warpui::{App, SingletonEntity as _, WindowId};
+use zterm_ui::integration::PersistedDataMap;
+pub use zterm_ui::integration::RUNTIME_TAG_FAILURE_REASON;
+use zterm_ui::{App, SingletonEntity as _, WindowId};
 
 pub const TOTAL_REQUEST_COST_PREFIX: &str = "Total request cost: ";
 pub const TOTAL_EXCHANGES_PREFIX: &str = "Total number of exchanges: ";

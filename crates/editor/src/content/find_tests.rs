@@ -4,7 +4,7 @@ use futures_lite::future;
 use itertools::Itertools;
 use rangemap::RangeSet;
 use sum_tree::SumTree;
-use warpui::App;
+use zterm_ui::App;
 
 use crate::content::{
     buffer::Buffer,

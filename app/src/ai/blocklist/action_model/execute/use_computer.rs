@@ -1,6 +1,6 @@
-use ai::agent::action_result::AIAgentActionResultType;
+﻿use ai::agent::action_result::AIAgentActionResultType;
 use futures::{future::BoxFuture, FutureExt};
-use warpui::{Entity, ModelContext};
+use zterm_ui::{Entity, ModelContext};
 
 use crate::ai::agent::{AIAgentActionType, UseComputerResult};
 

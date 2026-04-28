@@ -1,6 +1,6 @@
-use std::collections::VecDeque;
+﻿use std::collections::VecDeque;
 
-use warpui::{Entity, ModelContext};
+use zterm_ui::{Entity, ModelContext};
 
 #[derive(Clone, Copy, Debug)]
 pub enum QueuedQueryOrigin {

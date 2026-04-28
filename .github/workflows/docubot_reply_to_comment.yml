@@ -1,4 +1,4 @@
-name: "Run Docubot on @docubot mention"
+﻿name: "Run Docubot on @docubot mention"
 on:
   # These triggers are currently disabled because they cause workflow runs for ALL
   # comments in the org, even though the job only executes when @docubot is mentioned,
@@ -63,7 +63,7 @@ jobs:
         uses: ./.github/actions/docubot
         with:
           prompt: ${{ github.event.comment.body || inputs.prompt}}
-          warp_api_key: ${{ secrets.WARP_DEV_API_KEY }}
+          warp_api_key: ${{ secrets.ZTERM_DEV_API_KEY }}
           warp_channel: ${{ inputs.warp_channel || 'dev' }}
-          profile_id: ${{ inputs.profile_id || vars.WARP_DEV_API_PROFILE_ID }}
+          profile_id: ${{ inputs.profile_id || vars.ZTERM_DEV_API_PROFILE_ID }}
           github_token: ${{ secrets.PEI_GH_TOKEN_PLS_DEL }}

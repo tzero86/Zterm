@@ -1,6 +1,6 @@
 use std::ops::Range;
 
-use warpui::{
+use zterm_ui::{
     AfterLayoutContext, AppContext, Element, EventContext, LayoutContext, ModelHandle,
     PaintContext, SizeConstraint, WeakViewHandle,
     elements::Point,

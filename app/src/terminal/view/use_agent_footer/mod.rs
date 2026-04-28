@@ -12,23 +12,23 @@ use crate::terminal::cli_agent_sessions::{CLIAgentInputEntrypoint, CLIAgentSessi
 use crate::terminal::shared_session::{SharedSessionActionSource, SharedSessionScrollbackType};
 use base64::Engine;
 use session_sharing_protocol::sharer::SessionSourceType;
-use warpui::clipboard::{ClipboardContent, ImageData};
+use zterm_ui::clipboard::{ClipboardContent, ImageData};
 mod warpify_footer;
 
 pub use crate::terminal::CLIAgent;
-use warpify_footer::{WarpifyFooterView, WarpifyFooterViewEvent};
+use warpify_footer::{ZtermifyFooterView, ZtermifyFooterViewEvent};
 
 use std::sync::{Arc, LazyLock};
 use std::time::Duration;
 
-use warpui::r#async::Timer;
+use zterm_ui::r#async::Timer;
 
 use crate::code_review::diff_state::GitDeltaPreference;
 use crate::code_review::telemetry_event::CodeReviewPaneEntrypoint;
 use anyhow::anyhow;
 use parking_lot::FairMutex;
 use pathfinder_color::ColorU;
-use warp_core::{
+use zterm_core::{
     features::FeatureFlag,
     report_error, send_telemetry_from_ctx,
     settings::Setting,
@@ -41,7 +41,7 @@ use warp_core::{
     },
 };
 
-use warpui::{
+use zterm_ui::{
     elements::{
         ChildView, Container, CrossAxisAlignment, Empty, Expanded, Flex, MainAxisSize,
         ParentElement,
@@ -70,7 +70,7 @@ use crate::{
     },
 };
 
-use warp_terminal::model::escape_sequences::{BRACKETED_PASTE_END, BRACKETED_PASTE_START};
+use zterm_terminal::model::escape_sequences::{BRACKETED_PASTE_END, BRACKETED_PASTE_START};
 
 use super::{RichContentInsertionPosition, TerminalAction, TerminalView};
 use crate::terminal::view::block_banner::WarpificationMode;
@@ -256,18 +256,18 @@ impl TerminalView {
             UseAgentToolbarEvent::HideRichInput => {
                 self.close_cli_agent_rich_input_and_disable_auto_toggle(ctx);
             }
-            UseAgentToolbarEvent::Warpify { mode } => {
+            UseAgentToolbarEvent::Ztermify { mode } => {
                 self.hide_use_agent_footer_in_blocklist(ctx);
                 match mode {
                     WarpificationMode::Ssh { .. } => {
-                        self.handle_action(&TerminalAction::WarpifySSHSession, ctx);
+                        self.handle_action(&TerminalAction::ZtermifySSHSession, ctx);
                     }
                     WarpificationMode::Subshell { .. } => {
                         self.handle_action(&TerminalAction::TriggerSubshellBootstrap, ctx);
                     }
                 }
                 send_telemetry_from_ctx!(
-                    TelemetryEvent::WarpifyFooterAcceptedWarpify {
+                    TelemetryEvent::ZtermifyFooterAcceptedZtermify {
                         is_ssh: mode.is_ssh()
                     },
                     ctx
@@ -945,8 +945,8 @@ pub struct UseAgentToolbar {
     // Shared agent input footer (renders CLI agent mode when a CLI session is active).
     agent_input_footer: ViewHandle<AgentInputFooter>,
 
-    // Warpify footer UI (shown when a subshell/SSH command is detected).
-    warpify_footer_view: ViewHandle<WarpifyFooterView>,
+    // Ztermify footer UI (shown when a subshell/SSH command is detected).
+    warpify_footer_view: ViewHandle<ZtermifyFooterView>,
 
     // `true` if the user has dismissed the footer.
     //
@@ -1020,7 +1020,7 @@ impl UseAgentToolbar {
         });
 
         let warpify_footer_view =
-            ctx.add_typed_action_view(|ctx| WarpifyFooterView::new(terminal_model.clone(), ctx));
+            ctx.add_typed_action_view(|ctx| ZtermifyFooterView::new(terminal_model.clone(), ctx));
 
         ctx.subscribe_to_view(&warpify_footer_view, |me, _, event, ctx| {
             me.handle_warpify_footer_event(event, ctx);
@@ -1098,17 +1098,17 @@ impl UseAgentToolbar {
 
     fn handle_warpify_footer_event(
         &mut self,
-        event: &WarpifyFooterViewEvent,
+        event: &ZtermifyFooterViewEvent,
         ctx: &mut ViewContext<Self>,
     ) {
         match event {
-            WarpifyFooterViewEvent::Warpify { mode } => {
-                ctx.emit(UseAgentToolbarEvent::Warpify { mode: mode.clone() });
+            ZtermifyFooterViewEvent::Ztermify { mode } => {
+                ctx.emit(UseAgentToolbarEvent::Ztermify { mode: mode.clone() });
             }
-            WarpifyFooterViewEvent::UseAgent => {
+            ZtermifyFooterViewEvent::UseAgent => {
                 ctx.emit(UseAgentToolbarEvent::UseAgent);
             }
-            WarpifyFooterViewEvent::Dismiss => {
+            ZtermifyFooterViewEvent::Dismiss => {
                 ctx.emit(UseAgentToolbarEvent::Dismiss);
             }
         }
@@ -1193,7 +1193,7 @@ pub enum UseAgentToolbarEvent {
     /// Hide the rich input editor (same as Escape).
     HideRichInput,
     /// User chose to warpify the subshell/SSH session.
-    Warpify { mode: WarpificationMode },
+    Ztermify { mode: WarpificationMode },
     /// User chose to use the agent.
     UseAgent,
 }

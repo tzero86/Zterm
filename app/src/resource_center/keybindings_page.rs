@@ -1,10 +1,10 @@
-use enum_iterator::{all, Sequence};
+﻿use enum_iterator::{all, Sequence};
 use itertools::{Either, Itertools};
-use warpui::elements::CornerRadius;
-use warpui::presenter::ChildView;
-use warpui::units::Pixels;
-use warpui::FocusContext;
-use warpui::{
+use zterm_ui::elements::CornerRadius;
+use zterm_ui::presenter::ChildView;
+use zterm_ui::units::Pixels;
+use zterm_ui::FocusContext;
+use zterm_ui::{
     elements::{
         Align, Border, ClippedScrollStateHandle, ClippedScrollable, ConstrainedBox, Container,
         CrossAxisAlignment, Element, Fill, Flex, MainAxisSize, MouseStateHandle, ParentElement,
@@ -25,7 +25,7 @@ use crate::{
     util::bindings::filter_bindings_including_keystroke,
     workspace::WorkspaceAction,
 };
-use warpui::ModelHandle;
+use zterm_ui::ModelHandle;
 
 use crate::{
     editor::{

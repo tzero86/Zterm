@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+﻿use std::collections::HashMap;
 
 use crate::ai::mcp::templatable_installation::{VariableType, VariableValue};
 use crate::appearance::Appearance;
@@ -11,11 +11,11 @@ use crate::settings_view::mcp_servers::style::{
 };
 use crate::view_components::dropdown::{Dropdown, DropdownItem};
 use markdown_parser::parse_markdown;
-use warpui::elements::Shrinkable;
-use warpui::fonts::{Properties, Weight};
-use warpui::ui_components::button::ButtonVariant;
-use warpui::ui_components::components::{Coords, UiComponent, UiComponentStyles};
-use warpui::{
+use zterm_ui::elements::Shrinkable;
+use zterm_ui::fonts::{Properties, Weight};
+use zterm_ui::ui_components::button::ButtonVariant;
+use zterm_ui::ui_components::components::{Coords, UiComponent, UiComponentStyles};
+use zterm_ui::{
     elements::{
         Align, Border, ChildView, ConstrainedBox, Container, CrossAxisAlignment, Empty, Flex,
         FormattedTextElement, HighlightedHyperlink, Hoverable, MainAxisAlignment, MouseStateHandle,
@@ -24,7 +24,7 @@ use warpui::{
     platform::Cursor,
     AppContext, Element, Entity, FocusContext, TypedActionView, View, ViewHandle,
 };
-use warpui::{SingletonEntity, ViewContext};
+use zterm_ui::{SingletonEntity, ViewContext};
 
 use crate::ai::mcp::{TemplatableMCPServer, TemplatableMCPServerManager, TemplateVariable};
 
@@ -32,9 +32,9 @@ use crate::ui_components::{
     avatar::{Avatar, AvatarContent},
     blended_colors,
 };
-use warpui::elements::{CornerRadius, Padding, Radius};
+use zterm_ui::elements::{CornerRadius, Padding, Radius};
 
-use warp_core::ui::{
+use zterm_core::ui::{
     color::coloru_with_opacity, external_product_icon::ExternalProductIcon, icons::Icon,
 };
 
@@ -269,7 +269,7 @@ impl InstallationModalBody {
                     let mut icon = Container::new(
                         ConstrainedBox::new(
                             Icon::X
-                                .to_warpui_icon(theme.active_ui_text_color())
+                                .to_zterm_ui_icon(theme.active_ui_text_color())
                                 .finish(),
                         )
                         .with_width(16.)
@@ -411,7 +411,7 @@ impl InstallationModalBody {
     fn render_source_indicator(is_shared: bool, appearance: &Appearance) -> Box<dyn Element> {
         let info_icon = ConstrainedBox::new(
             Icon::Info
-                .to_warpui_icon(appearance.theme().disabled_ui_text_color())
+                .to_zterm_ui_icon(appearance.theme().disabled_ui_text_color())
                 .finish(),
         )
         .with_width(16.)
@@ -462,7 +462,7 @@ impl InstallationModalBody {
         let corner_down_left_icon = Container::new(
             ConstrainedBox::new(
                 Icon::CornerDownLeft
-                    .to_warpui_icon(appearance.theme().active_ui_text_color())
+                    .to_zterm_ui_icon(appearance.theme().active_ui_text_color())
                     .finish(),
             )
             .with_width(appearance.monospace_font_size())

@@ -1,4 +1,4 @@
-use crate::cloud_object::model::actions::{
+﻿use crate::cloud_object::model::actions::{
     ObjectAction, ObjectActionHistory, ObjectActionSubtype, ObjectActionType,
 };
 use crate::cloud_object::model::generic_string_model::GenericStringObjectId;
@@ -27,8 +27,8 @@ use chrono::{DateTime, Duration, Utc};
 use firebase::FirebaseError;
 use itertools::Itertools;
 use std::sync::Arc;
-use warp_server_client::cloud_object::ServerPermissions;
-use warpui::{r#async::Timer, App, Entity, ModelHandle, SingletonEntity};
+use zterm_server_client::cloud_object::ServerPermissions;
+use zterm_ui::{r#async::Timer, App, Entity, ModelHandle, SingletonEntity};
 
 #[cfg(test)]
 use crate::server::server_api::object::MockObjectClient;

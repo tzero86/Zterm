@@ -30,34 +30,34 @@ use itertools::Itertools;
 use ordered_float::OrderedFloat;
 use serde_json::json;
 use std::{any::Any, sync::Arc};
-use warp_core::ui::builder;
-use warpui::{
+use zterm_core::ui::builder;
+use zterm_ui::{
     elements::{ConstrainedBox, Container, Text},
     AppContext, Element, SingletonEntity,
 };
 
-const OPEN_WARP_AI_ITEM_BODY_TEXT: &str = "Ask Warp AI for command suggestions";
-const TRANSLATE_WITH_WARP_AI_ITEM_BODY_TEXT: &str = "Translate into shell command using Warp AI";
+const OPEN_ZTERM_AI_ITEM_BODY_TEXT: &str = "Ask Warp AI for command suggestions";
+const TRANSLATE_WITH_ZTERM_AI_ITEM_BODY_TEXT: &str = "Translate into shell command using Zterm AI";
 
 #[derive(Clone, Debug)]
-pub enum WarpAISearchItem {
+pub enum ZtermAISearchItem {
     /// Translates the query within command search.
     Translate,
 
-    /// Opens WarpAI with the query.
+    /// Opens ZtermAI with the query.
     Open,
 }
 
-impl WarpAISearchItem {
+impl ZtermAISearchItem {
     fn item_body_text(&self) -> &'static str {
         match self {
-            WarpAISearchItem::Translate => TRANSLATE_WITH_WARP_AI_ITEM_BODY_TEXT,
-            WarpAISearchItem::Open => OPEN_WARP_AI_ITEM_BODY_TEXT,
+            ZtermAISearchItem::Translate => TRANSLATE_WITH_ZTERM_AI_ITEM_BODY_TEXT,
+            ZtermAISearchItem::Open => OPEN_ZTERM_AI_ITEM_BODY_TEXT,
         }
     }
 }
 
-impl SearchItem for WarpAISearchItem {
+impl SearchItem for ZtermAISearchItem {
     type Action = CommandSearchItemAction;
 
     fn render_icon(
@@ -75,7 +75,7 @@ impl SearchItem for WarpAISearchItem {
 
         let icon = if FeatureFlag::AgentMode.is_enabled() {
             UIIcon::Oz
-                .to_warpui_icon(
+                .to_zterm_ui_icon(
                     appearance
                         .theme()
                         .main_text_color(appearance.theme().accent()),
@@ -86,7 +86,7 @@ impl SearchItem for WarpAISearchItem {
                 item_background_color.into_solid(),
                 MinimumAllowedContrast::NonText,
             );
-            UIIcon::AiAssistant.to_warpui_icon(color.into()).finish()
+            UIIcon::AiAssistant.to_zterm_ui_icon(color.into()).finish()
         };
 
         Container::new(
@@ -127,15 +127,15 @@ impl SearchItem for WarpAISearchItem {
 
     fn accept_result(&self) -> CommandSearchItemAction {
         match self {
-            WarpAISearchItem::Translate => CommandSearchItemAction::TranslateUsingWarpAI,
-            WarpAISearchItem::Open => CommandSearchItemAction::OpenWarpAI,
+            ZtermAISearchItem::Translate => CommandSearchItemAction::TranslateUsingZtermAI,
+            ZtermAISearchItem::Open => CommandSearchItemAction::OpenZtermAI,
         }
     }
 
     fn execute_result(&self) -> CommandSearchItemAction {
         match self {
-            WarpAISearchItem::Translate => CommandSearchItemAction::TranslateUsingWarpAI,
-            WarpAISearchItem::Open => CommandSearchItemAction::OpenWarpAI,
+            ZtermAISearchItem::Translate => CommandSearchItemAction::TranslateUsingZtermAI,
+            ZtermAISearchItem::Open => CommandSearchItemAction::OpenZtermAI,
         }
     }
 
@@ -146,17 +146,17 @@ impl SearchItem for WarpAISearchItem {
 
 /// The Warp AI data source provides two different types of results:
 /// - synchronous: the synchronous result provided by this data source is a
-///   single item that opens/translates using Warp AI when selected.
+///   single item that opens/translates using Zterm AI when selected.
 /// - asynchronous: the asynchronous results are AI generated workflows
 /// In most cases, the data source should be registered _twice_: once as a sync source
 /// and once as an async source. That way, the mixer will treat these as two separate
 /// data sources.
-pub struct WarpAIDataSource {
+pub struct ZtermAIDataSource {
     ai_client: Arc<dyn AIClient>,
     ai_execution_context: Option<WarpAiExecutionContext>,
 }
 
-impl WarpAIDataSource {
+impl ZtermAIDataSource {
     pub fn new(
         ai_client: Arc<dyn AIClient>,
         ai_execution_context: Option<WarpAiExecutionContext>,
@@ -168,7 +168,7 @@ impl WarpAIDataSource {
     }
 }
 
-impl SyncDataSource for WarpAIDataSource {
+impl SyncDataSource for ZtermAIDataSource {
     type Action = CommandSearchItemAction;
 
     fn run_query(
@@ -177,17 +177,17 @@ impl SyncDataSource for WarpAIDataSource {
         _app: &AppContext,
     ) -> Result<Vec<QueryResult<Self::Action>>, DataSourceRunErrorWrapper> {
         if query.filters.is_empty() {
-            Ok(vec![WarpAISearchItem::Translate.into()])
+            Ok(vec![ZtermAISearchItem::Translate.into()])
         } else {
             // Since the query matched, the `#` filter must be applied in this case.
-            Ok(vec![WarpAISearchItem::Open.into()])
+            Ok(vec![ZtermAISearchItem::Open.into()])
         }
     }
 }
 
 #[cfg_attr(not(target_family = "wasm"), async_trait)]
 #[cfg_attr(target_family = "wasm", async_trait(?Send))]
-impl AsyncDataSource for WarpAIDataSource {
+impl AsyncDataSource for ZtermAIDataSource {
     type Action = CommandSearchItemAction;
 
     fn run_query(
@@ -219,7 +219,7 @@ impl AsyncDataSource for WarpAIDataSource {
                                         origin: AIWorkflowOrigin::CommandSearch,
                                     },
                                 )),
-                                source: WorkflowSource::WarpAI,
+                                source: WorkflowSource::ZtermAI,
                                 fuzzy_matched_workflow: FuzzyMatchWorkflowResult::no_match(),
                             }
                             .into()

@@ -1,6 +1,6 @@
 use crate::appearance::Appearance;
 use crate::debounce::debounce;
-use crate::drive::settings::WarpDriveSettings;
+use crate::drive::settings::ZtermDriveSettings;
 #[cfg(not(target_family = "wasm"))]
 use crate::search::ai_context_menu::blocks::data_source::BlockDataSource;
 #[cfg(not(target_family = "wasm"))]
@@ -39,30 +39,30 @@ use settings::Setting as _;
 use std::collections::HashSet;
 use std::ops::Range;
 use std::time::Duration;
-use warp_core::features::FeatureFlag;
-use warpui::elements::ConstrainedBox;
-use warpui::elements::CrossAxisAlignment;
-use warpui::elements::Empty;
-use warpui::elements::Fill;
-use warpui::elements::Hoverable;
-use warpui::elements::MouseStateHandle;
-use warpui::elements::ScrollStateHandle;
-use warpui::elements::Scrollable;
-use warpui::elements::ScrollableElement;
-use warpui::elements::ScrollbarWidth;
-use warpui::elements::UniformList;
-use warpui::elements::UniformListState;
-use warpui::elements::{
+use zterm_core::features::FeatureFlag;
+use zterm_ui::elements::ConstrainedBox;
+use zterm_ui::elements::CrossAxisAlignment;
+use zterm_ui::elements::Empty;
+use zterm_ui::elements::Fill;
+use zterm_ui::elements::Hoverable;
+use zterm_ui::elements::MouseStateHandle;
+use zterm_ui::elements::ScrollStateHandle;
+use zterm_ui::elements::Scrollable;
+use zterm_ui::elements::ScrollableElement;
+use zterm_ui::elements::ScrollbarWidth;
+use zterm_ui::elements::UniformList;
+use zterm_ui::elements::UniformListState;
+use zterm_ui::elements::{
     AnchorPair, Border, ChildView, Container, CornerRadius, Dismiss, Flex, Icon, OffsetPositioning,
     OffsetType, ParentElement, PositionedElementOffsetBounds, PositioningAxis, Radius,
     SavePosition, Shrinkable, Stack, Text, XAxisAnchor, YAxisAnchor,
 };
 
-use warpui::platform::Cursor;
-use warpui::windowing::WindowManager;
-use warpui::SingletonEntity;
-use warpui::View;
-use warpui::{
+use zterm_ui::platform::Cursor;
+use zterm_ui::windowing::WindowManager;
+use zterm_ui::SingletonEntity;
+use zterm_ui::View;
+use zterm_ui::{
     AppContext, Element, Entity, ModelHandle, TypedActionView, ViewContext, ViewHandle,
     WeakViewHandle,
 };
@@ -390,7 +390,7 @@ impl AIContextMenu {
         is_cli_agent_input: bool,
         app: &AppContext,
     ) -> Vec<AIContextMenuCategory> {
-        let show_warp_drive = WarpDriveSettings::is_warp_drive_enabled(app);
+        let show_warp_drive = ZtermDriveSettings::is_warp_drive_enabled(app);
 
         // Compute once — used by CLI agent, AI-mode, and terminal-mode branches.
         let is_active_dir_in_git_repo = {

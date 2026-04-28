@@ -1,6 +1,6 @@
-use serde::{Deserialize, Serialize};
+﻿use serde::{Deserialize, Serialize};
 use std::fmt;
-use warp_server_client::cloud_object::Owner;
+use zterm_server_client::cloud_object::Owner;
 
 use crate::{
     auth::AuthStateProvider,
@@ -16,7 +16,7 @@ use crate::{
     server::{ids::SyncId, sync_queue::QueueItem},
     workspaces::user_workspaces::UserWorkspaces,
 };
-use warpui::{AppContext, SingletonEntity as _};
+use zterm_ui::{AppContext, SingletonEntity as _};
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
 pub struct GithubRepo {

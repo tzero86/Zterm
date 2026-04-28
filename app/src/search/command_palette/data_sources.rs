@@ -1,7 +1,7 @@
 use std::collections::HashSet;
 use std::path::PathBuf;
 
-use crate::drive::settings::WarpDriveSettings;
+use crate::drive::settings::ZtermDriveSettings;
 use crate::search::action::CommandBindingDataSource;
 use crate::search::binding_source::BindingSource;
 use crate::search::command_palette::files;
@@ -16,10 +16,10 @@ use crate::search::mixer::AddAsyncSourceOptions;
 use crate::search::QueryFilter;
 use crate::session_management::SessionSource;
 use crate::settings::AISettings;
-use warp_core::context_flag::ContextFlag;
-use warp_core::features::FeatureFlag;
-use warpui::keymap::BindingId;
-use warpui::{AppContext, Entity, ModelContext, ModelHandle, SingletonEntity};
+use zterm_core::context_flag::ContextFlag;
+use zterm_core::features::FeatureFlag;
+use zterm_ui::keymap::BindingId;
+use zterm_ui::{AppContext, Entity, ModelContext, ModelHandle, SingletonEntity};
 
 use super::conversations;
 use super::warp_drive;
@@ -98,7 +98,7 @@ impl DataSourceStore {
                 HashSet::from([QueryFilter::Sessions]),
             );
 
-            if WarpDriveSettings::is_warp_drive_enabled(ctx) {
+            if ZtermDriveSettings::is_warp_drive_enabled(ctx) {
                 let mut warp_drive_filters = HashSet::from([
                     QueryFilter::Notebooks,
                     QueryFilter::Plans,
@@ -205,7 +205,7 @@ impl DataSourceStore {
             }
             ItemSummary::CloudObject => {
                 // We don't yet support all cloud objects in the command palette but
-                // we have a `ViewInWarpDrive` action that supports all of them, so
+                // we have a `ViewInZtermDrive` action that supports all of them, so
                 // this is necessary to make the compiler happy.
                 None
             }

@@ -9,13 +9,13 @@ use crate::{
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(graphql_type = "RootSubscription")]
-pub struct GetWarpDriveUpdates {
-    pub warp_drive_updates: WarpDriveUpdate,
+pub struct GetZtermDriveUpdates {
+    pub warp_drive_updates: ZtermDriveUpdate,
 }
 
 #[derive(cynic::InlineFragments, Debug)]
 #[allow(clippy::large_enum_variant)]
-pub enum WarpDriveUpdate {
+pub enum ZtermDriveUpdate {
     ObjectActionOccurred(ObjectActionOccurred),
     ObjectContentUpdated(ObjectContentUpdated),
     ObjectDeleted(ObjectDeleted),

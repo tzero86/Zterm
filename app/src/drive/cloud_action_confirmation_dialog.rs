@@ -1,4 +1,4 @@
-use warpui::{
+﻿use zterm_ui::{
     elements::{CornerRadius, Dismiss, MouseStateHandle, Radius},
     fonts::Weight,
     platform::Cursor,

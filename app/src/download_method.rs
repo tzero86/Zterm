@@ -1,10 +1,10 @@
-use crate::{
+﻿use crate::{
     auth::auth_state::AuthState,
     send_telemetry_on_executor,
     server::telemetry::{DownloadSource, TelemetryEvent},
 };
 use std::sync::Arc;
-use warpui::r#async::executor::Background;
+use zterm_ui::r#async::executor::Background;
 
 /// Determine the Warp download method (if possible) and send a telemetry event reporting that
 /// method

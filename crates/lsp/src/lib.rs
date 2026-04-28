@@ -56,8 +56,8 @@ use anyhow::Result;
 #[cfg(not(target_arch = "wasm32"))]
 use simple_logger::SimpleLogger;
 use std::sync::Arc;
-use warpui::r#async::executor::Background;
-use warpui::AppContext;
+use zterm_ui::r#async::executor::Background;
+use zterm_ui::AppContext;
 
 pub struct LspServiceInitializationResult {
     pub service: LspService,

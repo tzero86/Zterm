@@ -1,4 +1,4 @@
-use warpui::{
+﻿use zterm_ui::{
     windowing::{StateEvent, WindowManager},
     Entity, ModelContext, SingletonEntity,
 };
@@ -54,7 +54,7 @@ impl DefaultTerminal {
     }
 
     /// This is an OS-level setting. Unlike most other settings, where Warp is the source-of-truth
-    /// for the value of the setting, it can be changed outside of Warp. We monitor if it gets
+    /// for the value of the setting, it can be changed outside of Zterm. We monitor if it gets
     /// changed externally by checking when Warp is focused.
     fn handle_window_manager_event(&mut self, event: &StateEvent, ctx: &mut ModelContext<Self>) {
         match event {

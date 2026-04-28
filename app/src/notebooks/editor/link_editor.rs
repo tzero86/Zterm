@@ -1,5 +1,5 @@
-use warp_editor::{editor::NavigationKey, model::RichTextEditorModel, render::model::RenderState};
-use warpui::{
+use zterm_editor::{editor::NavigationKey, model::RichTextEditorModel, render::model::RenderState};
+use zterm_ui::{
     elements::{
         AnchorPair, Container, Flex, MouseStateHandle, OffsetPositioning, OffsetType,
         ParentElement, PositionedElementOffsetBounds, PositioningAxis, XAxisAnchor, YAxisAnchor,
@@ -201,7 +201,7 @@ impl View for LinkEditor {
         }
     }
 
-    fn render(&self, app: &warpui::AppContext) -> Box<dyn Element> {
+    fn render(&self, app: &zterm_ui::AppContext) -> Box<dyn Element> {
         let appearance = Appearance::as_ref(app);
         let mut editors = Flex::column();
 

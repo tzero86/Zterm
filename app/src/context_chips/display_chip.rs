@@ -1,4 +1,4 @@
-use std::borrow::Cow;
+﻿use std::borrow::Cow;
 use std::sync::Arc;
 
 use crate::ai::blocklist::agent_view::AgentViewController;
@@ -27,14 +27,14 @@ use crate::view_components::{FeaturePopup, NewFeaturePopupEvent, NewFeaturePopup
 use pathfinder_color::ColorU;
 use pathfinder_geometry::vector::{vec2f, Vector2F};
 use std::path::PathBuf;
-use warp_core::ui::theme::Fill;
-use warp_core::{features::FeatureFlag, ui::theme::color::internal_colors};
-use warpui::elements::Empty;
-use warpui::keymap::Keystroke;
-use warpui::platform::Cursor;
-use warpui::ui_components::components::UiComponentStyles;
-use warpui::ui_components::components::{Coords, UiComponent};
-use warpui::{
+use zterm_core::ui::theme::Fill;
+use zterm_core::{features::FeatureFlag, ui::theme::color::internal_colors};
+use zterm_ui::elements::Empty;
+use zterm_ui::keymap::Keystroke;
+use zterm_ui::platform::Cursor;
+use zterm_ui::ui_components::components::UiComponentStyles;
+use zterm_ui::ui_components::components::{Coords, UiComponent};
+use zterm_ui::{
     elements::{
         Border, ChildAnchor, ChildView, ConstrainedBox, Container, CornerRadius,
         CrossAxisAlignment, Flex, Hoverable, MouseStateHandle, OffsetPositioning, ParentAnchor,
@@ -78,12 +78,12 @@ pub fn render_git_diff_stats_content(
     let icon_element = if has_changes {
         // Use file icon when there are changes
         Icon::File
-            .to_warpui_icon(Fill::Solid(internal_colors::neutral_6(theme)))
+            .to_zterm_ui_icon(Fill::Solid(internal_colors::neutral_6(theme)))
             .finish()
     } else {
         // Use diff icon when there are no changes
         Icon::Diff
-            .to_warpui_icon(Fill::Solid(internal_colors::neutral_6(theme)))
+            .to_zterm_ui_icon(Fill::Solid(internal_colors::neutral_6(theme)))
             .finish()
     };
 
@@ -1810,7 +1810,7 @@ pub(crate) fn render_udi_chip(config: UdiChipConfig, appearance: &Appearance) ->
     if let Some(icon) = config.icon {
         content.add_child(
             Container::new(
-                ConstrainedBox::new(icon.to_warpui_icon(Fill::Solid(config.color)).finish())
+                ConstrainedBox::new(icon.to_zterm_ui_icon(Fill::Solid(config.color)).finish())
                     .with_height(icon_size)
                     .with_width(icon_size)
                     .finish(),

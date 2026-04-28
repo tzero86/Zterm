@@ -1,10 +1,10 @@
-use std::{pin, task, time::Duration};
+﻿use std::{pin, task, time::Duration};
 
 use futures_lite::{ready, Stream};
 use pin::Pin;
 use pin_project::pin_project;
 use task::{Context, Poll};
-use warpui::r#async::Timer;
+use zterm_ui::r#async::Timer;
 
 /// Debounce takes in a stream and limits the rate of firing events from the stream
 /// by bundling all events occurred within the set interval into one.

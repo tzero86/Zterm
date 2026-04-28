@@ -1,6 +1,6 @@
-use warpui::{Entity, ModelContext, ModelHandle};
+﻿use zterm_ui::{Entity, ModelContext, ModelHandle};
 
-use warp_core::send_telemetry_from_ctx;
+use zterm_core::send_telemetry_from_ctx;
 
 use crate::{
     ai::blocklist::agent_view::{AgentViewController, AgentViewControllerEvent},

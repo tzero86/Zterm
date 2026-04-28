@@ -9,7 +9,7 @@
 mod warpify;
 
 pub use warpify::*;
-use warpui::{
+use zterm_ui::{
     elements::{
         ConstrainedBox, Container, CornerRadius, Hoverable, MouseState, MouseStateHandle,
         ParentElement, Radius, Stack,
@@ -17,7 +17,7 @@ use warpui::{
     Element,
 };
 
-use crate::themes::theme::WarpTheme;
+use crate::themes::theme::ZtermTheme;
 
 const CONSTRAINED_BANNER_HEIGHT: f32 = 48.;
 const BANNER_TOP_MARGIN: f32 = 16.;
@@ -28,7 +28,7 @@ pub const BLOCK_BANNER_HEIGHT: f32 = CONSTRAINED_BANNER_HEIGHT + BANNER_TOP_MARG
 pub const BLOCK_BANNER_DESCRIPTION_MAX_HEIGHT: f32 = 24.;
 
 pub enum WithinBlockBanner {
-    WarpifyBanner(WarpifyBannerState),
+    ZtermifyBanner(ZtermifyBannerState),
 }
 
 impl WithinBlockBanner {
@@ -43,7 +43,7 @@ impl WithinBlockBanner {
 
     pub fn warpify_mode(&self) -> Option<&WarpificationMode> {
         match self {
-            WithinBlockBanner::WarpifyBanner(state) => Some(&state.mode),
+            WithinBlockBanner::ZtermifyBanner(state) => Some(&state.mode),
         }
     }
 }
@@ -53,7 +53,7 @@ impl WithinBlockBanner {
 fn render_block_banner(
     build_child: impl FnOnce(&MouseState) -> Box<dyn Element>,
     hover_state: MouseStateHandle,
-    theme: &WarpTheme,
+    theme: &ZtermTheme,
 ) -> Box<dyn Element> {
     Stack::new()
         .with_child(

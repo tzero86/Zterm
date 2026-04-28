@@ -7,7 +7,7 @@ use warp::integration_testing::{
     },
     view_getters::ai_assistant_panel_view,
 };
-use warpui::async_assert;
+use zterm_ui::async_assert;
 
 use super::new_builder;
 

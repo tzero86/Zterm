@@ -1,4 +1,4 @@
-//! Utility functions for working with skills.
+﻿//! Utility functions for working with skills.
 
 use super::{SkillDescriptor, SkillManager};
 use crate::ai::agent::conversation::AIConversationId;
@@ -14,12 +14,12 @@ use std::collections::{HashMap, HashSet};
 use std::hash::{Hash, Hasher};
 use std::path::Path;
 use std::path::PathBuf;
-use warp_core::ui::appearance::Appearance;
-use warp_core::ui::theme::color::internal_colors;
-use warp_core::ui::Icon;
-use warpui::prelude::MouseStateHandle;
-use warpui::EventContext;
-use warpui::{AppContext, Element, SingletonEntity};
+use zterm_core::ui::appearance::Appearance;
+use zterm_core::ui::theme::color::internal_colors;
+use zterm_core::ui::Icon;
+use zterm_ui::prelude::MouseStateHandle;
+use zterm_ui::EventContext;
+use zterm_ui::{AppContext, Element, SingletonEntity};
 
 use crate::warp_managed_paths_watcher::warp_managed_skill_dirs;
 

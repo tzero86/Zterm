@@ -27,7 +27,7 @@ use warp::terminal::model::index::Point;
 use warp::terminal::model::terminal_model::{BlockIndex, WithinBlock, WithinModel};
 use warp::terminal::shell::ShellType;
 use warp::terminal::GridType;
-use warpui::{async_assert, async_assert_eq};
+use zterm_ui::{async_assert, async_assert_eq};
 
 use crate::Builder;
 

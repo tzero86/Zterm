@@ -1,4 +1,4 @@
-use crate::server::telemetry::ImageProtocol;
+﻿use crate::server::telemetry::ImageProtocol;
 use crate::terminal::model::session::Sessions;
 
 use crate::terminal::event::{
@@ -13,8 +13,8 @@ use instant::Instant;
 use std::sync::Arc;
 
 use crate::remote_server::manager::RemoteServerManager;
-use warpui::SingletonEntity;
-use warpui::{Entity, ModelContext, ModelHandle};
+use zterm_ui::SingletonEntity;
+use zterm_ui::{Entity, ModelContext, ModelHandle};
 
 use super::event::SshLoginStatus;
 use super::model::ansi::{FinishUpdateValue, WarpificationUnavailableReason};
@@ -440,7 +440,7 @@ pub enum ModelEvent {
     InitSsh(InitSshEvent),
     /// Emitted when the active block's prompt has been updated.
     PromptUpdated,
-    /// Emitted when the honor_ps1 state of the shell is out-of-sync with Warp's settings.
+    /// Emitted when the honor_ps1 state of the shell is out-of-sync with Zterm's settings.
     /// This can happen in cases such as when the user changes between PS1 and Warp prompt inside
     /// of an SSH session (the bindkeys are sent to the SSH session but not the local session, so
     /// they are out-of-sync when the user exits SSH).

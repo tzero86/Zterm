@@ -1,4 +1,4 @@
-//! Code review diff state management.
+﻿//! Code review diff state management.
 //!
 //! Some of the code in this module is adapted from GitHub Desktop, which is licensed under the MIT license,
 //! Copyright (c) GitHub, Inc.  See GITHUB-DESKTOP-LICENSE in this directory.
@@ -22,8 +22,8 @@ cfg_if::cfg_if! {
     }
 }
 #[cfg(not(target_arch = "wasm32"))]
-use warpui::AppContext;
-use warpui::{r#async::SpawnedFutureHandle, ModelContext};
+use zterm_ui::AppContext;
+use zterm_ui::{r#async::SpawnedFutureHandle, ModelContext};
 
 use crate::code_review::diff_size_limits::DiffSize;
 use crate::features::FeatureFlag;
@@ -38,19 +38,19 @@ use super::diff_size_limits::compute_diff_size;
 
 use crate::code_review::CodeReviewTelemetryEvent;
 #[cfg(not(target_family = "wasm"))]
-use warp_core::channel::ChannelState;
-use warp_core::{safe_warn, send_telemetry_from_ctx};
+use zterm_core::channel::ChannelState;
+use zterm_core::{safe_warn, send_telemetry_from_ctx};
 
 cfg_if::cfg_if! {
     if #[cfg(feature = "local_fs")] {
         use repo_metadata::repositories::{DetectedRepositories, RepoDetectionSource};
-        use warpui::SingletonEntity;
+        use zterm_ui::SingletonEntity;
         use repo_metadata::{
             repository::{RepositorySubscriber, SubscriberId},
             RepoMetadataError, Repository, RepositoryUpdate,
         };
         use async_channel::Sender;
-        use warpui::ModelHandle;
+        use zterm_ui::ModelHandle;
     }
 }
 #[cfg(all(feature = "local_fs", feature = "local_tty"))]
@@ -605,7 +605,7 @@ impl DiffStateModel {
     }
 
     #[cfg(not(feature = "local_fs"))]
-    pub fn is_git_operation_blocked(&self, _app: &warpui::AppContext) -> bool {
+    pub fn is_git_operation_blocked(&self, _app: &zterm_ui::AppContext) -> bool {
         false
     }
     /// Get comprehensive git diff information including uncommitted stats, main branch stats, and main branch name
@@ -658,7 +658,7 @@ impl DiffStateModel {
     }
 
     #[cfg(not(feature = "local_fs"))]
-    pub fn active_repository_path(&self, _app: &warpui::AppContext) -> Option<PathBuf> {
+    pub fn active_repository_path(&self, _app: &zterm_ui::AppContext) -> Option<PathBuf> {
         None
     }
 
@@ -1586,7 +1586,7 @@ impl DiffStateModel {
         let n = file.read(&mut buffer)?;
         buffer.truncate(n);
 
-        if warp_util::file_type::is_buffer_binary(&buffer) {
+        if zterm_util::file_type::is_buffer_binary(&buffer) {
             return Ok(None);
         }
         file.rewind()?;
@@ -2967,7 +2967,7 @@ pub enum DiffStateModelEvent {
     DiffModeChanged { should_fetch_base: bool },
 }
 
-impl warpui::Entity for DiffStateModel {
+impl zterm_ui::Entity for DiffStateModel {
     type Event = DiffStateModelEvent;
 }
 

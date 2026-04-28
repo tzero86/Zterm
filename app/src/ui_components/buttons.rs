@@ -2,11 +2,11 @@ use super::icons::{Icon, ICON_DIMENSIONS};
 use super::{blended_colors, BORDER_RADIUS};
 use crate::appearance::Appearance;
 use crate::themes::theme::Fill;
-use crate::themes::theme::WarpTheme;
-use warpui::elements::Radius;
-use warpui::elements::{CornerRadius, MouseStateHandle};
-use warpui::ui_components::button::Button;
-use warpui::ui_components::components::{Coords, UiComponent, UiComponentStyles};
+use crate::themes::theme::ZtermTheme;
+use zterm_ui::elements::Radius;
+use zterm_ui::elements::{CornerRadius, MouseStateHandle};
+use zterm_ui::ui_components::button::Button;
+use zterm_ui::ui_components::components::{Coords, UiComponent, UiComponentStyles};
 
 const ICON_BUTTON_PADDING: f32 = 4.;
 
@@ -33,7 +33,7 @@ pub struct AllButtonStyles {
     disabled_styles: Option<UiComponentStyles>,
 }
 
-fn all_icon_button_styles(warp_theme: &WarpTheme, mode: ButtonMode) -> AllButtonStyles {
+fn all_icon_button_styles(warp_theme: &ZtermTheme, mode: ButtonMode) -> AllButtonStyles {
     AllButtonStyles {
         default_styles: icon_button_styles(warp_theme, mode, ButtonState::Default),
         hovered_styles: Some(icon_button_styles(warp_theme, mode, ButtonState::Hover)),
@@ -43,7 +43,7 @@ fn all_icon_button_styles(warp_theme: &WarpTheme, mode: ButtonMode) -> AllButton
 }
 
 fn icon_button_styles(
-    warp_theme: &WarpTheme,
+    warp_theme: &ZtermTheme,
     mode: ButtonMode,
     state: ButtonState,
 ) -> UiComponentStyles {
@@ -86,7 +86,7 @@ fn icon_button_styles(
     styles
 }
 
-fn combo_inner_button_styles(warp_theme: &WarpTheme, state: ButtonState) -> UiComponentStyles {
+fn combo_inner_button_styles(warp_theme: &ZtermTheme, state: ButtonState) -> UiComponentStyles {
     let background = match state {
         ButtonState::Default => None,
         ButtonState::Hover => Some(blended_colors::neutral_2(warp_theme)),
@@ -130,7 +130,7 @@ pub fn combo_inner_button(
         Some(combo_inner_button_styles(theme, ButtonState::Pressed)),
         Some(combo_inner_button_styles(theme, ButtonState::Disabled)),
     )
-    .with_icon_label(icon.to_warpui_icon(theme.foreground()));
+    .with_icon_label(icon.to_zterm_ui_icon(theme.foreground()));
 
     if active {
         return button.active();
@@ -138,7 +138,7 @@ pub fn combo_inner_button(
     button
 }
 
-fn icon_color(warp_theme: &WarpTheme, mode: ButtonMode) -> Fill {
+fn icon_color(warp_theme: &ZtermTheme, mode: ButtonMode) -> Fill {
     match mode {
         ButtonMode::Base => warp_theme.foreground(),
         ButtonMode::Accent => blended_colors::accent(warp_theme),
@@ -163,7 +163,7 @@ fn icon_button_internal(
         button_styles.clicked_styles,
         button_styles.disabled_styles,
     )
-    .with_icon_label(icon.to_warpui_icon(color.unwrap_or(icon_color(theme, mode))));
+    .with_icon_label(icon.to_zterm_ui_icon(color.unwrap_or(icon_color(theme, mode))));
 
     if let Some(color) = color.take() {
         // We also need to set the font color here to get the button to be colored correctly.

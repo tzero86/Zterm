@@ -1,4 +1,4 @@
-//! Skill resolution for agent runs.
+﻿//! Skill resolution for agent runs.
 //!
 //! This module exists primarily for `warp agent run --skill ...` (and related flows) where we need to
 //! resolve a CLI-provided `--skill` specifier (`SkillSpec`) into a concrete `SKILL.md` file and its
@@ -18,9 +18,9 @@ use ai::skills::{
 };
 use command::blocking::Command;
 use command::r#async::Command as AsyncCommand;
-use warp_cli::skill::SkillSpec;
-use warpui::AppContext;
-use warpui::SingletonEntity as _;
+use zterm_cli::skill::SkillSpec;
+use zterm_ui::AppContext;
+use zterm_ui::SingletonEntity as _;
 
 use super::SkillManager;
 use crate::warp_managed_paths_watcher::warp_managed_skill_dirs;

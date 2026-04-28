@@ -1,4 +1,4 @@
-//! [`TerminalView`]-specific implementation for shared sessions.
+﻿//! [`TerminalView`]-specific implementation for shared sessions.
 
 use crate::ai::blocklist::BlocklistAIHistoryModel;
 use crate::auth::UserUid;
@@ -40,19 +40,19 @@ use session_sharing_protocol::common::{
 use session_sharing_protocol::sharer::SessionSourceType;
 use session_sharing_protocol::sharer::{RoleUpdateReason, SessionEndedReason};
 use session_sharing_protocol::viewer::RoleUpdatedReason;
-use warp_core::features::FeatureFlag;
-use warpui::r#async::Timer;
+use zterm_core::features::FeatureFlag;
+use zterm_ui::r#async::Timer;
 
 use settings::Setting as _;
-use warp_core::semantic_selection::SemanticSelection;
-use warp_core::ui::appearance::Appearance;
-use warpui::clipboard::ClipboardContent;
-use warpui::platform::Cursor;
-use warpui::ui_components::button::ButtonVariant;
-use warpui::ui_components::components::UiComponent;
-use warpui::units::IntoLines;
-use warpui::{Element, SingletonEntity};
-use warpui::{ModelHandle, ViewContext};
+use zterm_core::semantic_selection::SemanticSelection;
+use zterm_core::ui::appearance::Appearance;
+use zterm_ui::clipboard::ClipboardContent;
+use zterm_ui::platform::Cursor;
+use zterm_ui::ui_components::button::ButtonVariant;
+use zterm_ui::ui_components::components::UiComponent;
+use zterm_ui::units::IntoLines;
+use zterm_ui::{Element, SingletonEntity};
+use zterm_ui::{ModelHandle, ViewContext};
 
 use crate::menu::Event as MenuEvent;
 
@@ -62,8 +62,8 @@ use crate::terminal::shared_session::participant_avatar_view::ParticipantAvatarV
 use session_sharing_protocol::common::ParticipantList;
 use session_sharing_protocol::common::ParticipantPresenceUpdate;
 
-use warpui::elements::MouseStateHandle;
-use warpui::AppContext;
+use zterm_ui::elements::MouseStateHandle;
+use zterm_ui::AppContext;
 
 use super::adapter::{Adapter, Kind, Participant};
 use super::sharer::inactivity_modal::InactivityModalEvent;

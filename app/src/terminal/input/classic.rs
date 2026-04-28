@@ -1,4 +1,4 @@
-use crate::{
+﻿use crate::{
     ai::blocklist::InputType,
     appearance::Appearance,
     context_chips::spacing,
@@ -23,7 +23,7 @@ use crate::{
 };
 use pathfinder_geometry::vector::vec2f;
 use settings::Setting;
-use warpui::{
+use zterm_ui::{
     elements::{
         Border, ChildAnchor, ChildView, Clipped, Container, DropTarget, Element, Empty, Flex,
         Hoverable, OffsetPositioning, ParentAnchor, ParentElement, ParentOffsetBounds,

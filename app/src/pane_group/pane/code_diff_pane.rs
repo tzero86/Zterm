@@ -1,4 +1,4 @@
-use warpui::{AppContext, ModelHandle, SingletonEntity, ViewContext, ViewHandle};
+﻿use zterm_ui::{AppContext, ModelHandle, SingletonEntity, ViewContext, ViewHandle};
 
 use crate::{
     ai::blocklist::inline_action::code_diff_view::{CodeDiffView, CodeDiffViewEvent},

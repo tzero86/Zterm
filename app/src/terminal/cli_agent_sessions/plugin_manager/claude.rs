@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+﻿use std::collections::HashMap;
 use std::env;
 use std::fs;
 use std::io;
@@ -163,7 +163,7 @@ impl CliAgentPluginManager for ClaudeCodePluginManager {
 
 static INSTALL_INSTRUCTIONS: LazyLock<PluginInstructions> = LazyLock::new(|| {
     PluginInstructions {
-        title: "Install Warp Plugin for Claude Code",
+        title: "Install Zterm Plugin for Claude Code",
         subtitle: "Ensure that jq is installed on your machine. Then, run these commands.",
         steps: &[
             PluginInstructionStep {

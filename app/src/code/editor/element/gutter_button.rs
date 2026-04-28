@@ -1,13 +1,13 @@
-use crate::view_components::action_button::{
+﻿use crate::view_components::action_button::{
     ActionButtonTheme, DisabledSecondaryTheme, SecondaryTheme,
 };
-use warp_core::ui::appearance::Appearance;
-use warp_core::ui::color::contrast::MinimumAllowedContrast;
-use warp_core::ui::color::ContrastingColor;
-use warp_core::ui::theme::color::internal_colors;
-use warp_core::ui::theme::Fill;
-use warp_core::ui::Icon;
-use warpui::elements::MouseState;
+use zterm_core::ui::appearance::Appearance;
+use zterm_core::ui::color::contrast::MinimumAllowedContrast;
+use zterm_core::ui::color::ContrastingColor;
+use zterm_core::ui::theme::color::internal_colors;
+use zterm_core::ui::theme::Fill;
+use zterm_core::ui::Icon;
+use zterm_ui::elements::MouseState;
 
 /// A button rendered within the gutter of the editor.
 pub(super) trait GutterButton {

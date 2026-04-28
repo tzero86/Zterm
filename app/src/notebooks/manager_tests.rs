@@ -1,7 +1,7 @@
-use std::sync::mpsc;
+﻿use std::sync::mpsc;
 
-use warp_core::ui::appearance::Appearance;
-use warpui::{
+use zterm_core::ui::appearance::Appearance;
+use zterm_ui::{
     platform::WindowStyle, AddSingletonModel, App, EntityId, ModelHandle, ViewContext, ViewHandle,
 };
 

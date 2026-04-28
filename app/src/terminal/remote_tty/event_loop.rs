@@ -1,4 +1,4 @@
-use crate::terminal::{
+﻿use crate::terminal::{
     bootstrap::init_shell_script_for_shell, event_listener::ChannelEventListener,
     model::ansi::Processor, session_settings::SessionSettings, shell::ShellType,
     writeable_pty::Message as EventLoopMessage, SizeInfo, TerminalModel,
@@ -9,7 +9,7 @@ use parking_lot::FairMutex;
 use serde::Serialize;
 use std::io;
 use std::sync::Arc;
-use warpui::{Entity, ModelContext, SingletonEntity};
+use zterm_ui::{Entity, ModelContext, SingletonEntity};
 use websocket::{Message, Sink, Stream, WebSocket, WebsocketMessage as _};
 
 const CREATE_SESSION_ENDPOINT: &str = "ws://127.0.0.1:3030/create";
@@ -176,7 +176,7 @@ impl EventLoop {
         sink: &mut impl Sink,
         is_honor_ps1_enabled: bool,
     ) -> anyhow::Result<()> {
-        let honor_ps1_env_var = format!(r#"WARP_HONOR_PS1="{}";"#, is_honor_ps1_enabled as u8);
+        let honor_ps1_env_var = format!(r#"ZTERM_HONOR_PS1="{}";"#, is_honor_ps1_enabled as u8);
         sink.send(Message::new_binary(honor_ps1_env_var.as_bytes().to_vec()))
             .await?;
 

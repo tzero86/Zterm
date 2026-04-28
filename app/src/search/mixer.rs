@@ -1,4 +1,4 @@
-use super::data_source::{Query, QueryResult};
+﻿use super::data_source::{Query, QueryResult};
 use crate::debounce::debounce;
 use crate::search::QueryFilter;
 use crate::send_telemetry_from_ctx;
@@ -12,8 +12,8 @@ use std::collections::{HashMap, HashSet};
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::Arc;
 use std::time::Duration;
-use warpui::r#async::Timer;
-use warpui::{Action, AppContext, Entity, ModelContext};
+use zterm_ui::r#async::Timer;
+use zterm_ui::{Action, AppContext, Entity, ModelContext};
 
 /// Maximum time to wait for matching data sources to return results before showing
 /// partial results.

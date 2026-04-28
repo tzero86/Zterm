@@ -1,4 +1,4 @@
-pub use block_list_element::GridType;
+﻿pub use block_list_element::GridType;
 use model::alt_screen::AltScreen;
 use model::blocks::BlockList;
 use model::index::Side;
@@ -11,11 +11,11 @@ mod package_installers;
 pub(crate) use history::UpArrowHistoryConfig;
 pub use view::Event;
 pub use view::TerminalView;
-pub use warp_terminal::shell::{self, ShellLaunchData};
-use warpui::geometry::vector::Vector2F;
-use warpui::units::{IntoPixels, Lines, Pixels};
-use warpui::AppContext;
-use warpui::WindowId;
+pub use zterm_terminal::shell::{self, ShellLaunchData};
+use zterm_ui::geometry::vector::Vector2F;
+use zterm_ui::units::{IntoPixels, Lines, Pixels};
+use zterm_ui::AppContext;
+use zterm_ui::WindowId;
 pub use {history::History, history::HistoryEntry, history::HistoryEvent, history::ShellHost};
 mod block_list_settings;
 

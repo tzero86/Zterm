@@ -1,4 +1,4 @@
-use super::*;
+﻿use super::*;
 use crate::auth::auth_manager::AuthManager;
 use crate::auth::AuthStateProvider;
 use crate::search::command_search::searcher::CommandSearchMixer;
@@ -18,9 +18,9 @@ use itertools::Itertools;
 use ordered_float::OrderedFloat;
 use std::collections::HashSet;
 use std::time::Duration;
-use warpui::r#async::Timer;
-use warpui::AppContext;
-use warpui::{elements::Empty, App, Element};
+use zterm_ui::r#async::Timer;
+use zterm_ui::AppContext;
+use zterm_ui::{elements::Empty, App, Element};
 
 #[derive(Clone, Debug)]
 enum TestItemAction {

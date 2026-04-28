@@ -28,20 +28,20 @@ use pathfinder_geometry::rect::RectF;
 use pathfinder_geometry::vector::vec2f;
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
-use warp_core::channel::{Channel, ChannelState};
-use warp_core::features::FeatureFlag;
-use warp_core::ui::appearance::Appearance;
-use warp_core::ui::icons::ICON_DIMENSIONS;
-use warp_editor::render::element::VerticalExpansionBehavior;
-use warp_util::path::LineAndColumnArg;
-use warpui::elements::Rect;
-use warpui::fonts::Style;
-use warpui::text::point::Point;
-use warpui::text_layout::ClipConfig;
+use zterm_core::channel::{Channel, ChannelState};
+use zterm_core::features::FeatureFlag;
+use zterm_core::ui::appearance::Appearance;
+use zterm_core::ui::icons::ICON_DIMENSIONS;
+use zterm_editor::render::element::VerticalExpansionBehavior;
+use zterm_util::path::LineAndColumnArg;
+use zterm_ui::elements::Rect;
+use zterm_ui::fonts::Style;
+use zterm_ui::text::point::Point;
+use zterm_ui::text_layout::ClipConfig;
 
 #[cfg(feature = "local_fs")]
-use warpui::clipboard::ClipboardContent;
-use warpui::{
+use zterm_ui::clipboard::ClipboardContent;
+use zterm_ui::{
     elements::{
         AcceptedByDropTarget, Align, Border, ChildAnchor, ChildView, Clipped, ConstrainedBox,
         Container, CornerRadius, CrossAxisAlignment, Draggable, DraggableState, DropTarget, Empty,
@@ -378,8 +378,8 @@ impl CodeView {
                             ctx,
                         )
                         .with_horizontal_scrollbar_appearance(
-                            warpui::elements::new_scrollable::ScrollableAppearance::new(
-                                warpui::elements::ScrollbarWidth::Auto,
+                            zterm_ui::elements::new_scrollable::ScrollableAppearance::new(
+                                zterm_ui::elements::ScrollbarWidth::Auto,
                                 true,
                             ),
                         )
@@ -419,8 +419,8 @@ impl CodeView {
                 ctx,
             )
             .with_horizontal_scrollbar_appearance(
-                warpui::elements::new_scrollable::ScrollableAppearance::new(
-                    warpui::elements::ScrollbarWidth::Auto,
+                zterm_ui::elements::new_scrollable::ScrollableAppearance::new(
+                    zterm_ui::elements::ScrollbarWidth::Auto,
                     true,
                 ),
             )

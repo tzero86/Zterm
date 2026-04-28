@@ -1,6 +1,6 @@
-use settings::Setting;
-use warp_core::{report_if_error, ui::Icon};
-use warpui::{
+﻿use settings::Setting;
+use zterm_core::{report_if_error, ui::Icon};
+use zterm_ui::{
     elements::{
         ChildAnchor, Container, CrossAxisAlignment, Flex, MainAxisSize, OffsetPositioning,
         ParentAnchor, ParentElement, ParentOffsetBounds, Shrinkable, Stack, Text,
@@ -154,7 +154,7 @@ impl View for TerminalViewZeroStateBlock {
                 Container::new(
                     ConstrainedBox::new(
                         Icon::Warp
-                            .to_warpui_icon(theme.main_text_color(theme.background()))
+                            .to_zterm_ui_icon(theme.main_text_color(theme.background()))
                             .finish(),
                     )
                     .with_height(title_font_size)

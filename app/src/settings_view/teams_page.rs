@@ -58,10 +58,10 @@ use regex::Regex;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use std::{cmp::Ordering, collections::HashSet};
-use warp_core::ui::theme::color::internal_colors;
-use warpui::FocusContext;
+use zterm_core::ui::theme::color::internal_colors;
+use zterm_ui::FocusContext;
 
-use warpui::{
+use zterm_ui::{
     clipboard::ClipboardContent,
     elements::{
         Align, Border, ChildAnchor, ClippedScrollStateHandle, ConstrainedBox, Container,
@@ -188,7 +188,7 @@ pub enum TeamsPageAction {
     SendEmailInvites {
         team_uid: ServerId,
     },
-    OpenWarpDrive,
+    OpenZtermDrive,
     GenerateUpgradeLink {
         team_uid: ServerId,
     },
@@ -297,7 +297,7 @@ impl TryFrom<&TeamsPageAction> for TelemetryEvent {
 #[derive(Clone)]
 pub enum TeamsPageViewEvent {
     TeamsChanged,
-    OpenWarpDrive,
+    OpenZtermDrive,
     ShowToast {
         message: String,
         flavor: ToastFlavor,
@@ -491,7 +491,7 @@ impl TypedActionView for TeamsPageView {
                 self.send_email_invites(*team_uid, ctx);
                 ctx.notify();
             }
-            TeamsPageAction::OpenWarpDrive => ctx.emit(TeamsPageViewEvent::OpenWarpDrive),
+            TeamsPageAction::OpenZtermDrive => ctx.emit(TeamsPageViewEvent::OpenZtermDrive),
             TeamsPageAction::ShowLeaveTeamConfirmationDialog => {
                 self.delete_or_leave_team_confirmation_dialog
                     .update(ctx, |dialog, ctx| {
@@ -950,7 +950,7 @@ impl TeamsPageView {
                 self.show_error("Failed to toggle team discoverability", Some(err), ctx);
             }
             UserWorkspacesEvent::JoinTeamWithTeamDiscoverySuccess => {
-                // Force refresh of Warp Drive objects after joining a team
+                // Force refresh of Zterm Drive objects after joining a team
                 UpdateManager::handle(ctx).update(ctx, move |update_manager, ctx| {
                     update_manager.refresh_updated_objects(ctx);
                 });
@@ -1364,7 +1364,7 @@ impl TeamsPageView {
                 ctx,
             );
         });
-        ctx.dispatch_typed_action(&WorkspaceAction::OpenWarpDrive);
+        ctx.dispatch_typed_action(&WorkspaceAction::OpenZtermDrive);
     }
 
     fn set_team_member_role(
@@ -1778,9 +1778,9 @@ impl TeamsWidget {
         has_admin_permissions: bool,
     ) -> Box<dyn Element> {
         let prorated_message = if has_admin_permissions {
-            "You'll be charged for a portion of the team member's usage of Warp."
+            "You'll be charged for a portion of the team member's usage of Zterm."
         } else {
-            "Your admin will be charged for a portion of the team member's usage of Warp."
+            "Your admin will be charged for a portion of the team member's usage of Zterm."
         };
 
         let additional_members_cost_money_msg = if let Some((monthly_cost, yearly_cost)) =
@@ -1798,7 +1798,7 @@ impl TeamsWidget {
         let currency_icon = Container::new(
             ConstrainedBox::new(
                 Icon::CoinsStacked
-                    .to_warpui_icon(appearance.theme().active_ui_text_color().with_opacity(90))
+                    .to_zterm_ui_icon(appearance.theme().active_ui_text_color().with_opacity(90))
                     .finish(),
             )
             .with_max_height(20.)
@@ -2063,7 +2063,7 @@ impl TeamsWidget {
                 TextAndIcon::new(
                     TextAndIconAlignment::IconFirst,
                     "Contact support",
-                    Icon::Phone.to_warpui_icon(appearance.theme().accent()),
+                    Icon::Phone.to_zterm_ui_icon(appearance.theme().accent()),
                     MainAxisSize::Min,
                     MainAxisAlignment::Center,
                     vec2f(14., 14.),
@@ -2092,7 +2092,7 @@ impl TeamsWidget {
                 TextAndIcon::new(
                     TextAndIconAlignment::IconFirst,
                     "Manage billing",
-                    Icon::CoinsStacked.to_warpui_icon(appearance.theme().accent()),
+                    Icon::CoinsStacked.to_zterm_ui_icon(appearance.theme().accent()),
                     MainAxisSize::Min,
                     MainAxisAlignment::Center,
                     vec2f(14., 14.),
@@ -2123,7 +2123,7 @@ impl TeamsWidget {
                 TextAndIcon::new(
                     TextAndIconAlignment::IconFirst,
                     "Open admin panel",
-                    Icon::Users.to_warpui_icon(appearance.theme().accent()),
+                    Icon::Users.to_zterm_ui_icon(appearance.theme().accent()),
                     MainAxisSize::Min,
                     MainAxisAlignment::Center,
                     vec2f(14., 14.),
@@ -3254,7 +3254,7 @@ impl TeamsWidget {
                                 Hoverable::new(handle.clone(), move |_mouse_state| {
                                     Container::new(
                                         ConstrainedBox::new(
-                                            icon.to_warpui_icon(
+                                            icon.to_zterm_ui_icon(
                                                 appearance
                                                     .theme()
                                                     .active_ui_text_color()
@@ -3287,7 +3287,7 @@ impl TeamsWidget {
                             Container::new(
                                 ConstrainedBox::new(
                                     Icon::DotsVertical
-                                        .to_warpui_icon(
+                                        .to_zterm_ui_icon(
                                             appearance
                                                 .theme()
                                                 .active_ui_text_color()
@@ -3872,7 +3872,7 @@ impl TeamsWidget {
                 TextAndIcon::new(
                     TextAndIconAlignment::IconFirst,
                     text.to_string(),
-                    Icon::CoinsStacked.to_warpui_icon(icon_color),
+                    Icon::CoinsStacked.to_zterm_ui_icon(icon_color),
                     MainAxisSize::Min,
                     MainAxisAlignment::Center,
                     vec2f(14., 14.),
@@ -4083,7 +4083,7 @@ impl SettingsWidget for TeamsWidget {
 pub fn test_valid_domains() {
     assert!(!TeamsPageView::is_valid_domain("@warp.dev"));
     assert!(!TeamsPageView::is_valid_domain("warp,"));
-    assert!(!TeamsPageView::is_valid_domain("warpdev"));
+    assert!(!TeamsPageView::is_valid_domain("ztermdev"));
     assert!(!TeamsPageView::is_valid_domain(".dev"));
     assert!(!TeamsPageView::is_valid_domain("warp..dev"));
     assert!(!TeamsPageView::is_valid_domain(" "));

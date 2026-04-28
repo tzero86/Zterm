@@ -3,9 +3,9 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::path::PathBuf;
 use std::sync::Arc;
-use warpui::platform::FullscreenState;
+use zterm_ui::platform::FullscreenState;
 
-use warpui::AppContext;
+use zterm_ui::AppContext;
 
 use crate::ai::agent::conversation::AIConversationId;
 use crate::ai::agent_conversations_model::AgentManagementFilters;
@@ -13,7 +13,7 @@ use crate::ai::ambient_agents::AmbientAgentTaskId;
 use crate::ai::blocklist::InputConfig;
 use crate::ai::blocklist::SerializedBlockListItem;
 use crate::code::editor_management::CodeSource;
-use crate::drive::OpenWarpDriveObjectSettings;
+use crate::drive::OpenZtermDriveObjectSettings;
 use crate::root_view::quake_mode_window_id;
 use crate::server::ids::SyncId;
 use crate::settings_view::{environments_page::EnvironmentsPage, SettingsSection};
@@ -216,7 +216,7 @@ pub enum NotebookPaneSnapshot {
         ///    server ID.
         notebook_id: Option<SyncId>,
         // Settings for the notebook pane when it's opened (such as a folder to focus upon opening)
-        settings: OpenWarpDriveObjectSettings,
+        settings: OpenZtermDriveObjectSettings,
     },
     LocalFileNotebook {
         /// The path to the local file that was open in this pane. This may be `None` if
@@ -255,7 +255,7 @@ pub enum WorkflowPaneSnapshot {
     CloudWorkflow {
         workflow_id: Option<SyncId>,
         // Settings for the workflow pane when it's opened (such as a folder to focus upon opening)
-        settings: OpenWarpDriveObjectSettings,
+        settings: OpenZtermDriveObjectSettings,
     },
 }
 
@@ -298,7 +298,7 @@ pub enum CodeReviewPaneSnapshot {
 pub enum LeftPanelDisplayedTab {
     FileTree,
     GlobalSearch,
-    WarpDrive,
+    ZtermDrive,
     ConversationListView,
 }
 
@@ -307,7 +307,7 @@ impl From<ToolPanelView> for LeftPanelDisplayedTab {
         match view {
             ToolPanelView::ProjectExplorer => LeftPanelDisplayedTab::FileTree,
             ToolPanelView::GlobalSearch { .. } => LeftPanelDisplayedTab::GlobalSearch,
-            ToolPanelView::WarpDrive => LeftPanelDisplayedTab::WarpDrive,
+            ToolPanelView::ZtermDrive => LeftPanelDisplayedTab::ZtermDrive,
             ToolPanelView::ConversationListView => LeftPanelDisplayedTab::ConversationListView,
         }
     }

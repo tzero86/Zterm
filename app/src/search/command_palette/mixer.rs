@@ -8,9 +8,9 @@ use crate::util::bindings::CommandBinding;
 use crate::workspace::PaneViewLocator;
 use std::sync::Arc;
 use strum_macros::IntoStaticStr;
-use warp_util::path::LineAndColumnArg;
-use warpui::keymap::BindingId;
-use warpui::{EntityId, WindowId};
+use zterm_util::path::LineAndColumnArg;
+use zterm_ui::keymap::BindingId;
+use zterm_ui::{EntityId, WindowId};
 
 pub type CommandPaletteMixer = SearchMixer<CommandPaletteItemAction>;
 
@@ -26,7 +26,7 @@ pub enum CommandPaletteItemAction {
     OpenNotebook {
         id: SyncId,
     },
-    ViewInWarpDrive {
+    ViewInZtermDrive {
         id: CloudObjectTypeAndId,
     },
     InvokeEnvironmentVariables {
@@ -106,7 +106,7 @@ impl CommandPaletteItemAction {
             CommandPaletteItemAction::OpenLaunchConfiguration { .. } => {
                 ItemSummary::LaunchConfiguration
             }
-            CommandPaletteItemAction::ViewInWarpDrive { id } => match id {
+            CommandPaletteItemAction::ViewInZtermDrive { id } => match id {
                 CloudObjectTypeAndId::Notebook(_)
                 | CloudObjectTypeAndId::Folder(_)
                 | CloudObjectTypeAndId::GenericStringObject { .. } => ItemSummary::CloudObject,

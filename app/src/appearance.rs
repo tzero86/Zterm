@@ -1,5 +1,5 @@
 use settings::Setting as _;
-use warpui::{
+use zterm_ui::{
     fonts::FamilyId, AddSingletonModel, AppContext, AssetProvider, Entity, ModelContext,
     SingletonEntity,
 };
@@ -12,8 +12,8 @@ mod macos_app_icon {
         base::{id, nil},
     };
     pub use objc::{class, msg_send, sel, sel_impl};
-    pub use warp_core::channel::{Channel, ChannelState};
-    pub use warpui::platform::mac::{make_nsstring, AutoreleasePoolGuard};
+    pub use zterm_core::channel::{Channel, ChannelState};
+    pub use zterm_ui::platform::mac::{make_nsstring, AutoreleasePoolGuard};
 
     pub use crate::settings::app_icon::{AppIcon, AppIconSettings, AppIconSettingsChangedEvent};
 }
@@ -25,13 +25,13 @@ use crate::{
         active_theme_kind, FontSettings, FontSettingsChangedEvent, MonospaceFontSize, Settings,
         ThemeSettings,
     },
-    themes::theme::{ThemeKind, WarpTheme},
+    themes::theme::{ThemeKind, ZtermTheme},
     ASSETS,
 };
 
 use anyhow::anyhow;
 
-pub use warp_core::ui::appearance::{Appearance, AppearanceEvent};
+pub use zterm_core::ui::appearance::{Appearance, AppearanceEvent};
 
 /// Manages the state of the app-wide Appearance settings, it is responsible
 /// for 1) listening to settings changes and update the underlying Appearance
@@ -40,7 +40,7 @@ pub use warp_core::ui::appearance::{Appearance, AppearanceEvent};
 pub struct AppearanceManager {
     // The transient theme is a theme that is set by the user but not saved
     // as a setting. It is used when the user is actively choosing a theme.
-    transient_theme: Option<WarpTheme>,
+    transient_theme: Option<ZtermTheme>,
 
     #[cfg(target_os = "macos")]
     app_icon_at_startup: AppIcon,
@@ -275,7 +275,7 @@ impl Entity for AppearanceManager {
 impl SingletonEntity for AppearanceManager {}
 
 fn load_default_monospace_font_family(ctx: &mut AppContext) -> anyhow::Result<FamilyId> {
-    warpui::fonts::Cache::handle(ctx).update(ctx, |font_cache, _| {
+    zterm_ui::fonts::Cache::handle(ctx).update(ctx, |font_cache, _| {
         let default_monospace_font_family = font_cache.load_family_from_bytes(
             "Hack",
             vec![
@@ -302,7 +302,7 @@ fn load_default_monospace_font_family(ctx: &mut AppContext) -> anyhow::Result<Fa
 }
 
 fn load_default_ui_font_family(ctx: &mut AppContext) -> anyhow::Result<FamilyId> {
-    warpui::fonts::Cache::handle(ctx).update(ctx, |font_cache, _| {
+    zterm_ui::fonts::Cache::handle(ctx).update(ctx, |font_cache, _| {
         let roboto = font_cache.load_family_from_bytes(
             "Roboto",
             vec![
@@ -339,7 +339,7 @@ fn load_default_ui_font_family(ctx: &mut AppContext) -> anyhow::Result<FamilyId>
 }
 
 fn load_password_font_family(ctx: &mut AppContext) -> anyhow::Result<FamilyId> {
-    warpui::fonts::Cache::handle(ctx).update(ctx, |font_cache, _| {
+    zterm_ui::fonts::Cache::handle(ctx).update(ctx, |font_cache, _| {
         font_cache.load_family_from_bytes(
             "PasswordCircle",
             vec![ASSETS.get("bundled/fonts/password.ttf")?.to_vec()],
@@ -359,10 +359,10 @@ fn get_or_load_font_family(_font_name: &str, _ctx: &mut AppContext) -> Option<Fa
 /// the font cache in case we are using a pre-bundled font like Hack.
 /// Then we fall back to loading a system font.
 fn get_or_load_font_family(font_name: &str, ctx: &mut AppContext) -> Option<FamilyId> {
-    warpui::fonts::Cache::handle(ctx).update(ctx, |font_cache, _| {
+    zterm_ui::fonts::Cache::handle(ctx).update(ctx, |font_cache, _| {
         match font_cache.get_or_load_system_font(font_name) {
             Ok(family) => {
-                let font_id = font_cache.select_font(family, warpui::fonts::Properties::default());
+                let font_id = font_cache.select_font(family, zterm_ui::fonts::Properties::default());
 
                 // Validate that the font contains the `m` glyph since this is assumed in
                 // various parts of the code. We already do this when surfacing fonts in the font
@@ -431,7 +431,7 @@ fn build_appearance(ctx: &mut AppContext) -> Appearance {
 }
 
 #[cfg(target_family = "wasm")]
-fn emit_theme_background_event(theme: &WarpTheme) {
+fn emit_theme_background_event(theme: &ZtermTheme) {
     let bg = theme.background().into_solid();
     let color = format!("#{:02x}{:02x}{:02x}", bg.r, bg.g, bg.b);
     crate::platform::wasm::emit_event(crate::platform::wasm::WarpEvent::ThemeBackgroundChanged {

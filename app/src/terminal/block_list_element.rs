@@ -2,7 +2,7 @@ use crate::ai::blocklist::agent_view::{agent_view_bg_fill, AgentViewState};
 use crate::ai::blocklist::{ai_brand_color, ATTACH_AS_AGENT_MODE_CONTEXT_TEXT};
 use crate::ai_assistant::{AI_ASSISTANT_SVG_PATH, ASK_AI_ASSISTANT_TEXT};
 use crate::appearance::Appearance;
-use crate::drive::settings::WarpDriveSettings;
+use crate::drive::settings::ZtermDriveSettings;
 use crate::features::FeatureFlag;
 use crate::pane_group::SplitPaneState;
 use crate::settings::{
@@ -20,19 +20,19 @@ use crate::terminal::model::selection::{SelectAction, SelectionPoint};
 use crate::terminal::safe_mode_settings::get_secret_obfuscation_mode;
 use crate::terminal::view::TerminalAction;
 use crate::terminal::{grid_renderer, SizeInfo};
-use crate::themes::theme::{Fill, WarpTheme};
+use crate::themes::theme::{Fill, ZtermTheme};
 use crate::ui_components::{self, icons as UIIcon};
 use crate::util::color::Opacity;
 use enum_iterator::Sequence;
 use itertools::Itertools;
 use parking_lot::FairMutex;
 use vec1::Vec1;
-use warp_core::semantic_selection::SemanticSelection;
-use warp_core::ui::builder::UiBuilder;
-use warp_core::ui::theme::AnsiColorIdentifier;
-use warp_util::user_input::UserInput;
-use warpui::platform::Cursor;
-use warpui::text::SelectionType;
+use zterm_core::semantic_selection::SemanticSelection;
+use zterm_core::ui::builder::UiBuilder;
+use zterm_core::ui::theme::AnsiColorIdentifier;
+use zterm_util::user_input::UserInput;
+use zterm_ui::platform::Cursor;
+use zterm_ui::text::SelectionType;
 
 use pathfinder_color::ColorU;
 use session_sharing_protocol::common::{ParticipantId, Selection};
@@ -43,25 +43,25 @@ use std::ops::{Deref, Range, RangeInclusive};
 use std::rc::Rc;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, Mutex, MutexGuard};
-use warpui::elements::new_scrollable::{NewScrollableElement, ScrollableAxis};
-use warpui::elements::{
+use zterm_ui::elements::new_scrollable::{NewScrollableElement, ScrollableAxis};
+use zterm_ui::elements::{
     Axis, Border, ChildAnchor, ClippedScrollStateHandle, ConstrainedBox, Container, CornerRadius,
     Hoverable, MouseStateHandle, OffsetPositioning, ParentAnchor, ParentElement,
     ParentOffsetBounds, Point, Radius, ScrollData, ScrollableElement, Stack, Text, ZIndex,
 };
-use warpui::event::{KeyState, ModifiersState};
-use warpui::fonts::{FamilyId, Properties, Weight};
-use warpui::geometry::rect::RectF;
-use warpui::geometry::vector::{vec2f, Vector2F};
-use warpui::platform::keyboard::KeyCode;
-use warpui::ui_components::components::UiComponent;
-use warpui::units::{IntoLines, IntoPixels, Lines, Pixels};
-use warpui::{elements::Icon, ClipBounds};
-use warpui::{
+use zterm_ui::event::{KeyState, ModifiersState};
+use zterm_ui::fonts::{FamilyId, Properties, Weight};
+use zterm_ui::geometry::rect::RectF;
+use zterm_ui::geometry::vector::{vec2f, Vector2F};
+use zterm_ui::platform::keyboard::KeyCode;
+use zterm_ui::ui_components::components::UiComponent;
+use zterm_ui::units::{IntoLines, IntoPixels, Lines, Pixels};
+use zterm_ui::{elements::Icon, ClipBounds};
+use zterm_ui::{
     elements::SavePosition, event::DispatchedEvent, AfterLayoutContext, AppContext, Element, Event,
     EventContext, LayoutContext, PaintContext, SizeConstraint,
 };
-use warpui::{EntityId, ModelHandle, SingletonEntity as _};
+use zterm_ui::{EntityId, ModelHandle, SingletonEntity as _};
 
 use super::block_list_viewport::{ClampingMode, InputMode, ScrollPosition, ViewportState};
 use super::blockgrid_renderer::GridRenderParams;
@@ -633,7 +633,7 @@ pub struct BlockListElement {
     font_size: f32,
     font_weight: Weight,
     line_height_ratio: f32,
-    warp_theme: WarpTheme,
+    warp_theme: ZtermTheme,
     ui_builder: UiBuilder,
     block_borders_enabled: bool,
     overflow_offset: f32,
@@ -1140,11 +1140,11 @@ impl BlockListElement {
             let icon = Container::new(
                 ConstrainedBox::new(if FeatureFlag::AgentView.is_enabled() {
                     UIIcon::Icon::Paperclip
-                        .to_warpui_icon(icon_color.into())
+                        .to_zterm_ui_icon(icon_color.into())
                         .finish()
                 } else if FeatureFlag::AgentMode.is_enabled() {
                     UIIcon::Icon::Stars
-                        .to_warpui_icon(icon_color.into())
+                        .to_zterm_ui_icon(icon_color.into())
                         .finish()
                 } else {
                     Icon::new(AI_ASSISTANT_SVG_PATH, icon_color).finish()
@@ -1202,12 +1202,12 @@ impl BlockListElement {
         }
 
         if FeatureFlag::BlockToolbeltSaveAsWorkflow.is_enabled()
-            && WarpDriveSettings::is_warp_drive_enabled(app)
+            && ZtermDriveSettings::is_warp_drive_enabled(app)
         {
             let icon = Container::new(
                 ConstrainedBox::new(
                     ui_components::icons::Icon::Save
-                        .to_warpui_icon(icon_color.into())
+                        .to_zterm_ui_icon(icon_color.into())
                         .finish(),
                 )
                 .with_height(16.)
@@ -1282,7 +1282,7 @@ impl BlockListElement {
     }
 
     /// We only want to process control characters here and return `false` for everything else.
-    /// That way, we'll receive a `warpui::Event::TypedCharacters` event for printable characters.
+    /// That way, we'll receive a `zterm_ui::Event::TypedCharacters` event for printable characters.
     /// So `TerminalAction::KeyDown` is for control characters only while
     /// `TerminalAction::TypedCharacters` is for characters that can go into the editor.
     fn key_down(&mut self, chars: &str, ctx: &mut EventContext) -> bool {
@@ -1576,7 +1576,7 @@ impl BlockListElement {
                                 .is_some_and(|block| block.is_active_and_long_running());
 
                             // On mobile, request soft keyboard so users can input
-                            if warpui::platform::is_mobile_device() && on_long_running_block {
+                            if zterm_ui::platform::is_mobile_device() && on_long_running_block {
                                 ctx.request_soft_keyboard();
                             }
 
@@ -2361,7 +2361,7 @@ impl BlockListElement {
         block: &Block,
         is_selected_by_anyone: bool,
         bounds: RectF,
-        warp_theme: &WarpTheme,
+        warp_theme: &ZtermTheme,
         block_borders_enabled: bool,
         snackbar_header: &Option<SnackbarHeader>,
         ai_render_context: &BlocklistAIRenderContext,
@@ -4113,7 +4113,7 @@ impl Element for BlockListElement {
                                 None => 0.,
                             },
                             // Otherwise, we need to measure the prompt grid(s). Grids
-                            // aren't warpui::Elements, and hence their width isn't
+                            // aren't zterm_ui::Elements, and hence their width isn't
                             // straightforward to measure. We'll use the column index of the
                             // right-most non-empty cell as a proxy for width.
                             None => {
@@ -4772,7 +4772,7 @@ pub fn render_hoverable_block_button<F>(
     should_ignore_mouse_events: bool,
     should_allow_action: bool,
     mouse_state: MouseStateHandle,
-    theme: &WarpTheme,
+    theme: &ZtermTheme,
     ui_builder: &UiBuilder,
     on_click: F,
 ) -> Box<dyn Element>

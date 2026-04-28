@@ -2,8 +2,8 @@ use async_io::block_on;
 use pathfinder_color::ColorU;
 use plist::{Dictionary, Value};
 use virtual_fs::{Stub, VirtualFS};
-use warp_core::ui::theme::{Fill, WarpTheme};
-use warpui::{fonts::FontInfo, keymap::Keystroke};
+use zterm_core::ui::theme::{Fill, ZtermTheme};
+use zterm_ui::{fonts::FontInfo, keymap::Keystroke};
 
 use crate::settings::import::{
     config::{GlobalHotkey, HotkeyError, ImportedFont, ParseableConfig, ThemeType},
@@ -106,9 +106,9 @@ fn test_color_dictionary_to_coloru() {
 
 #[test]
 fn test_into_warp_theme_valid() {
-    let theme: WarpTheme = solarized_dark_theme()
+    let theme: ZtermTheme = solarized_dark_theme()
         .into_warp_theme("", &default_dark_theme())
-        .expect("Should be able to convert into WarpTheme");
+        .expect("Should be able to convert into ZtermTheme");
     assert_eq!(
         theme.accent(),
         Fill::Solid(ColorU {

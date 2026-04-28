@@ -4,24 +4,24 @@ use std::time::Duration;
 use chrono::Local;
 
 use pathfinder_geometry::vector::{vec2f, Vector2F};
-use warp_editor::editor::NavigationKey;
-use warpui::clipboard::ClipboardContent;
-use warpui::elements::{
+use zterm_editor::editor::NavigationKey;
+use zterm_ui::clipboard::ClipboardContent;
+use zterm_ui::elements::{
     resizable_state_handle, Align, Border, ChildAnchor, ConstrainedBox, Container, CornerRadius,
     CrossAxisAlignment, DispatchEventResult, DragBarSide, Empty, EventHandler, Fill, Flex,
     HyperlinkUrl, Icon, MainAxisAlignment, MainAxisSize, OffsetPositioning, ParentAnchor,
     PositionedElementAnchor, PositionedElementOffsetBounds, Radius, SavePosition, Shrinkable,
     Stack, Text,
 };
-use warpui::fonts::Properties;
-use warpui::keymap::{EditableBinding, FixedBinding};
-use warpui::platform::Cursor;
-use warpui::presenter::ChildView;
-use warpui::r#async::Timer;
-use warpui::ui_components::button::ButtonVariant;
-use warpui::ui_components::components::{Coords, UiComponent, UiComponentStyles};
-use warpui::{elements::Element, AppContext, Entity, TypedActionView, View, ViewContext};
-use warpui::{FocusContext, ModelHandle, SingletonEntity, ViewHandle};
+use zterm_ui::fonts::Properties;
+use zterm_ui::keymap::{EditableBinding, FixedBinding};
+use zterm_ui::platform::Cursor;
+use zterm_ui::presenter::ChildView;
+use zterm_ui::r#async::Timer;
+use zterm_ui::ui_components::button::ButtonVariant;
+use zterm_ui::ui_components::components::{Coords, UiComponent, UiComponentStyles};
+use zterm_ui::{elements::Element, AppContext, Entity, TypedActionView, View, ViewContext};
+use zterm_ui::{FocusContext, ModelHandle, SingletonEntity, ViewHandle};
 
 use crate::appearance::Appearance;
 use crate::editor::{
@@ -32,8 +32,8 @@ use crate::input_suggestions::{Event as InputSuggestionsEvent, InputSuggestions}
 use crate::send_telemetry_from_ctx;
 use crate::server::server_api::ai::AIClient;
 use crate::server::server_api::ServerApi;
-use crate::server::telemetry::{TelemetryEvent, WarpAIActionType};
-use crate::terminal::resizable_data::{ModalType, ResizableData, DEFAULT_WARP_AI_WIDTH};
+use crate::server::telemetry::{TelemetryEvent, ZtermAIActionType};
+use crate::terminal::resizable_data::{ModalType, ResizableData, DEFAULT_ZTERM_AI_WIDTH};
 use crate::ui_components::blended_colors;
 use crate::workspaces::user_workspaces::UserWorkspaces;
 
@@ -41,10 +41,10 @@ use crate::ui_components::buttons::icon_button;
 use crate::workspace::{ActiveSession, TAB_BAR_HEIGHT};
 
 use crate::util::bindings::{cmd_or_ctrl_shift, CustomAction};
-use warpui::elements::MouseStateHandle;
-use warpui::elements::ParentElement;
-use warpui::elements::Resizable;
-use warpui::elements::ResizableStateHandle;
+use zterm_ui::elements::MouseStateHandle;
+use zterm_ui::elements::ParentElement;
+use zterm_ui::elements::Resizable;
+use zterm_ui::elements::ResizableStateHandle;
 
 use super::execution_context::WarpAiExecutionContext;
 use super::requests::{Event as RequestsEvent, RequestStatus, Requests};
@@ -146,7 +146,7 @@ pub enum AIAssistantAction {
 }
 
 pub fn init(app: &mut AppContext) {
-    use warpui::keymap::macros::*;
+    use zterm_ui::keymap::macros::*;
 
     app.register_fixed_bindings([FixedBinding::custom(
         CustomAction::CloseCurrentSession,
@@ -233,12 +233,12 @@ impl AIAssistantPanelView {
         let resizable_data_handle = ResizableData::handle(ctx);
         let resizable_state_handle = match resizable_data_handle
             .as_ref(ctx)
-            .get_handle(ctx.window_id(), ModalType::WarpAIWidth)
+            .get_handle(ctx.window_id(), ModalType::ZtermAIWidth)
         {
             Some(handle) => handle,
             None => {
                 log::error!("Couldn't retrieve warp ai resizable state handle.");
-                resizable_state_handle(DEFAULT_WARP_AI_WIDTH)
+                resizable_state_handle(DEFAULT_ZTERM_AI_WIDTH)
             }
         };
 
@@ -424,7 +424,7 @@ impl AIAssistantPanelView {
         }
 
         send_telemetry_from_ctx!(
-            TelemetryEvent::OpenedWarpAI {
+            TelemetryEvent::OpenedZtermAI {
                 source: ask_type.into()
             },
             ctx
@@ -450,7 +450,7 @@ impl AIAssistantPanelView {
                     self.issue_request(buffer_text, ctx);
                 } else {
                     // Only send this event if the user tried to execute with a longer than permitted prompt.
-                    send_telemetry_from_ctx!(TelemetryEvent::WarpAICharacterLimitExceeded, ctx);
+                    send_telemetry_from_ctx!(TelemetryEvent::ZtermAICharacterLimitExceeded, ctx);
                 }
                 ctx.notify();
             }
@@ -661,7 +661,7 @@ impl AIAssistantPanelView {
         let time_now = Local::now();
 
         result.push_str(&format!(
-            "## Warp AI Transcript ({})\n\n",
+            "## Zterm AI Transcript ({})\n\n",
             time_now.format("%x %l:%M %p")
         ));
 
@@ -725,7 +725,7 @@ impl AIAssistantPanelView {
                         .with_style(UiComponentStyles {
                             font_family_id: Some(appearance.ui_font_family()),
                             font_size: Some(TITLE_FONT_SIZE),
-                            font_weight: Some(warpui::fonts::Weight::Semibold),
+                            font_weight: Some(zterm_ui::fonts::Weight::Semibold),
                             font_color: Some(appearance.theme().active_ui_text_color().into()),
                             ..Default::default()
                         })
@@ -851,7 +851,7 @@ impl AIAssistantPanelView {
                         BODY_FONT_SIZE,
                     )
                     .with_style(Properties {
-                        weight: warpui::fonts::Weight::Bold,
+                        weight: zterm_ui::fonts::Weight::Bold,
                         ..Default::default()
                     })
                     .with_color(appearance.theme().ui_error_color())
@@ -1029,8 +1029,8 @@ impl TypedActionView for AIAssistantPanelView {
             ResetContext => {
                 self.reset_context(ctx);
                 send_telemetry_from_ctx!(
-                    TelemetryEvent::WarpAIAction {
-                        action_type: WarpAIActionType::Restart
+                    TelemetryEvent::ZtermAIAction {
+                        action_type: ZtermAIActionType::Restart
                     },
                     ctx
                 );
@@ -1038,8 +1038,8 @@ impl TypedActionView for AIAssistantPanelView {
             CopyTranscript => {
                 self.copy_transcript(ctx);
                 send_telemetry_from_ctx!(
-                    TelemetryEvent::WarpAIAction {
-                        action_type: WarpAIActionType::CopyTranscript
+                    TelemetryEvent::ZtermAIAction {
+                        action_type: ZtermAIActionType::CopyTranscript
                     },
                     ctx
                 );
@@ -1049,7 +1049,7 @@ impl TypedActionView for AIAssistantPanelView {
             }
             PreparedPrompt(prompt) => {
                 self.issue_request(prompt.to_string(), ctx);
-                send_telemetry_from_ctx!(TelemetryEvent::UsedWarpAIPreparedPrompt { prompt }, ctx);
+                send_telemetry_from_ctx!(TelemetryEvent::UsedZtermAIPreparedPrompt { prompt }, ctx);
             }
             ClickedUrl(url) => {
                 ctx.open_url(&url.url);
@@ -1058,8 +1058,8 @@ impl TypedActionView for AIAssistantPanelView {
                 ctx.clipboard()
                     .write(ClipboardContent::plain_text(content.to_string()));
                 send_telemetry_from_ctx!(
-                    TelemetryEvent::WarpAIAction {
-                        action_type: WarpAIActionType::CopyAnswer
+                    TelemetryEvent::ZtermAIAction {
+                        action_type: ZtermAIActionType::CopyAnswer
                     },
                     ctx
                 );
@@ -1143,7 +1143,7 @@ impl View for AIAssistantPanelView {
             .finish(),
             OffsetPositioning::offset_from_parent(
                 vec2f(0., HEADER_HEIGHT),
-                warpui::elements::ParentOffsetBounds::Unbounded,
+                zterm_ui::elements::ParentOffsetBounds::Unbounded,
                 ParentAnchor::TopLeft,
                 ChildAnchor::BottomLeft,
             ),

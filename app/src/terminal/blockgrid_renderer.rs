@@ -6,15 +6,15 @@ use crate::terminal::model::grid::grid_handler::Link;
 use crate::terminal::model::index::Point;
 use crate::terminal::model::ObfuscateSecrets;
 use crate::terminal::SizeInfo;
-use crate::themes::theme::WarpTheme;
+use crate::themes::theme::ZtermTheme;
 use pathfinder_color::ColorU;
 use std::collections::HashMap;
 use std::ops::Neg;
 use std::ops::RangeInclusive;
-use warpui::fonts::{FamilyId, Properties, Weight};
-use warpui::geometry::rect::RectF;
-use warpui::geometry::vector::{vec2f, Vector2F};
-use warpui::{AppContext, Element, EntityId, PaintContext};
+use zterm_ui::fonts::{FamilyId, Properties, Weight};
+use zterm_ui::geometry::rect::RectF;
+use zterm_ui::geometry::vector::{vec2f, Vector2F};
+use zterm_ui::{AppContext, Element, EntityId, PaintContext};
 
 use super::model::ansi::{CursorShape, CursorStyle};
 use super::model::grid::RespectDisplayedOutput;
@@ -22,7 +22,7 @@ use super::model::image_map::StoredImageMetadata;
 use super::model::SecretHandle;
 
 pub struct GridRenderParams {
-    pub warp_theme: WarpTheme,
+    pub warp_theme: ZtermTheme,
     pub font_family: FamilyId,
     pub font_size: f32,
     pub font_weight: Weight,

@@ -1,11 +1,11 @@
-use std::{collections::HashMap, sync::Arc};
+﻿use std::{collections::HashMap, sync::Arc};
 
 use crate::server::telemetry::{CLISubagentControlState, TelemetryEvent};
 use instant::Instant;
 use parking_lot::FairMutex;
 use serde::{Deserialize, Serialize};
-use warp_core::send_telemetry_from_ctx;
-use warpui::{Entity, EntityId, ModelContext, ModelHandle, SingletonEntity};
+use zterm_core::send_telemetry_from_ctx;
+use zterm_ui::{Entity, EntityId, ModelContext, ModelHandle, SingletonEntity};
 
 use crate::ai::blocklist::context_model::block_context_from_terminal_model;
 use crate::{

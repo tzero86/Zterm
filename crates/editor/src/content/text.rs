@@ -30,11 +30,11 @@ use std::{
 };
 use string_offset::{ByteOffset, CharOffset, impl_offset};
 use sum_tree::{Cursor, SeekBias, SumTree};
-use warp_core::features::FeatureFlag;
-use warpui::elements::ListIndentLevel;
-use warpui::text::BlockHeaderSize as HeaderSize;
-use warpui::text::point::Point;
-use warpui::{
+use zterm_core::features::FeatureFlag;
+use zterm_ui::elements::ListIndentLevel;
+use zterm_ui::text::BlockHeaderSize as HeaderSize;
+use zterm_ui::text::point::Point;
+use zterm_ui::{
     AppContext,
     fonts::{Properties, Style, Weight},
 };

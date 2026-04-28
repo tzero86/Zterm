@@ -1,4 +1,4 @@
-use warpui::{App, SingletonEntity};
+﻿use zterm_ui::{App, SingletonEntity};
 
 use crate::{
     auth::UserUid,

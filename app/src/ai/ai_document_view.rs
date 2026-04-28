@@ -6,7 +6,7 @@ use crate::ai::agent::conversation::AIConversationId;
 use crate::ai::blocklist::agent_view::AgentViewEntryOrigin;
 use crate::ai::document::ai_document_model::{AIDocumentSaveStatus, AIDocumentUserEditStatus};
 use crate::appearance::Appearance;
-use crate::drive::{items::WarpDriveItemId, sharing::ShareableObject, CloudObjectTypeAndId};
+use crate::drive::{items::ZtermDriveItemId, sharing::ShareableObject, CloudObjectTypeAndId};
 use crate::notebooks::editor::view::RichTextEditorConfig;
 use crate::pane_group::focus_state::PaneFocusHandle;
 use crate::pane_group::pane::view::header::components::{
@@ -48,20 +48,20 @@ use crate::{
     view_components::action_button::{ActionButton, PrimaryTheme},
 };
 use pathfinder_geometry::vector::vec2f;
-use warp_core::ui::icons;
-use warp_core::ui::icons::ICON_DIMENSIONS;
-use warp_core::ui::theme::Fill as ThemeFill;
-use warpui::clipboard::ClipboardContent;
-use warpui::elements::CrossAxisAlignment;
-use warpui::elements::MainAxisAlignment;
-use warpui::elements::MainAxisSize;
-use warpui::elements::{ChildAnchor, PositionedElementAnchor, PositionedElementOffsetBounds};
-use warpui::keymap::EditableBinding;
-use warpui::keymap::FixedBinding;
-use warpui::text_layout::ClipConfig;
-use warpui::ui_components::button::ButtonTooltipPosition;
-use warpui::ui_components::components::UiComponent;
-use warpui::{
+use zterm_core::ui::icons;
+use zterm_core::ui::icons::ICON_DIMENSIONS;
+use zterm_core::ui::theme::Fill as ThemeFill;
+use zterm_ui::clipboard::ClipboardContent;
+use zterm_ui::elements::CrossAxisAlignment;
+use zterm_ui::elements::MainAxisAlignment;
+use zterm_ui::elements::MainAxisSize;
+use zterm_ui::elements::{ChildAnchor, PositionedElementAnchor, PositionedElementOffsetBounds};
+use zterm_ui::keymap::EditableBinding;
+use zterm_ui::keymap::FixedBinding;
+use zterm_ui::text_layout::ClipConfig;
+use zterm_ui::ui_components::button::ButtonTooltipPosition;
+use zterm_ui::ui_components::components::UiComponent;
+use zterm_ui::{
     elements::{
         ChildView, ConstrainedBox, Container, Flex, Hoverable, MouseStateHandle, OffsetPositioning,
         ParentElement, SavePosition, Stack,
@@ -69,7 +69,7 @@ use warpui::{
     AppContext, Element, Entity, ModelHandle, SingletonEntity, TypedActionView, View, ViewContext,
     ViewHandle,
 };
-use warpui::{id, EntityId};
+use zterm_ui::{id, EntityId};
 
 pub fn init(app: &mut AppContext) {
     app.register_editable_bindings([EditableBinding::new(
@@ -97,7 +97,7 @@ use crate::util::file::external_editor::settings::EditorLayout;
 #[cfg(feature = "local_fs")]
 use crate::util::openable_file_type::FileTarget;
 #[cfg(feature = "local_fs")]
-use warp_util::path::LineAndColumnArg;
+use zterm_util::path::LineAndColumnArg;
 
 // Import keybinding constants from code view to ensure consistency
 use crate::code::view::{SAVE_FILE_BINDING_DESCRIPTION, SAVE_FILE_BINDING_NAME};
@@ -108,12 +108,12 @@ pub enum AIDocumentAction {
     SelectVersion(AIDocumentVersion),
     Export,
     OpenVersionMenu,
-    CreateWarpDriveNotebook,
+    CreateZtermDriveNotebook,
     RevertToDocumentVersion,
     SendUpdatedPlan,
     CopyLink(String),
     CopyPlanId,
-    ShowInWarpDrive,
+    ShowInZtermDrive,
     AttachToActiveSession,
 }
 
@@ -121,7 +121,7 @@ pub enum AIDocumentAction {
 pub enum AIDocumentEvent {
     Pane(PaneEvent),
     CloseRequested,
-    ViewInWarpDrive(WarpDriveItemId),
+    ViewInZtermDrive(ZtermDriveItemId),
     #[cfg(feature = "local_fs")]
     OpenCodeInWarp {
         source: CodeSource,
@@ -366,7 +366,7 @@ impl AIDocumentView {
             pane_config.refresh_pane_header_overflow_menu_items(ctx)
         });
 
-        // Create sync button mouse state (for Warp Drive syncing)
+        // Create sync button mouse state (for Zterm Drive syncing)
         let sync_button_mouse_state = MouseStateHandle::default();
 
         // Create Update Agent button
@@ -550,7 +550,7 @@ impl AIDocumentView {
             .and_then(|sync_id| sync_id.into_server());
 
         self.pane_configuration.update(ctx, |pc, ctx| {
-            pc.set_shareable_object(server_id.map(ShareableObject::WarpDriveObject), ctx);
+            pc.set_shareable_object(server_id.map(ShareableObject::ZtermDriveObject), ctx);
             pc.refresh_pane_header_overflow_menu_items(ctx);
         });
         ctx.notify();
@@ -610,7 +610,7 @@ impl AIDocumentView {
                 let appearance = Appearance::as_ref(app);
                 let ui_builder = appearance.ui_builder().clone();
                 let tooltip = ui_builder
-                    .tool_tip("Save and auto-sync this plan to your Warp Drive".to_string())
+                    .tool_tip("Save and auto-sync this plan to your Zterm Drive".to_string())
                     .build()
                     .finish();
                 let sync_button_mouse_state = self.sync_button_mouse_state.clone();
@@ -626,7 +626,7 @@ impl AIDocumentView {
                 .on_click(|ctx, _, _| {
                     ctx.dispatch_typed_action(
                         PaneHeaderAction::<AIDocumentAction, AIDocumentAction>::CustomAction(
-                            AIDocumentAction::CreateWarpDriveNotebook,
+                            AIDocumentAction::CreateZtermDriveNotebook,
                         ),
                     )
                 })
@@ -641,7 +641,7 @@ impl AIDocumentView {
                         Container::new(
                             ConstrainedBox::new(
                                 Icon::RefreshCw04
-                                    .to_warpui_icon(ThemeFill::Solid(color))
+                                    .to_zterm_ui_icon(ThemeFill::Solid(color))
                                     .finish(),
                             )
                             .with_width(16.)
@@ -663,7 +663,7 @@ impl AIDocumentView {
                 let color = theme.nonactive_ui_detail().into_solid();
                 let ui_builder = appearance.ui_builder().clone();
                 let tooltip_text =
-                    "This plan is synced to your Warp Drive and will auto save any edits you make."
+                    "This plan is synced to your Zterm Drive and will auto save any edits you make."
                         .to_string();
                 let synced_status_mouse_state = self.synced_status_mouse_state.clone();
                 Container::new(
@@ -672,7 +672,7 @@ impl AIDocumentView {
                             Hoverable::new(synced_status_mouse_state, move |state| {
                                 let icon = {
                                     let icon_elem = Icon::RefreshCw04
-                                        .to_warpui_icon(ThemeFill::Solid(color))
+                                        .to_zterm_ui_icon(ThemeFill::Solid(color))
                                         .finish();
                                     ConstrainedBox::new(icon_elem)
                                         .with_width(16.)
@@ -688,8 +688,8 @@ impl AIDocumentView {
                                         tooltip,
                                         OffsetPositioning::offset_from_parent(
                                             vec2f(0., 4.),
-                                            warpui::elements::ParentOffsetBounds::WindowByPosition,
-                                            warpui::elements::ParentAnchor::BottomRight,
+                                            zterm_ui::elements::ParentOffsetBounds::WindowByPosition,
+                                            zterm_ui::elements::ParentAnchor::BottomRight,
                                             ChildAnchor::TopRight,
                                         ),
                                     );
@@ -938,7 +938,7 @@ impl AIDocumentView {
     }
 
     /// Bind the underlying editor model to the given window, enabling render/event processing.
-    pub fn bind_window(&self, window_id: warpui::WindowId, ctx: &mut ViewContext<Self>) {
+    pub fn bind_window(&self, window_id: zterm_ui::WindowId, ctx: &mut ViewContext<Self>) {
         self.editor.update(ctx, |editor_view, ctx| {
             editor_view
                 .model()
@@ -951,7 +951,7 @@ impl AIDocumentView {
             model.sync_to_warp_drive(self.document_id, ctx)
         });
         if !success {
-            log::error!("Failed to create Warp Drive notebook");
+            log::error!("Failed to create Zterm Drive notebook");
         }
     }
 
@@ -959,7 +959,7 @@ impl AIDocumentView {
     #[cfg(feature = "local_fs")]
     fn export(&self, ctx: &mut ViewContext<Self>) {
         use crate::drive::export::safe_filename;
-        use warpui::platform::SaveFilePickerConfiguration;
+        use zterm_ui::platform::SaveFilePickerConfiguration;
         let markdown = self.editor.as_ref(ctx).markdown_unescaped(ctx);
 
         // Get the document title from the model
@@ -1015,7 +1015,7 @@ impl View for AIDocumentView {
         "AIDocumentView"
     }
 
-    fn render(&self, _app: &AppContext) -> Box<dyn warpui::Element> {
+    fn render(&self, _app: &AppContext) -> Box<dyn zterm_ui::Element> {
         let editor = Container::new(ChildView::new(&self.editor).finish())
             .with_padding_left(8.)
             .with_padding_right(8.)
@@ -1052,7 +1052,7 @@ impl TypedActionView for AIDocumentView {
                 self.refresh(ctx);
             }
             AIDocumentAction::Export => self.export(ctx),
-            AIDocumentAction::CreateWarpDriveNotebook => self.create_warp_drive_notebook(ctx),
+            AIDocumentAction::CreateZtermDriveNotebook => self.create_warp_drive_notebook(ctx),
             AIDocumentAction::CopyLink(link) => {
                 send_telemetry_from_ctx!(
                     TelemetryEvent::ObjectLinkCopied { link: link.clone() },
@@ -1169,12 +1169,12 @@ impl TypedActionView for AIDocumentView {
                 // Update UI to reflect the new query
                 self.update_header_buttons(ctx);
             }
-            AIDocumentAction::ShowInWarpDrive => {
+            AIDocumentAction::ShowInZtermDrive => {
                 if let Some(document) =
                     AIDocumentModel::as_ref(ctx).get_current_document(&self.document_id)
                 {
                     if let Some(sync_id) = document.sync_id {
-                        ctx.emit(AIDocumentEvent::ViewInWarpDrive(WarpDriveItemId::Object(
+                        ctx.emit(AIDocumentEvent::ViewInZtermDrive(ZtermDriveItemId::Object(
                             CloudObjectTypeAndId::Notebook(sync_id),
                         )));
                     }
@@ -1222,7 +1222,7 @@ impl BackingView for AIDocumentView {
     ) -> Vec<MenuItem<Self::PaneHeaderOverflowMenuAction>> {
         let mut menu_items = vec![];
 
-        // Only show shareable link when the document is synced to Warp Drive
+        // Only show shareable link when the document is synced to Zterm Drive
         if let Some(link) =
             AIDocumentModel::as_ref(ctx).get_document_warp_drive_object_link(&self.document_id, ctx)
         {
@@ -1233,9 +1233,9 @@ impl BackingView for AIDocumentView {
                     .into_item(),
             );
             menu_items.push(
-                MenuItemFields::new("Show in Warp Drive")
-                    .with_on_select_action(AIDocumentAction::ShowInWarpDrive)
-                    .with_icon(Icon::WarpDrive)
+                MenuItemFields::new("Show in Zterm Drive")
+                    .with_on_select_action(AIDocumentAction::ShowInZtermDrive)
+                    .with_icon(Icon::ZtermDrive)
                     .into_item(),
             );
         }

@@ -1,7 +1,7 @@
-use std::path::Path;
+﻿use std::path::Path;
 
-use warp_core::ui::appearance::Appearance;
-use warpui::{
+use zterm_core::ui::appearance::Appearance;
+use zterm_ui::{
     assets::asset_cache::AssetSource,
     elements::{CacheOption, Icon, Image},
     Element,

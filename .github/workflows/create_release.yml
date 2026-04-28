@@ -1,4 +1,4 @@
-# A reusable workflow that encapsulates all of the logic surrounding building
+﻿# A reusable workflow that encapsulates all of the logic surrounding building
 # all bundles for a single release channel, either new releases (when run on the
 # `master` branch) or updated release candidates (when run within a `*_release`
 # branch).
@@ -158,7 +158,7 @@ jobs:
           is_self_hosted: false
           ref: ${{ needs.prepare_release.outputs.release_branch }}
           install_release_deps: true
-          ssh_key: ${{ secrets.WARP_CHANNEL_CONFIG_ACCESS_SSH_KEY }}
+          ssh_key: ${{ secrets.ZTERM_CHANNEL_CONFIG_ACCESS_SSH_KEY }}
 
       - name: Ensure rust target is installed
         run: rustup target add ${{ matrix.arch }}-apple-darwin
@@ -191,11 +191,11 @@ jobs:
         env:
           CHANNEL: ${{ steps.get-config.outputs.channel }}
           GIT_RELEASE_TAG: ${{ needs.prepare_release.outputs.release_tag }}
-          WARP_DEVELOPER_ID_CERT: ${{ secrets.WARP_DEVELOPER_ID_CERT }}
-          WARP_DEVELOPER_ID_CERT_PASSWORD: ${{ secrets.WARP_DEVELOPER_ID_CERT_PASSWORD }}
-          WARP_CODESIGN_KEYCHAIN_PASSWORD: ${{ secrets.WARP_CODESIGN_KEYCHAIN_PASSWORD }}
-          WARP_NOTARIZATION_APPLE_ID: ${{ secrets.WARP_NOTARIZATION_APPLE_ID }}
-          WARP_NOTARIZATION_PASSWORD: ${{ secrets.WARP_NOTARIZATION_PASSWORD }}
+          ZTERM_DEVELOPER_ID_CERT: ${{ secrets.ZTERM_DEVELOPER_ID_CERT }}
+          ZTERM_DEVELOPER_ID_CERT_PASSWORD: ${{ secrets.ZTERM_DEVELOPER_ID_CERT_PASSWORD }}
+          ZTERM_CODESIGN_KEYCHAIN_PASSWORD: ${{ secrets.ZTERM_CODESIGN_KEYCHAIN_PASSWORD }}
+          ZTERM_NOTARIZATION_APPLE_ID: ${{ secrets.ZTERM_NOTARIZATION_APPLE_ID }}
+          ZTERM_NOTARIZATION_PASSWORD: ${{ secrets.ZTERM_NOTARIZATION_PASSWORD }}
 
       - name: Add DMG to GitHub release assets
         if: ${{ needs.prepare_release.outputs.should_publish == 'true' }}
@@ -278,7 +278,7 @@ jobs:
           is_self_hosted: false
           ref: ${{ needs.prepare_release.outputs.release_branch }}
           install_release_deps: true
-          ssh_key: ${{ secrets.WARP_CHANNEL_CONFIG_ACCESS_SSH_KEY }}
+          ssh_key: ${{ secrets.ZTERM_CHANNEL_CONFIG_ACCESS_SSH_KEY }}
 
       # Install go toolchain, as it may be needed for some build steps.
       - name: Setup Go
@@ -325,11 +325,11 @@ jobs:
         env:
           CHANNEL: ${{ steps.get-config.outputs.channel }}
           GIT_RELEASE_TAG: ${{ needs.prepare_release.outputs.release_tag }}
-          WARP_DEVELOPER_ID_CERT: ${{ secrets.WARP_DEVELOPER_ID_CERT }}
-          WARP_DEVELOPER_ID_CERT_PASSWORD: ${{ secrets.WARP_DEVELOPER_ID_CERT_PASSWORD }}
-          WARP_CODESIGN_KEYCHAIN_PASSWORD: ${{ secrets.WARP_CODESIGN_KEYCHAIN_PASSWORD }}
-          WARP_NOTARIZATION_APPLE_ID: ${{ secrets.WARP_NOTARIZATION_APPLE_ID }}
-          WARP_NOTARIZATION_PASSWORD: ${{ secrets.WARP_NOTARIZATION_PASSWORD }}
+          ZTERM_DEVELOPER_ID_CERT: ${{ secrets.ZTERM_DEVELOPER_ID_CERT }}
+          ZTERM_DEVELOPER_ID_CERT_PASSWORD: ${{ secrets.ZTERM_DEVELOPER_ID_CERT_PASSWORD }}
+          ZTERM_CODESIGN_KEYCHAIN_PASSWORD: ${{ secrets.ZTERM_CODESIGN_KEYCHAIN_PASSWORD }}
+          ZTERM_NOTARIZATION_APPLE_ID: ${{ secrets.ZTERM_NOTARIZATION_APPLE_ID }}
+          ZTERM_NOTARIZATION_PASSWORD: ${{ secrets.ZTERM_NOTARIZATION_PASSWORD }}
 
       - name: Set up Sentry CLI
         if: ${{ needs.prepare_release.outputs.should_publish == 'true' }}
@@ -425,7 +425,7 @@ jobs:
           is_self_hosted: false
           ref: ${{ needs.prepare_release.outputs.release_branch }}
           install_release_deps: true
-          ssh_key: ${{ secrets.WARP_CHANNEL_CONFIG_ACCESS_SSH_KEY }}
+          ssh_key: ${{ secrets.ZTERM_CHANNEL_CONFIG_ACCESS_SSH_KEY }}
 
       - name: Ensure rust target is installed
         run: rustup target add ${{ matrix.arch }}-apple-darwin
@@ -452,11 +452,11 @@ jobs:
         env:
           CHANNEL: ${{ steps.get-config.outputs.channel }}
           GIT_RELEASE_TAG: ${{ needs.prepare_release.outputs.release_tag }}
-          WARP_DEVELOPER_ID_CERT: ${{ secrets.WARP_DEVELOPER_ID_CERT }}
-          WARP_DEVELOPER_ID_CERT_PASSWORD: ${{ secrets.WARP_DEVELOPER_ID_CERT_PASSWORD }}
-          WARP_CODESIGN_KEYCHAIN_PASSWORD: ${{ secrets.WARP_CODESIGN_KEYCHAIN_PASSWORD }}
-          WARP_NOTARIZATION_APPLE_ID: ${{ secrets.WARP_NOTARIZATION_APPLE_ID }}
-          WARP_NOTARIZATION_PASSWORD: ${{ secrets.WARP_NOTARIZATION_PASSWORD }}
+          ZTERM_DEVELOPER_ID_CERT: ${{ secrets.ZTERM_DEVELOPER_ID_CERT }}
+          ZTERM_DEVELOPER_ID_CERT_PASSWORD: ${{ secrets.ZTERM_DEVELOPER_ID_CERT_PASSWORD }}
+          ZTERM_CODESIGN_KEYCHAIN_PASSWORD: ${{ secrets.ZTERM_CODESIGN_KEYCHAIN_PASSWORD }}
+          ZTERM_NOTARIZATION_APPLE_ID: ${{ secrets.ZTERM_NOTARIZATION_APPLE_ID }}
+          ZTERM_NOTARIZATION_PASSWORD: ${{ secrets.ZTERM_NOTARIZATION_PASSWORD }}
 
       - name: Package CLI binary
         run: |
@@ -528,7 +528,7 @@ jobs:
           is_self_hosted: false
           ref: ${{ needs.prepare_release.outputs.release_branch }}
           install_release_deps: true
-          ssh_key: ${{ secrets.WARP_CHANNEL_CONFIG_ACCESS_SSH_KEY }}
+          ssh_key: ${{ secrets.ZTERM_CHANNEL_CONFIG_ACCESS_SSH_KEY }}
 
       # Install gcc 10, as gcc 9.5 has a bug with memcmp that is incompatible
       # with aws-lc-rs (see https://gcc.gnu.org/bugzilla/show_bug.cgi?id=95189).
@@ -678,7 +678,7 @@ jobs:
           is_self_hosted: false
           ref: ${{ needs.prepare_release.outputs.release_branch }}
           install_release_deps: true
-          ssh_key: ${{ secrets.WARP_CHANNEL_CONFIG_ACCESS_SSH_KEY }}
+          ssh_key: ${{ secrets.ZTERM_CHANNEL_CONFIG_ACCESS_SSH_KEY }}
 
       # Install gcc 10, as gcc 9.5 has a bug with memcmp that is incompatible
       # with aws-lc-rs (see https://gcc.gnu.org/bugzilla/show_bug.cgi?id=95189).
@@ -854,7 +854,7 @@ jobs:
           is_self_hosted: false
           ref: ${{ needs.prepare_release.outputs.release_branch }}
           install_release_deps: true
-          ssh_key: ${{ secrets.WARP_CHANNEL_CONFIG_ACCESS_SSH_KEY }}
+          ssh_key: ${{ secrets.ZTERM_CHANNEL_CONFIG_ACCESS_SSH_KEY }}
 
       # Install gcc 10, as gcc 9.5 has a bug with memcmp that is incompatible
       # with aws-lc-rs (see https://gcc.gnu.org/bugzilla/show_bug.cgi?id=95189).
@@ -943,7 +943,7 @@ jobs:
           is_self_hosted: false
           ref: ${{ needs.prepare_release.outputs.release_branch }}
           install_release_deps: true
-          ssh_key: ${{ secrets.WARP_CHANNEL_CONFIG_ACCESS_SSH_KEY }}
+          ssh_key: ${{ secrets.ZTERM_CHANNEL_CONFIG_ACCESS_SSH_KEY }}
 
       # Install gcc 10, as gcc 9.5 has a bug with memcmp that is incompatible
       # with aws-lc-rs (see https://gcc.gnu.org/bugzilla/show_bug.cgi?id=95189).
@@ -1276,7 +1276,7 @@ jobs:
           target_os: wasm
           is_self_hosted: false
           ref: ${{ needs.prepare_release.outputs.release_branch }}
-          ssh_key: ${{ secrets.WARP_CHANNEL_CONFIG_ACCESS_SSH_KEY }}
+          ssh_key: ${{ secrets.ZTERM_CHANNEL_CONFIG_ACCESS_SSH_KEY }}
 
       - name: Get channel configuration
         id: get-config
@@ -1403,7 +1403,7 @@ jobs:
           is_self_hosted: false
           ref: ${{ needs.prepare_release.outputs.release_branch }}
           install_release_deps: true
-          ssh_key: ${{ secrets.WARP_CHANNEL_CONFIG_ACCESS_SSH_KEY }}
+          ssh_key: ${{ secrets.ZTERM_CHANNEL_CONFIG_ACCESS_SSH_KEY }}
 
       - name: Add arm64 target
         if: ${{ matrix.arch == 'arm64' }}

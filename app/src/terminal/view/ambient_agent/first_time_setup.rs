@@ -1,4 +1,4 @@
-//! First-time cloud agent setup view.
+﻿//! First-time cloud agent setup view.
 //!
 //! This view is displayed as an overlay when users first try to use cloud agent mode
 //! and need to create an environment.
@@ -17,8 +17,8 @@ use crate::{
     ui_components::blended_colors,
 };
 use markdown_parser::{FormattedText, FormattedTextFragment, FormattedTextLine};
-use warp_core::ui::theme::{AnsiColorIdentifier, Fill};
-use warpui::{
+use zterm_core::ui::theme::{AnsiColorIdentifier, Fill};
+use zterm_ui::{
     elements::{
         new_scrollable::SingleAxisConfig, Align, Border, ChildView, ClippedScrollStateHandle,
         ConstrainedBox, Container, CornerRadius, CrossAxisAlignment, Element, Expanded, Flex,
@@ -355,7 +355,7 @@ impl View for FirstTimeCloudAgentSetupView {
             },
             appearance.theme().nonactive_ui_detail().into(),
             appearance.theme().active_ui_detail().into(),
-            warpui::elements::Fill::None,
+            zterm_ui::elements::Fill::None,
         )
         .finish();
 

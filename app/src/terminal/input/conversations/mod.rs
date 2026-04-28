@@ -1,4 +1,4 @@
-//! Inline conversation menu for selecting AI conversations, enabled
+﻿//! Inline conversation menu for selecting AI conversations, enabled
 //! when `FeatureFlag::AgentView` is enabled.
 mod data_source;
 mod search_item;
@@ -7,8 +7,8 @@ mod view;
 pub use view::{InlineConversationMenuEvent, InlineConversationMenuView};
 
 use pathfinder_color::ColorU;
-use warp_core::ui::appearance::Appearance;
-use warpui::{keymap::Keystroke, SingletonEntity};
+use zterm_core::ui::appearance::Appearance;
+use zterm_ui::{keymap::Keystroke, SingletonEntity};
 
 use crate::ai::active_agent_views_model::{ActiveAgentViewsModel, ConversationOrTaskId};
 use crate::ai::conversation_navigation::ConversationNavigationData;

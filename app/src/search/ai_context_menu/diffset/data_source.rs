@@ -1,10 +1,10 @@
-use super::search_item::DiffSetSearchItem;
+﻿use super::search_item::DiffSetSearchItem;
 use crate::code_review::diff_state::DiffMode;
 
 use crate::search::ai_context_menu::mixer::AIContextMenuSearchableAction;
 use crate::search::data_source::{Query, QueryResult};
 use crate::search::mixer::{DataSourceRunErrorWrapper, SyncDataSource};
-use warpui::AppContext;
+use zterm_ui::AppContext;
 
 const UNCOMMITTED_CHANGES_NAME: &str = "uncommitted changes";
 const MAIN_BRANCH_CHANGES_NAME: &str = "changes vs. main branch";
@@ -53,6 +53,6 @@ impl SyncDataSource for DiffSetDataSource {
     }
 }
 
-impl warpui::Entity for DiffSetDataSource {
+impl zterm_ui::Entity for DiffSetDataSource {
     type Event = ();
 }

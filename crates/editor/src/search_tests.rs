@@ -1,4 +1,4 @@
-use warpui::{App, ModelHandle};
+use zterm_ui::{App, ModelHandle};
 
 use crate::content::{
     buffer::{AutoScrollBehavior, Buffer, BufferEditAction, BufferSelectAction, EditOrigin},

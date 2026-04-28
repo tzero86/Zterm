@@ -1,4 +1,4 @@
-//! Header layout used when the `GitOperationsInCodeReview` feature flag is
+﻿//! Header layout used when the `GitOperationsInCodeReview` feature flag is
 //! enabled. This replaces the legacy header (which lives in the parent module)
 //! with a simplified layout: the diff-mode dropdown on the left, and file-nav /
 //! overflow / maximize buttons on the right.
@@ -12,13 +12,13 @@ use crate::code_review::diff_selector::DiffSelector;
 use crate::menu::Menu;
 use crate::view_components::action_button::ActionButton;
 use pathfinder_geometry::vector::vec2f;
-use warp_core::features::FeatureFlag;
-use warpui::elements::{
+use zterm_core::features::FeatureFlag;
+use zterm_ui::elements::{
     ChildAnchor, ChildView, Clipped, ConstrainedBox, Container, CrossAxisAlignment, Flex,
     MainAxisAlignment, MainAxisSize, OffsetPositioning, ParentAnchor, ParentElement,
     ParentOffsetBounds, Shrinkable, Stack,
 };
-use warpui::{Element, ViewHandle};
+use zterm_ui::{Element, ViewHandle};
 
 use crate::appearance::Appearance;
 
@@ -89,8 +89,8 @@ impl CodeReviewHeader {
 
     fn render_file_nav_button(button: &ViewHandle<ActionButton>) -> Box<dyn Element> {
         ConstrainedBox::new(ChildView::new(button).finish())
-            .with_height(warp_core::ui::icons::ICON_DIMENSIONS)
-            .with_width(warp_core::ui::icons::ICON_DIMENSIONS)
+            .with_height(zterm_core::ui::icons::ICON_DIMENSIONS)
+            .with_width(zterm_core::ui::icons::ICON_DIMENSIONS)
             .finish()
     }
 
@@ -142,8 +142,8 @@ impl CodeReviewHeader {
     ) -> Box<dyn Element> {
         let button_container = Container::new(
             ConstrainedBox::new(ChildView::new(header_dropdown_button).finish())
-                .with_height(warp_core::ui::icons::ICON_DIMENSIONS)
-                .with_width(warp_core::ui::icons::ICON_DIMENSIONS)
+                .with_height(zterm_core::ui::icons::ICON_DIMENSIONS)
+                .with_width(zterm_core::ui::icons::ICON_DIMENSIONS)
                 .finish(),
         )
         .finish();

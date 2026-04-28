@@ -7,9 +7,9 @@ pub mod theme_creator_modal;
 pub mod theme_deletion_body;
 pub mod theme_deletion_modal;
 
-use warp_core::ui::theme::WarpTheme;
+use zterm_core::ui::theme::ZtermTheme;
 
-pub fn onboarding_theme_picker_themes() -> [WarpTheme; 4] {
+pub fn onboarding_theme_picker_themes() -> [ZtermTheme; 4] {
     [
         default_themes::phenomenon(),
         default_themes::dark_theme(),

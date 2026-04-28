@@ -1,5 +1,5 @@
 use crate::ai::agent::SuggestedLoggingId;
-use crate::drive::items::{ai_fact::WarpDriveAIFact, WarpDriveItem};
+use crate::drive::items::{ai_fact::ZtermDriveAIFact, ZtermDriveItem};
 use crate::server::{ids::SyncId, sync_queue::QueueItem};
 use crate::{
     cloud_object::{
@@ -13,7 +13,7 @@ use crate::{
     drive::CloudObjectTypeAndId,
 };
 use serde::{Deserialize, Serialize};
-use warp_core::ui::appearance::Appearance;
+use zterm_core::ui::appearance::Appearance;
 
 pub mod manager;
 pub mod view;
@@ -110,8 +110,8 @@ impl StringModel for AIFact {
         id: SyncId,
         _appearance: &Appearance,
         ai_fact: &CloudAIFact,
-    ) -> Option<Box<dyn WarpDriveItem>> {
-        Some(Box::new(WarpDriveAIFact::new(
+    ) -> Option<Box<dyn ZtermDriveItem>> {
+        Some(Box::new(ZtermDriveAIFact::new(
             CloudObjectTypeAndId::GenericStringObject {
                 object_type: GenericStringObjectFormat::Json(JsonObjectType::AIFact),
                 id,

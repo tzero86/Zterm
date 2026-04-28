@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+﻿use std::collections::HashMap;
 use std::fs;
 use std::io;
 use std::path::{Path, PathBuf};
@@ -124,7 +124,7 @@ impl CliAgentPluginManager for GeminiPluginManager {
 }
 
 static INSTALL_INSTRUCTIONS: LazyLock<PluginInstructions> = LazyLock::new(|| PluginInstructions {
-    title: "Install Warp Plugin for Gemini CLI",
+    title: "Install Zterm Plugin for Gemini CLI",
     subtitle: "Run the following command, then restart Gemini CLI.",
     steps: &[PluginInstructionStep {
         description: "Install the Warp extension",

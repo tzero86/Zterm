@@ -1,4 +1,4 @@
-//! Bridges durable lead-agent messages into Claude Code's hook-driven
+﻿//! Bridges durable lead-agent messages into Claude Code's hook-driven
 //! next-turn context.
 //!
 //! The bridge uses an on-disk three-stage state machine inside the per-session
@@ -20,8 +20,8 @@ use serde::{Deserialize, Serialize};
 use tempfile::NamedTempFile;
 use tokio::sync::Mutex as AsyncMutex;
 use uuid::Uuid;
-use warpui::r#async::SpawnedFutureHandle;
-use warpui::ModelSpawner;
+use zterm_ui::r#async::SpawnedFutureHandle;
+use zterm_ui::ModelSpawner;
 
 use crate::ai::agent_events::{
     run_agent_event_driver, AgentEventConsumer, AgentEventConsumerControlFlow,

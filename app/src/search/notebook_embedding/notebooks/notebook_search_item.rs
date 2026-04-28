@@ -1,5 +1,5 @@
-use ordered_float::OrderedFloat;
-use warpui::{
+﻿use ordered_float::OrderedFloat;
+use zterm_ui::{
     elements::{
         ConstrainedBox, Container, CrossAxisAlignment, Flex, Highlight, MainAxisAlignment,
         MainAxisSize, ParentElement, Text,
@@ -52,7 +52,7 @@ impl SearchItem for NotebookSearchItem {
         Container::new(
             ConstrainedBox::new(
                 Icon::Notebook
-                    .to_warpui_icon(
+                    .to_zterm_ui_icon(
                         warp_drive_icon_color(
                             appearance,
                             DriveObjectType::Notebook {
@@ -117,7 +117,7 @@ impl SearchItem for NotebookSearchItem {
                 .finish();
             let warning_icon = ConstrainedBox::new(
                 Icon::Warning
-                    .to_warpui_icon(appearance.theme().ui_warning_color().into())
+                    .to_zterm_ui_icon(appearance.theme().ui_warning_color().into())
                     .finish(),
             )
             .with_width(warning_font_size)

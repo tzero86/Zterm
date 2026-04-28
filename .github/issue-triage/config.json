@@ -1,4 +1,4 @@
-{
+﻿{
   "labels": {
     "bug": {
       "color": "d73a4a",
@@ -30,7 +30,7 @@
     },
     "needs-mocks": {
       "color": "f48c06",
-      "description": "The issue requires UI mocks from from Warp's design team before implementation can begin."
+      "description": "The issue requires UI mocks from from Zterm's design team before implementation can begin."
     },
     "ready-to-implement": {
       "color": "0e8a16",
@@ -154,7 +154,7 @@
     },
     "area:warp-drive": {
       "color": "0e8a16",
-      "description": "Warp Drive objects, sync, sharing, cloud object management, and persisted artifacts."
+      "description": "Zterm Drive objects, sync, sharing, cloud object management, and persisted artifacts."
     },
     "area:window-tabs-panes": {
       "color": "fef2c0",

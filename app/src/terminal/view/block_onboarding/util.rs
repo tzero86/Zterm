@@ -1,12 +1,12 @@
-use crate::appearance::Appearance;
+﻿use crate::appearance::Appearance;
 use crate::editor::EditorView;
 use crate::ui_components::icons::Icon;
 use pathfinder_color::ColorU;
-use warp_core::ui::theme::Fill;
-use warpui::elements::{Flex, ParentElement};
-use warpui::ui_components::components::Coords;
-use warpui::ui_components::text_input::TextInput;
-use warpui::{
+use zterm_core::ui::theme::Fill;
+use zterm_ui::elements::{Flex, ParentElement};
+use zterm_ui::ui_components::components::Coords;
+use zterm_ui::ui_components::text_input::TextInput;
+use zterm_ui::{
     elements::{
         ConstrainedBox, Container, CornerRadius, CrossAxisAlignment, MouseStateHandle, Radius,
         Shrinkable,
@@ -19,7 +19,7 @@ use warpui::{
     },
     Action, AppContext, Element,
 };
-use warpui::{SingletonEntity, ViewHandle};
+use zterm_ui::{SingletonEntity, ViewHandle};
 
 pub const INPUT_BOX_FONT_SIZE: f32 = 14.;
 pub const TEAM_BLOCK_INITIAL_HEIGHT: f32 = 92.;
@@ -161,7 +161,7 @@ pub fn render_input_row<A: Action + Clone>(
     } else {
         ConstrainedBox::new(
             Icon::Check
-                .to_warpui_icon(Fill::Solid(ColorU::new(11, 142, 71, 255)))
+                .to_zterm_ui_icon(Fill::Solid(ColorU::new(11, 142, 71, 255)))
                 .finish(),
         )
         .with_width(24.)

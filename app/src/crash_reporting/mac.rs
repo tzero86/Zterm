@@ -1,10 +1,10 @@
-#![allow(deprecated)]
+﻿#![allow(deprecated)]
 
 use cocoa::{
     base::{id, nil, BOOL},
     foundation::NSAutoreleasePool,
 };
-use warpui::platform::mac::make_nsstring;
+use zterm_ui::platform::mac::make_nsstring;
 
 use super::*;
 

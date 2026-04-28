@@ -1,4 +1,4 @@
-// Allow the `single_range_in_vec_init` clippy rule. The buffer#edit API takes in a `Vec` of ranges,
+﻿// Allow the `single_range_in_vec_init` clippy rule. The buffer#edit API takes in a `Vec` of ranges,
 // which is at odds with this clippy rule.
 #![allow(clippy::single_range_in_vec_init)]
 
@@ -15,7 +15,7 @@ use std::{
     collections::HashSet,
     pin::{pin, Pin},
 };
-use warpui::{color::ColorU, App, ModelHandle};
+use zterm_ui::{color::ColorU, App, ModelHandle};
 
 fn visible_text_styles(buffer: &Buffer) -> Vec<Option<TextStyle>> {
     buffer

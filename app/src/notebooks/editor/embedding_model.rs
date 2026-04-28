@@ -1,13 +1,13 @@
 use std::{borrow::Cow, mem, ops::Range, sync::Arc};
 
 use string_offset::{ByteOffset, CharOffset};
-use warp_completer::signatures::CommandRegistry;
-use warp_editor::{
+use zterm_completer::signatures::CommandRegistry;
+use zterm_editor::{
     content::{anchor::Anchor, buffer::Buffer, selection_model::BufferSelectionModel},
     editor::EmbeddedItemModel,
 };
-use warp_util::user_input::UserInput;
-use warpui::{
+use zterm_util::user_input::UserInput;
+use zterm_ui::{
     elements::{
         Align, Border, Container, CrossAxisAlignment, Empty, Flex, MainAxisAlignment,
         MouseStateHandle, ParentElement, Shrinkable,

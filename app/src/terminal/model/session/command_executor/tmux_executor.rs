@@ -1,4 +1,4 @@
-use std::any::Any;
+﻿use std::any::Any;
 use std::collections::HashMap;
 use std::fmt;
 use std::sync::Arc;
@@ -16,8 +16,8 @@ use crate::terminal::model::tmux::commands::TmuxCommand;
 use crate::terminal::shell::Shell;
 
 use super::CommandExecutor;
-use warp_completer::completer::{CommandExitStatus, CommandOutput};
-use warp_core::command::ExitCode;
+use zterm_completer::completer::{CommandExitStatus, CommandOutput};
+use zterm_core::command::ExitCode;
 
 /// A `Session`-scoped executor for commands via tmux.
 pub struct TmuxCommandExecutor {

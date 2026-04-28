@@ -1,6 +1,6 @@
-//! The rendering logic for shared session banners.
+﻿//! The rendering logic for shared session banners.
 use chrono::{DateTime, Datelike, Local};
-use warpui::{
+use zterm_ui::{
     elements::{
         Border, ConstrainedBox, Container, CornerRadius, CrossAxisAlignment, Flex, MainAxisSize,
         ParentElement, Radius, Rect, Shrinkable, Text,

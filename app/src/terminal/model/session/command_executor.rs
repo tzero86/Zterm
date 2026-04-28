@@ -1,4 +1,4 @@
-mod in_band_command_executor;
+﻿mod in_band_command_executor;
 #[cfg(feature = "local_tty")]
 mod local_command_executor;
 #[cfg(feature = "local_tty")]
@@ -19,8 +19,8 @@ use std::{any::Any, fmt::Debug, sync::Arc};
 use anyhow::Result;
 use async_channel::{Receiver, Sender};
 use async_trait::async_trait;
-use warp_completer::completer::CommandOutput;
-use warpui::ModelContext;
+use zterm_completer::completer::CommandOutput;
+use zterm_ui::ModelContext;
 
 use crate::terminal::{
     event::ExecutedExecutorCommandEvent, model::session::Sessions, shell::Shell,
@@ -151,7 +151,7 @@ fn new_command_executor_for_local_tty_session(
     use remote_server_executor::RemoteServerCommandExecutor;
     use settings::Setting as _;
     use tmux_executor::TmuxCommandExecutor;
-    use warpui::SingletonEntity as _;
+    use zterm_ui::SingletonEntity as _;
     use wsl_command_executor::WslCommandExecutor;
 
     use crate::{
@@ -373,7 +373,7 @@ pub mod testing {
 
     use anyhow::anyhow;
     use command::r#async::Command;
-    use warp_completer::completer::CommandOutput;
+    use zterm_completer::completer::CommandOutput;
 
     use super::*;
 

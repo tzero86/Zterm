@@ -62,9 +62,9 @@ use crate::terminal::shell::{ShellName, ShellType};
 
 use crate::terminal::model::secrets::ObfuscateSecrets;
 use session_sharing_protocol::sharer::SessionSourceType;
-use warp_core::report_error;
+use zterm_core::report_error;
 #[cfg(not(target_family = "wasm"))]
-use warpui::util::save_as_file;
+use zterm_ui::util::save_as_file;
 
 use async_channel::Sender;
 use base64::Engine;
@@ -82,14 +82,14 @@ use std::ops::{Range, RangeInclusive};
 use std::path::PathBuf;
 use std::str::FromStr;
 use std::sync::Arc;
-use warp_core::features::FeatureFlag;
-use warp_core::semantic_selection::SemanticSelection;
-pub use warp_terminal::model::BlockIndex;
-use warp_terminal::model::{KeyboardModes, KeyboardModesApplyBehavior};
-use warpui::assets::asset_cache::Asset;
-use warpui::image_cache::ImageType;
-use warpui::r#async::executor::Background;
-use warpui::AppContext;
+use zterm_core::features::FeatureFlag;
+use zterm_core::semantic_selection::SemanticSelection;
+pub use zterm_terminal::model::BlockIndex;
+use zterm_terminal::model::{KeyboardModes, KeyboardModesApplyBehavior};
+use zterm_ui::assets::asset_cache::Asset;
+use zterm_ui::image_cache::ImageType;
+use zterm_ui::r#async::executor::Background;
+use zterm_ui::AppContext;
 
 /// Max size of the window title stack.
 const TITLE_STACK_MAX_DEPTH: usize = 4096;
@@ -1011,7 +1011,7 @@ impl SelectedBlocks {
 pub enum TerminalInputState {
     /// Alt-screen on which programs like vim run is visible.
     AltScreen,
-    /// Warp Input View is visible.
+    /// Zterm Input View is visible.
     InputEditor,
     /// Block-list is visible but input will go to the running command.
     LongRunningCommand,
@@ -2278,7 +2278,7 @@ impl TerminalModel {
             SshLoginState::LastLogin | SshLoginState::PromptDetected => {
                 self.event_proxy
                     .send_terminal_event(Event::DetectedEndOfSshLogin(
-                        SshLoginStatus::ReadyToWarpify,
+                        SshLoginStatus::ReadyToZtermify,
                     ));
 
                 ssh_login_state.notification_state = SshLoginNotificationState::Completed;
@@ -2289,7 +2289,7 @@ impl TerminalModel {
                     if ssh_login_state.notification_state == SshLoginNotificationState::Monitoring {
                         self.event_proxy
                             .send_terminal_event(Event::DetectedEndOfSshLogin(
-                                SshLoginStatus::RecheckBeforeWarpifying,
+                                SshLoginStatus::RecheckBeforeZtermifying,
                             ));
 
                         // We want to avoid emitting redundant events for the initial check.
@@ -2299,7 +2299,7 @@ impl TerminalModel {
                 } else {
                     self.event_proxy
                         .send_terminal_event(Event::DetectedEndOfSshLogin(
-                            SshLoginStatus::ReadyToWarpify,
+                            SshLoginStatus::ReadyToZtermify,
                         ));
 
                     ssh_login_state.notification_state = SshLoginNotificationState::Completed;
@@ -2694,7 +2694,7 @@ impl ansi::Handler for TerminalModel {
         delegate!(self.configure_charset(index, charset));
     }
 
-    fn set_color(&mut self, index: usize, color: warpui::color::ColorU) {
+    fn set_color(&mut self, index: usize, color: zterm_ui::color::ColorU) {
         self.override_colors[index] = Some(color);
     }
 

@@ -1,4 +1,4 @@
-use crate::{
+﻿use crate::{
     ai::blocklist::InputType,
     appearance::Appearance,
     context_chips::spacing,
@@ -13,7 +13,7 @@ use crate::{
     themes::theme::color::internal_colors,
 };
 use settings::Setting;
-use warpui::{
+use zterm_ui::{
     elements::{
         Border, ChildView, Container, CornerRadius, DropTarget, Element, Flex, Hoverable,
         ParentElement, Radius, SavePosition, Stack,

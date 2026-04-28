@@ -1,6 +1,6 @@
 use std::{path::PathBuf, time::Duration};
 
-use warpui::{
+use zterm_ui::{
     async_assert,
     integration::{AssertionOutcome, TestStep},
     ModelHandle,
@@ -50,7 +50,7 @@ pub fn test_add_launch_config_to_warp_config() -> Builder {
                         .clone();
                     launch_config_data_source.read(app, |palette, app| {
                         // Note that this can be a synchronous assertion because unlike the next test step,
-                        // we don't have concurrency with a WarpConfig watcher thread
+                        // we don't have concurrency with a ZtermConfig watcher thread
                         assert_eq!(
                             palette.run_query(&Query::from(""), app).unwrap().len(),
                             0,
@@ -167,7 +167,7 @@ pub fn test_launch_config_single_child_branch() -> Builder {
     use warp::launch_configs::launch_config::{
         LaunchConfig, PaneMode, PaneTemplateType, SplitDirection, TabTemplate, WindowTemplate,
     };
-    use warpui::actions::StandardAction;
+    use zterm_ui::actions::StandardAction;
 
     /// Create a launch config that has a branch with a single child
     fn create_launch_config() -> LaunchConfig {

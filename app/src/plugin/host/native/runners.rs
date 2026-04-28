@@ -1,4 +1,4 @@
-use std::{
+﻿use std::{
     collections::{HashMap, HashSet},
     sync::Arc,
 };
@@ -6,8 +6,8 @@ use std::{
 use async_channel::Receiver;
 use futures::channel::oneshot;
 use parking_lot::Mutex;
-use warp_js::JsFunctionId;
-use warpui::r#async::executor::Background;
+use zterm_js::JsFunctionId;
+use zterm_ui::r#async::executor::Background;
 
 use super::{
     plugin::{AppServiceCallers, PluginRequest, PluginResponse},

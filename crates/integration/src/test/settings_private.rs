@@ -14,7 +14,7 @@ use warp::{
     },
     settings::{CodeSettings, DebugSettings, FontSettings},
 };
-use warpui::{async_assert, async_assert_eq, integration::TestStep, SingletonEntity};
+use zterm_ui::{async_assert, async_assert_eq, integration::TestStep, SingletonEntity};
 
 use super::{new_builder, Builder};
 

@@ -1,8 +1,8 @@
 use std::sync::Arc;
 
 use parking_lot::FairMutex;
-use warpui::prelude::Empty;
-use warpui::{
+use zterm_ui::prelude::Empty;
+use zterm_ui::{
     elements::{
         ChildView, Container, CrossAxisAlignment, Expanded, Flex, MainAxisSize, ParentElement,
     },
@@ -19,8 +19,8 @@ use super::{AgentFooterButtonTheme, USE_AGENT_KEYSTROKE};
 use crate::terminal::view::block_banner::WarpificationMode;
 
 /// Footer view rendered for detected subshell/SSH commands, offering both
-/// "Warpify" and "Use agent" buttons in a horizontal row.
-pub(super) struct WarpifyFooterView {
+/// "Ztermify" and "Use agent" buttons in a horizontal row.
+pub(super) struct ZtermifyFooterView {
     terminal_model: Arc<FairMutex<TerminalModel>>,
     warpify_button: ViewHandle<ActionButton>,
     use_agent_button: ViewHandle<ActionButton>,
@@ -28,18 +28,18 @@ pub(super) struct WarpifyFooterView {
     mode: Option<WarpificationMode>,
 }
 
-impl WarpifyFooterView {
+impl ZtermifyFooterView {
     pub fn new(terminal_model: Arc<FairMutex<TerminalModel>>, ctx: &mut ViewContext<Self>) -> Self {
         let button_size = ButtonSize::XSmall;
 
         let warpify_button = ctx.add_typed_action_view(|_ctx| {
-            ActionButton::new("Warpify subshell", AgentFooterButtonTheme::new(None))
+            ActionButton::new("Ztermify subshell", AgentFooterButtonTheme::new(None))
                 .with_icon(Icon::Warp)
                 .with_size(button_size)
                 .with_tooltip("Enable Warp shell integration in this session")
                 .with_tooltip_alignment(TooltipAlignment::Left)
                 .on_click(|ctx| {
-                    ctx.dispatch_typed_action(WarpifyFooterViewAction::Warpify);
+                    ctx.dispatch_typed_action(ZtermifyFooterViewAction::Ztermify);
                 })
         });
 
@@ -51,7 +51,7 @@ impl WarpifyFooterView {
                 .with_tooltip("Ask the Warp agent to assist")
                 .with_tooltip_alignment(TooltipAlignment::Left)
                 .on_click(|ctx| {
-                    ctx.dispatch_typed_action(WarpifyFooterViewAction::UseAgent);
+                    ctx.dispatch_typed_action(ZtermifyFooterViewAction::UseAgent);
                 })
         });
 
@@ -59,7 +59,7 @@ impl WarpifyFooterView {
             ActionButton::new("Dismiss", AgentFooterButtonTheme::new(None))
                 .with_size(button_size)
                 .on_click(|ctx| {
-                    ctx.dispatch_typed_action(WarpifyFooterViewAction::Dismiss);
+                    ctx.dispatch_typed_action(ZtermifyFooterViewAction::Dismiss);
                 })
         });
 
@@ -76,9 +76,9 @@ impl WarpifyFooterView {
     pub fn set_mode(&mut self, mode: WarpificationMode, ctx: &mut ViewContext<Self>) {
         let (label, binding_name) = match mode {
             WarpificationMode::Ssh { .. } => {
-                ("Warpify SSH session", "terminal:warpify_ssh_session")
+                ("Ztermify SSH session", "terminal:warpify_ssh_session")
             }
-            WarpificationMode::Subshell { .. } => ("Warpify subshell", "terminal:warpify_subshell"),
+            WarpificationMode::Subshell { .. } => ("Ztermify subshell", "terminal:warpify_subshell"),
         };
         self.warpify_button.update(ctx, |button, ctx| {
             button.set_label(label, ctx);
@@ -104,25 +104,25 @@ impl WarpifyFooterView {
 }
 
 #[derive(Debug, Clone)]
-pub enum WarpifyFooterViewAction {
-    Warpify,
+pub enum ZtermifyFooterViewAction {
+    Ztermify,
     UseAgent,
     Dismiss,
 }
 
-pub enum WarpifyFooterViewEvent {
-    Warpify { mode: WarpificationMode },
+pub enum ZtermifyFooterViewEvent {
+    Ztermify { mode: WarpificationMode },
     UseAgent,
     Dismiss,
 }
 
-impl Entity for WarpifyFooterView {
-    type Event = WarpifyFooterViewEvent;
+impl Entity for ZtermifyFooterView {
+    type Event = ZtermifyFooterViewEvent;
 }
 
-impl View for WarpifyFooterView {
+impl View for ZtermifyFooterView {
     fn ui_name() -> &'static str {
-        "WarpifyFooterView"
+        "ZtermifyFooterView"
     }
 
     fn render(&self, _app: &AppContext) -> Box<dyn Element> {
@@ -151,24 +151,24 @@ impl View for WarpifyFooterView {
     }
 }
 
-impl TypedActionView for WarpifyFooterView {
-    type Action = WarpifyFooterViewAction;
+impl TypedActionView for ZtermifyFooterView {
+    type Action = ZtermifyFooterViewAction;
 
     fn handle_action(&mut self, action: &Self::Action, ctx: &mut ViewContext<Self>) {
         match action {
-            WarpifyFooterViewAction::Warpify => {
+            ZtermifyFooterViewAction::Ztermify => {
                 if let Some(mode) = self.mode.clone() {
                     self.clear_mode(ctx);
-                    ctx.emit(WarpifyFooterViewEvent::Warpify { mode });
+                    ctx.emit(ZtermifyFooterViewEvent::Ztermify { mode });
                 }
             }
-            WarpifyFooterViewAction::UseAgent => {
+            ZtermifyFooterViewAction::UseAgent => {
                 self.clear_mode(ctx);
-                ctx.emit(WarpifyFooterViewEvent::UseAgent);
+                ctx.emit(ZtermifyFooterViewEvent::UseAgent);
             }
-            WarpifyFooterViewAction::Dismiss => {
+            ZtermifyFooterViewAction::Dismiss => {
                 self.clear_mode(ctx);
-                ctx.emit(WarpifyFooterViewEvent::Dismiss);
+                ctx.emit(ZtermifyFooterViewEvent::Dismiss);
             }
         }
     }

@@ -29,15 +29,15 @@ use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use session_sharing_protocol::common::SessionId;
 use std::collections::{HashMap, HashSet};
 use std::time::Duration;
-use warp_cli::agent::Harness;
-use warp_core::execution_mode::AppExecutionMode;
-use warp_core::features::FeatureFlag;
-use warp_core::report_error;
-use warp_core::ui::theme::{color::internal_colors, WarpTheme};
-use warpui::color::ColorU;
-use warpui::r#async::Timer;
-use warpui::windowing::{StateEvent, WindowManager};
-use warpui::{
+use zterm_cli::agent::Harness;
+use zterm_core::execution_mode::AppExecutionMode;
+use zterm_core::features::FeatureFlag;
+use zterm_core::report_error;
+use zterm_core::ui::theme::{color::internal_colors, ZtermTheme};
+use zterm_ui::color::ColorU;
+use zterm_ui::r#async::Timer;
+use zterm_ui::windowing::{StateEvent, WindowManager};
+use zterm_ui::{
     duration_with_jitter, AppContext, Entity, EntityId, ModelContext, RequestState,
     SingletonEntity, WindowId,
 };
@@ -332,7 +332,7 @@ impl AgentRunDisplayStatus {
         )
     }
 
-    pub fn status_icon_and_color(&self, theme: &WarpTheme) -> (Icon, ColorU) {
+    pub fn status_icon_and_color(&self, theme: &ZtermTheme) -> (Icon, ColorU) {
         match self {
             AgentRunDisplayStatus::TaskQueued
             | AgentRunDisplayStatus::TaskPending

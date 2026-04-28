@@ -1,4 +1,4 @@
-mod changelog;
+﻿mod changelog;
 mod channel_versions;
 #[cfg(target_os = "linux")]
 pub mod linux;
@@ -23,16 +23,16 @@ use rand::Rng as _;
 use std::collections::VecDeque;
 use std::sync::Arc;
 use std::time::Duration;
-use warp_core::execution_mode::AppExecutionMode;
-use warpui::platform::TerminationMode;
-use warpui::r#async::Timer;
-use warpui::windowing::state::ApplicationStage;
-use warpui::windowing::{self, WindowManager};
-use warpui::{
+use zterm_core::execution_mode::AppExecutionMode;
+use zterm_ui::platform::TerminationMode;
+use zterm_ui::r#async::Timer;
+use zterm_ui::windowing::state::ApplicationStage;
+use zterm_ui::windowing::{self, WindowManager};
+use zterm_ui::{
     accessibility::{AccessibilityContent, WarpA11yRole},
     AppContext,
 };
-use warpui::{Entity, ModelContext, SingletonEntity, ViewContext};
+use zterm_ui::{Entity, ModelContext, SingletonEntity, ViewContext};
 
 pub use self::changelog::get_current_changelog;
 use self::channel_versions::fetch_channel_versions;

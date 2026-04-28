@@ -1,4 +1,4 @@
-pub mod mode_selector;
+﻿pub mod mode_selector;
 
 use crate::ai::agent::icons::yellow_stop_icon;
 use crate::ai::blocklist::block::keyboard_navigable_buttons::{
@@ -10,11 +10,11 @@ use crate::ai::blocklist::inline_action::inline_action_header::{
 use crate::ai::blocklist::inline_action::inline_action_icons::cancelled_icon;
 use crate::ai::blocklist::inline_action::requested_action::RenderableAction;
 use crate::appearance::Appearance;
-use warpui::elements::{
+use zterm_ui::elements::{
     ChildView, Container, CornerRadius, CrossAxisAlignment, Flex, MouseStateHandle, ParentElement,
     Radius, Text,
 };
-use warpui::{
+use zterm_ui::{
     AppContext, Element, Entity, SingletonEntity, TypedActionView, View, ViewContext, ViewHandle,
 };
 

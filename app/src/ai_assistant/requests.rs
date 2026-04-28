@@ -5,8 +5,8 @@ use std::sync::Arc;
 use chrono::{OutOfRangeError, Utc};
 use futures::stream::AbortHandle;
 
-use warp_core::user_preferences::GetUserPreferences as _;
-use warpui::{AppContext, Entity, ModelContext, SingletonEntity};
+use zterm_core::user_preferences::GetUserPreferences as _;
+use zterm_ui::{AppContext, Entity, ModelContext, SingletonEntity};
 
 use crate::{
     ai::{RequestLimitInfo, RequestUsageInfo},
@@ -15,7 +15,7 @@ use crate::{
     send_telemetry_from_ctx,
     server::{
         server_api::{ai::AIClient, ServerApi},
-        telemetry::{TelemetryEvent, WarpAIRequestResult},
+        telemetry::{TelemetryEvent, ZtermAIRequestResult},
     },
     workspaces::user_workspaces::UserWorkspaces,
 };
@@ -239,7 +239,7 @@ impl Requests {
 
                             let req_latency = end_time.signed_duration_since(start_time).num_milliseconds();
                             send_telemetry_from_ctx!(
-                                TelemetryEvent::WarpAIRequestIssued { result: WarpAIRequestResult::Succeeded { latency_ms: req_latency, truncated }},
+                                TelemetryEvent::ZtermAIRequestIssued { result: ZtermAIRequestResult::Succeeded { latency_ms: req_latency, truncated }},
                                 ctx
                             );
                         }
@@ -289,7 +289,7 @@ impl Requests {
                             });
 
                             send_telemetry_from_ctx!(
-                                TelemetryEvent::WarpAIRequestIssued { result: WarpAIRequestResult::OutOfRequests},
+                                TelemetryEvent::ZtermAIRequestIssued { result: ZtermAIRequestResult::OutOfRequests},
                                 ctx
                             );
                         }
@@ -313,7 +313,7 @@ impl Requests {
                             });
 
                             send_telemetry_from_ctx!(
-                                TelemetryEvent::WarpAIRequestIssued { result: WarpAIRequestResult::Failed},
+                                TelemetryEvent::ZtermAIRequestIssued { result: ZtermAIRequestResult::Failed},
                                 ctx
                             );
                         }

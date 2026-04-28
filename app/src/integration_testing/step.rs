@@ -1,4 +1,4 @@
-use warpui::{
+﻿use zterm_ui::{
     async_assert,
     integration::{AssertionCallback, TestStep},
 };

@@ -1,4 +1,4 @@
-# Best Practices for Warp Skills
+﻿# Best Practices for Zterm Skills
 
 Detailed authoring guidance for creating effective skills in `.agents/skills/`.
 

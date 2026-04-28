@@ -1,4 +1,4 @@
-use warpui::{elements::MouseStateHandle, AppContext, Element};
+use zterm_ui::{elements::MouseStateHandle, AppContext, Element};
 
 use crate::{
     appearance::Appearance,
@@ -24,7 +24,7 @@ pub mod notebook;
 pub mod space;
 pub mod workflow;
 
-pub trait WarpDriveItem {
+pub trait ZtermDriveItem {
     /// The display name of the item. If the item is unnamed, this may return `None` - implementations
     /// should prefer this over `Some("")`, as it lets the index view use alternate styling.
     fn display_name(&self) -> Option<String>;
@@ -33,7 +33,7 @@ pub trait WarpDriveItem {
     fn secondary_icon(&self, color: Option<Fill>) -> Option<Box<dyn Element>>; // The optional icon to the right of the name
     fn click_action(&self) -> Option<DriveIndexAction>;
     fn preview(&self, appearance: &Appearance) -> Option<Box<dyn Element>>;
-    fn warp_drive_id(&self) -> WarpDriveItemId;
+    fn warp_drive_id(&self) -> ZtermDriveItemId;
     fn sync_status_icon(
         &self,
         sync_queue_is_dequeueing: bool,
@@ -44,7 +44,7 @@ pub trait WarpDriveItem {
     fn icon(&self, appearance: &Appearance, color: Option<Fill>) -> Option<Box<dyn Element>> {
         let object_type = self.object_type()?;
         let icon_fill = color.unwrap_or(warp_drive_icon_color(appearance, object_type).into());
-        Some(Icon::from(object_type).to_warpui_icon(icon_fill).finish())
+        Some(Icon::from(object_type).to_zterm_ui_icon(icon_fill).finish())
     }
 
     /// If implemented, returns a string that summarizes the primary action history. For example, "Run 2 times in the last week"
@@ -55,10 +55,10 @@ pub trait WarpDriveItem {
         None
     }
 
-    fn clone_box(&self) -> Box<dyn WarpDriveItem>;
+    fn clone_box(&self) -> Box<dyn ZtermDriveItem>;
 }
 
-impl WarpDriveItemId {
+impl ZtermDriveItemId {
     pub fn drive_row_position_id(&self) -> String {
         match self {
             Self::AIFactCollection => "AI_fact_collection".to_string(),
@@ -71,10 +71,10 @@ impl WarpDriveItemId {
         }
     }
 }
-/// This uniquely identifies an item in Warp Drive index
+/// This uniquely identifies an item in Zterm Drive index
 /// Includes spaces (which CloudObjectTypeAndId does not entail)
 #[derive(Debug, Clone, PartialEq, Eq, Copy)]
-pub enum WarpDriveItemId {
+pub enum ZtermDriveItemId {
     AIFactCollection,
     MCPServerCollection,
     Object(CloudObjectTypeAndId),
@@ -82,7 +82,7 @@ pub enum WarpDriveItemId {
     Trash,
 }
 
-impl Clone for Box<dyn WarpDriveItem> {
+impl Clone for Box<dyn ZtermDriveItem> {
     fn clone(&self) -> Self {
         self.clone_box()
     }

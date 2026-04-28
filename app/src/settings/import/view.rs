@@ -1,7 +1,7 @@
 use itertools::Itertools;
-use warp_core::{settings::Setting, ui::appearance::Appearance};
+use zterm_core::{settings::Setting, ui::appearance::Appearance};
 
-use warpui::{
+use zterm_ui::{
     elements::{
         Border, Container, CornerRadius, Flex, Hoverable, MainAxisAlignment, MainAxisSize,
         MouseStateHandle, ParentElement, Radius, Shrinkable, Text,
@@ -17,7 +17,7 @@ use warpui::{
     ViewContext,
 };
 
-use warpui::ui_components::radio_buttons::RadioButtonStateHandle;
+use zterm_ui::ui_components::radio_buttons::RadioButtonStateHandle;
 
 use crate::{
     report_if_error, send_telemetry_from_ctx,
@@ -35,7 +35,7 @@ use crate::{
     },
     themes::theme::{CustomTheme, SelectedSystemThemes, ThemeKind},
     ui_components::blended_colors,
-    user_config::{self, WarpConfig},
+    user_config::{self, ZtermConfig},
     window_settings::WindowSettings,
     GlobalResourceHandlesProvider, TelemetryEvent,
 };
@@ -217,7 +217,7 @@ impl SettingsImportView {
         &self,
         appearance: &Appearance,
         name: impl Into<std::borrow::Cow<'static, str>>,
-    ) -> Box<dyn warpui::Element> {
+    ) -> Box<dyn zterm_ui::Element> {
         let theme = appearance.theme();
         let font_color = theme.disabled_text_color(theme.background());
         let font_family = appearance.monospace_font_family();
@@ -237,8 +237,8 @@ impl SettingsImportView {
     fn render_import_button(
         &self,
         appearance: &Appearance,
-        app: &warpui::AppContext,
-    ) -> Box<dyn warpui::Element> {
+        app: &zterm_ui::AppContext,
+    ) -> Box<dyn zterm_ui::Element> {
         let model = ImportedConfigModel::as_ref(app);
         let button = if self
             .radio_button_state
@@ -282,7 +282,7 @@ impl SettingsImportView {
         .finish()
     }
 
-    fn render_reset_button(&self, appearance: &Appearance) -> Box<dyn warpui::Element> {
+    fn render_reset_button(&self, appearance: &Appearance) -> Box<dyn zterm_ui::Element> {
         appearance
             .ui_builder()
             .button(ButtonVariant::Secondary, self.skip_button_handle.clone())
@@ -311,8 +311,8 @@ impl SettingsImportView {
         appearance: &Appearance,
         setting: &ToggleableSetting,
         idx: usize,
-        app: &warpui::AppContext,
-    ) -> Box<dyn warpui::Element> {
+        app: &zterm_ui::AppContext,
+    ) -> Box<dyn zterm_ui::Element> {
         let theme = appearance.theme();
         let font_family = appearance.monospace_font_family();
         let font_color = blended_colors::text_sub(theme, theme.background());
@@ -343,7 +343,7 @@ impl SettingsImportView {
                 )
                 .with_child(Shrinkable::new(1.0, description.finish()).finish())
                 .with_main_axis_size(MainAxisSize::Max)
-                .with_cross_axis_alignment(warpui::elements::CrossAxisAlignment::Center)
+                .with_cross_axis_alignment(zterm_ui::elements::CrossAxisAlignment::Center)
                 .finish(),
         )
         .finish()
@@ -356,8 +356,8 @@ impl SettingsImportView {
         is_selected: bool,
         hovered: bool,
         idx: usize,
-        app: &warpui::AppContext,
-    ) -> Box<dyn warpui::Element> {
+        app: &zterm_ui::AppContext,
+    ) -> Box<dyn zterm_ui::Element> {
         let theme = appearance.theme();
         let font_family = appearance.monospace_font_family();
         let font_color = theme.main_text_color(theme.background());
@@ -389,7 +389,7 @@ impl SettingsImportView {
         }
 
         let config_name_flex = Flex::row()
-            .with_cross_axis_alignment(warpui::elements::CrossAxisAlignment::Center)
+            .with_cross_axis_alignment(zterm_ui::elements::CrossAxisAlignment::Center)
             .with_children(config_name_text_elements)
             .finish();
 
@@ -461,7 +461,7 @@ impl SettingsImportView {
                 .with_opacity(appearance.theme().settings_import_config_hover_opacity());
 
                 let preference_flex = Flex::row()
-                    .with_cross_axis_alignment(warpui::elements::CrossAxisAlignment::Center)
+                    .with_cross_axis_alignment(zterm_ui::elements::CrossAxisAlignment::Center)
                     .with_children(preference_text_elements)
                     .finish();
                 Container::new(
@@ -473,7 +473,7 @@ impl SettingsImportView {
                                     .with_child(Shrinkable::new(3.0, config_name_flex).finish())
                                     .with_child(Shrinkable::new(1.0, preference_flex).finish())
                                     .with_cross_axis_alignment(
-                                        warpui::elements::CrossAxisAlignment::Center,
+                                        zterm_ui::elements::CrossAxisAlignment::Center,
                                     )
                                     .with_main_axis_size(MainAxisSize::Max)
                                     .with_main_axis_alignment(MainAxisAlignment::SpaceBetween)
@@ -516,7 +516,7 @@ impl SettingsImportView {
         appearance: &Appearance,
         settings: &[ToggleableSetting],
         idx: usize,
-        app: &warpui::AppContext,
+        app: &zterm_ui::AppContext,
     ) -> Box<dyn Element> {
         let mut iter = settings.iter();
         let mut column_holder = Flex::row().with_main_axis_size(MainAxisSize::Max);
@@ -747,7 +747,7 @@ impl SettingsImportView {
     }
 
     fn set_theme(
-        ctx: &mut warpui::ViewContext<Self>,
+        ctx: &mut zterm_ui::ViewContext<Self>,
         theme_type: ThemeType,
         terminal_name: &String,
     ) {
@@ -775,10 +775,10 @@ impl SettingsImportView {
                     ));
                     report_if_error!(theme_settings.use_system_theme.set_value(true, ctx));
                 });
-                WarpConfig::handle(ctx).update(ctx, |config, ctx| {
+                ZtermConfig::handle(ctx).update(ctx, |config, ctx| {
                     config.add_new_theme_to_config(dark_kind, dark, ctx)
                 });
-                WarpConfig::handle(ctx).update(ctx, |config, ctx| {
+                ZtermConfig::handle(ctx).update(ctx, |config, ctx| {
                     config.add_new_theme_to_config(light_kind, light, ctx)
                 });
             }
@@ -795,7 +795,7 @@ impl SettingsImportView {
                         .set_value(theme_kind.clone(), ctx,));
                     report_if_error!(theme_settings.use_system_theme.set_value(false, ctx));
                 });
-                WarpConfig::handle(ctx).update(ctx, |config, ctx| {
+                ZtermConfig::handle(ctx).update(ctx, |config, ctx| {
                     config.add_new_theme_to_config(theme_kind, theme, ctx)
                 });
             }
@@ -861,7 +861,7 @@ impl SettingsImportView {
         );
     }
 
-    pub(crate) fn interrupt_block(&mut self, ctx: &mut warpui::ViewContext<Self>) {
+    pub(crate) fn interrupt_block(&mut self, ctx: &mut zterm_ui::ViewContext<Self>) {
         self.state = State::Completed { imported_idx: None };
         ctx.notify();
     }
@@ -907,7 +907,7 @@ impl View for SettingsImportView {
         "SettingsImportView"
     }
 
-    fn render(&self, app: &warpui::AppContext) -> Box<dyn warpui::Element> {
+    fn render(&self, app: &zterm_ui::AppContext) -> Box<dyn zterm_ui::Element> {
         let appearance = Appearance::as_ref(app);
         let font_family = appearance.monospace_font_family();
         let font_size = appearance.monospace_font_size();

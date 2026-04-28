@@ -7,8 +7,8 @@ use crate::workspace::tab_settings::VerticalTabsDisplayGranularity;
 use pathfinder_geometry::rect::RectF;
 use pathfinder_geometry::vector::Vector2F;
 use std::path::PathBuf;
-use warpui::elements::PositionedElementOffsetBounds;
-use warpui::EntityId;
+use zterm_ui::elements::PositionedElementOffsetBounds;
+use zterm_ui::EntityId;
 
 use super::{
     branch_label_display, coalesce_summary_branch_entries, code_detail_kind_label,

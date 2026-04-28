@@ -30,9 +30,9 @@ use num_traits::FromPrimitive;
 use pathfinder_geometry::{rect::RectF, vector::Vector2F};
 use persistence::model::AMBIENT_AGENT_PANE_KIND;
 use uuid::Uuid;
-use warp_graphql::scalars::time::ServerTimestamp;
-use warpui::platform::FullscreenState;
-use warpui::{AppContext, SingletonEntity};
+use zterm_graphql::scalars::time::ServerTimestamp;
+use zterm_ui::platform::FullscreenState;
+use zterm_ui::{AppContext, SingletonEntity};
 
 use super::agent::{delete_agent_conversations, upsert_agent_conversation};
 use super::block_list::{
@@ -86,7 +86,7 @@ use crate::cloud_object::{
 };
 use crate::code::editor_management::CodeSource;
 use crate::drive::folders::{CloudFolder, CloudFolderModel, FolderId};
-use crate::drive::OpenWarpDriveObjectSettings;
+use crate::drive::OpenZtermDriveObjectSettings;
 use crate::env_vars::{CloudEnvVarCollection, CloudEnvVarCollectionModel};
 use crate::features::FeatureFlag;
 use crate::notebooks::{CloudNotebook, NotebookId};
@@ -139,9 +139,9 @@ diesel::define_sql_function! {
 const CHANNEL_SIZE: usize = 1024;
 const COMMANDS_COUNT_LIMIT: i64 = 10000;
 
-use warp_server_client::persistence::{upsert_cloud_object, CloudObjectId};
+use zterm_server_client::persistence::{upsert_cloud_object, CloudObjectId};
 
-const WARP_SQLITE_FILE_NAME: &str = "warp.sqlite";
+const ZTERM_SQLITE_FILE_NAME: &str = "warp.sqlite";
 
 /// When delete a cloud object, this callback is used to delete the cloud
 /// object. It takes the id of the cloud object to delete as a parameter.
@@ -258,7 +258,7 @@ unsafe fn init_logging() {
             // According to the docs, this error means that the database file was moved (or deleted),
             // so SQLite can't safely modify it and the rollback journal:
             //     https://www.sqlite.org/rescode.html#readonly_dbmoved
-            // This is mostly outside of Warp's control (e.g. the user or some system program is
+            // This is mostly outside of Zterm's control (e.g. the user or some system program is
             // moving around files in the user data directory), so downgrade to a warning.
             (_, sqlite3::SQLITE_READONLY_DBMOVED) => log::Level::Warn,
             _ => log::Level::Error,
@@ -349,7 +349,7 @@ pub(super) fn init_db() -> Result<SqliteConnection> {
     }
 
     // Migrate old SQLite files into the secure application container.
-    let old_db_path = warp_core::paths::state_dir().join(WARP_SQLITE_FILE_NAME);
+    let old_db_path = zterm_core::paths::state_dir().join(ZTERM_SQLITE_FILE_NAME);
     if old_db_path != db_path && old_db_path.exists() && !db_path.exists() {
         match std::fs::rename(&old_db_path, &db_path) {
             Ok(_) => {
@@ -414,9 +414,9 @@ fn setup_database(database_path: &Path) -> Result<SqliteConnection> {
 /// Integration tests that initialize the database with known data should use
 /// this function to determine where to create the database file.
 pub fn database_file_path() -> PathBuf {
-    warp_core::paths::secure_state_dir()
-        .unwrap_or_else(warp_core::paths::state_dir)
-        .join(WARP_SQLITE_FILE_NAME)
+    zterm_core::paths::secure_state_dir()
+        .unwrap_or_else(zterm_core::paths::state_dir)
+        .join(ZTERM_SQLITE_FILE_NAME)
 }
 
 pub(super) fn remove(sender: SyncSender<ModelEvent>) {
@@ -2445,7 +2445,7 @@ fn read_node(conn: &mut SqliteConnection, node: model::PaneNode) -> Result<PaneN
                         Some(path) => NotebookPaneSnapshot::LocalFileNotebook { path: Some(path) },
                         None => NotebookPaneSnapshot::CloudNotebook {
                             notebook_id,
-                            settings: OpenWarpDriveObjectSettings::default(),
+                            settings: OpenZtermDriveObjectSettings::default(),
                         },
                     })
                 }
@@ -2463,7 +2463,7 @@ fn read_node(conn: &mut SqliteConnection, node: model::PaneNode) -> Result<PaneN
 
                     LeafContents::Workflow(WorkflowPaneSnapshot::CloudWorkflow {
                         workflow_id,
-                        settings: OpenWarpDriveObjectSettings::default(),
+                        settings: OpenZtermDriveObjectSettings::default(),
                     })
                 }
                 CODE_PANE_KIND => {

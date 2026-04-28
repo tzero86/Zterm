@@ -1,7 +1,7 @@
-use float_cmp::{approx_eq, assert_approx_eq};
-use warp_core::features::FeatureFlag;
-use warpui::units::IntoLines;
-use warpui::{elements::DEFAULT_UI_LINE_HEIGHT_RATIO, App};
+﻿use float_cmp::{approx_eq, assert_approx_eq};
+use zterm_core::features::FeatureFlag;
+use zterm_ui::units::IntoLines;
+use zterm_ui::{elements::DEFAULT_UI_LINE_HEIGHT_RATIO, App};
 
 use super::*;
 use crate::ai::agent::AIAgentActionId;
@@ -577,12 +577,12 @@ pub fn test_basic_bootstrapping() {
         .with_channel_event_proxy(channel_event_proxy)
         .build();
 
-    // Simulate entering the bootstrap script for WarpInput mode.
+    // Simulate entering the bootstrap script for ZtermInput mode.
     block_list.start_active_block();
     input_string(&mut block_list, "i am the warp input");
     block_list.linefeed();
     block_list.preexec(Default::default());
-    // WarpInput -> ScriptExecution
+    // ZtermInput -> ScriptExecution
     command_finished_and_precmd(&mut block_list);
     // ScriptExecution -> Bootstrapped
     block_list.bootstrapped(Default::default());
@@ -1186,7 +1186,7 @@ pub fn test_block_heights_combined_prompt_command_grid_ps1() {
     assert_eq!(first_block.prompt_and_command_grid().len(), 4);
     assert_eq!(first_block.output_grid().len(), 3);
 
-    // We have a 2-line prompt, adding 1 extra line to the combined grid (vs 0.6 default for Warp prompt).
+    // We have a 2-line prompt, adding 1 extra line to the combined grid (vs 0.6 default for Zterm prompt).
     // Hence, we expect a height of 8.7 rather than 8.3.
     assert_lines_approx_eq!(first_block.height(&AgentViewState::Inactive), 8.7);
 }

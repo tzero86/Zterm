@@ -1,5 +1,5 @@
-use warp_core::ui::appearance::Appearance;
-use warpui::{platform::WindowStyle, App};
+﻿use zterm_core::ui::appearance::Appearance;
+use zterm_ui::{platform::WindowStyle, App};
 
 use crate::{
     ai::blocklist::BlocklistAIHistoryModel,

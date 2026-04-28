@@ -1,9 +1,9 @@
-use std::sync::Arc;
+﻿use std::sync::Arc;
 
 use markdown_parser::{FormattedText, FormattedTextFragment, FormattedTextLine};
 use rand::{distributions::Alphanumeric, thread_rng, Rng as _};
-use warp_core::{settings::ToggleableSetting, ui::appearance::Appearance};
-use warpui::{
+use zterm_core::{settings::ToggleableSetting, ui::appearance::Appearance};
+use zterm_ui::{
     elements::{
         Align, ConstrainedBox, Container, CrossAxisAlignment, Expanded, Flex, FormattedTextElement,
         HighlightedHyperlink, MainAxisAlignment, MainAxisSize, MouseStateHandle, ParentElement,
@@ -172,7 +172,7 @@ impl SuggestedUnitTestsView {
     fn render_icon(&self, appearance: &Appearance) -> Box<dyn Element> {
         Container::new(
             ConstrainedBox::new(
-                warpui::elements::Icon::new(
+                zterm_ui::elements::Icon::new(
                     Icon::Code2.into(),
                     appearance
                         .theme()

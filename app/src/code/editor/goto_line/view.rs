@@ -1,4 +1,4 @@
-#![cfg_attr(target_family = "wasm", allow(dead_code, unused_imports))]
+﻿#![cfg_attr(target_family = "wasm", allow(dead_code, unused_imports))]
 
 use crate::appearance::Appearance;
 use crate::code::editor::find::view::{FIND_BAR_PADDING, FIND_EDITOR_BORDER_RADIUS};
@@ -6,7 +6,7 @@ use crate::editor::{
     EditorView, Event as EditorEvent, InteractionState, PropagateAndNoOpNavigationKeys,
     SingleLineEditorOptions, TextOptions,
 };
-use warpui::{
+use zterm_ui::{
     elements::{
         Align, Border, ChildView, ConstrainedBox, Container, CornerRadius, DropShadow, Flex,
         ParentElement, Radius, Text,

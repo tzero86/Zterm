@@ -15,7 +15,7 @@ use async_trait::async_trait;
 use anyhow::Result;
 use itertools::Itertools;
 use serde::{Deserialize, Serialize};
-use warpui::AppContext;
+use zterm_ui::AppContext;
 
 use crate::server::cloud_objects::update_manager::InitiatedBy;
 use crate::{
@@ -27,7 +27,7 @@ use crate::{
         UpdateCloudObjectResult,
     },
     drive::{
-        items::{notebook::WarpDriveNotebook, WarpDriveItem},
+        items::{notebook::ZtermDriveNotebook, ZtermDriveItem},
         CloudObjectTypeAndId,
     },
     persistence::ModelEvent,
@@ -203,8 +203,8 @@ impl CloudModelType for CloudNotebookModel {
         id: SyncId,
         _appearance: &Appearance,
         notebook: &CloudNotebook,
-    ) -> Option<Box<dyn WarpDriveItem>> {
-        Some(Box::new(WarpDriveNotebook::new(
+    ) -> Option<Box<dyn ZtermDriveItem>> {
+        Some(Box::new(ZtermDriveNotebook::new(
             self.cloud_object_type_and_id(id),
             notebook.clone(),
             notebook.model().ai_document_id.is_some(),
@@ -269,7 +269,7 @@ pub fn post_process_notebook(data: &str) -> String {
 /// * Includes extra context for embedded objects.
 #[cfg_attr(not(feature = "local_fs"), allow(dead_code))]
 pub fn export_notebook(data: &str, ctx: &AppContext) -> anyhow::Result<String> {
-    use warp_editor::content::{buffer::Buffer, markdown::MarkdownStyle};
+    use zterm_editor::content::{buffer::Buffer, markdown::MarkdownStyle};
 
     // Parse the Markdown directly rather than using [`Buffer::from_markdown`] so that we can
     // report errors to the exporter.

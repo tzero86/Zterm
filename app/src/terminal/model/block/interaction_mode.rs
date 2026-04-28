@@ -1,5 +1,5 @@
-use anyhow::anyhow;
-use warp_terminal::model::{grid::Dimensions, Point};
+﻿use anyhow::anyhow;
+use zterm_terminal::model::{grid::Dimensions, Point};
 
 use crate::{
     ai::{

@@ -1,4 +1,4 @@
-mod entry;
+﻿mod entry;
 mod query;
 mod setup_command;
 mod setup_command_text;
@@ -8,8 +8,8 @@ pub use query::*;
 pub use setup_command::*;
 pub use setup_command_text::*;
 
-use warpui::prelude::Container;
-use warpui::{AppContext, Element, ModelHandle};
+use zterm_ui::prelude::Container;
+use zterm_ui::{AppContext, Element, ModelHandle};
 
 use crate::ai::blocklist::block::view_impl::{
     WithContentItemSpacing, CONTENT_ITEM_VERTICAL_MARGIN,

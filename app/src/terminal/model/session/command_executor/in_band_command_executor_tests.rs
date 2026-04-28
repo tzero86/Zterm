@@ -1,5 +1,5 @@
-use futures_util::future::{AbortHandle, Abortable, Aborted};
-use warpui::App;
+﻿use futures_util::future::{AbortHandle, Abortable, Aborted};
+use zterm_ui::App;
 
 use crate::terminal::model::session::ExecuteCommandOptions;
 

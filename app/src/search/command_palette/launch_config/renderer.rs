@@ -1,4 +1,4 @@
-use warpui::{
+﻿use zterm_ui::{
     elements::{
         Align, Border, ConstrainedBox, Container, CornerRadius, Flex, Highlight, ParentElement,
         Radius, Shrinkable, Text,

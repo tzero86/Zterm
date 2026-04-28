@@ -44,8 +44,8 @@ use crate::{
 use anyhow::{anyhow, bail};
 use regex::Regex;
 use std::path::PathBuf;
-use warp_graphql::workspace::AddonCreditsSettings as GqlAddonCreditsSettings;
-use warp_graphql::{
+use zterm_graphql::workspace::AddonCreditsSettings as GqlAddonCreditsSettings;
+use zterm_graphql::{
     billing::{
         AiAutonomyPolicy as GqlAiAutonomyPolicy, AmbientAgentsPolicy as GqlAmbientAgentsPolicy,
         BillingMetadata as GqlBillingMetadata, BonusGrant as GqlBonusGrant,
@@ -67,7 +67,7 @@ use warp_graphql::{
     queries::{
         get_conversation_usage as gql_usage, get_workspaces_metadata_for_user::User as GqlUser,
     },
-    subscriptions::get_warp_drive_updates::WarpDriveUpdate,
+    subscriptions::get_warp_drive_updates::ZtermDriveUpdate,
     user::{DiscoverableTeamData as GqlDiscoverableTeamData, PublicUserProfile},
     workspace::{
         AdminEnablementSetting as GqlAdminEnablementSetting, AiAutonomyValue as GqlAiAutonomyValue,
@@ -650,9 +650,9 @@ impl ToPathBufs for Vec<String> {
         self.into_iter().map(PathBuf::from).collect()
     }
 }
-impl From<warp_graphql::workspace::LlmModelHost> for crate::ai::llms::LLMModelHost {
-    fn from(gql_host: warp_graphql::workspace::LlmModelHost) -> Self {
-        use warp_graphql::workspace::LlmModelHost as GqlLlmModelHost;
+impl From<zterm_graphql::workspace::LlmModelHost> for crate::ai::llms::LLMModelHost {
+    fn from(gql_host: zterm_graphql::workspace::LlmModelHost) -> Self {
+        use zterm_graphql::workspace::LlmModelHost as GqlLlmModelHost;
         match gql_host {
             GqlLlmModelHost::DirectApi => Self::DirectApi,
             GqlLlmModelHost::AwsBedrock => Self::AwsBedrock,
@@ -666,8 +666,8 @@ impl From<warp_graphql::workspace::LlmModelHost> for crate::ai::llms::LLMModelHo
     }
 }
 
-impl From<warp_graphql::workspace::LlmHostSettings> for super::workspace::LlmHostSettings {
-    fn from(gql_settings: warp_graphql::workspace::LlmHostSettings) -> Self {
+impl From<zterm_graphql::workspace::LlmHostSettings> for super::workspace::LlmHostSettings {
+    fn from(gql_settings: zterm_graphql::workspace::LlmHostSettings) -> Self {
         Self {
             enabled: gql_settings.enabled,
             enablement_setting: gql_settings
@@ -678,8 +678,8 @@ impl From<warp_graphql::workspace::LlmHostSettings> for super::workspace::LlmHos
     }
 }
 
-impl From<warp_graphql::workspace::LlmSettings> for LlmSettings {
-    fn from(gql_settings: warp_graphql::workspace::LlmSettings) -> Self {
+impl From<zterm_graphql::workspace::LlmSettings> for LlmSettings {
+    fn from(gql_settings: zterm_graphql::workspace::LlmSettings) -> Self {
         let mut host_configs = std::collections::HashMap::new();
         for entry in gql_settings.host_configs {
             let host: crate::ai::llms::LLMModelHost = entry.host.into();
@@ -984,17 +984,17 @@ impl From<PublicUserProfile> for UserProfileWithUID {
     }
 }
 
-impl TryFrom<WarpDriveUpdate> for ObjectUpdateMessage {
+impl TryFrom<ZtermDriveUpdate> for ObjectUpdateMessage {
     type Error = anyhow::Error;
 
-    fn try_from(value: WarpDriveUpdate) -> Result<Self, Self::Error> {
+    fn try_from(value: ZtermDriveUpdate) -> Result<Self, Self::Error> {
         match value {
-            WarpDriveUpdate::ObjectActionOccurred(message) => {
+            ZtermDriveUpdate::ObjectActionOccurred(message) => {
                 Ok(ObjectUpdateMessage::ObjectActionOccurred {
                     history: message.history.try_into()?,
                 })
             }
-            WarpDriveUpdate::ObjectContentUpdated(message) => {
+            ZtermDriveUpdate::ObjectContentUpdated(message) => {
                 let server_object = message.object.try_into()?;
                 let last_editor = message.last_editor.map(|e| e.into());
                 Ok(ObjectUpdateMessage::ObjectContentChanged {
@@ -1002,15 +1002,15 @@ impl TryFrom<WarpDriveUpdate> for ObjectUpdateMessage {
                     last_editor,
                 })
             }
-            WarpDriveUpdate::ObjectDeleted(message) => Ok(ObjectUpdateMessage::ObjectDeleted {
+            ZtermDriveUpdate::ObjectDeleted(message) => Ok(ObjectUpdateMessage::ObjectDeleted {
                 object_uid: ServerId::from_string_lossy(message.object_uid.inner()),
             }),
-            WarpDriveUpdate::ObjectMetadataUpdated(message) => {
+            ZtermDriveUpdate::ObjectMetadataUpdated(message) => {
                 Ok(ObjectUpdateMessage::ObjectMetadataChanged {
                     metadata: message.metadata.try_into()?,
                 })
             }
-            WarpDriveUpdate::ObjectPermissionsUpdated(message) => {
+            ZtermDriveUpdate::ObjectPermissionsUpdated(message) => {
                 Ok(ObjectUpdateMessage::ObjectPermissionsChangedV2 {
                     object_uid: ServerId::from_string_lossy(message.object_uid.inner()),
                     user_profiles: message
@@ -1022,24 +1022,24 @@ impl TryFrom<WarpDriveUpdate> for ObjectUpdateMessage {
                     permissions: message.permissions.try_into()?,
                 })
             }
-            WarpDriveUpdate::TeamMembershipsChanged(_) => {
+            ZtermDriveUpdate::TeamMembershipsChanged(_) => {
                 Ok(ObjectUpdateMessage::TeamMembershipsChanged)
             }
-            WarpDriveUpdate::AmbientTaskUpdated(message) => {
+            ZtermDriveUpdate::AmbientTaskUpdated(message) => {
                 Ok(ObjectUpdateMessage::AmbientTaskUpdated {
                     task_id: message.task_id.inner().to_string(),
                     timestamp: message.task_updated_ts.utc(),
                 })
             }
-            WarpDriveUpdate::Unknown => bail!("Unexpected WarpDriveUpdate variant"),
+            ZtermDriveUpdate::Unknown => bail!("Unexpected ZtermDriveUpdate variant"),
         }
     }
 }
 
-impl TryFrom<warp_graphql::folder::Folder> for ServerFolder {
+impl TryFrom<zterm_graphql::folder::Folder> for ServerFolder {
     type Error = anyhow::Error;
 
-    fn try_from(folder: warp_graphql::folder::Folder) -> Result<Self, Self::Error> {
+    fn try_from(folder: zterm_graphql::folder::Folder) -> Result<Self, Self::Error> {
         ServerFolder::try_from_graphql_fields(
             ServerId::from_string_lossy(folder.metadata.uid.inner()),
             Some(folder.name),
@@ -1050,10 +1050,10 @@ impl TryFrom<warp_graphql::folder::Folder> for ServerFolder {
     }
 }
 
-impl TryFrom<warp_graphql::notebook::Notebook> for ServerNotebook {
+impl TryFrom<zterm_graphql::notebook::Notebook> for ServerNotebook {
     type Error = anyhow::Error;
 
-    fn try_from(notebook: warp_graphql::notebook::Notebook) -> Result<Self, Self::Error> {
+    fn try_from(notebook: zterm_graphql::notebook::Notebook) -> Result<Self, Self::Error> {
         ServerNotebook::try_from_graphql_fields(
             ServerId::from_string_lossy(notebook.metadata.uid.inner()),
             Some(notebook.title),
@@ -1065,10 +1065,10 @@ impl TryFrom<warp_graphql::notebook::Notebook> for ServerNotebook {
     }
 }
 
-impl TryFrom<warp_graphql::workflow::Workflow> for ServerWorkflow {
+impl TryFrom<zterm_graphql::workflow::Workflow> for ServerWorkflow {
     type Error = anyhow::Error;
 
-    fn try_from(workflow: warp_graphql::workflow::Workflow) -> Result<Self, Self::Error> {
+    fn try_from(workflow: zterm_graphql::workflow::Workflow) -> Result<Self, Self::Error> {
         ServerWorkflow::try_from_graphql_fields(
             ServerId::from_string_lossy(workflow.metadata.uid.inner()),
             workflow.data,
@@ -1078,11 +1078,11 @@ impl TryFrom<warp_graphql::workflow::Workflow> for ServerWorkflow {
     }
 }
 
-impl TryFrom<warp_graphql::generic_string_object::GenericStringObject> for ServerEnvVarCollection {
+impl TryFrom<zterm_graphql::generic_string_object::GenericStringObject> for ServerEnvVarCollection {
     type Error = anyhow::Error;
 
     fn try_from(
-        gso: warp_graphql::generic_string_object::GenericStringObject,
+        gso: zterm_graphql::generic_string_object::GenericStringObject,
     ) -> Result<Self, Self::Error> {
         ServerEnvVarCollection::try_from_graphql_fields(
             ServerId::from_string_lossy(gso.metadata.uid.inner()),
@@ -1093,11 +1093,11 @@ impl TryFrom<warp_graphql::generic_string_object::GenericStringObject> for Serve
     }
 }
 
-impl TryFrom<warp_graphql::generic_string_object::GenericStringObject> for ServerWorkflowEnum {
+impl TryFrom<zterm_graphql::generic_string_object::GenericStringObject> for ServerWorkflowEnum {
     type Error = anyhow::Error;
 
     fn try_from(
-        gso: warp_graphql::generic_string_object::GenericStringObject,
+        gso: zterm_graphql::generic_string_object::GenericStringObject,
     ) -> Result<Self, Self::Error> {
         ServerWorkflowEnum::try_from_graphql_fields(
             ServerId::from_string_lossy(gso.metadata.uid.inner()),
@@ -1108,11 +1108,11 @@ impl TryFrom<warp_graphql::generic_string_object::GenericStringObject> for Serve
     }
 }
 
-impl TryFrom<warp_graphql::generic_string_object::GenericStringObject> for ServerAIFact {
+impl TryFrom<zterm_graphql::generic_string_object::GenericStringObject> for ServerAIFact {
     type Error = anyhow::Error;
 
     fn try_from(
-        gso: warp_graphql::generic_string_object::GenericStringObject,
+        gso: zterm_graphql::generic_string_object::GenericStringObject,
     ) -> Result<Self, Self::Error> {
         ServerAIFact::try_from_graphql_fields(
             ServerId::from_string_lossy(gso.metadata.uid.inner()),
@@ -1123,13 +1123,13 @@ impl TryFrom<warp_graphql::generic_string_object::GenericStringObject> for Serve
     }
 }
 
-impl TryFrom<warp_graphql::generic_string_object::GenericStringObject>
+impl TryFrom<zterm_graphql::generic_string_object::GenericStringObject>
     for ServerAIExecutionProfile
 {
     type Error = anyhow::Error;
 
     fn try_from(
-        gso: warp_graphql::generic_string_object::GenericStringObject,
+        gso: zterm_graphql::generic_string_object::GenericStringObject,
     ) -> Result<Self, Self::Error> {
         ServerAIExecutionProfile::try_from_graphql_fields(
             ServerId::from_string_lossy(gso.metadata.uid.inner()),
@@ -1139,11 +1139,11 @@ impl TryFrom<warp_graphql::generic_string_object::GenericStringObject>
         )
     }
 }
-impl TryFrom<warp_graphql::generic_string_object::GenericStringObject> for ServerMCPServer {
+impl TryFrom<zterm_graphql::generic_string_object::GenericStringObject> for ServerMCPServer {
     type Error = anyhow::Error;
 
     fn try_from(
-        gso: warp_graphql::generic_string_object::GenericStringObject,
+        gso: zterm_graphql::generic_string_object::GenericStringObject,
     ) -> Result<Self, Self::Error> {
         ServerMCPServer::try_from_graphql_fields(
             ServerId::from_string_lossy(gso.metadata.uid.inner()),
@@ -1154,12 +1154,12 @@ impl TryFrom<warp_graphql::generic_string_object::GenericStringObject> for Serve
     }
 }
 
-impl TryFrom<warp_graphql::generic_string_object::GenericStringObject>
+impl TryFrom<zterm_graphql::generic_string_object::GenericStringObject>
     for ServerTemplatableMCPServer
 {
     type Error = anyhow::Error;
     fn try_from(
-        gso: warp_graphql::generic_string_object::GenericStringObject,
+        gso: zterm_graphql::generic_string_object::GenericStringObject,
     ) -> Result<Self, Self::Error> {
         ServerTemplatableMCPServer::try_from_graphql_fields(
             ServerId::from_string_lossy(gso.metadata.uid.inner()),
@@ -1170,11 +1170,11 @@ impl TryFrom<warp_graphql::generic_string_object::GenericStringObject>
     }
 }
 
-impl TryFrom<warp_graphql::generic_string_object::GenericStringObject> for ServerPreference {
+impl TryFrom<zterm_graphql::generic_string_object::GenericStringObject> for ServerPreference {
     type Error = anyhow::Error;
 
     fn try_from(
-        gso: warp_graphql::generic_string_object::GenericStringObject,
+        gso: zterm_graphql::generic_string_object::GenericStringObject,
     ) -> Result<Self, Self::Error> {
         ServerPreference::try_from_graphql_fields(
             ServerId::from_string_lossy(gso.metadata.uid.inner()),
@@ -1185,13 +1185,13 @@ impl TryFrom<warp_graphql::generic_string_object::GenericStringObject> for Serve
     }
 }
 
-impl TryFrom<warp_graphql::generic_string_object::GenericStringObject>
+impl TryFrom<zterm_graphql::generic_string_object::GenericStringObject>
     for ServerAmbientAgentEnvironment
 {
     type Error = anyhow::Error;
 
     fn try_from(
-        gso: warp_graphql::generic_string_object::GenericStringObject,
+        gso: zterm_graphql::generic_string_object::GenericStringObject,
     ) -> Result<Self, Self::Error> {
         ServerAmbientAgentEnvironment::try_from_graphql_fields(
             ServerId::from_string_lossy(gso.metadata.uid.inner()),
@@ -1202,13 +1202,13 @@ impl TryFrom<warp_graphql::generic_string_object::GenericStringObject>
     }
 }
 
-impl TryFrom<warp_graphql::generic_string_object::GenericStringObject>
+impl TryFrom<zterm_graphql::generic_string_object::GenericStringObject>
     for ServerScheduledAmbientAgent
 {
     type Error = anyhow::Error;
 
     fn try_from(
-        gso: warp_graphql::generic_string_object::GenericStringObject,
+        gso: zterm_graphql::generic_string_object::GenericStringObject,
     ) -> Result<Self, Self::Error> {
         ServerScheduledAmbientAgent::try_from_graphql_fields(
             ServerId::from_string_lossy(gso.metadata.uid.inner()),
@@ -1219,11 +1219,11 @@ impl TryFrom<warp_graphql::generic_string_object::GenericStringObject>
     }
 }
 
-impl TryFrom<warp_graphql::generic_string_object::GenericStringObject> for ServerCloudAgentConfig {
+impl TryFrom<zterm_graphql::generic_string_object::GenericStringObject> for ServerCloudAgentConfig {
     type Error = anyhow::Error;
 
     fn try_from(
-        gso: warp_graphql::generic_string_object::GenericStringObject,
+        gso: zterm_graphql::generic_string_object::GenericStringObject,
     ) -> Result<Self, Self::Error> {
         ServerCloudAgentConfig::try_from_graphql_fields(
             ServerId::from_string_lossy(gso.metadata.uid.inner()),
@@ -1234,55 +1234,55 @@ impl TryFrom<warp_graphql::generic_string_object::GenericStringObject> for Serve
     }
 }
 
-impl TryFrom<warp_graphql::object::CloudObject> for ServerCloudObject {
+impl TryFrom<zterm_graphql::object::CloudObject> for ServerCloudObject {
     type Error = anyhow::Error;
 
-    fn try_from(value: warp_graphql::object::CloudObject) -> Result<Self, Self::Error> {
+    fn try_from(value: zterm_graphql::object::CloudObject) -> Result<Self, Self::Error> {
         match value {
-            warp_graphql::object::CloudObject::AIConversation(_) => {
+            zterm_graphql::object::CloudObject::AIConversation(_) => {
                 Err(anyhow::anyhow!("AIConversation is not a supported object type for this operation"))
             }
-            warp_graphql::object::CloudObject::Folder(folder) => {
+            zterm_graphql::object::CloudObject::Folder(folder) => {
                 Ok(ServerCloudObject::Folder(folder.try_into()?))
             }
-            warp_graphql::object::CloudObject::GenericStringObject(gso) => {
+            zterm_graphql::object::CloudObject::GenericStringObject(gso) => {
                 match gso.format {
-                    warp_graphql::generic_string_object::GenericStringObjectFormat::JsonEnvVarCollection => {
+                    zterm_graphql::generic_string_object::GenericStringObjectFormat::JsonEnvVarCollection => {
                         Ok(ServerCloudObject::EnvVarCollection(gso.try_into()?))
                     }
-                    warp_graphql::generic_string_object::GenericStringObjectFormat::JsonPreference => {
+                    zterm_graphql::generic_string_object::GenericStringObjectFormat::JsonPreference => {
                         Ok(ServerCloudObject::Preference(gso.try_into()?))
                     }
-                    warp_graphql::generic_string_object::GenericStringObjectFormat::JsonWorkflowEnum => {
+                    zterm_graphql::generic_string_object::GenericStringObjectFormat::JsonWorkflowEnum => {
                         Ok(ServerCloudObject::WorkflowEnum(gso.try_into()?))
                     }
-                    warp_graphql::generic_string_object::GenericStringObjectFormat::JsonAIFact => {
+                    zterm_graphql::generic_string_object::GenericStringObjectFormat::JsonAIFact => {
                         Ok(ServerCloudObject::AIFact(gso.try_into()?))
                     }
-                    warp_graphql::generic_string_object::GenericStringObjectFormat::JsonMCPServer => {
+                    zterm_graphql::generic_string_object::GenericStringObjectFormat::JsonMCPServer => {
                         Ok(ServerCloudObject::MCPServer(gso.try_into()?))
                     }
-                    warp_graphql::generic_string_object::GenericStringObjectFormat::JsonAIExecutionProfile => {
+                    zterm_graphql::generic_string_object::GenericStringObjectFormat::JsonAIExecutionProfile => {
                         Ok(ServerCloudObject::AIExecutionProfile(gso.try_into()?))
                     }
-                    warp_graphql::generic_string_object::GenericStringObjectFormat::JsonTemplatableMCPServer => {
+                    zterm_graphql::generic_string_object::GenericStringObjectFormat::JsonTemplatableMCPServer => {
                         Ok(ServerCloudObject::TemplatableMCPServer(gso.try_into()?))
                     }
-                    warp_graphql::generic_string_object::GenericStringObjectFormat::JsonCloudEnvironment => {
+                    zterm_graphql::generic_string_object::GenericStringObjectFormat::JsonCloudEnvironment => {
                         Ok(ServerCloudObject::AmbientAgentEnvironment(gso.try_into()?))
                     }
-                    warp_graphql::generic_string_object::GenericStringObjectFormat::JsonScheduledAmbientAgent => {
+                    zterm_graphql::generic_string_object::GenericStringObjectFormat::JsonScheduledAmbientAgent => {
                         Ok(ServerCloudObject::ScheduledAmbientAgent(gso.try_into()?))
                     }
                 }
             }
-            warp_graphql::object::CloudObject::Notebook(notebook) => {
+            zterm_graphql::object::CloudObject::Notebook(notebook) => {
                 Ok(ServerCloudObject::Notebook(notebook.try_into()?))
             }
-            warp_graphql::object::CloudObject::Workflow(workflow) => {
+            zterm_graphql::object::CloudObject::Workflow(workflow) => {
                 Ok(ServerCloudObject::Workflow(Box::new(workflow.try_into()?)))
             }
-            warp_graphql::object::CloudObject::Unknown => {
+            zterm_graphql::object::CloudObject::Unknown => {
                 Err(anyhow::anyhow!("Unable to convert cloud object type"))
             }
         }
@@ -1301,31 +1301,31 @@ impl TryFrom<CloudObjectWithDescendants> for ServerCloudObject {
                 Ok(ServerCloudObject::Folder(fwd.folder.try_into()?))
             }
             CloudObjectWithDescendants::GenericStringObject(gso) => match gso.format {
-                warp_graphql::generic_string_object::GenericStringObjectFormat::JsonEnvVarCollection => {
+                zterm_graphql::generic_string_object::GenericStringObjectFormat::JsonEnvVarCollection => {
                     Ok(ServerCloudObject::EnvVarCollection(gso.try_into()?))
                 }
-                warp_graphql::generic_string_object::GenericStringObjectFormat::JsonPreference => {
+                zterm_graphql::generic_string_object::GenericStringObjectFormat::JsonPreference => {
                     Ok(ServerCloudObject::Preference(gso.try_into()?))
                 }
-                warp_graphql::generic_string_object::GenericStringObjectFormat::JsonWorkflowEnum => {
+                zterm_graphql::generic_string_object::GenericStringObjectFormat::JsonWorkflowEnum => {
                     Ok(ServerCloudObject::WorkflowEnum(gso.try_into()?))
                 }
-                warp_graphql::generic_string_object::GenericStringObjectFormat::JsonAIFact => {
+                zterm_graphql::generic_string_object::GenericStringObjectFormat::JsonAIFact => {
                     Ok(ServerCloudObject::AIFact(gso.try_into()?))
                 }
-                warp_graphql::generic_string_object::GenericStringObjectFormat::JsonMCPServer => {
+                zterm_graphql::generic_string_object::GenericStringObjectFormat::JsonMCPServer => {
                     Ok(ServerCloudObject::MCPServer(gso.try_into()?))
                 }
-                warp_graphql::generic_string_object::GenericStringObjectFormat::JsonAIExecutionProfile => {
+                zterm_graphql::generic_string_object::GenericStringObjectFormat::JsonAIExecutionProfile => {
                     Ok(ServerCloudObject::AIExecutionProfile(gso.try_into()?))
                 }
-                warp_graphql::generic_string_object::GenericStringObjectFormat::JsonTemplatableMCPServer => {
+                zterm_graphql::generic_string_object::GenericStringObjectFormat::JsonTemplatableMCPServer => {
                     Ok(ServerCloudObject::TemplatableMCPServer(gso.try_into()?))
                 }
-                warp_graphql::generic_string_object::GenericStringObjectFormat::JsonCloudEnvironment => {
+                zterm_graphql::generic_string_object::GenericStringObjectFormat::JsonCloudEnvironment => {
                     Ok(ServerCloudObject::AmbientAgentEnvironment(gso.try_into()?))
                 }
-                warp_graphql::generic_string_object::GenericStringObjectFormat::JsonScheduledAmbientAgent => {
+                zterm_graphql::generic_string_object::GenericStringObjectFormat::JsonScheduledAmbientAgent => {
                     Ok(ServerCloudObject::ScheduledAmbientAgent(gso.try_into()?))
                 }
             }

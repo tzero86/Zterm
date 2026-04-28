@@ -1,7 +1,7 @@
-use std::sync::Arc;
+﻿use std::sync::Arc;
 
-use warp_core::features::FeatureFlag;
-use warpui::{AppContext, ModelContext, SingletonEntity};
+use zterm_core::features::FeatureFlag;
+use zterm_ui::{AppContext, ModelContext, SingletonEntity};
 
 use crate::{
     ai::{

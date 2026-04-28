@@ -1,13 +1,13 @@
-use core::fmt;
+﻿use core::fmt;
 use std::collections::HashMap;
 use std::path::PathBuf;
 use std::sync::atomic::{AtomicUsize, Ordering};
 
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
-use warp_core::channel::ChannelState;
-use warp_core::user_preferences::GetUserPreferences;
-use warpui::{AppContext, Entity, EntityId, ModelContext, SingletonEntity};
+use zterm_core::channel::ChannelState;
+use zterm_core::user_preferences::GetUserPreferences;
+use zterm_ui::{AppContext, Entity, EntityId, ModelContext, SingletonEntity};
 
 use crate::ai::llms::LLMId;
 use crate::ai::mcp::templatable_manager::TemplatableMCPServerManagerEvent;
@@ -63,7 +63,7 @@ impl AIExecutionProfileInfo {
         &self.id
     }
 
-    /// The Warp Drive sync ID of this profile, if it has been synced.
+    /// The Zterm Drive sync ID of this profile, if it has been synced.
     #[cfg_attr(target_family = "wasm", allow(dead_code))]
     pub fn sync_id(&self) -> Option<SyncId> {
         self.sync_id

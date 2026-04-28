@@ -48,11 +48,11 @@ use crate::{
 use instant::Instant;
 use pathfinder_geometry::vector::vec2f;
 use std::collections::HashMap;
-use warp_core::ui::color::blend::Blend;
-use warp_core::ui::theme::color::internal_colors;
-use warp_editor::editor::NavigationKey;
-use warp_graphql::scalars::time::ServerTimestamp;
-use warpui::{
+use zterm_core::ui::color::blend::Blend;
+use zterm_core::ui::theme::color::internal_colors;
+use zterm_editor::editor::NavigationKey;
+use zterm_graphql::scalars::time::ServerTimestamp;
+use zterm_ui::{
     elements::{
         Align, Border, ChildAnchor, Clipped, ConstrainedBox, Container, CornerRadius,
         CrossAxisAlignment, Element, Empty, Expanded, Flex, Hoverable, MainAxisAlignment,
@@ -78,7 +78,7 @@ use new_environment_button::NewEnvironmentButtonView;
 #[allow(unused_imports)] // IntegrationsClient trait is used in fetch_github_repos
 use {
     crate::server::server_api::{integrations::IntegrationsClient, ServerApiProvider},
-    warp_graphql::queries::user_github_info::UserGithubInfoResult,
+    zterm_graphql::queries::user_github_info::UserGithubInfoResult,
 };
 
 const PAGE_TITLE_TEXT: &str = "Environments";
@@ -929,7 +929,7 @@ impl TypedActionView for EnvironmentsPageView {
             }
             EnvironmentsPageAction::CopyEnvId(sync_id, env_id_string) => {
                 ctx.clipboard()
-                    .write(warpui::clipboard::ClipboardContent::plain_text(
+                    .write(zterm_ui::clipboard::ClipboardContent::plain_text(
                         env_id_string.clone(),
                     ));
                 // Track when this was copied for feedback
@@ -938,7 +938,7 @@ impl TypedActionView for EnvironmentsPageView {
                 let duration = COPY_FEEDBACK_DURATION;
                 ctx.spawn(
                     async move {
-                        warpui::r#async::Timer::after(duration).await;
+                        zterm_ui::r#async::Timer::after(duration).await;
                     },
                     |me, _, ctx| {
                         ctx.notify();
@@ -999,8 +999,8 @@ impl TypedActionView for EnvironmentsPageView {
         &mut self,
         _action: &Self::Action,
         _ctx: &mut ViewContext<Self>,
-    ) -> warpui::accessibility::ActionAccessibilityContent {
-        warpui::accessibility::ActionAccessibilityContent::default()
+    ) -> zterm_ui::accessibility::ActionAccessibilityContent {
+        zterm_ui::accessibility::ActionAccessibilityContent::default()
     }
 }
 
@@ -1241,7 +1241,7 @@ impl EnvironmentsPageWidget {
 
         let search_icon = ConstrainedBox::new(
             Icon::Search
-                .to_warpui_icon(blended_colors::text_sub(theme, theme.surface_2()).into())
+                .to_zterm_ui_icon(blended_colors::text_sub(theme, theme.surface_2()).into())
                 .finish(),
         )
         .with_width(icon_size)
@@ -1543,7 +1543,7 @@ impl EnvironmentsPageWidget {
         let theme = appearance.theme();
         let build_icon = || {
             Container::new(
-                ConstrainedBox::new(icon.to_warpui_icon(theme.active_ui_text_color()).finish())
+                ConstrainedBox::new(icon.to_zterm_ui_icon(theme.active_ui_text_color()).finish())
                     .with_width(icon_size)
                     .with_height(icon_size)
                     .finish(),
@@ -1919,7 +1919,7 @@ impl EnvironmentsPageWidget {
             let icon_color: ThemeFill = if is_card_hovered {
                 theme.foreground()
             } else {
-                ThemeFill::Solid(warpui::color::ColorU::transparent_black())
+                ThemeFill::Solid(zterm_ui::color::ColorU::transparent_black())
             };
 
             let should_render_share_button = list_scope == EnvironmentListScope::Personal

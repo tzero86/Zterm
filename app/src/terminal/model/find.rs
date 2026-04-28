@@ -1,4 +1,4 @@
-use std::ops::RangeInclusive;
+﻿use std::ops::RangeInclusive;
 
 use regex::escape;
 use regex_automata::hybrid::dfa::{Cache, DFA};
@@ -7,7 +7,7 @@ use regex_automata::nfa::thompson;
 use regex_automata::util::pool::Pool;
 use regex_automata::util::syntax::Config;
 use regex_automata::{Anchored, Input};
-use warp_terminal::model::grid::CellType;
+use zterm_terminal::model::grid::CellType;
 
 use crate::terminal::model::index::Direction;
 use crate::terminal::model::index::Point;

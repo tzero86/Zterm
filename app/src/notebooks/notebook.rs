@@ -6,16 +6,16 @@ use regex::Regex;
 use settings::Setting as _;
 use std::{sync::Arc, time::Duration};
 use url::Url;
-use warp_core::context_flag::ContextFlag;
+use zterm_core::context_flag::ContextFlag;
 
 #[cfg(target_family = "wasm")]
 use crate::uri::web_intent_parser::open_url_on_desktop;
 
-use warp_editor::{
+use zterm_editor::{
     editor::NavigationKey,
     model::{CoreEditorModel, RichTextEditorModel},
 };
-use warpui::{
+use zterm_ui::{
     accessibility::{AccessibilityContent, WarpA11yRole},
     clipboard::ClipboardContent,
     elements::{
@@ -51,8 +51,8 @@ use crate::{
     cmd_or_ctrl_shift,
     drive::{
         drive_helpers::has_feature_gated_anonymous_user_reached_notebook_limit,
-        export::ExportManager, items::WarpDriveItemId, sharing::ShareableObject,
-        CloudObjectTypeAndId, OpenWarpDriveObjectSettings,
+        export::ExportManager, items::ZtermDriveItemId, sharing::ShareableObject,
+        CloudObjectTypeAndId, OpenZtermDriveObjectSettings,
     },
     editor::{
         EditOrigin, EditorView, Event as EditorEvent, InteractionState,
@@ -156,7 +156,7 @@ lazy_static! {
 }
 
 pub fn init(app: &mut AppContext) {
-    use warpui::keymap::macros::*;
+    use zterm_ui::keymap::macros::*;
 
     app.register_editable_bindings([
         EditableBinding::new(
@@ -272,7 +272,7 @@ pub enum NotebookEvent {
         source: WorkflowSource,
     },
     EditWorkflow(SyncId),
-    ViewInWarpDrive(WarpDriveItemId),
+    ViewInZtermDrive(ZtermDriveItemId),
     Pane(PaneEvent),
     MoveToSpace {
         cloud_object_type_and_id: CloudObjectTypeAndId,
@@ -302,7 +302,7 @@ pub enum NotebookAction {
     ResetFontSize,
     ConflictResolutionBannerRefreshClicked,
     FocusTerminalInput,
-    ViewInWarpDrive(WarpDriveItemId),
+    ViewInZtermDrive(ZtermDriveItemId),
     ContextMenu(ContextMenuAction), // right click context menu
     MoveToSpace {
         cloud_object_type_and_id: CloudObjectTypeAndId,
@@ -613,7 +613,7 @@ impl NotebookView {
                 {
                     self.pane_configuration.update(ctx, |pane_config, ctx| {
                         pane_config
-                            .set_shareable_object(Some(ShareableObject::WarpDriveObject(id)), ctx);
+                            .set_shareable_object(Some(ShareableObject::ZtermDriveObject(id)), ctx);
                     })
                 }
             }
@@ -1213,8 +1213,8 @@ impl NotebookView {
         });
     }
 
-    fn view_in_warp_drive(&mut self, id: WarpDriveItemId, ctx: &mut ViewContext<Self>) {
-        ctx.emit(NotebookEvent::ViewInWarpDrive(id));
+    fn view_in_warp_drive(&mut self, id: ZtermDriveItemId, ctx: &mut ViewContext<Self>) {
+        ctx.emit(NotebookEvent::ViewInZtermDrive(id));
     }
 
     fn move_to_team_owner(
@@ -1443,7 +1443,7 @@ impl NotebookView {
             );
         }
 
-        if !warpui::platform::is_mobile_device()
+        if !zterm_ui::platform::is_mobile_device()
             && !ContextFlag::HideOpenOnDesktopButton.is_enabled()
             && *UserAppInstallDetectionSettings::as_ref(ctx)
                 .user_app_installation_detected
@@ -1522,7 +1522,7 @@ impl NotebookView {
     pub fn wait_for_initial_load_then_load(
         &mut self,
         notebook_id: SyncId,
-        settings: &OpenWarpDriveObjectSettings,
+        settings: &OpenZtermDriveObjectSettings,
         window_id: WindowId,
         ctx: &mut ViewContext<Self>,
     ) {
@@ -1561,7 +1561,7 @@ impl NotebookView {
     fn fetch_and_load_notebook(
         &mut self,
         notebook_id: ServerId,
-        settings: &OpenWarpDriveObjectSettings,
+        settings: &OpenZtermDriveObjectSettings,
         window_id: WindowId,
         ctx: &mut ViewContext<Self>,
     ) {
@@ -1605,7 +1605,7 @@ impl NotebookView {
     pub fn load(
         &mut self,
         notebook: CloudNotebook,
-        settings: &OpenWarpDriveObjectSettings,
+        settings: &OpenZtermDriveObjectSettings,
         ctx: &mut ViewContext<Self>,
     ) -> SpawnedFutureHandle {
         self.set_title(&notebook.model().title, ctx);
@@ -1615,7 +1615,7 @@ impl NotebookView {
             self.pane_configuration
                 .update(ctx, |pane_configuration, ctx| {
                     pane_configuration.set_shareable_object(
-                        Some(ShareableObject::WarpDriveObject(server_id)),
+                        Some(ShareableObject::ZtermDriveObject(server_id)),
                         ctx,
                     );
                 });
@@ -1695,7 +1695,7 @@ impl NotebookView {
             });
         } else if let Some(focused_folder_id) = settings.focused_folder_id.map(SyncId::ServerId) {
             self.view_in_warp_drive(
-                WarpDriveItemId::Object(CloudObjectTypeAndId::Folder(focused_folder_id)),
+                ZtermDriveItemId::Object(CloudObjectTypeAndId::Folder(focused_folder_id)),
                 ctx,
             );
         }
@@ -1868,7 +1868,7 @@ impl NotebookView {
         if let Some(notebook) = CloudModel::as_ref(ctx).get_notebook(&id) {
             self.load(
                 notebook.clone(),
-                &OpenWarpDriveObjectSettings::default(),
+                &OpenZtermDriveObjectSettings::default(),
                 ctx,
             );
         }
@@ -1943,7 +1943,7 @@ impl NotebookView {
                     .with_children([
                         ConstrainedBox::new(
                             icons::Icon::Trash
-                                .to_warpui_icon(appearance.theme().foreground())
+                                .to_zterm_ui_icon(appearance.theme().foreground())
                                 .finish(),
                         )
                         .with_width(16.)
@@ -2203,7 +2203,7 @@ impl View for NotebookView {
         }
     }
 
-    fn render(&self, app: &AppContext) -> Box<dyn warpui::Element> {
+    fn render(&self, app: &AppContext) -> Box<dyn zterm_ui::Element> {
         let mut content = Flex::column();
         content.extend(self.render_trash_banner(app));
         content.add_child(self.render_title(app));
@@ -2256,7 +2256,7 @@ impl View for NotebookView {
         SavePosition::new(stack.finish(), &self.view_position_id).finish()
     }
 
-    fn keymap_context(&self, app: &AppContext) -> warpui::keymap::Context {
+    fn keymap_context(&self, app: &AppContext) -> zterm_ui::keymap::Context {
         let mut context = Self::default_keymap_context();
 
         match self.mode_app_ctx(app) {
@@ -2307,7 +2307,7 @@ impl TypedActionView for NotebookView {
             NotebookAction::ResetFontSize => {
                 self.apply_font_size_to_setting(NotebookFontSize::default_value(), ctx)
             }
-            NotebookAction::ViewInWarpDrive(id) => self.view_in_warp_drive(*id, ctx),
+            NotebookAction::ViewInZtermDrive(id) => self.view_in_warp_drive(*id, ctx),
             NotebookAction::FocusTerminalInput => {
                 ctx.emit(NotebookEvent::Pane(PaneEvent::FocusActiveSession))
             }

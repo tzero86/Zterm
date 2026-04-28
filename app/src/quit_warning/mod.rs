@@ -1,7 +1,7 @@
-use itertools::Itertools;
+﻿use itertools::Itertools;
 use settings::ToggleableSetting as _;
 use std::fmt::Write;
-use warpui::{
+use zterm_ui::{
     modals::{AlertDialogWithCallbacks, AppModalCallback, ModalButton},
     AppContext, EntityId, SingletonEntity, ViewContext, WeakViewHandle, WindowId,
 };

@@ -1,8 +1,8 @@
-mod legacy;
+﻿mod legacy;
 mod maa;
 mod static_prompt_suggestions;
 
-use warpui::ModelHandle;
+use zterm_ui::ModelHandle;
 
 pub use legacy::{
     PassiveSuggestionsEvent as LegacyPassiveSuggestionsEvent,

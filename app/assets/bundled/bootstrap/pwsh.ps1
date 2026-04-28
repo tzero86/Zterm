@@ -1,4 +1,4 @@
-[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseApprovedVerbs', '', Scope = 'Function', Target = 'Warp-*', Justification = 'Warp-* functions are ours')]
+﻿[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseApprovedVerbs', '', Scope = 'Function', Target = 'Warp-*', Justification = 'Warp-* functions are ours')]
 param()
 
 # Wrap things in a module to avoid cluttering the global scope. We assign it to '$null' to suppress
@@ -6,7 +6,7 @@ param()
 # NOTE: If you do need a function to be global and also have access to variables in this scope, add
 # the function name to the 'Export-ModuleMember' call at the end.
 $null = New-Module -Name Warp-Module -ScriptBlock {
-    # Byte sequence used to signal the start of an OSC for Warp JSON messages.
+    # Byte sequence used to signal the start of an OSC for Zterm JSON messages.
     $oscStart = "$([char]0x1b)]9278;"
 
     # Appended to $oscStart to signal that the following message is JSON-encoded.
@@ -14,7 +14,7 @@ $null = New-Module -Name Warp-Module -ScriptBlock {
 
     $oscParamSeparator = ';'
 
-    # Byte used to signal the end of an OSC for Warp JSON messages.
+    # Byte used to signal the end of an OSC for Zterm JSON messages.
     $oscEnd = "$([char]0x07)"
 
     # Writes a hex-encoded JSON message to the PTY.
@@ -115,7 +115,7 @@ $null = New-Module -Name Warp-Module -ScriptBlock {
                 $stringifiedOutput = $rawOutput -join "$([char]0x0a)"
 
                 # This is a best-effort attempt to get an error code.
-                # We cannot duplicate our error code logic from Warp-Precmd
+                # We cannot duplicate our error code logic from Zterm-Precmd
                 # b/c Invoke-Expression will swallow the value of $? and always
                 # return true. So we do our best to return a legit error code
                 Write-Output "$commandId;$stringifiedOutput;$exitCode"
@@ -135,14 +135,14 @@ $null = New-Module -Name Warp-Module -ScriptBlock {
     }
 
     function Warp-Bootstrapped {
-        [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', 'WARP_BOOTSTRAPPED', Justification = 'False positive as we are assigning to global')]
+        [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', 'ZTERM_BOOTSTRAPPED', Justification = 'False positive as we are assigning to global')]
         param([decimal]$rcStartTime, [decimal]$rcEndTime)
 
         $envVarNames = (Get-ChildItem env: | Select-Object -ExpandProperty Name | ForEach-Object { 'env:' + $_ }) + `
         (Get-Variable | Select-Object -ExpandProperty Name) -join ' '
         $aliasesRaw = Get-Command -CommandType Alias | Select-Object -ExpandProperty DisplayName
         $aliases = $aliasesRaw -join [Environment]::NewLine
-        $functionNamesRaw = Get-Command -CommandType Function | Where-Object { -not $_.Name.StartsWith('Warp') } | Select-Object -ExpandProperty Name
+        $functionNamesRaw = Get-Command -CommandType Function | Where-Object { -not $_.Name.StartsWith('Zterm') } | Select-Object -ExpandProperty Name
         $functionNames = $functionNamesRaw -join [Environment]::NewLine
         $builtinsRaw = Get-Command -CommandType Cmdlet | Select-Object -ExpandProperty Name
         $builtins = $builtinsRaw -join [Environment]::NewLine
@@ -222,7 +222,7 @@ $null = New-Module -Name Warp-Module -ScriptBlock {
             }
         }
         Warp-Send-JsonMessage $bootstrappedMsg
-        $global:WARP_BOOTSTRAPPED = 1
+        $global:ZTERM_BOOTSTRAPPED = 1
     }
 
     function Warp-Preexec([string]$command) {
@@ -363,14 +363,14 @@ $null = New-Module -Name Warp-Module -ScriptBlock {
         # Sets the prompt mode to custom prompt (PS1)
         # Is the equivalent of warp_change_prompt_modes_to_ps1 in other shells
         Set-PSReadLineKeyHandler -Chord 'Alt+p' -ScriptBlock {
-            $env:WARP_HONOR_PS1 = '1'
+            $env:ZTERM_HONOR_PS1 = '1'
             Warp-Redraw-Prompt
         }
 
         # Sets the prompt mode to warp prompt
         # Is the equivalent of warp_change_prompt_modes_to_warp_prompt in other shells
         Set-PSReadLineKeyHandler -Chord 'Alt+w' -ScriptBlock {
-            $env:WARP_HONOR_PS1 = '0'
+            $env:ZTERM_HONOR_PS1 = '0'
             Warp-Redraw-Prompt
         }
 
@@ -387,8 +387,8 @@ $null = New-Module -Name Warp-Module -ScriptBlock {
     }
 
     # Force use of the Inline PredictionViewStyle. The ListView style can occassionally cause some
-    # flickering when using Warp and it doesn't matter what the value of this setting is because
-    # Warp has its own input editor.
+    # flickering when using Zterm and it doesn't matter what the value of this setting is because
+    # Zterm has its own input editor.
     function Warp-Disable-PSPrediction {
         [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseCompatibleCommands', '', Justification = 'Errors are ignored')]
         [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingEmptyCatchBlock', '', Justification = 'Errors expected')]
@@ -482,7 +482,7 @@ $null = New-Module -Name Warp-Module -ScriptBlock {
             # blocks created during the bootstrap process don't have visible
             # prompts, and we don't want to invoke 'git' before we've sourced the
             # user's rcfiles and have a fully-populated PATH.
-            if ($global:WARP_BOOTSTRAPPED -eq 1) {
+            if ($global:ZTERM_BOOTSTRAPPED -eq 1) {
                 if (Test-Path env:VIRTUAL_ENV) {
                     $virtualEnv = $env:VIRTUAL_ENV
                 }
@@ -553,7 +553,7 @@ $null = New-Module -Name Warp-Module -ScriptBlock {
                 }
             }
 
-            $honor_ps1 = "$env:WARP_HONOR_PS1" -eq '1'
+            $honor_ps1 = "$env:ZTERM_HONOR_PS1" -eq '1'
 
             $precmdMsg = @{
                 hook = 'Precmd'
@@ -795,7 +795,7 @@ $null = New-Module -Name Warp-Module -ScriptBlock {
         # Wrap prompt in Prompt Marker OSCs
         $startPromptMarker = "$e]133;A$oscEnd"
         $startRPromptMarker = "$e]133;P;k=r$oscEnd"
-        if ("$env:WARP_HONOR_PS1" -eq '0') {
+        if ("$env:ZTERM_HONOR_PS1" -eq '0') {
             $endPromptMarker = "$e]133;B$oscEnd$oscResetGrid"
         } else {
             $endPromptMarker = "$e]133;B$oscEnd"
@@ -865,20 +865,20 @@ $null = New-Module -Name Warp-Module -ScriptBlock {
         return $decoratedPrompt
     }
 
-    if ((Test-Path env:WARP_INITIAL_WORKING_DIR) -and -not [String]::IsNullOrEmpty($env:WARP_INITIAL_WORKING_DIR)) {
-        Set-Location $env:WARP_INITIAL_WORKING_DIR 2> $null
-        Remove-Item -Path env:WARP_INITIAL_WORKING_DIR
+    if ((Test-Path env:ZTERM_INITIAL_WORKING_DIR) -and -not [String]::IsNullOrEmpty($env:ZTERM_INITIAL_WORKING_DIR)) {
+        Set-Location $env:ZTERM_INITIAL_WORKING_DIR 2> $null
+        Remove-Item -Path env:ZTERM_INITIAL_WORKING_DIR
     }
 
     # In some cases, the Clear-Host command will not interface properly with the blocklist.
     # Clear-Host defers to whatever the 'clear' command is defined, and if that command
-    # is not set up to work with Warp (or has funky other behaviors) it can cause problems.
+    # is not set up to work with Zterm (or has funky other behaviors) it can cause problems.
     #
     # Specific examples:
     # - The default /usr/bin/clear on mac creates a giant, empty block to clear content
     #   off of the screen.
     # - if miniconda is installed on an osx system, the miniconda 'clear' command will be
-    #   invoked for 'Clear-Host', which does not play with Warp and winds up doing nothing.
+    #   invoked for 'Clear-Host', which does not play with Zterm and winds up doing nothing.
 
     # Because of the above, we explicitly override both 'Clear-Host' and 'clear' to
     # instead send a DCS command to Warp instructing it to clear the blocklist.
@@ -977,11 +977,11 @@ $null = New-Module -Name Warp-Module -ScriptBlock {
         }
     }
 
-    # Append additional PATH entries if provided via WARP_PATH_APPEND.
+    # Append additional PATH entries if provided via ZTERM_PATH_APPEND.
     # This happens after we source RC files in case they reset PATH.
-    if (-not [String]::IsNullOrEmpty($env:WARP_PATH_APPEND)) {
-        $env:PATH = '{0}{1}{2}' -f $env:PATH, [IO.Path]::PathSeparator, $env:WARP_PATH_APPEND
-        Remove-Item -Path env:WARP_PATH_APPEND
+    if (-not [String]::IsNullOrEmpty($env:ZTERM_PATH_APPEND)) {
+        $env:PATH = '{0}{1}{2}' -f $env:PATH, [IO.Path]::PathSeparator, $env:ZTERM_PATH_APPEND
+        Remove-Item -Path env:ZTERM_PATH_APPEND
     }
 
     # This is a workaround for oh-my-posh's "transient prompt" feature. When enabled, it causes the

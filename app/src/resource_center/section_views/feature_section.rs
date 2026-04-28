@@ -1,11 +1,11 @@
-use crate::{
+﻿use crate::{
     appearance::Appearance,
     send_telemetry_from_ctx,
     server::telemetry::TelemetryEvent,
     settings_view::keybindings::{KeybindingChangedEvent, KeybindingChangedNotifier},
     themes::theme::Fill,
 };
-use warpui::{
+use zterm_ui::{
     elements::{
         Align, ConstrainedBox, Container, CrossAxisAlignment, Element, Flex, Hoverable, Icon,
         MouseState, MouseStateHandle, ParentElement, Shrinkable,

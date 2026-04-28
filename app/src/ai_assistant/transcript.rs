@@ -2,11 +2,11 @@ use markdown_parser::markdown_parser::RUNNABLE_BLOCK_MARKDOWN_LANG;
 use markdown_parser::CodeBlockText;
 use pathfinder_color::ColorU;
 use pathfinder_geometry::vector::vec2f;
-use warp_core::ui::builder::AnimatedButtonOptions;
-use warpui::clipboard::ClipboardContent;
-use warpui::elements::{DispatchEventResult, Stack};
-use warpui::units::Pixels;
-use warpui::{
+use zterm_core::ui::builder::AnimatedButtonOptions;
+use zterm_ui::clipboard::ClipboardContent;
+use zterm_ui::elements::{DispatchEventResult, Stack};
+use zterm_ui::units::Pixels;
+use zterm_ui::{
     elements::{
         Align, Border, ChildAnchor, ClippedScrollStateHandle, ClippedScrollable, ConstrainedBox,
         Container, CornerRadius, CrossAxisAlignment, EventHandler, Fill, Flex,
@@ -21,13 +21,13 @@ use warpui::{
     AppContext, Element, Entity, ModelHandle, SingletonEntity, TypedActionView, View, ViewContext,
     WeakViewHandle,
 };
-use warpui::{BlurContext, FocusContext};
+use zterm_ui::{BlurContext, FocusContext};
 
 use crate::workspaces::user_workspaces::UserWorkspaces;
 use crate::{
     appearance::Appearance,
     send_telemetry_from_ctx,
-    server::telemetry::{SaveAsWorkflowModalSource, TelemetryEvent, WarpAIActionType},
+    server::telemetry::{SaveAsWorkflowModalSource, TelemetryEvent, ZtermAIActionType},
     ui_components::blended_colors,
 };
 
@@ -154,8 +154,8 @@ impl TypedActionView for Transcript {
                     ctx.clipboard().write(ClipboardContent::plain_text(answer));
                 }
                 send_telemetry_from_ctx!(
-                    TelemetryEvent::WarpAIAction {
-                        action_type: WarpAIActionType::CopyAnswer
+                    TelemetryEvent::ZtermAIAction {
+                        action_type: ZtermAIActionType::CopyAnswer
                     },
                     ctx
                 );
@@ -211,8 +211,8 @@ impl Transcript {
         }
 
         send_telemetry_from_ctx!(
-            TelemetryEvent::WarpAIAction {
-                action_type: WarpAIActionType::CopyCode
+            TelemetryEvent::ZtermAIAction {
+                action_type: ZtermAIActionType::CopyCode
             },
             ctx
         );
@@ -225,8 +225,8 @@ impl Transcript {
     ) {
         ctx.emit(TranscriptEvent::PasteInTerminalInput { code_block_index });
         send_telemetry_from_ctx!(
-            TelemetryEvent::WarpAIAction {
-                action_type: WarpAIActionType::InsertIntoInput
+            TelemetryEvent::ZtermAIAction {
+                action_type: ZtermAIActionType::InsertIntoInput
             },
             ctx
         );
@@ -243,7 +243,7 @@ impl Transcript {
 
         send_telemetry_from_ctx!(
             TelemetryEvent::SaveAsWorkflowModal {
-                source: SaveAsWorkflowModalSource::WarpAIPanel
+                source: SaveAsWorkflowModalSource::ZtermAIPanel
             },
             ctx
         );

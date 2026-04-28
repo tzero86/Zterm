@@ -1,4 +1,4 @@
-use super::hoa_onboarding;
+﻿use super::hoa_onboarding;
 use crate::auth::auth_manager::AuthManagerEvent;
 use crate::auth::AuthManager;
 use crate::channel::{Channel, ChannelState};
@@ -8,8 +8,8 @@ use crate::settings::cloud_preferences_syncer::{
 use crate::settings::{AISettings, CodeSettings};
 use crate::terminal::general_settings::GeneralSettings;
 use settings::Setting as _;
-use warp_core::features::FeatureFlag;
-use warpui::{Entity, ModelContext, SingletonEntity, WindowId};
+use zterm_core::features::FeatureFlag;
+use zterm_ui::{Entity, ModelContext, SingletonEntity, WindowId};
 
 /// A generic model for managing one-time modals that should be shown to users only once.
 ///

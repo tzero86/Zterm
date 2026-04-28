@@ -1,4 +1,4 @@
-//! This module implements processing logic for pty output.
+﻿//! This module implements processing logic for pty output.
 //!
 //! The top-level export is [`Processor`], which is a lightweight wrapper
 //! around Alacritty's [`VteParser`] that delegates handling of the parsed PTY
@@ -7,7 +7,7 @@
 //! Internally, [`Performer`] delegates to finer-grained methods for handling
 //! PTY output implemented by the [`Handler`] trait -- this could be printing to
 //! the terminal, executing actions as a result of CSI or OSC sequences,
-//! executing one of Warp's DCS hooks, etc. [`Handler`] should be implemented by
+//! executing one of Zterm's DCS hooks, etc. [`Handler`] should be implemented by
 //! an app-level model that updates the terminal's state accordingly.
 mod ansi_c_decoder;
 mod dcs_hooks;
@@ -18,8 +18,8 @@ pub use dcs_hooks::*;
 pub use handler::*;
 use instant::Instant;
 use itertools::Itertools;
-pub use warp_terminal::model::ansi::control_sequence_parameters::*;
-use warp_terminal::model::{KeyboardModes, KeyboardModesApplyBehavior};
+pub use zterm_terminal::model::ansi::control_sequence_parameters::*;
+use zterm_terminal::model::{KeyboardModes, KeyboardModesApplyBehavior};
 
 use crate::features::FeatureFlag;
 use crate::terminal::model::completions::{
@@ -49,7 +49,7 @@ use std::str::FromStr as _;
 use std::time::Duration;
 use std::{io, str};
 use vte::{Params, Parser as VteParser, Perform as VtePerform};
-use warpui::color::ColorU;
+use zterm_ui::color::ColorU;
 
 use super::kitty::parse_kitty_chunk;
 use super::terminal_model::TmuxInstallationState;
@@ -57,15 +57,15 @@ use super::terminal_model::TmuxInstallationState;
 /// Marks an OSC as one that is sent by Warp logic registered in the shell.
 ///
 /// 9277 spells out "WARP" on a dialpad :).
-const WARP_IN_BAND_GENERATOR_OSC_MARKER: &[u8] = b"9277";
-const WARP_IN_BAND_GENERATOR_START_BYTE: &[u8] = b"A";
-const WARP_IN_BAND_GENERATOR_END_BYTE: &[u8] = b"B";
+const ZTERM_IN_BAND_GENERATOR_OSC_MARKER: &[u8] = b"9277";
+const ZTERM_IN_BAND_GENERATOR_START_BYTE: &[u8] = b"A";
+const ZTERM_IN_BAND_GENERATOR_END_BYTE: &[u8] = b"B";
 
 /// Marks an OSC that is used for messages containing shell hooks.
-const WARP_OSC_MARKER: &[u8] = b"9278";
+const ZTERM_OSC_MARKER: &[u8] = b"9278";
 /// Marks an OSC that is used for resetting ConPTY's grid. This is useful for performing a series
 /// of checks ensuring that Warp's grids and ConPTY's grid are in sync.
-const WARP_RESET_GRID_OSC_MARKER: &[u8] = b"9279";
+const ZTERM_RESET_GRID_OSC_MARKER: &[u8] = b"9279";
 
 /// The amount of time a single synchronized update can take from the time the corresponding
 /// 'Set Mode' escape sequence is processed before a redraw is forced.
@@ -82,23 +82,23 @@ lazy_static! {
     static ref SYNC_OUTPUT_MAX_BUFFER_SIZE: Byte = Byte::from_u64_with_unit(2, ByteUnit::MiB).expect("Can create byte size for sync output max buffer size");
 }
 
-const WARP_COMPLETIONS_OSC_MARKER: &[u8] = b"9280";
-const WARP_COMPLETIONS_START_BYTE: &[u8] = b"A";
-const WARP_COMPLETIONS_END_BYTE: &[u8] = b"B";
-const WARP_COMPLETIONS_MATCH_RESULT_BYTE: &[u8] = b"C";
+const ZTERM_COMPLETIONS_OSC_MARKER: &[u8] = b"9280";
+const ZTERM_COMPLETIONS_START_BYTE: &[u8] = b"A";
+const ZTERM_COMPLETIONS_END_BYTE: &[u8] = b"B";
+const ZTERM_COMPLETIONS_MATCH_RESULT_BYTE: &[u8] = b"C";
 
 /// Denotes an OSC that sends metadata about the last match result.
 /// The sequence begins with `D?` followed by the field that should be updated.
 /// For example: `D?description'{OSC_PAYLOAD}` updates the description of the last match.
-const WARP_COMPLETIONS_MATCH_UPDATE_METADATA: &[u8] = b"D?";
+const ZTERM_COMPLETIONS_MATCH_UPDATE_METADATA: &[u8] = b"D?";
 
 /// Marks an OSC that tells the terminal that the shell is ready to receive
 /// the the string to run completions for.
-const WARP_COMPLETIONS_PROMPT_BYTE: &[u8] = b"P";
+const ZTERM_COMPLETIONS_PROMPT_BYTE: &[u8] = b"P";
 
-const WARP_KV_START_BYTE: &[u8] = b"A";
-const WARP_KV_ENTRY_BYTE: &[u8] = b"B";
-const WARP_KV_END_BYTE: &[u8] = b"C";
+const ZTERM_KV_START_BYTE: &[u8] = b"A";
+const ZTERM_KV_ENTRY_BYTE: &[u8] = b"B";
+const ZTERM_KV_END_BYTE: &[u8] = b"C";
 
 /// Parse colors in XParseColor format.
 #[allow(dead_code)]
@@ -697,14 +697,14 @@ impl<'a, H: Handler + 'a, W: io::Write> Performer<'a, H, W> {
 
     fn handle_kv_marker(&mut self, params: &[&[u8]]) {
         match params.get(2) {
-            Some(&WARP_KV_START_BYTE) => {
+            Some(&ZTERM_KV_START_BYTE) => {
                 let Some(hook) = params.get(3).map(|data| String::from_utf8_lossy(data)) else {
                     log::error!("Start pending hook OSC did not contain shell hook");
                     return;
                 };
                 self.handler.start_receiving_hook(hook.into());
             }
-            Some(&WARP_KV_END_BYTE) => {
+            Some(&ZTERM_KV_END_BYTE) => {
                 let Some(pending_shell_hook) = self.handler.finish_receiving_hook() else {
                     return;
                 };
@@ -715,7 +715,7 @@ impl<'a, H: Handler + 'a, W: io::Write> Performer<'a, H, W> {
                 );
                 self.handle_decoded_hook(Ok(hook));
             }
-            Some(&WARP_KV_ENTRY_BYTE) => {
+            Some(&ZTERM_KV_ENTRY_BYTE) => {
                 let Some(key) = params.get(3) else {
                     log::error!("Pending hook update OSC did not contain key");
                     return;
@@ -1075,12 +1075,12 @@ where
             }
 
             // Received a Warp OSC used for in-band generators.
-            WARP_IN_BAND_GENERATOR_OSC_MARKER => match params.get(1) {
-                Some(&WARP_IN_BAND_GENERATOR_START_BYTE) => {
+            ZTERM_IN_BAND_GENERATOR_OSC_MARKER => match params.get(1) {
+                Some(&ZTERM_IN_BAND_GENERATOR_START_BYTE) => {
                     log::info!("Received a Warp OSC marker for starting in-band command output.");
                     self.handler.start_in_band_command_output();
                 }
-                Some(&WARP_IN_BAND_GENERATOR_END_BYTE) => {
+                Some(&ZTERM_IN_BAND_GENERATOR_END_BYTE) => {
                     self.handler.end_in_band_command_output(true);
                 }
                 _ => {
@@ -1089,7 +1089,7 @@ where
             },
 
             // Received a Warp OSC used for shell hooks.
-            WARP_OSC_MARKER => {
+            ZTERM_OSC_MARKER => {
                 let Some(json_marker_char) = params
                     .get(1)
                     .map(|json_marker_bytes| String::from_utf8_lossy(json_marker_bytes))
@@ -1139,14 +1139,14 @@ where
                 }
             }
 
-            WARP_RESET_GRID_OSC_MARKER => {
+            ZTERM_RESET_GRID_OSC_MARKER => {
                 log::debug!("Received Warp OSC string for reset grid");
                 self.handler.on_reset_grid();
             }
 
             // Received a Warp OSC used for completions.
-            WARP_COMPLETIONS_OSC_MARKER => match params.get(1) {
-                Some(&WARP_COMPLETIONS_START_BYTE) => {
+            ZTERM_COMPLETIONS_OSC_MARKER => match params.get(1) {
+                Some(&ZTERM_COMPLETIONS_START_BYTE) => {
                     let Some(format) = params
                         .get(2)
                         .map(|osc_data| String::from_utf8_lossy(osc_data))
@@ -1157,10 +1157,10 @@ where
                     };
                     self.handler.start_completions_output(format);
                 }
-                Some(&WARP_COMPLETIONS_END_BYTE) => {
+                Some(&ZTERM_COMPLETIONS_END_BYTE) => {
                     self.handler.end_completions_output();
                 }
-                Some(&WARP_COMPLETIONS_MATCH_RESULT_BYTE) => {
+                Some(&ZTERM_COMPLETIONS_MATCH_RESULT_BYTE) => {
                     // The payload for the OSC is contained in the third parameter.
                     let Some(data_str) = params
                         .get(2)
@@ -1177,7 +1177,7 @@ where
                     self.handler
                         .on_completion_result_received(shell_completion_result);
                 }
-                Some(bytes) if bytes.starts_with(WARP_COMPLETIONS_MATCH_UPDATE_METADATA) => {
+                Some(bytes) if bytes.starts_with(ZTERM_COMPLETIONS_MATCH_UPDATE_METADATA) => {
                     let Ok(parameter) = String::from_utf8(bytes.to_vec()) else {
                         log::warn!(
                             "Unable to convert update completions match parameter into a string"
@@ -1210,7 +1210,7 @@ where
                         }
                     }
                 }
-                Some(&WARP_COMPLETIONS_PROMPT_BYTE) => {
+                Some(&ZTERM_COMPLETIONS_PROMPT_BYTE) => {
                     self.handler.send_completions_prompt();
                 }
                 _ => {

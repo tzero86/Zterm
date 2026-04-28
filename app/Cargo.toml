@@ -1,16 +1,16 @@
 [package]
-authors = ["Warp Team <dev@warp.dev>"]
-default-run = "warp-oss"
+authors = ["Zterm Team <dev@warp.dev>"]
+default-run = "zterm-oss"
 description = "The cloud-backed terminal for individuals and teams"
 edition = "2021"
 autobins = false
-name = "warp"
+name = "zterm"
 version = "0.1.0"
 publish.workspace = true
 license.workspace = true
 
 [lib]
-name = "warp"
+name = "zterm"
 path = "src/lib.rs"
 
 # We define separate targets for each channel (stable, preview, dev) so that we can
@@ -18,12 +18,12 @@ path = "src/lib.rs"
 # flag overrides). Otherwise these binaries are exactly identical to our main binary.
 
 [[bin]]
-name = "warp-oss"
+name = "zterm-oss"
 path = "src/bin/oss.rs"
 test = false
 
 [[bin]]
-name = "warp"
+name = "zterm"
 path = "src/bin/local.rs"
 test = false
 
@@ -134,7 +134,7 @@ line-ending.workspace = true
 log.workspace = true
 log-panics = { version = "2.1.0", features = ["with-backtrace"] }
 lsp.workspace = true
-warp_logging.workspace = true
+zterm_logging.workspace = true
 sentry = { workspace = true, optional = true }
 lz4_flex = "0.11"
 markdown_parser.workspace = true
@@ -207,7 +207,7 @@ unindent = "0.1.7"
 url = { workspace = true, features = ["serde"] }
 urlocator.workspace = true
 uuid.workspace = true
-warp_cli.workspace = true
+zterm_cli.workspace = true
 validator = "0.19.0"
 variant_count = "1.1.0"
 vec1.workspace = true
@@ -215,19 +215,19 @@ version-compare.workspace = true
 vte.workspace = true
 walkdir.workspace = true
 warp-workflows.workspace = true
-warp_completer.workspace = true
-warp_core.workspace = true
-warp_editor.workspace = true
-warp_graphql.workspace = true
-warp_js = { workspace = true, optional = true }
-warp_server_client.workspace = true
-warp_util.workspace = true
-warpui = { workspace = true, features = ["schema_gen", "settings_value"] }
+zterm_completer.workspace = true
+zterm_core.workspace = true
+zterm_editor.workspace = true
+zterm_graphql.workspace = true
+zterm_js = { workspace = true, optional = true }
+zterm_server_client.workspace = true
+zterm_util.workspace = true
+zterm_ui = { workspace = true, features = ["schema_gen", "settings_value"] }
 voice_input = { workspace = true, optional = true }
-warpui_extras = { workspace = true, features = ["default", "user_preferences-toml"] }
+zterm_ui_extras = { workspace = true, features = ["default", "user_preferences-toml"] }
 syntax_tree.workspace = true
 languages.workspace = true
-warp_terminal.workspace = true
+zterm_terminal.workspace = true
 websocket.workspace = true
 wgpu = { workspace = true, optional = true }
 natural_language_detection.workspace = true
@@ -246,9 +246,9 @@ remote_server.workspace = true
 repo_metadata.workspace = true
 vim.workspace = true
 rmcp = { workspace = true, features = ["client"] }
-warp_isolation_platform.workspace = true
-warp_ripgrep.workspace = true
-warp_managed_secrets.workspace = true
+zterm_isolation_platform.workspace = true
+zterm_ripgrep.workspace = true
+zterm_managed_secrets.workspace = true
 
 [target.'cfg(target_os = "macos")'.dependencies]
 block.workspace = true
@@ -305,7 +305,7 @@ warp-command-signatures = { workspace = true, features = ["embed-signatures"] }
 is_executable = "1.0.1"
 gethostname = "1.1.0"
 watcher.workspace = true
-warp_files.workspace = true
+zterm_files.workspace = true
 tantivy = "0.26.0"
 
 [target.'cfg(target_family = "wasm")'.dependencies]
@@ -330,7 +330,7 @@ serde-wasm-bindgen = "0.6.5"
 # For wasm, we don't use the feature "embed-signatures".
 warp-command-signatures = { workspace = true }
 web-sys.workspace = true
-warp_web_event_bus.workspace = true
+zterm_web_event_bus.workspace = true
 
 [target.'cfg(unix)'.dependencies]
 cvt = "0.1.1"
@@ -393,14 +393,14 @@ mockito.workspace = true
 serial_test = "0.8.0"
 sum_tree = { workspace = true, features = ["test-util"] }
 virtual-fs.workspace = true
-warp_completer = { workspace = true, features = ["test-util"] }
-warp_core = { workspace = true, features = ["test-util"] }
-warp_editor = { workspace = true, features = ["test-util"] }
-warp_server_client = { workspace = true, features = ["test-util"] }
-warp_terminal = { workspace = true, features = ["test-util"] }
-warpui = { workspace = true, features = ["test-util"] }
-warpui_extras = { workspace = true, features = ["test-util"] }
-warp_files = { workspace = true, features = ["test-util"] }
+zterm_completer = { workspace = true, features = ["test-util"] }
+zterm_core = { workspace = true, features = ["test-util"] }
+zterm_editor = { workspace = true, features = ["test-util"] }
+zterm_server_client = { workspace = true, features = ["test-util"] }
+zterm_terminal = { workspace = true, features = ["test-util"] }
+zterm_ui = { workspace = true, features = ["test-util"] }
+zterm_ui_extras = { workspace = true, features = ["test-util"] }
+zterm_files = { workspace = true, features = ["test-util"] }
 repo_metadata = { workspace = true, features = ["test-util"] }
 
 [target.'cfg(not(target_family = "wasm"))'.dev-dependencies]
@@ -414,7 +414,7 @@ prost-build.workspace = true
 sha2.workspace = true
 tempfile.workspace = true
 walkdir = "2.3.2"
-warp_util.workspace = true
+zterm_util.workspace = true
 
 [target.'cfg(windows)'.build-dependencies]
 embed-resource = "3.0"
@@ -442,7 +442,7 @@ command_predictor = []
 context_line_review_comments = []
 completions_v2 = [
     "plugin_host",
-    "warp_completer/v2",
+    "zterm_completer/v2",
     "dep:command-signatures-v2",
 ]
 crash_reporting = [
@@ -450,7 +450,7 @@ crash_reporting = [
     "dep:sentry-log",
     "dep:minidumper",
     "dep:crash-handler",
-    "warp_logging/crash_reporting",
+    "zterm_logging/crash_reporting",
     "ai/crash_reporting",
 ]
 creating_shared_sessions = []
@@ -477,7 +477,7 @@ default = [
     "rect_selection",
     "reload_stale_conversation_files",
     "loginless_conversion",
-    "warp_packs",
+    "zterm_packs",
     "ai_rules",
     "suggested_rules",
     "default_waterfall_mode",
@@ -554,7 +554,7 @@ default = [
     "ambient_agents_command_line",
     "ambient_agents_image_upload",
     "scheduled_ambient_agents",
-    "warp_managed_secrets",
+    "zterm_managed_secrets",
     "v4a_file_diffs",
     "classic_completions",
     "force_classic_completions",
@@ -582,7 +582,7 @@ default = [
     "inline_history_menu",
     "inline_model_selector",
     "oz_launch_modal",
-    "open_warp_launch_modal",
+    "open_zterm_launch_modal",
     "new_tab_styling",
     "richtext_multiselect",
     "inline_profile_selector",
@@ -620,7 +620,7 @@ default = [
     "hoa_remote_control",
     "codex_notifications",
     "trim_trailing_blank_lines",
-    "open_warp_new_settings_modes",
+    "open_zterm_new_settings_modes",
     "skip_firebase_anonymous_user",
     "settings_file",
 ]
@@ -647,9 +647,9 @@ global_ai_analytics_banner = []
 global_ai_analytics_collection = []
 grab_the_baton_editing = []
 grep_tool = []
-# This feature is enabled in graphical builds of Warp, and groups together other features
+# This feature is enabled in graphical builds of Zterm, and groups together other features
 # that are not needed in headless builds. Because Cargo features are additive, the default
-# feature set is for a minimal build of Warp, and we add on GUI-specific features here.
+# feature set is for a minimal build of Zterm, and we add on GUI-specific features here.
 # For the most part, including GUI code in headless builds is fine; the main use case is
 # for things that pull in external dependencies.
 gui = ["voice_input"]
@@ -665,8 +665,8 @@ agent_mode_evals = [
     "full_source_code_embedding",
     "cross_repo_context",
     "rust-embed/debug-embed",
-    "warpui/log_named_telemetry_events",
-    "warp_logging/agent_mode_evals",
+    "zterm_ui/log_named_telemetry_events",
+    "zterm_logging/agent_mode_evals",
 ]
 ambient_agents_command_line = []
 ambient_agents_image_upload = []
@@ -677,7 +677,7 @@ inline_slash_commands = ["agent_view"]
 # Enable this feature to track heap usage and automatically produce a heap
 # profile report when app memory usage exceeds a 10GB threshold.
 #
-# Enabled on WarpDev by default.
+# Enabled on ZtermDev by default.
 heap_usage_tracking = ["jemalloc_pprof", "crash_reporting"]
 image_as_context = []
 in_band_generators_ssh = []
@@ -707,7 +707,7 @@ local_fs = [
     "lsp/local_fs",
     "persistence/local_fs",
     "repo_metadata/local_fs",
-    "warp_core/local_fs",
+    "zterm_core/local_fs",
 ]
 log_expensive_frames_in_sentry = []
 markdown_tables = []
@@ -728,7 +728,7 @@ read_image_files = []
 # This feature enables plugin support in Warp. Note that its typically checked
 # directly, rather than via the `FeatureFlag` enum, because its value is
 # required early in the app lifecycle prior to `FeatureFlag` initialization.
-plugin_host = ["dep:rquickjs", "dep:warp_js", "warp_cli/plugin_host"]
+plugin_host = ["dep:rquickjs", "dep:zterm_js", "zterm_cli/plugin_host"]
 # Enable this feature to automatically perform CPU profiling via pprof.  The
 # generated profile will be written to profile.pb in the current directory.
 # NOTE: This may slow down program execution.
@@ -740,7 +740,7 @@ recording_mode = []
 # This feature should only be enabled when building a release bundle with
 # the bundle script, and can be used to conditionally enable functionality
 # accordingly.
-release_bundle = ["rust-embed/debug-embed", "warp_core/release_bundle"]
+release_bundle = ["rust-embed/debug-embed", "zterm_core/release_bundle"]
 render_agent_mode_output_markdown = []
 render_continuous_block_selections_with_single_border = []
 rich_history = []
@@ -764,10 +764,10 @@ team_workflows = ["team_features_override"]
 toggle_bootstrap_block = []
 # Feature enabled only when app is compiled for integration tests.
 integration_tests = [
-    "warp_cli/integration_tests",
-    "warpui/integration_tests",
-    "warpui/test-util",
-    "warp_core/integration_tests",
+    "zterm_cli/integration_tests",
+    "zterm_ui/integration_tests",
+    "zterm_ui/test-util",
+    "zterm_core/integration_tests",
 ]
 traces = []
 viewing_shared_sessions = []
@@ -798,7 +798,7 @@ drive_objects_as_context = []
 iterm_images = []
 validate_autosuggestions = []
 autoupdate_ui_revamp = []
-warp_packs = []
+zterm_packs = []
 suggested_rules = []
 command_correction_key = []
 full_source_code_embedding = []
@@ -871,7 +871,7 @@ revert_to_checkpoints = []
 rewind_slash_command = []
 agent_view = []
 agent_view_block_context = ["agent_view"]
-warp_managed_secrets = []
+zterm_managed_secrets = []
 v4a_file_diffs = []
 agent_tips = []
 agent_toolbar_editor = ["agent_view"]
@@ -894,7 +894,7 @@ inline_profile_selector = ["agent_view"]
 oz_platform_skills = []
 oz_identity_federation = []
 oz_launch_modal = []
-open_warp_launch_modal = []
+open_zterm_launch_modal = []
 new_tab_styling = []
 file_based_mcp = []
 skill_arguments = []
@@ -907,7 +907,7 @@ pending_user_query_indicator = []
 queue_slash_command = []
 inline_menu_headers = []
 directory_tab_colors = []
-open_warp_new_settings_modes = []
+open_zterm_new_settings_modes = []
 hoa_code_review = []
 vertical_tabs = []
 vertical_tabs_summary_mode = []
@@ -928,11 +928,11 @@ codex_notifications = []
 cloud_mode_setup_v2 = ["cloud_mode"]
 cloud_mode_input_v2 = ["cloud_mode"]
 
-[package.metadata.bundle.bin.warp-oss]
+[package.metadata.bundle.bin.zterm-oss]
 category = "public.app-category.developer-tools"
 copyright = "© 2025, Denver Technologies, Inc"
-identifier = "dev.warp.WarpOss"
-name = "WarpOss"
+identifier = "dev.zterm.ZtermOss"
+name = "ZtermOss"
 resources = ["assets/onboarding"]
 icon = ["channels/oss/icon/no-padding/512x512.png", "channels/oss/icon/no-padding/icon.ico"]
 short_description = "The open-source, cloud-backed terminal for individuals and teams."
@@ -940,8 +940,8 @@ short_description = "The open-source, cloud-backed terminal for individuals and 
 [package.metadata.bundle.bin.stable]
 category = "public.app-category.developer-tools"
 copyright = "© 2025, Denver Technologies, Inc"
-identifier = "dev.warp.Warp-Stable"
-name = "Warp"
+identifier = "dev.zterm.Warp-Stable"
+name = "Zterm"
 osx_frameworks = [
     "frameworks/default/Sentry-Dynamic-WithARM64e.xcframework/macos-arm64_arm64e_x86_64/Sentry.framework",
 ]
@@ -951,8 +951,8 @@ short_description = "The cloud-backed terminal for individuals and teams, stable
 [package.metadata.bundle.bin.preview]
 category = "public.app-category.developer-tools"
 copyright = "© 2025, Denver Technologies, Inc"
-identifier = "dev.warp.Warp-Preview"
-name = "WarpPreview"
+identifier = "dev.zterm.Warp-Preview"
+name = "ZtermPreview"
 osx_frameworks = [
     "frameworks/default/Sentry-Dynamic-WithARM64e.xcframework/macos-arm64_arm64e_x86_64/Sentry.framework",
 ]
@@ -962,8 +962,8 @@ short_description = "The cloud-backed terminal for individuals and teams, featur
 [package.metadata.bundle.bin.dev]
 category = "public.app-category.developer-tools"
 copyright = "© 2025, Denver Technologies, Inc"
-identifier = "dev.warp.Warp-Dev"
-name = "WarpDev"
+identifier = "dev.zterm.Warp-Dev"
+name = "ZtermDev"
 osx_frameworks = [
     "frameworks/dev/Sentry-Dynamic-WithARM64e.xcframework/macos-arm64_arm64e_x86_64/Sentry.framework",
 ]
@@ -973,8 +973,8 @@ short_description = "The cloud-backed terminal for individuals and teams, develo
 [package.metadata.bundle.bin.warp]
 category = "public.app-category.developer-tools"
 copyright = "© 2025, Denver Technologies, Inc"
-identifier = "dev.warp.Warp-Local"
-name = "WarpLocal"
+identifier = "dev.zterm.Warp-Local"
+name = "ZtermLocal"
 resources = ["assets/onboarding"]
 short_description = "The cloud-backed terminal for individuals and teams, developer build."
 

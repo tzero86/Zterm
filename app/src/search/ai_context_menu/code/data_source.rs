@@ -1,4 +1,4 @@
-#![cfg_attr(not(feature = "local_fs"), allow(dead_code))]
+﻿#![cfg_attr(not(feature = "local_fs"), allow(dead_code))]
 #[cfg(not(target_family = "wasm"))]
 use super::search_item::CodeSearchItem;
 #[cfg(not(target_family = "wasm"))]
@@ -23,9 +23,9 @@ use std::collections::HashSet;
 use std::path::PathBuf;
 #[cfg(not(target_family = "wasm"))]
 use std::time::Duration;
-use warpui::AppContext;
+use zterm_ui::AppContext;
 #[cfg(not(target_family = "wasm"))]
-use warpui::ModelSpawner;
+use zterm_ui::ModelSpawner;
 
 #[cfg(not(target_family = "wasm"))]
 use crate::ai::outline::{OutlineStatus, RepoOutlines, RepoOutlinesEvent};
@@ -36,7 +36,7 @@ use repo_metadata::repositories::DetectedRepositories;
 #[cfg(not(target_family = "wasm"))]
 use std::path::Path;
 #[cfg(not(target_family = "wasm"))]
-use warpui::SingletonEntity;
+use zterm_ui::SingletonEntity;
 
 const MAX_RESULTS: usize = 200;
 
@@ -71,13 +71,13 @@ pub struct CodeSymbolCache {
     spawner: ModelSpawner<Self>,
 }
 
-impl warpui::Entity for CodeSymbolCache {
+impl zterm_ui::Entity for CodeSymbolCache {
     type Event = ();
 }
 
 impl CodeSymbolCache {
     #[cfg(not(target_family = "wasm"))]
-    pub fn new(ctx: &mut warpui::ModelContext<Self>) -> Self {
+    pub fn new(ctx: &mut zterm_ui::ModelContext<Self>) -> Self {
         let spawner = ctx.spawner();
         let cache = Self {
             symbol_cache: RefCell::new(HashMap::new()),

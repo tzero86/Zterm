@@ -1,15 +1,15 @@
-use std::collections::HashMap;
+﻿use std::collections::HashMap;
 
 use crate::terminal::shared_session::render_util::{
     non_hoverable_participant_avatar, ParticipantAvatarParams,
 };
 use crate::{appearance::Appearance, ui_components::blended_colors};
 use session_sharing_protocol::common::{ParticipantId, Role, RoleRequestId};
-use warpui::elements::{
+use zterm_ui::elements::{
     ConstrainedBox, Container, Flex, MainAxisAlignment, MouseStateHandle, ParentElement, Text,
 };
-use warpui::fonts::Properties;
-use warpui::{
+use zterm_ui::fonts::Properties;
+use zterm_ui::{
     elements::CrossAxisAlignment,
     fonts::Weight,
     platform::Cursor,
@@ -20,7 +20,7 @@ use warpui::{
     AppContext, Element, Entity, SingletonEntity, TypedActionView, View, ViewContext,
 };
 
-use warp_core::features::FeatureFlag;
+use zterm_core::features::FeatureFlag;
 
 use super::{BODY_PADDING, HEADER_FONT_SIZE, MODAL_PADDING, TEXT_FONT_SIZE};
 

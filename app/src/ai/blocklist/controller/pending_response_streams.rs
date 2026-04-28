@@ -1,7 +1,7 @@
-use std::collections::HashMap;
+﻿use std::collections::HashMap;
 
 use itertools::Itertools;
-use warpui::{AppContext, ModelContext, ModelHandle, SingletonEntity};
+use zterm_ui::{AppContext, ModelContext, ModelHandle, SingletonEntity};
 
 use crate::{
     ai::agent::{conversation::AIConversationId, CancellationReason},

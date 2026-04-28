@@ -1,12 +1,12 @@
 use itertools::{Either, Itertools};
-use warp_editor::editor::NavigationKey;
-use warpui::elements::ConstrainedBox;
-use warpui::FocusContext;
+use zterm_editor::editor::NavigationKey;
+use zterm_ui::elements::ConstrainedBox;
+use zterm_ui::FocusContext;
 
 use std::collections::HashSet;
 
-use warpui::fonts::FamilyId;
-use warpui::{
+use zterm_ui::fonts::FamilyId;
+use zterm_ui::{
     accessibility::{AccessibilityContent, WarpA11yRole},
     elements::{Clipped, Container, CrossAxisAlignment, Flex, ParentElement, Shrinkable, Text},
     fonts::{Properties, Style, Weight},
@@ -1014,7 +1014,7 @@ impl<T: Action + Clone> View for SearchBar<T> {
             let magnifying_glass = Container::new(
                 ConstrainedBox::new(
                     Icon::Search
-                        .to_warpui_icon(blended_colors::text_sub(theme, theme.surface_2()).into())
+                        .to_zterm_ui_icon(blended_colors::text_sub(theme, theme.surface_2()).into())
                         .finish(),
                 )
                 .with_height(size)

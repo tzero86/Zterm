@@ -1,11 +1,11 @@
-//! Data source for the rewind menu.
+﻿//! Data source for the rewind menu.
 
 use std::collections::HashSet;
 
 use ai::agent::action_result::RequestFileEditsResult;
 use itertools::Itertools;
 use ordered_float::OrderedFloat;
-use warpui::{AppContext, Entity, SingletonEntity};
+use zterm_ui::{AppContext, Entity, SingletonEntity};
 
 use crate::ai::agent::conversation::AIConversationId;
 use crate::ai::agent::{AIAgentActionResultType, AIAgentExchangeId, AIAgentInput};

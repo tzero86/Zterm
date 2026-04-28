@@ -1,4 +1,4 @@
-//! Commands to interact with ambient agents on Warp's platform.
+﻿//! Commands to interact with ambient agents on Warp's platform.
 use std::io::Write as _;
 use std::sync::Arc;
 use std::time::Duration;
@@ -27,7 +27,7 @@ use comfy_table::Cell;
 use futures::{future, StreamExt};
 use serde::Serialize;
 
-use warp_cli::{
+use zterm_cli::{
     agent::{Harness, OutputFormat, Prompt, RunCloudArgs},
     json_filter::JsonOutput,
     task::{
@@ -37,10 +37,10 @@ use warp_cli::{
     },
     GlobalOptions,
 };
-use warp_core::channel::ChannelState;
-use warp_core::features::FeatureFlag;
-use warpui::r#async::Timer;
-use warpui::{
+use zterm_core::channel::ChannelState;
+use zterm_core::features::FeatureFlag;
+use zterm_ui::r#async::Timer;
+use zterm_ui::{
     platform::TerminationMode, r#async::Spawnable, AppContext, ModelContext, SingletonEntity,
 };
 
@@ -1240,7 +1240,7 @@ impl AmbientAgentRunner {
     }
 }
 
-impl warpui::Entity for AmbientAgentRunner {
+impl zterm_ui::Entity for AmbientAgentRunner {
     type Event = ();
 }
 

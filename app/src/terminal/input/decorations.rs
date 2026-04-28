@@ -1,12 +1,12 @@
-//! Warp input editor logic related to decorating the input's text, such as
+﻿//! Warp input editor logic related to decorating the input's text, such as
 //! applying syntax highlighting and error underlining.
 
 use std::{collections::HashMap, ops::Range};
 
 use settings::Setting as _;
 use string_offset::{ByteOffset, CharOffset};
-use warp_core::features::FeatureFlag;
-use warpui::{AppContext, SingletonEntity, ViewContext};
+use zterm_core::features::FeatureFlag;
+use zterm_ui::{AppContext, SingletonEntity, ViewContext};
 
 use crate::{
     appearance::Appearance,
@@ -18,7 +18,7 @@ use crate::{
 
 use super::Input;
 
-pub use warp_completer::{
+pub use zterm_completer::{
     completer::SuggestionTypeName, util::parse_current_commands_and_tokens, ParsedTokenData,
     ParsedTokensSnapshot,
 };

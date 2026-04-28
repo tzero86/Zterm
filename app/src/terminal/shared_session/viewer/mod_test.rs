@@ -1,5 +1,5 @@
-use settings::Setting;
-use warpui::{App, SingletonEntity};
+﻿use settings::Setting;
+use zterm_ui::{App, SingletonEntity};
 
 use crate::{
     terminal::{

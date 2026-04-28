@@ -1,21 +1,21 @@
-//! This module is similar to `requested_actions.rs` but specifically for scripts instead of commands.
+﻿//! This module is similar to `requested_actions.rs` but specifically for scripts instead of commands.
 //! Eventually, we'll probably want to refactor the functions here to lean on Views instead.
 
 use pathfinder_geometry::vector::Vector2F;
 use std::rc::Rc;
-use warp_core::ui::appearance::Appearance;
-use warpui::elements::{
+use zterm_core::ui::appearance::Appearance;
+use zterm_ui::elements::{
     Align, Border, ConstrainedBox, Container, CornerRadius, CrossAxisAlignment, Flex, Hoverable,
     MainAxisAlignment, MainAxisSize, MouseStateHandle, ParentElement, Radius, Shrinkable, Text,
     Wrap,
 };
-use warpui::keymap::Keystroke;
-use warpui::platform::Cursor;
-use warpui::ui_components::components::{Coords, UiComponent, UiComponentStyles};
-use warpui::ui_components::toggle_menu::{
+use zterm_ui::keymap::Keystroke;
+use zterm_ui::platform::Cursor;
+use zterm_ui::ui_components::components::{Coords, UiComponent, UiComponentStyles};
+use zterm_ui::ui_components::toggle_menu::{
     ToggleMenuCallback, ToggleMenuItem, ToggleMenuStateHandle,
 };
-use warpui::{AppContext, Element, EventContext, SingletonEntity};
+use zterm_ui::{AppContext, Element, EventContext, SingletonEntity};
 
 use super::inline_action_header::{
     INLINE_ACTION_HEADER_VERTICAL_PADDING, INLINE_ACTION_HORIZONTAL_PADDING,
@@ -346,7 +346,7 @@ fn script_status(
     };
     let is_expanded = (is_executing && is_viewing_detail) || (!is_executing && !is_collapsed);
     let icon = ConstrainedBox::new(
-        warpui::elements::Icon::new(
+        zterm_ui::elements::Icon::new(
             if is_expanded {
                 Icon::ChevronDown.into()
             } else {

@@ -1,4 +1,4 @@
-# Environment Variables Documentation
+﻿# Environment Variables Documentation
 
 This document provides information about our "Environment Variables" feature. Internally, we refer to these objects as `EnvVarCollection`s (EVCs). Views bound to this object are often referred to by the string above, whereas functions and variables are usually named `env_var_collection`.
 
@@ -12,9 +12,9 @@ The core data model for EVCs is defined in `mod.rs`. The motivations behind our 
 
 Context: EVCs are built on GenericStringObjects (GSOs). Consequently, there isn't much unique server-side infrastructure dedicated to EVCs — we added a variant to the `Format` enum on the server side and did the same on the client (`JsonObjectType::EnvVarCollection`), and a small DB migration to support the type.
 
-We defined `CloudEnvVarCollection` in `mod.rs`, which implements the `GenericCloudObjectType` trait. This is a mostly boilerplate implementation specifying properties such as EVCs should render in Warp Drive, be linkable/exportable, etc.
+We defined `CloudEnvVarCollection` in `mod.rs`, which implements the `GenericCloudObjectType` trait. This is a mostly boilerplate implementation specifying properties such as EVCs should render in Zterm Drive, be linkable/exportable, etc.
 
-The implementation of EVCs as a Warp Drive object is in `app/src/drive/items/env_var_collection.rs`, where code for the Warp Drive preview and click action is located.
+The implementation of EVCs as a Zterm Drive object is in `app/src/drive/items/env_var_collection.rs`, where code for the Zterm Drive preview and click action is located.
 
 Code relevant to edit collisions and fetching EVCs from the server is in `app/src/server/server_api.rs` and `app/src/server/update_manager.rs`. We aimed to maintain a similar liveness property to workflows, meaning a concurrent edit made by another user requires one to check out the other's edit before committing their own.
 

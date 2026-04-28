@@ -17,8 +17,8 @@ use crate::{
         settings::TerminalSettings, view::TerminalAction,
     },
 };
-use warp_core::settings::Setting;
-use warpui::{
+use zterm_core::settings::Setting;
+use zterm_ui::{
     elements::{
         Border, Clipped, Container, DropTarget, Element, Flex, Hoverable, ParentElement,
         SavePosition, Stack,
@@ -299,9 +299,9 @@ impl Input {
 
 pub mod styles {
     use pathfinder_color::ColorU;
-    use warp_core::ui::theme::WarpTheme;
+    use zterm_core::ui::theme::ZtermTheme;
 
-    pub fn default_border_color(theme: &WarpTheme) -> ColorU {
+    pub fn default_border_color(theme: &ZtermTheme) -> ColorU {
         theme.outline().into()
     }
 }

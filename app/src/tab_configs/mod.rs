@@ -1,4 +1,4 @@
-pub(crate) mod action_sidecar;
+﻿pub(crate) mod action_sidecar;
 pub mod branch_picker;
 pub mod new_worktree_modal;
 pub mod params_modal;
@@ -10,7 +10,7 @@ pub mod session_config_rendering;
 pub mod tab_config;
 pub mod telemetry;
 
-use warp_core::ui::theme::Fill;
+use zterm_core::ui::theme::Fill;
 
 pub use new_worktree_modal::{NewWorktreeModal, NewWorktreeModalEvent};
 pub use params_modal::{TabConfigParamsModal, TabConfigParamsModalEvent};

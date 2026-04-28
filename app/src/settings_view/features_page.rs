@@ -5,14 +5,14 @@ use crate::terminal::input::OPEN_COMPLETIONS_KEYBINDING_NAME;
 use crate::terminal::session_settings::WorkingDirectoryConfig;
 
 use lazy_static::lazy_static;
-use warp_core::context_flag::ContextFlag;
-use warpui::platform::GraphicsBackend;
-use warpui::rendering::GPUPowerPreference;
-use warpui::{elements::DispatchEventResult, platform::Cursor};
+use zterm_core::context_flag::ContextFlag;
+use zterm_ui::platform::GraphicsBackend;
+use zterm_ui::rendering::GPUPowerPreference;
+use zterm_ui::{elements::DispatchEventResult, platform::Cursor};
 #[cfg(target_os = "linux")]
 use {
     crate::settings::ForceX11, crate::settings::LinuxAppConfiguration,
-    warpui::platform::linux::windowing_system_is_customizable,
+    zterm_ui::platform::linux::windowing_system_is_customizable,
 };
 
 use super::keybindings::KeyBindingModifyingState;
@@ -77,7 +77,7 @@ use crate::terminal::settings::{
 };
 use crate::terminal::{BlockListSettings, SnackbarEnabled};
 use crate::undo_close::UndoCloseSettings;
-use crate::user_config::{WarpConfig, WarpConfigUpdateEvent};
+use crate::user_config::{ZtermConfig, ZtermConfigUpdateEvent};
 use crate::util::bindings::{
     keybinding_name_to_display_string, reset_keybinding_to_default, set_custom_keybinding,
 };
@@ -95,20 +95,20 @@ use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
 use strum::IntoEnumIterator;
-use warp_core::channel::ChannelState;
-use warp_core::semantic_selection::{
+use zterm_core::channel::ChannelState;
+use zterm_core::semantic_selection::{
     SemanticSelection, SemanticSelectionChangedEvent, SmartSelectEnabled,
 };
-use warpui::elements::{
+use zterm_ui::elements::{
     Align, Border, ChildView, ConstrainedBox, Container, CornerRadius, CrossAxisAlignment, Dismiss,
     Element, Empty, EventHandler, Fill, Flex, Hoverable, MainAxisAlignment, MainAxisSize,
     MouseState, MouseStateHandle, ParentElement, Radius, Shrinkable, Text,
 };
-use warpui::keymap::{ContextPredicate, FixedBinding, Keystroke};
-use warpui::ui_components::button::ButtonVariant;
-use warpui::ui_components::components::{Coords, UiComponent, UiComponentStyles};
-use warpui::ui_components::switch::SwitchStateHandle;
-use warpui::{
+use zterm_ui::keymap::{ContextPredicate, FixedBinding, Keystroke};
+use zterm_ui::ui_components::button::ButtonVariant;
+use zterm_ui::ui_components::components::{Coords, UiComponent, UiComponentStyles};
+use zterm_ui::ui_components::switch::SwitchStateHandle;
+use zterm_ui::{
     Action, AppContext, DisplayIdx, Entity, EventContext, ModelHandle, SingletonEntity, Tracked,
     TypedActionView, View, ViewContext, ViewHandle, WindowId,
 };
@@ -128,7 +128,7 @@ pub fn init_actions_from_parent_view<T: Action + Clone>(
     context: &ContextPredicate,
     builder: fn(SettingsAction) -> T,
 ) {
-    use warpui::keymap::macros::*;
+    use zterm_ui::keymap::macros::*;
 
     // Add all of the toggle settings from the Features Page that you want to show up on the Command Palette here.
     let mut toggle_binding_pairs = vec![
@@ -553,7 +553,7 @@ pub fn init_actions_from_parent_view<T: Action + Clone>(
             builder(SettingsAction::FeaturesPageToggle(
                 FeaturesPageAction::MakeWarpDefaultTerminal,
             )),
-            context.to_owned() & !id!(flags::WARP_IS_DEFAULT_TERMINAL),
+            context.to_owned() & !id!(flags::ZTERM_IS_DEFAULT_TERMINAL),
         )]);
     }
 }
@@ -1842,7 +1842,7 @@ impl TypedActionView for FeaturesPageView {
                 self.force_x11_changed = true;
                 // This is a workaround to make sure the user sees the new text that is added to the description after changing the setting.
                 // Without scrolling, the new description text gets cut off.
-                self.page.scroll_by(warpui::units::Pixels::new(40.));
+                self.page.scroll_by(zterm_ui::units::Pixels::new(40.));
                 ctx.notify();
             }
             ToggleQuitOnLastWindowClosed => {
@@ -2141,8 +2141,8 @@ impl FeaturesPageView {
         let default_session_mode_dropdown = ctx.add_typed_action_view(FilterableDropdown::new);
         Self::update_default_session_mode_dropdown(default_session_mode_dropdown.clone(), ctx);
 
-        ctx.subscribe_to_model(&WarpConfig::handle(ctx), |me, _, event, ctx| {
-            if matches!(event, WarpConfigUpdateEvent::TabConfigs) {
+        ctx.subscribe_to_model(&ZtermConfig::handle(ctx), |me, _, event, ctx| {
+            if matches!(event, ZtermConfigUpdateEvent::TabConfigs) {
                 Self::update_default_session_mode_dropdown(
                     me.default_session_mode_dropdown.clone(),
                     ctx,
@@ -3339,7 +3339,7 @@ impl FeaturesPageView {
                     .collect();
 
                 // Append each loaded tab config
-                let tab_configs = WarpConfig::as_ref(ctx).tab_configs().to_vec();
+                let tab_configs = ZtermConfig::as_ref(ctx).tab_configs().to_vec();
                 for config in &tab_configs {
                     if let Some(path) = &config.source_path {
                         items.push(DropdownItem::new(
@@ -4037,7 +4037,7 @@ impl SettingsPageMeta for FeaturesPageView {
     }
 
     fn on_page_selected(&mut self, _: bool, ctx: &mut ViewContext<Self>) {
-        // On MacOS, we rely on [`warpui::platform::AppCallbacks::on_screen_changed`] to update and
+        // On MacOS, we rely on [`zterm_ui::platform::AppCallbacks::on_screen_changed`] to update and
         // notify on the [`DisplayCount`] model. However, no mechanism exists on Linux to trigger
         // that callback. As a workaround, we check for updates here where quake mode is
         // configured.
@@ -4955,7 +4955,7 @@ impl SettingsWidget for DesktopNotificationsWidget {
         let ui_builder = appearance.ui_builder();
         let mut column = Flex::column();
         column.add_child(render_body_item::<FeaturesPageAction>(
-            "Receive desktop notifications from Warp".into(),
+            "Receive desktop notifications from Zterm".into(),
             Some(AdditionalInfo {
                 mouse_state: self.additional_info_link.clone(),
                 on_click_action: Some(FeaturesPageAction::OpenUrl(NOTIFICATIONS_DOCS_URL.into())),

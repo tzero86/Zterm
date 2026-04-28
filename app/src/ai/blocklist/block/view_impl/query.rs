@@ -1,9 +1,9 @@
-//! Renders the user query portion of the AI block, if there is one.
+﻿//! Renders the user query portion of the AI block, if there is one.
 //!
 //! Queries are not rendered in blocks corresponding to requested command or requested action responses.
 
-use warp_core::{features::FeatureFlag, ui::theme::color::internal_colors};
-use warpui::{
+use zterm_core::{features::FeatureFlag, ui::theme::color::internal_colors};
+use zterm_ui::{
     elements::{
         Container, CornerRadius, Flex, MainAxisAlignment, MainAxisSize, ParentElement, Radius,
         Shrinkable, Wrap,
@@ -116,7 +116,7 @@ pub(crate) fn render_query(
     }
 
     Flex::row()
-        .with_cross_axis_alignment(warpui::elements::CrossAxisAlignment::Start)
+        .with_cross_axis_alignment(zterm_ui::elements::CrossAxisAlignment::Start)
         .with_child(avatar)
         .with_child(Shrinkable::new(1., query.finish()).finish())
         .finish()
@@ -153,7 +153,7 @@ fn render_attachments(
                 ..Default::default()
             },
         )
-        .with_icon(icon.to_warpui_icon(
+        .with_icon(icon.to_zterm_ui_icon(
             blended_colors::text_sub(appearance.theme(), appearance.theme().background()).into(),
         ))
         .build()

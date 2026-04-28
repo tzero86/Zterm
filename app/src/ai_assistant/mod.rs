@@ -3,7 +3,7 @@ use std::{collections::HashSet, sync::Arc};
 
 use crate::{
     ai::{RequestLimitInfo, RequestLimitRefreshDuration},
-    server::telemetry::OpenedWarpAISource,
+    server::telemetry::OpenedZtermAISource,
     terminal::model::terminal_model::BlockIndex,
     workflows::workflow::{Argument, Workflow},
 };
@@ -11,8 +11,8 @@ use itertools::Itertools;
 use lazy_static::lazy_static;
 use pathfinder_color::ColorU;
 use serde::{Deserialize, Serialize};
-use warp_core::command::ExitCode;
-use warp_graphql::{
+use zterm_core::command::ExitCode;
+use zterm_graphql::{
     ai::{
         RequestLimitInfo as RequestLimitInfoGraphql,
         RequestLimitRefreshDuration as RequestLimitRefreshDurationGraphql,
@@ -69,14 +69,14 @@ pub enum AskAIType {
     },
 }
 
-impl From<&AskAIType> for OpenedWarpAISource {
+impl From<&AskAIType> for OpenedZtermAISource {
     fn from(value: &AskAIType) -> Self {
         match value {
-            AskAIType::FromAICommandSearch { .. } => OpenedWarpAISource::FromAICommandSearch,
+            AskAIType::FromAICommandSearch { .. } => OpenedZtermAISource::FromAICommandSearch,
             AskAIType::FromBlock { .. } | AskAIType::FromBlocks { .. } => {
-                OpenedWarpAISource::HelpWithBlock
+                OpenedZtermAISource::HelpWithBlock
             }
-            AskAIType::FromTextSelection { .. } => OpenedWarpAISource::HelpWithTextSelection,
+            AskAIType::FromTextSelection { .. } => OpenedZtermAISource::HelpWithTextSelection,
         }
     }
 }

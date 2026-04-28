@@ -1,10 +1,10 @@
-use itertools::Itertools as _;
+﻿use itertools::Itertools as _;
 use markdown_parser::{parse_markdown, FormattedText, FormattedTextFragment, FormattedTextLine};
 use parking_lot::FairMutex;
 use settings::Setting;
 use std::{borrow::Cow, cmp::Reverse, path::Path, sync::Arc};
-use warp_core::{features::FeatureFlag, report_if_error, ui::Icon};
-use warpui::{
+use zterm_core::{features::FeatureFlag, report_if_error, ui::Icon};
+use zterm_ui::{
     elements::{
         Clipped, Container, CornerRadius, CrossAxisAlignment, Flex, FormattedTextElement,
         HighlightedHyperlink, MainAxisSize, MouseStateHandle, ParentElement, Radius, Shrinkable,
@@ -569,7 +569,7 @@ fn render_title_and_description(props: HeaderProps, app: &AppContext) -> Vec<Box
         .with_child(
             Container::new(
                 ConstrainedBox::new(
-                    icon.to_warpui_icon(
+                    icon.to_zterm_ui_icon(
                         theme
                             .main_text_color(theme.background())
                             .into_solid()
@@ -1020,7 +1020,7 @@ fn render_oz_updates(props: OzUpdatesProps<'_>, app: &AppContext) -> Option<Box<
                                     } else {
                                         Icon::ChevronRight
                                     }
-                                    .to_warpui_icon(theme.sub_text_color(theme.background()))
+                                    .to_zterm_ui_icon(theme.sub_text_color(theme.background()))
                                     .finish(),
                                 )
                                 .with_height(appearance.monospace_font_size())
@@ -1106,7 +1106,7 @@ fn render_oz_updates(props: OzUpdatesProps<'_>, app: &AppContext) -> Option<Box<
                                 .with_child(
                                     ConstrainedBox::new(
                                         Icon::Share3
-                                            .to_warpui_icon(
+                                            .to_zterm_ui_icon(
                                                 theme.sub_text_color(theme.background()),
                                             )
                                             .finish(),
@@ -1225,7 +1225,7 @@ pub fn render_ambient_credits_banner(credits: i32, app: &AppContext) -> Box<dyn 
 }
 
 mod styles {
-    use warp_core::ui::appearance::Appearance;
+    use zterm_core::ui::appearance::Appearance;
 
     pub const CONTAINER_VERTICAL_PADDING: f32 = 16.;
     pub const TITLE_MARGIN_BOTTOM: f32 = 8.;

@@ -1,12 +1,12 @@
-use warpui::elements::{
+﻿use zterm_ui::elements::{
     Container, CrossAxisAlignment, Flex, MainAxisAlignment, MouseStateHandle, ParentElement, Text,
 };
-use warpui::fonts::{Properties, Weight};
-use warpui::platform::Cursor;
-use warpui::ui_components::button::ButtonVariant;
-use warpui::ui_components::components::{UiComponent, UiComponentStyles};
-use warpui::ui_components::text::Span;
-use warpui::{AppContext, Element, Entity, SingletonEntity, TypedActionView, View, ViewContext};
+use zterm_ui::fonts::{Properties, Weight};
+use zterm_ui::platform::Cursor;
+use zterm_ui::ui_components::button::ButtonVariant;
+use zterm_ui::ui_components::components::{UiComponent, UiComponentStyles};
+use zterm_ui::ui_components::text::Span;
+use zterm_ui::{AppContext, Element, Entity, SingletonEntity, TypedActionView, View, ViewContext};
 
 use crate::appearance::Appearance;
 use crate::ui_components::blended_colors;

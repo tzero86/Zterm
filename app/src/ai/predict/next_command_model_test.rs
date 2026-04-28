@@ -1,12 +1,12 @@
-use crate::completer::SessionContext;
+﻿use crate::completer::SessionContext;
 use crate::terminal::model::session::Session;
 use crate::terminal::model::session::{
     command_executor::testing::TestCommandExecutor, SessionInfo,
 };
 use typed_path::TypedPathBuf;
-use warp_completer::signatures::CommandRegistry;
-use warp_completer::{meta::SpannedItem, parsers::ParsedToken};
-use warpui::App;
+use zterm_completer::signatures::CommandRegistry;
+use zterm_completer::{meta::SpannedItem, parsers::ParsedToken};
+use zterm_ui::App;
 
 use super::*;
 

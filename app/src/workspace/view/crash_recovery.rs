@@ -1,5 +1,5 @@
-use warp_cli::RecoveryMechanism;
-use warpui::{AppContext, SingletonEntity as _, ViewContext};
+use zterm_cli::RecoveryMechanism;
+use zterm_ui::{AppContext, SingletonEntity as _, ViewContext};
 
 use crate::crash_recovery::CrashRecovery;
 

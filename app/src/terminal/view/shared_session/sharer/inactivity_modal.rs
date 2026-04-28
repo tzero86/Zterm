@@ -1,17 +1,17 @@
-use std::time::Duration;
+﻿use std::time::Duration;
 
 use crate::modal::Modal;
 use crate::ui_components::blended_colors;
-use warp_core::ui::appearance::Appearance;
-use warpui::elements::{
+use zterm_core::ui::appearance::Appearance;
+use zterm_ui::elements::{
     ChildView, Container, CrossAxisAlignment, Flex, MouseStateHandle, ParentElement, Text,
 };
-use warpui::fonts::{Properties, Weight};
-use warpui::platform::Cursor;
-use warpui::r#async::Timer;
-use warpui::ui_components::button::ButtonVariant;
-use warpui::ui_components::components::{Coords, UiComponent, UiComponentStyles};
-use warpui::{
+use zterm_ui::fonts::{Properties, Weight};
+use zterm_ui::platform::Cursor;
+use zterm_ui::r#async::Timer;
+use zterm_ui::ui_components::button::ButtonVariant;
+use zterm_ui::ui_components::components::{Coords, UiComponent, UiComponentStyles};
+use zterm_ui::{
     AppContext, Element, Entity, SingletonEntity, TypedActionView, View, ViewContext, ViewHandle,
 };
 

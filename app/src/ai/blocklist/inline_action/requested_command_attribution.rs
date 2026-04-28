@@ -1,8 +1,8 @@
 //! Module to attribute AI-generated requested commands
-//! to known documents (e.g. Warp Drive objects).
+//! to known documents (e.g. Zterm Drive objects).
 
-use warpui::AppContext;
-use warpui::SingletonEntity;
+use zterm_ui::AppContext;
+use zterm_ui::SingletonEntity;
 
 use crate::env_vars::EnvVarCollection;
 use crate::env_vars::EnvVarValue;
@@ -24,7 +24,7 @@ pub(crate) fn is_command_copied_from_document(
     let command = command.trim();
 
     match document {
-        AIAgentCitation::WarpDriveObject { uid } => {
+        AIAgentCitation::ZtermDriveObject { uid } => {
             is_command_copied_from_warp_drive_object(command, uid, shell_type, ctx)
         }
         _ => false,
@@ -32,7 +32,7 @@ pub(crate) fn is_command_copied_from_document(
 }
 
 /// Returns true iff the `command` is directly copied from the
-/// Warp Drive object identified by `object_uid`.
+/// Zterm Drive object identified by `object_uid`.
 fn is_command_copied_from_warp_drive_object(
     command: &str,
     object_uid: &str,

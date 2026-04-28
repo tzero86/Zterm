@@ -31,11 +31,11 @@ use crate::{
     terminal::TerminalView,
     util::bindings::CustomAction,
 };
-use warp_core::context_flag::ContextFlag;
-use warpui::keymap::ContextPredicate;
-use warpui::keymap::{BindingDescription, PerPlatformKeystroke};
-use warpui::platform::OperatingSystem;
-use warpui::{
+use zterm_core::context_flag::ContextFlag;
+use zterm_ui::keymap::ContextPredicate;
+use zterm_ui::keymap::{BindingDescription, PerPlatformKeystroke};
+use zterm_ui::platform::OperatingSystem;
+use zterm_ui::{
     keymap::{EditableBinding, FixedBinding},
     units::IntoLines,
     AppContext,
@@ -65,7 +65,7 @@ pub const ROOT_CLOUD_MODE_PANE_KEY: &str = "RootCloudModePane";
 /// these into their own function to ensure we pay special attention to
 /// these overlaps, and ensure only 1 action is taken.
 fn init_overlapping_keybindings(app: &mut AppContext) {
-    use warpui::keymap::macros::*;
+    use zterm_ui::keymap::macros::*;
 
     let escape_key: &str = "escape";
     let cmd_or_ctrl_enter: &str = "cmdorctrl-enter";
@@ -98,7 +98,7 @@ fn init_overlapping_keybindings(app: &mut AppContext) {
 
 /// Register keybindings for [`TerminalView`] actions.
 pub fn init(app: &mut AppContext) {
-    use warpui::keymap::macros::*;
+    use zterm_ui::keymap::macros::*;
 
     app.register_binding_validator::<TerminalView>(is_binding_pty_compliant);
 
@@ -199,7 +199,7 @@ pub fn init(app: &mut AppContext) {
         // On the web, we get pastes from system paste events.
         #[cfg(target_family = "wasm")]
         FixedBinding::standard(
-            warpui::actions::StandardAction::Paste,
+            zterm_ui::actions::StandardAction::Paste,
             TerminalAction::Paste,
             id!("Terminal") & !id!("IMEOpen"),
         ),
@@ -341,7 +341,7 @@ pub fn init(app: &mut AppContext) {
         ),
         EditableBinding::new(
             "terminal:warpify_subshell",
-            "Warpify subshell",
+            "Ztermify subshell",
             TerminalAction::TriggerSubshellBootstrap,
         )
         .with_key_binding("ctrl-i")
@@ -350,8 +350,8 @@ pub fn init(app: &mut AppContext) {
         ),
         EditableBinding::new(
             "terminal:warpify_ssh_session",
-            "Warpify ssh session",
-            TerminalAction::WarpifySSHSession,
+            "Ztermify ssh session",
+            TerminalAction::ZtermifySSHSession,
         )
         .with_key_binding("ctrl-i")
         .with_context_predicate(
@@ -1106,11 +1106,11 @@ pub fn init(app: &mut AppContext) {
 
 /// Registers bindings related to input modes.
 fn register_input_mode_bindings(app: &mut AppContext) {
-    use warpui::keymap::macros::*;
+    use zterm_ui::keymap::macros::*;
 
     // A context predicate that matches when the input mode bindings are
     // available for use. Disabled when a CLI agent session is active — the
-    // Warp agent should not be tagged into a CLI agent's command, and the
+    // Zterm agent should not be tagged into a CLI agent's command, and the
     // `!` prefix is the only way to toggle shell mode in the rich input.
     let base_context = id!(flags::IS_ANY_AI_ENABLED)
         & (id!("Input") | id!("Terminal"))

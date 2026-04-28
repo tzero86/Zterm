@@ -1,4 +1,4 @@
----
+﻿---
 name: add-feature-flag
 description: Add a new feature flag to gate code changes in the Warp codebase.
 ---
@@ -22,7 +22,7 @@ your_feature_name = []
 ```
 
 ### 2. Add to FeatureFlag enum
-Add a new variant to the `FeatureFlag` enum in `warp_core/src/features.rs`:
+Add a new variant to the `FeatureFlag` enum in `zterm_core/src/features.rs`:
 
 ```rust
 #[derive(Sequence)]

@@ -1,5 +1,5 @@
-use super::*;
-use warpui::{
+﻿use super::*;
+use zterm_ui::{
     elements::{ChildView, Empty, SavePosition},
     platform::WindowStyle,
     App, ViewHandle,

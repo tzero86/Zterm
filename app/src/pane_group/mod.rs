@@ -53,7 +53,7 @@ use crate::uri::browser_url_handler::update_browser_url;
 use crate::util::openable_file_type::FileTarget;
 use crate::view_components::ToastFlavor;
 use crate::workflows::workflow::Workflow;
-use warp_terminal::shell::{ShellName, ShellType};
+use zterm_terminal::shell::{ShellName, ShellType};
 
 use std::any::Any;
 use std::cell::RefCell;
@@ -78,26 +78,26 @@ use tree::DEFAULT_FLEX_VALUE;
 use typed_path::TypedPath;
 use url::Url;
 use uuid::Uuid;
-use warp_cli::agent::Harness;
-use warp_core::command::ExitCode;
-use warp_core::context_flag::ContextFlag;
-use warp_core::HostId;
-use warp_util::path::convert_wsl_to_windows_host_path;
+use zterm_cli::agent::Harness;
+use zterm_core::command::ExitCode;
+use zterm_core::context_flag::ContextFlag;
+use zterm_core::HostId;
+use zterm_util::path::convert_wsl_to_windows_host_path;
 #[cfg(feature = "local_fs")]
-use warp_util::path::LineAndColumnArg;
-use warpui::elements::{
+use zterm_util::path::LineAndColumnArg;
+use zterm_ui::elements::{
     Clipped, CrossAxisAlignment, DispatchEventResult, EventHandler, Flex, MainAxisSize, Shrinkable,
     Stack,
 };
-use warpui::keymap::{Context, EditableBinding, FixedBinding};
-use warpui::notification::NotificationSendError;
+use zterm_ui::keymap::{Context, EditableBinding, FixedBinding};
+use zterm_ui::notification::NotificationSendError;
 
-use warpui::windowing::WindowManager;
-use warpui::{
+use zterm_ui::windowing::WindowManager;
+use zterm_ui::{
     elements::{ChildView, Element, ParentElement},
     AppContext, Entity, EntityId, ModelHandle, TypedActionView, View, ViewHandle, WindowId,
 };
-use warpui::{SingletonEntity, ViewContext};
+use zterm_ui::{SingletonEntity, ViewContext};
 
 use crate::ai::blocklist::SerializedBlockListItem;
 use crate::ai_assistant::AskAIType;
@@ -112,8 +112,8 @@ use crate::appearance::Appearance;
 use crate::banner::{Banner, BannerEvent, BannerState, BannerTextContent, DismissalType};
 use crate::channel::{Channel, ChannelState};
 use crate::code::view::CodeView;
-use crate::drive::items::WarpDriveItemId;
-use crate::drive::{CloudObjectTypeAndId, OpenWarpDriveObjectArgs};
+use crate::drive::items::ZtermDriveItemId;
+use crate::drive::{CloudObjectTypeAndId, OpenZtermDriveObjectArgs};
 use crate::features::FeatureFlag;
 use crate::launch_configs::launch_config::{self, PaneMode, PaneTemplateType};
 use crate::persistence::ModelEvent;
@@ -247,7 +247,7 @@ fn resolve_tab_config_shell(name: &str, ctx: &AppContext) -> Option<AvailableShe
 
     AvailableShell::try_from(name).ok()
 }
-const WARP_SHELL_COMPATIBILITY_DOCS: &str =
+const ZTERM_SHELL_COMPATIBILITY_DOCS: &str =
     "https://docs.warp.dev/getting-started/supported-shells";
 // Default minimum width for a newly created Agent Mode pane so that it is legible. Called "default"
 // because this value may be too large for small windows. In that case, we fall back to 50% of the
@@ -297,7 +297,7 @@ enum PaneRemovalReason {
 }
 
 pub fn init(app: &mut AppContext) {
-    use warpui::keymap::macros::*;
+    use zterm_ui::keymap::macros::*;
     app.register_binding_validator::<PaneGroup>(is_binding_pty_compliant);
 
     self::pane::init(app);
@@ -522,8 +522,8 @@ pub enum Event {
         /// The session that the path was opened from.
         session: Arc<Session>,
     },
-    OpenWarpDriveLink {
-        open_warp_drive_args: OpenWarpDriveObjectArgs,
+    OpenZtermDriveLink {
+        open_warp_drive_args: OpenZtermDriveObjectArgs,
     },
     #[cfg(feature = "local_fs")]
     OpenCodeInWarp {
@@ -571,7 +571,7 @@ pub enum Event {
     FocusPaneInWorkspace {
         locator: PaneViewLocator,
     },
-    ViewInWarpDrive(WarpDriveItemId),
+    ViewInZtermDrive(ZtermDriveItemId),
     MoveToSpace {
         cloud_object_type_and_id: CloudObjectTypeAndId,
         space: Space,
@@ -598,7 +598,7 @@ pub enum Event {
     },
     /// Clears the hovered tab index so it no longer appears as highlighted drop target
     ClearHoveredTabIndex,
-    OpenWarpDriveObjectInPane(ObjectUid),
+    OpenZtermDriveObjectInPane(ObjectUid),
     OpenSuggestedAgentModeWorkflowModal {
         workflow_and_id: SuggestedAgentModeWorkflowAndId,
     },
@@ -2914,7 +2914,7 @@ impl PaneGroup {
                     FormattedTextFragment::plain_text(
                         "Warp doesn't currently support your default shell, falling back to zsh.  ",
                     ),
-                    FormattedTextFragment::hyperlink("Learn more", WARP_SHELL_COMPATIBILITY_DOCS),
+                    FormattedTextFragment::hyperlink("Learn more", ZTERM_SHELL_COMPATIBILITY_DOCS),
                 ]),
             )
         });

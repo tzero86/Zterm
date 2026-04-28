@@ -1,4 +1,4 @@
-use std::cell::Cell;
+﻿use std::cell::Cell;
 use std::rc::Rc;
 
 use input_classifier::InputType;
@@ -6,8 +6,8 @@ use session_sharing_protocol::common::{
     CLIAgentSessionState, InputMode, InputType as ProtocolInputType, SelectedAgentModel,
     SelectedConversation, ServerConversationToken, UniversalDeveloperInputContextUpdate,
 };
-use warp_core::features::FeatureFlag;
-use warpui::{AppContext, ModelHandle, SingletonEntity, WeakViewHandle};
+use zterm_core::features::FeatureFlag;
+use zterm_ui::{AppContext, ModelHandle, SingletonEntity, WeakViewHandle};
 
 use crate::ai::blocklist::agent_view::{AgentViewController, AgentViewEntryOrigin};
 use crate::ai::blocklist::{BlocklistAIContextModel, BlocklistAIHistoryModel, InputConfig};
@@ -22,7 +22,7 @@ use crate::terminal::TerminalView;
 /// Handles updating the local LLM preferences when a selected agent model update is received.
 /// This function is shared between the viewer and sharer to ensure consistent behavior.
 pub(crate) fn apply_selected_agent_model_update(
-    terminal_view_id: warpui::EntityId,
+    terminal_view_id: zterm_ui::EntityId,
     selected_model: &SelectedAgentModel,
     _guard: &ActiveRemoteUpdate,
     ctx: &mut AppContext,

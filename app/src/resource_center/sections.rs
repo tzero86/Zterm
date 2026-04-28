@@ -1,5 +1,5 @@
-use warp_core::{context_flag::ContextFlag, features::FeatureFlag};
-use warpui::ViewContext;
+﻿use zterm_core::{context_flag::ContextFlag, features::FeatureFlag};
+use zterm_ui::ViewContext;
 
 use super::{
     ContentItem, ContentSectionData, FeatureItem, FeatureSection, FeatureSectionData,
@@ -36,7 +36,7 @@ pub fn sections(ctx: &mut ViewContext<ResourceCenterMainView>) -> Vec<Section> {
             ),
             FeatureItem::new(
                 "Open command palette",
-                "Access all of Warp via the keyboard.",
+                "Access all of Zterm via the keyboard.",
                 Tip::Action(TipAction::CommandPalette),
                 ctx,
             ),

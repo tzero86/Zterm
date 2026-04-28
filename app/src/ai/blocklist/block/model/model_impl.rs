@@ -1,10 +1,10 @@
-use std::marker::PhantomData;
+﻿use std::marker::PhantomData;
 
 use anyhow::{anyhow, Result};
 use chrono::{Local, TimeDelta};
 use history_model::{BlocklistAIHistoryEvent, BlocklistAIHistoryModel};
 use session_sharing_protocol::common::ParticipantId;
-use warpui::{AppContext, SingletonEntity, View, ViewContext};
+use zterm_ui::{AppContext, SingletonEntity, View, ViewContext};
 
 use crate::ai::{
     agent::{

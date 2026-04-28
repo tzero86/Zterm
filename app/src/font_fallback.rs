@@ -1,5 +1,5 @@
-use crate::ChannelState;
-use warpui::fonts::ExternalFontFamily;
+﻿use crate::ChannelState;
+use zterm_ui::fonts::ExternalFontFamily;
 
 use std::sync::Arc;
 

@@ -1,8 +1,8 @@
-use ai::LLMId;
+﻿use ai::LLMId;
 use chrono::{DateTime, Utc};
 use onboarding::slides::{AgentAutonomy, AgentDevelopmentSettings, ProjectOnboardingSettings};
 use onboarding::SelectedSettings;
-use warpui::{App, SingletonEntity};
+use zterm_ui::{App, SingletonEntity};
 
 use crate::ai::execution_profiles::profiles::AIExecutionProfilesModel;
 use crate::ai::execution_profiles::{

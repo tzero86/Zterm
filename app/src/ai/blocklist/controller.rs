@@ -1,4 +1,4 @@
-//! This module contains core business logic for Agent Mode, primarily sending input to an AI
+﻿//! This module contains core business logic for Agent Mode, primarily sending input to an AI
 //! model and receiving output.
 //!
 //! The `BlocklistAIController` orchestrates state updates and service calls to power the
@@ -74,12 +74,12 @@ use session_sharing_protocol::common::ParticipantId;
 use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
 use std::time::Duration;
-use warp_core::assertions::safe_assert;
+use zterm_core::assertions::safe_assert;
 use warp_multi_agent_api::{message, Task, ToolType};
-use warpui::r#async::{SpawnedFutureHandle, Timer};
+use zterm_ui::r#async::{SpawnedFutureHandle, Timer};
 
 use super::orchestration_events::{OrchestrationEventService, OrchestrationEventServiceEvent};
-use warpui::{AppContext, Entity, EntityId, ModelContext, ModelHandle, SingletonEntity};
+use zterm_ui::{AppContext, Entity, EntityId, ModelContext, ModelHandle, SingletonEntity};
 
 #[derive(Debug, Clone)]
 pub struct SessionContext {
@@ -111,7 +111,7 @@ impl SessionContext {
 
     /// Returns the remote host ID if this is a `WarpifiedRemote` session with
     /// a connected `RemoteServerClient`.
-    pub fn host_id(&self) -> Option<&warp_core::HostId> {
+    pub fn host_id(&self) -> Option<&zterm_core::HostId> {
         match &self.session_type {
             Some(SessionType::WarpifiedRemote { host_id }) => host_id.as_ref(),
             Some(SessionType::Local) | None => None,

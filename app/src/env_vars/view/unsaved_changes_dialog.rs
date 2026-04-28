@@ -1,5 +1,5 @@
-use warp_core::ui::appearance::Appearance;
-use warpui::{
+﻿use zterm_core::ui::appearance::Appearance;
+use zterm_ui::{
     elements::{Container, MouseStateHandle},
     fonts::Weight,
     platform::Cursor,

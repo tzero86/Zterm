@@ -1,10 +1,10 @@
-use crate::context_chips::{
+﻿use crate::context_chips::{
     display_chip::{DisplayChip, GitLineChanges, PromptDisplayChipEvent},
     git_line_changes_from_chips,
     prompt_type::PromptType,
     ChipResult,
 };
-use warpui::{ModelHandle, ViewContext, ViewHandle};
+use zterm_ui::{ModelHandle, ViewContext, ViewHandle};
 
 use super::{AgentInputFooter, AgentInputFooterEvent};
 

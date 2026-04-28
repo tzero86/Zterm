@@ -1,4 +1,4 @@
-#[cfg(not(target_family = "wasm"))]
+﻿#[cfg(not(target_family = "wasm"))]
 use command::r#async::Command;
 #[cfg(not(target_family = "wasm"))]
 use std::process::Stdio;
@@ -34,9 +34,9 @@ use crate::workspaces::user_workspaces::UserWorkspaces;
 use chrono::Utc;
 use parking_lot::FairMutex;
 use serde_json::json;
-use warp_core::features::FeatureFlag;
-use warpui::r#async::{FutureExt as AsyncFutureExt, SpawnedFutureHandle, Timer};
-use warpui::{Entity, EntityId, ModelContext, ModelHandle, SingletonEntity};
+use zterm_core::features::FeatureFlag;
+use zterm_ui::r#async::{FutureExt as AsyncFutureExt, SpawnedFutureHandle, Timer};
+use zterm_ui::{Entity, EntityId, ModelContext, ModelHandle, SingletonEntity};
 
 const NUM_TOP_BLOCK_LINES: usize = 100;
 const NUM_BOTTOM_BLOCK_LINES: usize = 200;

@@ -1,7 +1,7 @@
-use futures_util::stream::AbortHandle;
+﻿use futures_util::stream::AbortHandle;
 use pathfinder_geometry::vector::vec2f;
 use std::path::PathBuf;
-use warpui::{
+use zterm_ui::{
     elements::{
         Align, ConstrainedBox, Container, CornerRadius, CrossAxisAlignment, Flex,
         MainAxisAlignment, MainAxisSize, MouseStateHandle, ParentElement, Radius,
@@ -394,7 +394,7 @@ impl ImportModalBody {
                 TextAndIcon::new(
                     TextAndIconAlignment::TextFirst,
                     "Choose files...".to_string(),
-                    Icon::Import.to_warpui_icon(
+                    Icon::Import.to_zterm_ui_icon(
                         appearance
                             .theme()
                             .main_text_color(appearance.theme().accent_button_color()),

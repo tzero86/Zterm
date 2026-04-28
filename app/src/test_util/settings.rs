@@ -1,21 +1,21 @@
 #[cfg(test)]
-use warpui::App;
+use zterm_ui::App;
 
 #[cfg(test)]
 pub fn initialize_settings_for_tests(app: &mut App) {
-    use warp_core::execution_mode::ExecutionMode;
+    use zterm_core::execution_mode::ExecutionMode;
     initialize_settings_for_tests_with_mode(app, ExecutionMode::App, false);
 }
 
 #[cfg(test)]
 pub fn initialize_settings_for_tests_with_mode(
     app: &mut App,
-    mode: warp_core::execution_mode::ExecutionMode,
+    mode: zterm_core::execution_mode::ExecutionMode,
     is_sandboxed: bool,
 ) {
     use crate::{
         ai::cloud_agent_settings::CloudAgentSettings,
-        drive::settings::WarpDriveSettings,
+        drive::settings::ZtermDriveSettings,
         search::command_search::settings::CommandSearchSettings,
         settings::{
             app_icon::AppIconSettings, init_and_register_user_preferences,
@@ -30,20 +30,20 @@ pub fn initialize_settings_for_tests_with_mode(
             general_settings::GeneralSettings, keys_settings::KeysSettings,
             ligature_settings::LigatureSettings, safe_mode_settings::SafeModeSettings,
             session_settings::SessionSettings, settings::TerminalSettings,
-            shared_session::settings::SharedSessionSettings, warpify::settings::WarpifySettings,
+            shared_session::settings::SharedSessionSettings, warpify::settings::ZtermifySettings,
             BlockListSettings,
         },
         undo_close::UndoCloseSettings,
-        user_config::WarpConfig,
+        user_config::ZtermConfig,
         window_settings::WindowSettings,
         workspace::tab_settings::TabSettings,
     };
-    use warp_core::{execution_mode::AppExecutionMode, semantic_selection::SemanticSelection};
+    use zterm_core::{execution_mode::AppExecutionMode, semantic_selection::SemanticSelection};
     app.add_singleton_model(|ctx| AppExecutionMode::new(mode, is_sandboxed, ctx));
 
     app.update(init_and_register_user_preferences);
     app.add_singleton_model(|_ctx| SettingsManager::default());
-    app.add_singleton_model(WarpConfig::mock);
+    app.add_singleton_model(ZtermConfig::mock);
 
     AccessibilitySettings::register(app);
     app.update(AISettings::register_and_subscribe_to_events);
@@ -84,7 +84,7 @@ pub fn initialize_settings_for_tests_with_mode(
     ScrollSettings::register(app);
     SelectionSettings::register(app);
     app.update(|ctx| {
-        WarpifySettings::register(ctx);
+        ZtermifySettings::register(ctx);
     });
     SessionSettings::register(app);
     SshSettings::register(app);
@@ -94,7 +94,7 @@ pub fn initialize_settings_for_tests_with_mode(
     ThemeSettings::register(app);
     UndoCloseSettings::register(app);
     VimBannerSettings::register(app);
-    WarpDriveSettings::register(app);
+    ZtermDriveSettings::register(app);
     WindowSettings::register(app);
     SharedSessionSettings::register(app);
     CodeSettings::register(app);
@@ -102,7 +102,7 @@ pub fn initialize_settings_for_tests_with_mode(
 
     app.update(|ctx| {
         // Register a no-op secure storage provider for testing.
-        warpui_extras::secure_storage::register_noop("test", ctx);
+        zterm_ui_extras::secure_storage::register_noop("test", ctx);
 
         // Add settings models that are backed by secure storage, not user preferences.
         ctx.add_singleton_model(ai::api_keys::ApiKeyManager::new);

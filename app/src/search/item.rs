@@ -1,6 +1,6 @@
-use ordered_float::OrderedFloat;
-use warp_core::ui::theme::Fill;
-use warpui::{Action, AppContext, Element};
+﻿use ordered_float::OrderedFloat;
+use zterm_core::ui::theme::Fill;
+use zterm_ui::{Action, AppContext, Element};
 
 use crate::appearance::Appearance;
 

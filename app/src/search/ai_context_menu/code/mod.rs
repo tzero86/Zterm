@@ -1,4 +1,4 @@
-pub mod data_source;
+﻿pub mod data_source;
 #[cfg(not(target_family = "wasm"))]
 pub mod search_item;
 
@@ -8,9 +8,9 @@ use crate::ai::outline::{OutlineStatus, RepoOutlines};
 use crate::workspace::ActiveSession;
 #[cfg(not(target_family = "wasm"))]
 use std::path::Path;
-use warpui::AppContext;
+use zterm_ui::AppContext;
 #[cfg(not(target_family = "wasm"))]
-use warpui::SingletonEntity;
+use zterm_ui::SingletonEntity;
 
 /// Checks if the code symbols (outline) are currently being indexed for the active directory.
 /// Returns true if the outline is in a pending state, false otherwise.

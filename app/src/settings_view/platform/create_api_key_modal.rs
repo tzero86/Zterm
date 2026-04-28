@@ -10,18 +10,18 @@ use crate::{
 };
 use chrono::Utc;
 use pathfinder_geometry::vector::vec2f;
-use warp_core::features::FeatureFlag;
-use warpui::elements::{
+use zterm_core::features::FeatureFlag;
+use zterm_ui::elements::{
     Border, ChildView, ConstrainedBox, Container, CornerRadius, Empty, Fill, Flex,
     MouseStateHandle, ParentElement, Radius, Text,
 };
-use warpui::elements::{CrossAxisAlignment, Expanded, MainAxisAlignment, MainAxisSize, Padding};
-use warpui::ui_components::button::ButtonVariant;
-use warpui::ui_components::components::{Coords, UiComponent, UiComponentStyles};
-use warpui::ui_components::segmented_control::{
+use zterm_ui::elements::{CrossAxisAlignment, Expanded, MainAxisAlignment, MainAxisSize, Padding};
+use zterm_ui::ui_components::button::ButtonVariant;
+use zterm_ui::ui_components::components::{Coords, UiComponent, UiComponentStyles};
+use zterm_ui::ui_components::segmented_control::{
     LabelConfig, RenderableOptionConfig, SegmentedControl,
 };
-use warpui::{
+use zterm_ui::{
     AppContext, Element, Entity, SingletonEntity, TypedActionView, View, ViewContext, ViewHandle,
 };
 
@@ -108,7 +108,7 @@ pub enum CreateApiKeyModalAction {
 pub enum CreateApiKeyModalEvent {
     Close,
     Created {
-        api_key: warp_graphql::queries::api_keys::ApiKeyProperties,
+        api_key: zterm_graphql::queries::api_keys::ApiKeyProperties,
     },
     Error {
         message: String,
@@ -260,7 +260,7 @@ impl CreateApiKeyModal {
         let expires_at = match self.expiration.days() {
             Some(days) => {
                 let t = Utc::now() + chrono::Duration::days(days);
-                Some(warp_graphql::scalars::Time::from(t))
+                Some(zterm_graphql::scalars::Time::from(t))
             }
             None => None,
         };
@@ -294,7 +294,7 @@ impl CreateApiKeyModal {
             async move { server_api.create_api_key(final_name, team_id, expires_at).await },
             |me, res, ctx| {
                 match res {
-                    Ok(warp_graphql::mutations::generate_api_key::GenerateApiKeyResult::GenerateApiKeyOutput(output)) => {
+                    Ok(zterm_graphql::mutations::generate_api_key::GenerateApiKeyResult::GenerateApiKeyOutput(output)) => {
                         // Notify parent to append
                         ctx.emit(CreateApiKeyModalEvent::Created { api_key: output.api_key });
                         // Switch to success view and show raw key
@@ -303,13 +303,13 @@ impl CreateApiKeyModal {
                         me.raw_key = Some(output.raw_api_key);
                         ctx.notify();
                     }
-                    Ok(warp_graphql::mutations::generate_api_key::GenerateApiKeyResult::UserFacingError(e)) => {
-                        let msg = warp_graphql::client::get_user_facing_error_message(e);
+                    Ok(zterm_graphql::mutations::generate_api_key::GenerateApiKeyResult::UserFacingError(e)) => {
+                        let msg = zterm_graphql::client::get_user_facing_error_message(e);
                         me.request_state = RequestState::Idle;
                         ctx.emit(CreateApiKeyModalEvent::Error { message: msg });
                         ctx.notify();
                     }
-                    Ok(warp_graphql::mutations::generate_api_key::GenerateApiKeyResult::Unknown) | Err(_) => {
+                    Ok(zterm_graphql::mutations::generate_api_key::GenerateApiKeyResult::Unknown) | Err(_) => {
                         me.request_state = RequestState::Idle;
                         ctx.emit(CreateApiKeyModalEvent::Error { message: "Failed to create API key. Please try again.".to_string() });
                         ctx.notify();
@@ -407,10 +407,10 @@ impl CreateApiKeyModal {
             "Copy"
         };
         let copy_icon = if self.raw_key_copied {
-            warp_core::ui::icons::Icon::Check.to_warpui_icon(appearance.theme().background())
+            zterm_core::ui::icons::Icon::Check.to_zterm_ui_icon(appearance.theme().background())
         } else {
-            warp_core::ui::icons::Icon::Copy
-                .to_warpui_icon(appearance.theme().active_ui_text_color())
+            zterm_core::ui::icons::Icon::Copy
+                .to_zterm_ui_icon(appearance.theme().active_ui_text_color())
         };
         let mut copy_button_builder = appearance
             .ui_builder()
@@ -423,8 +423,8 @@ impl CreateApiKeyModal {
                 self.create_button_mouse_state.clone(),
             )
             .with_text_and_icon_label(
-                warpui::ui_components::button::TextAndIcon::new(
-                    warpui::ui_components::button::TextAndIconAlignment::IconFirst,
+                zterm_ui::ui_components::button::TextAndIcon::new(
+                    zterm_ui::ui_components::button::TextAndIconAlignment::IconFirst,
                     copy_label,
                     copy_icon,
                     MainAxisSize::Min,
@@ -647,7 +647,7 @@ impl TypedActionView for CreateApiKeyModal {
             CreateApiKeyModalAction::CopyRawKey => {
                 let content = self.raw_key.clone().unwrap_or_default();
                 ctx.clipboard()
-                    .write(warpui::clipboard::ClipboardContent::plain_text(content));
+                    .write(zterm_ui::clipboard::ClipboardContent::plain_text(content));
                 self.raw_key_copied = true;
                 // Success toast
                 let window_id = ctx.window_id();

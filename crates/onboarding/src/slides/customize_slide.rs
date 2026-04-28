@@ -5,10 +5,10 @@ use crate::slides::{bottom_nav, layout, slide_content};
 use crate::visuals::{intention_terminal_visual, intention_visual};
 use crate::OnboardingIntention;
 use ui_components::{button, Component as _, Options as _};
-use warp_core::features::FeatureFlag;
-use warp_core::ui::{appearance::Appearance, theme::color::internal_colors};
-use warpui::prelude::Align;
-use warpui::{
+use zterm_core::features::FeatureFlag;
+use zterm_core::ui::{appearance::Appearance, theme::color::internal_colors};
+use zterm_ui::prelude::Align;
+use zterm_ui::{
     elements::{
         ClippedScrollStateHandle, Container, CrossAxisAlignment, Flex, FormattedTextElement,
         MainAxisSize, MouseStateHandle, ParentElement,
@@ -35,7 +35,7 @@ pub enum ToolsPanelSubSetting {
     ConversationHistory,
     ProjectExplorer,
     GlobalSearch,
-    WarpDrive,
+    ZtermDrive,
 }
 
 #[derive(Debug, Clone)]
@@ -318,13 +318,13 @@ impl CustomizeUISlide {
                 mouse_state: self.chip_warp_drive_mouse.clone(),
                 on_click: Box::new(|ctx, _, _| {
                     ctx.dispatch_typed_action(CustomizeSlideAction::ToggleToolsSubSetting {
-                        setting: ToolsPanelSubSetting::WarpDrive,
+                        setting: ToolsPanelSubSetting::ZtermDrive,
                     });
                 }),
                 on_hover: Some(Box::new(|is_hovered, ctx, _, _| {
                     if is_hovered {
                         ctx.dispatch_typed_action(CustomizeSlideAction::HoverToolsChip {
-                            setting: ToolsPanelSubSetting::WarpDrive,
+                            setting: ToolsPanelSubSetting::ZtermDrive,
                         });
                     }
                 })),
@@ -552,8 +552,8 @@ impl CustomizeUISlide {
                             (ToolsPanelSubSetting::ProjectExplorer, false) => "async/png/onboarding/agent_intention/customize_fileexplorer_horizontal.png",
                             (ToolsPanelSubSetting::GlobalSearch, true) => "async/png/onboarding/agent_intention/customize_filesearch_vertical.png",
                             (ToolsPanelSubSetting::GlobalSearch, false) => "async/png/onboarding/agent_intention/customize_filesearch_horizontal.png",
-                            (ToolsPanelSubSetting::WarpDrive, true) => "async/png/onboarding/agent_intention/customize_warpdrive_vertical.png",
-                            (ToolsPanelSubSetting::WarpDrive, false) => "async/png/onboarding/agent_intention/customize_warpdrive_horizontal.png",
+                            (ToolsPanelSubSetting::ZtermDrive, true) => "async/png/onboarding/agent_intention/customize_warpdrive_vertical.png",
+                            (ToolsPanelSubSetting::ZtermDrive, false) => "async/png/onboarding/agent_intention/customize_warpdrive_horizontal.png",
                         }
                     } else {
                         // Terminal: no conversation chip; ConversationHistory falls through to file explorer.
@@ -562,8 +562,8 @@ impl CustomizeUISlide {
                             (ToolsPanelSubSetting::ConversationHistory | ToolsPanelSubSetting::ProjectExplorer, false) => "async/png/onboarding/terminal_intention/terminal_customize_fileexplorer_horizontal.png",
                             (ToolsPanelSubSetting::GlobalSearch, true) => "async/png/onboarding/terminal_intention/terminal_customize_filesearch_vertical.png",
                             (ToolsPanelSubSetting::GlobalSearch, false) => "async/png/onboarding/terminal_intention/terminal_customize_filesearch_horizontal.png",
-                            (ToolsPanelSubSetting::WarpDrive, true) => "async/png/onboarding/terminal_intention/terminal_customize_warpdrive_vertical.png",
-                            (ToolsPanelSubSetting::WarpDrive, false) => "async/png/onboarding/terminal_intention/terminal_customize_warpdrive_horizontal.png",
+                            (ToolsPanelSubSetting::ZtermDrive, true) => "async/png/onboarding/terminal_intention/terminal_customize_warpdrive_vertical.png",
+                            (ToolsPanelSubSetting::ZtermDrive, false) => "async/png/onboarding/terminal_intention/terminal_customize_warpdrive_horizontal.png",
                         }
                     }
                 }
@@ -792,7 +792,7 @@ impl TypedActionView for CustomizeUISlide {
                             let current = model.ui_customization().show_global_search;
                             model.set_show_global_search(!current, ctx);
                         }
-                        ToolsPanelSubSetting::WarpDrive => {
+                        ToolsPanelSubSetting::ZtermDrive => {
                             let current = model.ui_customization().show_warp_drive;
                             model.set_show_warp_drive(!current, ctx);
                         }

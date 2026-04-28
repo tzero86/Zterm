@@ -1,5 +1,5 @@
-use warp_core::features::FeatureFlag;
-use warpui::{App, EntityId, ModelHandle};
+﻿use zterm_core::features::FeatureFlag;
+use zterm_ui::{App, EntityId, ModelHandle};
 
 use crate::ai::active_agent_views_model::ActiveAgentViewsModel;
 use crate::ai::agent::conversation::AIConversationId;

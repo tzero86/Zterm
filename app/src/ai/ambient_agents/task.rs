@@ -3,17 +3,17 @@
 use anyhow::anyhow;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
-use warp_cli::agent::Harness;
-use warp_core::report_error;
-use warp_core::ui::theme::WarpTheme;
-use warpui::color::ColorU;
+use zterm_cli::agent::Harness;
+use zterm_core::report_error;
+use zterm_core::ui::theme::ZtermTheme;
+use zterm_ui::color::ColorU;
 
 use crate::ai::artifacts::{deserialize_artifacts, Artifact};
 use crate::server::server_api::ServerApiProvider;
 use crate::ui_components::icons::Icon;
 use crate::view_components::DismissibleToast;
 use crate::workspace::ToastStack;
-use warpui::{SingletonEntity, View, ViewContext};
+use zterm_ui::{SingletonEntity, View, ViewContext};
 
 use super::AmbientAgentTaskId;
 
@@ -406,7 +406,7 @@ impl AmbientAgentTaskState {
         }
     }
 
-    pub fn status_icon_and_color(&self, theme: &WarpTheme) -> (Icon, ColorU) {
+    pub fn status_icon_and_color(&self, theme: &ZtermTheme) -> (Icon, ColorU) {
         match self {
             AmbientAgentTaskState::Queued
             | AmbientAgentTaskState::Pending

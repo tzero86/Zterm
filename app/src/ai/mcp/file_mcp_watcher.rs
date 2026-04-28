@@ -11,8 +11,8 @@ use std::io::ErrorKind;
 use std::path::{Path, PathBuf};
 use std::pin::Pin;
 use std::sync::LazyLock;
-use warp_core::safe_warn;
-use warpui::{Entity, ModelContext, ModelHandle, SingletonEntity};
+use zterm_core::safe_warn;
+use zterm_ui::{Entity, ModelContext, ModelHandle, SingletonEntity};
 use watcher::HomeDirectoryWatcherEvent;
 
 use crate::ai::mcp::{
@@ -20,7 +20,7 @@ use crate::ai::mcp::{
     ParsedTemplatableMCPServerResult,
 };
 use crate::warp_managed_paths_watcher::{
-    warp_managed_mcp_config_path, WarpManagedPathsWatcher, WarpManagedPathsWatcherEvent,
+    warp_managed_mcp_config_path, ZtermManagedPathsWatcher, ZtermManagedPathsWatcherEvent,
 };
 use crate::HomeDirectoryWatcher;
 use strum::IntoEnumIterator;
@@ -173,7 +173,7 @@ impl FileMCPWatcher {
         ctx.subscribe_to_model(&HomeDirectoryWatcher::handle(ctx), |me, event, ctx| {
             me.handle_home_directory_watcher_event(event, ctx);
         });
-        ctx.subscribe_to_model(&WarpManagedPathsWatcher::handle(ctx), |me, event, ctx| {
+        ctx.subscribe_to_model(&ZtermManagedPathsWatcher::handle(ctx), |me, event, ctx| {
             me.handle_warp_managed_paths_event(event, ctx);
         });
 
@@ -286,7 +286,7 @@ impl FileMCPWatcher {
         }
 
         let Ok(std_path) =
-            warp_util::standardized_path::StandardizedPath::from_local_canonicalized(subdir_path)
+            zterm_util::standardized_path::StandardizedPath::from_local_canonicalized(subdir_path)
         else {
             return;
         };
@@ -418,10 +418,10 @@ impl FileMCPWatcher {
 
     fn handle_warp_managed_paths_event(
         &mut self,
-        event: &WarpManagedPathsWatcherEvent,
+        event: &ZtermManagedPathsWatcherEvent,
         ctx: &mut ModelContext<Self>,
     ) {
-        let WarpManagedPathsWatcherEvent::FilesChanged(update) = event;
+        let ZtermManagedPathsWatcherEvent::FilesChanged(update) = event;
         let Some(mcp_config_path) = warp_managed_mcp_config_path() else {
             return;
         };

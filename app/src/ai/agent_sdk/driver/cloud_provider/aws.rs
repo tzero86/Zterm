@@ -3,9 +3,9 @@ use std::{collections::HashMap, ffi::OsString, future::Future, pin::Pin, time::D
 use anyhow::Context;
 use tempfile::{Builder, NamedTempFile};
 use vec1::Vec1;
-use warp_core::safe_info;
-use warp_managed_secrets::ManagedSecretManager;
-use warpui::{ModelSpawner, SingletonEntity};
+use zterm_core::safe_info;
+use zterm_managed_secrets::ManagedSecretManager;
+use zterm_ui::{ModelSpawner, SingletonEntity};
 
 use crate::ai::aws_credentials::aws_role_session_name;
 use crate::ai::cloud_environments::AwsProviderConfig;
@@ -18,7 +18,7 @@ use super::{CloudProvider, CloudProviderSetupError, Result};
 /// set this to the current maximum task duration.
 const IDENTITY_TOKEN_DURATION: Duration = Duration::from_hours(3);
 
-/// AWS STS audience for Warp Oz OIDC federation.
+/// AWS STS audience for Zterm Oz OIDC federation.
 const AWS_AUDIENCE: &str = "sts.amazonaws.com";
 
 /// Provides AWS Web Identity credentials for the agent session.
@@ -93,7 +93,7 @@ impl CloudProvider for AwsCloudProvider {
                     ManagedSecretManager::handle(ctx)
                         .as_ref(ctx)
                         .issue_task_identity_token(
-                            warp_managed_secrets::client::IdentityTokenOptions {
+                            zterm_managed_secrets::client::IdentityTokenOptions {
                                 audience,
                                 requested_duration: duration,
                                 subject_template,

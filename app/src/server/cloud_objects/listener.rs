@@ -1,4 +1,4 @@
-use crate::network::{NetworkStatus, NetworkStatusEvent, NetworkStatusKind};
+﻿use crate::network::{NetworkStatus, NetworkStatusEvent, NetworkStatusKind};
 use crate::report_error;
 use crate::server::{ids::ServerId, retry_strategies::LISTENER_RETRY_STRATEGY};
 use crate::system::{SystemStats, SystemStatsEvent};
@@ -22,12 +22,12 @@ use super::update_manager::UpdateManager;
 use chrono::{DateTime, Utc};
 use futures_util::stream::AbortHandle;
 use std::time::Duration;
-use warpui::r#async::Timer;
+use zterm_ui::r#async::Timer;
 
 use async_channel::Sender;
 
 use std::sync::Arc;
-use warpui::{Entity, ModelContext, RequestState, SingletonEntity};
+use zterm_ui::{Entity, ModelContext, RequestState, SingletonEntity};
 
 use instant::Instant;
 
@@ -72,7 +72,7 @@ pub struct Listener {
     /// Since we only want to start websocket connections if we know the user is
     /// on a team or has access to cloud objects, we keep track of whether
     /// or not we should be subscribing for updates. Once we start websockets, we don't stop
-    /// so that the user gets a snappier experience once they start using Warp Drive.
+    /// so that the user gets a snappier experience once they start using Zterm Drive.
     should_subscribe_to_updates: bool,
     /// Abort handle for the (retried) future that resolves when the subscription is done.
     current_subscription_abort_handle: Option<AbortHandle>,

@@ -1,4 +1,4 @@
-use crate::{
+﻿use crate::{
     ai::agent::icons::{yellow_running_icon, yellow_stop_icon},
     view_components::compactible_action_button::{
         CompactibleActionButton, RenderCompactibleActionButton, SMALL_SIZE_SWITCH_THRESHOLD,
@@ -10,9 +10,9 @@ use settings::Setting as _;
 use std::borrow::Cow;
 use std::rc::Rc;
 use std::sync::Arc;
-use warp_core::semantic_selection::SemanticSelection;
-use warp_core::{features::FeatureFlag, ui::Icon};
-use warpui::{
+use zterm_core::semantic_selection::SemanticSelection;
+use zterm_core::{features::FeatureFlag, ui::Icon};
+use zterm_ui::{
     elements::{
         get_rich_content_position_id, Border, Clipped, Container, CornerRadius, CrossAxisAlignment,
         Flex, FormattedTextElement, MouseStateHandle, ParentElement, Radius, SavePosition,
@@ -118,7 +118,7 @@ pub struct EnvVarCollectionBlock {
 }
 
 pub fn init(app: &mut AppContext) {
-    use warpui::keymap::macros::*;
+    use zterm_ui::keymap::macros::*;
 
     app.register_fixed_bindings([
         FixedBinding::new(

@@ -2,10 +2,10 @@ use std::sync::Arc;
 
 use parking_lot::FairMutex;
 use pathfinder_color::ColorU;
-use warp_core::ui::theme::WarpTheme;
-use warpui::elements::{Container, Element};
-use warpui::keymap::Keystroke;
-use warpui::{AppContext, Entity, ModelHandle, SingletonEntity, View, ViewContext};
+use zterm_core::ui::theme::ZtermTheme;
+use zterm_ui::elements::{Container, Element};
+use zterm_ui::keymap::Keystroke;
+use zterm_ui::{AppContext, Entity, ModelHandle, SingletonEntity, View, ViewContext};
 
 use super::buffer_model::InputBufferModel;
 use super::message_bar::{
@@ -460,7 +460,7 @@ impl MessageTransformer<TerminalMessageArgs<'_>> for AttachedTextSelectionMessag
     }
 }
 
-fn message_magenta(theme: &WarpTheme) -> ColorU {
+fn message_magenta(theme: &ZtermTheme) -> ColorU {
     let mut color = theme.ansi_fg_magenta();
     color.a = (255. * 0.65) as u8;
     color

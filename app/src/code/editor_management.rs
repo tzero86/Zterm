@@ -1,4 +1,4 @@
-use std::{
+﻿use std::{
     collections::{hash_map::Entry, HashMap},
     path::{Path, PathBuf},
 };
@@ -6,8 +6,8 @@ use std::{
 use crate::ai::skills::SkillOpenOrigin;
 use ai::skills::SkillReference;
 use serde::{Deserialize, Serialize};
-use warp_util::path::LineAndColumnArg;
-use warpui::{AppContext, Entity, EntityId, ModelContext, SingletonEntity, ViewHandle, WindowId};
+use zterm_util::path::LineAndColumnArg;
+use zterm_ui::{AppContext, Entity, EntityId, ModelContext, SingletonEntity, ViewHandle, WindowId};
 
 use crate::{
     ai::agent::AIAgentActionId,

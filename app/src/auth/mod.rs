@@ -1,4 +1,4 @@
-pub mod anonymous_id;
+﻿pub mod anonymous_id;
 pub mod auth_manager;
 mod auth_override_warning_body;
 pub mod auth_override_warning_modal;
@@ -33,10 +33,10 @@ pub use auth_state::AuthStateProvider;
 use itertools::Itertools;
 pub use login_failure_notification::LoginFailureReason;
 pub use user_uid::UserUid;
-use warpui::modals::{AlertDialogWithCallbacks, ModalButton};
+use zterm_ui::modals::{AlertDialogWithCallbacks, ModalButton};
 
-use warp_core::user_preferences::GetUserPreferences as _;
-use warpui::{AppContext, SingletonEntity};
+use zterm_core::user_preferences::GetUserPreferences as _;
+use zterm_ui::{AppContext, SingletonEntity};
 
 use crate::cloud_object::model::persistence::CloudModel;
 use crate::focus_running_window_and_show_native_modal;
@@ -158,7 +158,7 @@ pub fn maybe_log_out(app: &mut AppContext) {
                 "object"
             };
             info_text_vec.push(format!(
-                "You have {num_unsaved_objects} unsynced Warp Drive {plural}. \
+                "You have {num_unsaved_objects} unsynced Zterm Drive {plural}. \
             Logging out will cause you to lose the {plural}."
             ));
         }

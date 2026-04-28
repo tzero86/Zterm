@@ -1,4 +1,4 @@
-use crate::appearance::Appearance;
+﻿use crate::appearance::Appearance;
 use crate::pane_group::PaneId;
 use crate::search::command_palette::mixer::CommandPaletteItemAction;
 use crate::search::command_palette::navigation::render::render_navigation_session;
@@ -9,8 +9,8 @@ use crate::search::result_renderer::ItemHighlightState;
 use crate::session_management::SessionNavigationData;
 use crate::ui_components::icons::Icon;
 use ordered_float::OrderedFloat;
-use warpui::elements::Container;
-use warpui::{AppContext, Element, SingletonEntity};
+use zterm_ui::elements::Container;
+use zterm_ui::{AppContext, Element, SingletonEntity};
 
 /// Search item to render a session within the command palette.
 pub struct SearchItem {

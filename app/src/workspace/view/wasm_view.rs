@@ -1,9 +1,9 @@
 //! WASM-only view functions for the Workspace.
 
-use warpui::elements::{ChildView, Element};
-use warpui::{AppContext, SingletonEntity, ViewContext, ViewHandle};
+use zterm_ui::elements::{ChildView, Element};
+use zterm_ui::{AppContext, SingletonEntity, ViewContext, ViewHandle};
 
-use warp_core::channel::ChannelState;
+use zterm_core::channel::ChannelState;
 
 use crate::uri::browser_url_handler::parse_current_url;
 
@@ -20,7 +20,7 @@ use crate::view_components::action_button::{
 };
 use crate::wasm_nux_dialog::{WasmNUXDialog, WasmNUXDialogEvent};
 use crate::workspace::action::WorkspaceAction;
-use crate::workspace::view::{NotebookSource, OpenWarpDriveObjectSettings, Workspace};
+use crate::workspace::view::{NotebookSource, OpenZtermDriveObjectSettings, Workspace};
 use crate::BlocklistAIHistoryModel;
 
 const TRANSCRIPT_PANEL_WIDTH: f32 = 280.0;
@@ -101,7 +101,7 @@ impl Workspace {
             ConversationDetailsPanelEvent::OpenPlanNotebook { notebook_uid } => {
                 me.open_notebook(
                     &NotebookSource::Existing((*notebook_uid).into()),
-                    &OpenWarpDriveObjectSettings::default(),
+                    &OpenZtermDriveObjectSettings::default(),
                     ctx,
                     true,
                 );

@@ -1,4 +1,4 @@
-use std::{
+﻿use std::{
     collections::{HashMap, HashSet},
     iter,
 };
@@ -14,7 +14,7 @@ use session_sharing_protocol::common::{
 };
 
 use asset_cache::AssetCacheExt as _;
-use warpui::{
+use zterm_ui::{
     assets::asset_cache::{AssetCache, AssetState},
     image_cache::ImageType,
     r#async::SpawnedFutureHandle,

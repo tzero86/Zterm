@@ -1,5 +1,5 @@
-use serde_json::Value;
-use warpui::{App, SingletonEntity};
+﻿use serde_json::Value;
+use zterm_ui::{App, SingletonEntity};
 
 use super::Prompt;
 use crate::auth::AuthStateProvider;

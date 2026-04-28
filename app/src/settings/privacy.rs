@@ -3,10 +3,10 @@ use std::sync::Arc;
 
 use anyhow::Result;
 use regex::Regex;
-use warp_core::features::FeatureFlag;
-use warp_core::report_if_error;
-use warp_core::user_preferences::GetUserPreferences as _;
-use warpui::{AppContext, Entity, ModelContext, SingletonEntity, UpdateModel};
+use zterm_core::features::FeatureFlag;
+use zterm_core::report_if_error;
+use zterm_core::user_preferences::GetUserPreferences as _;
+use zterm_ui::{AppContext, Entity, ModelContext, SingletonEntity, UpdateModel};
 
 use crate::ai::blocklist::telemetry_banner::should_collect_ai_ugc_telemetry;
 use crate::auth::auth_state::AuthState;
@@ -93,7 +93,7 @@ impl PartialEq for CustomSecretRegex {
 
 impl settings_value::SettingsValue for CustomSecretRegex {}
 
-define_settings_group!(WarpDrivePrivacySettings, settings: [
+define_settings_group!(ZtermDrivePrivacySettings, settings: [
     is_telemetry_enabled: IsTelemetryEnabled {
         type: bool,
         default: true,
@@ -288,22 +288,22 @@ impl PrivacySettings {
         );
 
         // Listen for changes to the cloud model and update ourselves when they happen.
-        ctx.subscribe_to_model(&WarpDrivePrivacySettings::handle(ctx), |me, event, ctx| {
-            let privacy_settings = WarpDrivePrivacySettings::as_ref(ctx);
+        ctx.subscribe_to_model(&ZtermDrivePrivacySettings::handle(ctx), |me, event, ctx| {
+            let privacy_settings = ZtermDrivePrivacySettings::as_ref(ctx);
             match event {
-                WarpDrivePrivacySettingsChangedEvent::IsTelemetryEnabled { .. } => {
+                ZtermDrivePrivacySettingsChangedEvent::IsTelemetryEnabled { .. } => {
                     me.set_is_telemetry_enabled(
                         *privacy_settings.is_telemetry_enabled.value(),
                         ctx,
                     );
                 }
-                WarpDrivePrivacySettingsChangedEvent::IsCrashReportingEnabled { .. } => {
+                ZtermDrivePrivacySettingsChangedEvent::IsCrashReportingEnabled { .. } => {
                     me.set_is_crash_reporting_enabled(
                         *privacy_settings.is_crash_reporting_enabled.value(),
                         ctx,
                     );
                 }
-                WarpDrivePrivacySettingsChangedEvent::IsCloudConversationStorageEnabled {
+                ZtermDrivePrivacySettingsChangedEvent::IsCloudConversationStorageEnabled {
                     ..
                 } => {
                     me.set_is_cloud_conversation_storage_enabled(
@@ -529,7 +529,7 @@ impl PrivacySettings {
         if new_value != old_value {
             self.is_crash_reporting_enabled = new_value;
 
-            WarpDrivePrivacySettings::handle(ctx).update(ctx, |settings, ctx| {
+            ZtermDrivePrivacySettings::handle(ctx).update(ctx, |settings, ctx| {
                 log::info!("Setting is_crash_reporting_enabled to {new_value}");
                 let _ = settings
                     .is_crash_reporting_enabled
@@ -565,7 +565,7 @@ impl PrivacySettings {
         if new_value != old_value {
             self.is_telemetry_enabled = new_value;
 
-            WarpDrivePrivacySettings::handle(ctx).update(ctx, |settings, ctx| {
+            ZtermDrivePrivacySettings::handle(ctx).update(ctx, |settings, ctx| {
                 log::info!("Setting is_telemetry_enabled to {new_value}");
                 let _ = settings.is_telemetry_enabled.set_value(new_value, ctx);
             });
@@ -597,7 +597,7 @@ impl PrivacySettings {
 
         self.is_cloud_conversation_storage_enabled = new_value;
 
-        WarpDrivePrivacySettings::handle(ctx).update(ctx, |settings, ctx| {
+        ZtermDrivePrivacySettings::handle(ctx).update(ctx, |settings, ctx| {
             log::info!("Setting is_cloud_conversation_storage_enabled to {new_value}");
             let _ = settings
                 .is_cloud_conversation_storage_enabled
@@ -784,7 +784,7 @@ impl PrivacySettings {
                 Some(is_cloud_conversation_storage_enabled),
             ) => {
                 log::info!(
-                    "Warp Drive privacy preferences are set, using those for telemetry={is_telemetry_enabled}, \
+                    "Zterm Drive privacy preferences are set, using those for telemetry={is_telemetry_enabled}, \
                     crash_reporting={is_crash_reporting_enabled}, cloud_conversation_storage={is_cloud_conversation_storage_enabled}"
                 );
                 self.set_is_telemetry_enabled(is_telemetry_enabled, ctx);
@@ -796,20 +796,20 @@ impl PrivacySettings {
             }
             _ => {
                 log::info!(
-                    "Warp Drive privacy preferences are not set, syncing local PrivacySettings values to \
-                    WarpDrivePrivacySettings and cloud. telemetry={}, crash_reporting={}, \
+                    "Zterm Drive privacy preferences are not set, syncing local PrivacySettings values to \
+                    ZtermDrivePrivacySettings and cloud. telemetry={}, crash_reporting={}, \
                     cloud_conversation_storage={}",
                     self.is_telemetry_enabled,
                     self.is_crash_reporting_enabled,
                     self.is_cloud_conversation_storage_enabled
                 );
-                // First, ensure WarpDrivePrivacySettings (the define_settings_group model)
+                // First, ensure ZtermDrivePrivacySettings (the define_settings_group model)
                 // reflects the actual PrivacySettings in-memory values. These may differ
-                // because WarpDrivePrivacySettings defaults to `true` for all three settings,
+                // because ZtermDrivePrivacySettings defaults to `true` for all three settings,
                 // while the user may have changed them to `false` via PrivacySettings before
                 // signing up. Without this step, maybe_sync_local_prefs_to_cloud would read
-                // the stale WarpDrivePrivacySettings defaults and push those to the cloud.
-                WarpDrivePrivacySettings::handle(ctx).update(ctx, |settings, ctx| {
+                // the stale ZtermDrivePrivacySettings defaults and push those to the cloud.
+                ZtermDrivePrivacySettings::handle(ctx).update(ctx, |settings, ctx| {
                     report_if_error!(settings
                         .is_telemetry_enabled
                         .set_value(self.is_telemetry_enabled, ctx));

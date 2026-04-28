@@ -1,4 +1,4 @@
-#![allow(dead_code)]
+﻿#![allow(dead_code)]
 
 use crate::ai::blocklist::TextLocation;
 use crate::terminal::model::index::Point;
@@ -10,8 +10,8 @@ use rangemap::{RangeInclusiveMap, StepLite};
 use std::collections::HashMap;
 use std::ops::{Not, RangeInclusive};
 use std::sync::atomic::{AtomicUsize, Ordering};
-use warpui::elements::SecretRange;
-use warpui::EntityId;
+use zterm_ui::elements::SecretRange;
+use zterm_ui::EntityId;
 
 use super::grid::grid_handler::GridHandler;
 use super::grid::{Dimensions as _, RespectDisplayedOutput};
@@ -527,7 +527,7 @@ pub mod regexes {
     pub const JWT: &str = r"\b(ey[a-zA-z0-9_\-=]{10,}\.){2}[a-zA-z0-9_\-=]{10,}\b";
 
     /// Identifies a Warp API Key. Format: wk- followed by a version number and any combination of hex digits, hyphens, or periods.
-    pub const WARP_API_KEY: &str = r"\bwk-[0-9]+\.[A-Fa-f0-9.\-]+\b";
+    pub const ZTERM_API_KEY: &str = r"\bwk-[0-9]+\.[A-Fa-f0-9.\-]+\b";
 
     /// Returns a slice of regex strings that can be used to identify secrets.
     // NOTE: All regexes added here must also be added server-side in logic/ai/util.go.
@@ -609,7 +609,7 @@ pub mod regexes {
             name: "Fireworks API Key",
         },
         DefaultRegex {
-            pattern: WARP_API_KEY,
+            pattern: ZTERM_API_KEY,
             name: "Warp API Key",
         },
     ];

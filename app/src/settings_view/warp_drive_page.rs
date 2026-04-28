@@ -5,9 +5,9 @@ use super::{
     },
     LocalOnlyIconState, SettingsSection, ToggleState,
 };
-use crate::{appearance::Appearance, auth::AuthStateProvider, drive::settings::WarpDriveSettings};
-use warp_core::{features::FeatureFlag, report_if_error, settings::ToggleableSetting as _};
-use warpui::{
+use crate::{appearance::Appearance, auth::AuthStateProvider, drive::settings::ZtermDriveSettings};
+use zterm_core::{features::FeatureFlag, report_if_error, settings::ToggleableSetting as _};
+use zterm_ui::{
     elements::{Container, Element, Flex, MouseStateHandle, ParentElement, Shrinkable, Text},
     fonts::Weight,
     ui_components::{
@@ -19,27 +19,27 @@ use warpui::{
 };
 
 #[derive(Debug, Clone)]
-pub enum WarpDriveSettingsPageAction {
-    ToggleShowWarpDrive,
+pub enum ZtermDriveSettingsPageAction {
+    ToggleShowZtermDrive,
     SignUp,
     OpenUrl(String),
 }
 
-pub enum WarpDriveSettingsPageEvent {
+pub enum ZtermDriveSettingsPageEvent {
     SignUp,
 }
 
-pub struct WarpDriveSettingsPageView {
+pub struct ZtermDriveSettingsPageView {
     page: PageType<Self>,
 }
 
-impl WarpDriveSettingsPageView {
+impl ZtermDriveSettingsPageView {
     pub fn new(_ctx: &mut ViewContext<Self>) -> Self {
         Self {
             page: PageType::new_uncategorized(
                 vec![
-                    Box::new(WarpDriveHeaderWidget::default()),
-                    Box::new(WarpDriveToggleWidget::default()),
+                    Box::new(ZtermDriveHeaderWidget::default()),
+                    Box::new(ZtermDriveToggleWidget::default()),
                 ],
                 None,
             ),
@@ -47,34 +47,34 @@ impl WarpDriveSettingsPageView {
     }
 }
 
-impl Entity for WarpDriveSettingsPageView {
-    type Event = WarpDriveSettingsPageEvent;
+impl Entity for ZtermDriveSettingsPageView {
+    type Event = ZtermDriveSettingsPageEvent;
 }
 
-impl TypedActionView for WarpDriveSettingsPageView {
-    type Action = WarpDriveSettingsPageAction;
+impl TypedActionView for ZtermDriveSettingsPageView {
+    type Action = ZtermDriveSettingsPageAction;
 
     fn handle_action(&mut self, action: &Self::Action, ctx: &mut ViewContext<Self>) {
         match action {
-            WarpDriveSettingsPageAction::ToggleShowWarpDrive => {
-                WarpDriveSettings::handle(ctx).update(ctx, |settings, ctx| {
+            ZtermDriveSettingsPageAction::ToggleShowZtermDrive => {
+                ZtermDriveSettings::handle(ctx).update(ctx, |settings, ctx| {
                     report_if_error!(settings.enable_warp_drive.toggle_and_save_value(ctx));
                 });
                 ctx.notify();
             }
-            WarpDriveSettingsPageAction::SignUp => {
-                ctx.emit(WarpDriveSettingsPageEvent::SignUp);
+            ZtermDriveSettingsPageAction::SignUp => {
+                ctx.emit(ZtermDriveSettingsPageEvent::SignUp);
             }
-            WarpDriveSettingsPageAction::OpenUrl(url) => {
+            ZtermDriveSettingsPageAction::OpenUrl(url) => {
                 ctx.open_url(url.as_str());
             }
         }
     }
 }
 
-impl View for WarpDriveSettingsPageView {
+impl View for ZtermDriveSettingsPageView {
     fn ui_name() -> &'static str {
-        "WarpDrivePage"
+        "ZtermDrivePage"
     }
 
     fn render(&self, app: &AppContext) -> Box<dyn Element> {
@@ -82,9 +82,9 @@ impl View for WarpDriveSettingsPageView {
     }
 }
 
-impl SettingsPageMeta for WarpDriveSettingsPageView {
+impl SettingsPageMeta for ZtermDriveSettingsPageView {
     fn section() -> SettingsSection {
-        SettingsSection::WarpDrive
+        SettingsSection::ZtermDrive
     }
 
     fn should_render(&self, _ctx: &AppContext) -> bool {
@@ -104,19 +104,19 @@ impl SettingsPageMeta for WarpDriveSettingsPageView {
     }
 }
 
-impl From<ViewHandle<WarpDriveSettingsPageView>> for SettingsPageViewHandle {
-    fn from(view_handle: ViewHandle<WarpDriveSettingsPageView>) -> Self {
-        SettingsPageViewHandle::WarpDrive(view_handle)
+impl From<ViewHandle<ZtermDriveSettingsPageView>> for SettingsPageViewHandle {
+    fn from(view_handle: ViewHandle<ZtermDriveSettingsPageView>) -> Self {
+        SettingsPageViewHandle::ZtermDrive(view_handle)
     }
 }
 
 #[derive(Default)]
-struct WarpDriveHeaderWidget {
+struct ZtermDriveHeaderWidget {
     sign_up_button: MouseStateHandle,
 }
 
-impl SettingsWidget for WarpDriveHeaderWidget {
-    type View = WarpDriveSettingsPageView;
+impl SettingsWidget for ZtermDriveHeaderWidget {
+    type View = ZtermDriveSettingsPageView;
 
     fn search_terms(&self) -> &str {
         "warp drive sign up"
@@ -139,7 +139,7 @@ impl SettingsWidget for WarpDriveHeaderWidget {
 
         let message = Container::new(
             Text::new_inline(
-                "To use Warp Drive, please create an account.".to_string(),
+                "To use Zterm Drive, please create an account.".to_string(),
                 appearance.ui_font_family(),
                 14.,
             )
@@ -160,8 +160,8 @@ impl SettingsWidget for WarpDriveHeaderWidget {
                 .with_style(UiComponentStyles {
                     font_size: Some(14.),
                     font_weight: Some(Weight::Semibold),
-                    border_radius: Some(warpui::elements::CornerRadius::with_all(
-                        warpui::elements::Radius::Pixels(4.),
+                    border_radius: Some(zterm_ui::elements::CornerRadius::with_all(
+                        zterm_ui::elements::Radius::Pixels(4.),
                     )),
                     padding: Some(Coords {
                         top: 8.,
@@ -174,7 +174,7 @@ impl SettingsWidget for WarpDriveHeaderWidget {
                 .with_text_label("Sign up".to_owned())
                 .build()
                 .on_click(move |ctx, _, _| {
-                    ctx.dispatch_typed_action(WarpDriveSettingsPageAction::SignUp);
+                    ctx.dispatch_typed_action(ZtermDriveSettingsPageAction::SignUp);
                 })
                 .finish(),
         )
@@ -182,7 +182,7 @@ impl SettingsWidget for WarpDriveHeaderWidget {
 
         Container::new(
             Flex::row()
-                .with_cross_axis_alignment(warpui::elements::CrossAxisAlignment::Center)
+                .with_cross_axis_alignment(zterm_ui::elements::CrossAxisAlignment::Center)
                 .with_child(Shrinkable::new(1., message).finish())
                 .with_child(button)
                 .finish(),
@@ -193,13 +193,13 @@ impl SettingsWidget for WarpDriveHeaderWidget {
 }
 
 #[derive(Default)]
-struct WarpDriveToggleWidget {
+struct ZtermDriveToggleWidget {
     switch_state: SwitchStateHandle,
     info_icon_mouse_state: MouseStateHandle,
 }
 
-impl SettingsWidget for WarpDriveToggleWidget {
-    type View = WarpDriveSettingsPageView;
+impl SettingsWidget for ZtermDriveToggleWidget {
+    type View = ZtermDriveSettingsPageView;
 
     fn search_terms(&self) -> &str {
         "warp drive tools panel command palette search workflows prompts notebooks environment variables"
@@ -211,17 +211,17 @@ impl SettingsWidget for WarpDriveToggleWidget {
         appearance: &Appearance,
         app: &AppContext,
     ) -> Box<dyn Element> {
-        let settings = WarpDriveSettings::as_ref(app);
+        let settings = ZtermDriveSettings::as_ref(app);
         let is_anonymous_or_logged_out = FeatureFlag::SkipFirebaseAnonymousUser.is_enabled()
             && AuthStateProvider::as_ref(app)
                 .get()
                 .is_anonymous_or_logged_out();
 
-        render_body_item::<WarpDriveSettingsPageAction>(
-            "Warp Drive".into(),
+        render_body_item::<ZtermDriveSettingsPageAction>(
+            "Zterm Drive".into(),
             Some(AdditionalInfo {
                 mouse_state: self.info_icon_mouse_state.clone(),
-                on_click_action: Some(WarpDriveSettingsPageAction::OpenUrl(
+                on_click_action: Some(ZtermDriveSettingsPageAction::OpenUrl(
                     "https://docs.warp.dev/knowledge-and-collaboration/warp-drive".to_string(),
                 )),
                 secondary_text: None,
@@ -243,12 +243,12 @@ impl SettingsWidget for WarpDriveToggleWidget {
                 .on_click(move |ctx, _, _| {
                     if !is_anonymous_or_logged_out {
                         ctx.dispatch_typed_action(
-                            WarpDriveSettingsPageAction::ToggleShowWarpDrive,
+                            ZtermDriveSettingsPageAction::ToggleShowZtermDrive,
                         );
                     }
                 })
                 .finish(),
-            Some("Warp Drive is a workspace in your terminal where you can save Workflows, Notebooks, Prompts, and Environment Variables for personal use or to share with a team.".into()),
+            Some("Zterm Drive is a workspace in your terminal where you can save Workflows, Notebooks, Prompts, and Environment Variables for personal use or to share with a team.".into()),
         )
     }
 }

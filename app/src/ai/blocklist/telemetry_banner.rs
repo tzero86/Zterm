@@ -1,11 +1,11 @@
-use crate::{
+﻿use crate::{
     settings_view::SettingsSection,
     terminal::view::TerminalAction,
     ui_components::{buttons::icon_button, icons::Icon},
     workspaces::{user_workspaces::UserWorkspaces, workspace::UgcCollectionEnablementSetting},
     Appearance, FeatureFlag, WorkspaceAction,
 };
-use warpui::{
+use zterm_ui::{
     elements::{
         ConstrainedBox, Container, CrossAxisAlignment, Flex, MainAxisAlignment, MainAxisSize,
         MouseStateHandle, ParentElement, Shrinkable, Text,
@@ -64,7 +64,7 @@ impl View for TelemetryBanner {
                 Container::new(
                     ConstrainedBox::new(
                         Icon::Info
-                            .to_warpui_icon(theme.active_ui_text_color())
+                            .to_zterm_ui_icon(theme.active_ui_text_color())
                             .finish(),
                     )
                     .with_height(20.)

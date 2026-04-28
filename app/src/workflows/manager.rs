@@ -1,7 +1,7 @@
 use super::{workflow::Workflow, CloudWorkflowModel};
 use crate::{
     cloud_object::{model::persistence::CloudModel, GenericCloudObject, Owner},
-    drive::OpenWarpDriveObjectSettings,
+    drive::OpenZtermDriveObjectSettings,
     pane_group::{PaneContent, WorkflowPane},
     safe_warn,
     server::{
@@ -14,7 +14,7 @@ use crate::{
     PaneViewLocator, WindowId,
 };
 use std::collections::{hash_map::Entry, HashMap};
-use warpui::{Entity, EntityId, ModelContext, SingletonEntity};
+use zterm_ui::{Entity, EntityId, ModelContext, SingletonEntity};
 
 pub struct WorkflowManager {
     panes_by_hashed_id: HashMap<String, WorkflowPaneData>,
@@ -67,7 +67,7 @@ impl WorkflowManager {
     pub fn create_pane(
         &mut self,
         source: &WorkflowOpenSource,
-        settings: &OpenWarpDriveObjectSettings,
+        settings: &OpenZtermDriveObjectSettings,
         mode: WorkflowViewMode,
         window_id: WindowId,
         ctx: &mut ModelContext<Self>,
@@ -122,7 +122,7 @@ impl WorkflowManager {
                             *initial_folder_id,
                             ClientId::default(),
                         ),
-                        &OpenWarpDriveObjectSettings::default(),
+                        &OpenZtermDriveObjectSettings::default(),
                         mode,
                         ctx,
                     );

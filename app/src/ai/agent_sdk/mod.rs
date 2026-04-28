@@ -24,7 +24,7 @@ use crate::server::server_api::ai::AIClient;
 use crate::workflows::workflow::Workflow;
 use ai::api_keys::{ApiKeyManager, AwsCredentialsRefreshStrategy};
 use anyhow::Context;
-use warp_cli::{
+use zterm_cli::{
     agent::{AgentCommand, AgentProfileCommand, OutputFormat},
     artifact::ArtifactCommand,
     environment::{EnvironmentCommand, ImageCommand},
@@ -40,13 +40,13 @@ use warp_cli::{
     task::{MessageCommand, TaskCommand},
     CliCommand, GlobalOptions,
 };
-use warp_core::features::FeatureFlag;
-use warp_isolation_platform::IsolationPlatformError;
+use zterm_core::features::FeatureFlag;
+use zterm_isolation_platform::IsolationPlatformError;
 #[cfg(not(target_family = "wasm"))]
-use warp_logging::log_file_path;
-use warp_managed_secrets::ManagedSecretManager;
-use warpui::ModelSpawner;
-use warpui::{platform::TerminationMode, AppContext, SingletonEntity};
+use zterm_logging::log_file_path;
+use zterm_managed_secrets::ManagedSecretManager;
+use zterm_ui::ModelSpawner;
+use zterm_ui::{platform::TerminationMode, AppContext, SingletonEntity};
 
 use crate::{
     ai::ambient_agents::{task::HarnessConfig, AmbientAgentTaskId},
@@ -60,7 +60,7 @@ use crate::{
     terminal::view::ConversationRestorationInNewPaneType,
 };
 use driver::AgentDriverError;
-use warp_graphql::object_permissions::OwnerType;
+use zterm_graphql::object_permissions::OwnerType;
 
 use crate::ai::attachment_utils::attachments_download_dir;
 use crate::ai::skills::{
@@ -72,8 +72,8 @@ pub(crate) use driver::harness::{
 };
 pub use driver::AgentDriver;
 use telemetry::CliTelemetryEvent;
-use warp_cli::agent::{Harness, Prompt, RunAgentArgs};
-use warp_cli::OZ_HARNESS_ENV;
+use zterm_cli::agent::{Harness, Prompt, RunAgentArgs};
+use zterm_cli::OZ_HARNESS_ENV;
 
 mod admin;
 mod agent_config;
@@ -175,7 +175,7 @@ fn dispatch_command(
             schedule::run(ctx, global_options, schedule_cmd)
         }
         CliCommand::Secret(secret_cmd) => {
-            if !FeatureFlag::WarpManagedSecrets.is_enabled() {
+            if !FeatureFlag::ZtermManagedSecrets.is_enabled() {
                 return Err(anyhow::anyhow!("invalid value 'secret'"));
             }
             secret::run(ctx, global_options, secret_cmd)
@@ -510,7 +510,7 @@ fn run_task(
                 ));
             }
             match conv_cmd {
-                warp_cli::task::ConversationCommand::Get(args) => {
+                zterm_cli::task::ConversationCommand::Get(args) => {
                     ambient::get_conversation(ctx, args.conversation_id)
                 }
             }
@@ -531,11 +531,11 @@ fn run_task(
 /// requires spawning an async task, which requires a ModelContext.
 struct AgentDriverRunner;
 
-impl warpui::Entity for AgentDriverRunner {
+impl zterm_ui::Entity for AgentDriverRunner {
     type Event = ();
 }
 
-impl warpui::SingletonEntity for AgentDriverRunner {}
+impl zterm_ui::SingletonEntity for AgentDriverRunner {}
 
 impl AgentDriverRunner {
     async fn setup_and_run_driver(
@@ -547,7 +547,7 @@ impl AgentDriverRunner {
         // Ensure we've synced team state before starting the driver.
         Self::refresh_team_metadata(&foreground).await?;
 
-        // Wait for Warp Drive to sync before building the task config, since
+        // Wait for Zterm Drive to sync before building the task config, since
         // prompt resolution (SavedPrompt -> workflow lookup) and environment
         // resolution (CloudAmbientAgentEnvironment lookup) depend on it.
         if foreground
@@ -556,7 +556,7 @@ impl AgentDriverRunner {
             .await
             .is_err()
         {
-            return Err(AgentDriverError::WarpDriveSyncFailed);
+            return Err(AgentDriverError::ZtermDriveSyncFailed);
         }
 
         // Extract the task ID if available, so that if there are setup errors and we have
@@ -1301,7 +1301,7 @@ fn launch_command(
         return dispatch_command(ctx, command, global_options);
     }
 
-    let cli_name = warp_cli::binary_name().unwrap_or_else(|| "warp".to_string());
+    let cli_name = zterm_cli::binary_name().unwrap_or_else(|| "warp".to_string());
 
     let auth_state = AuthStateProvider::handle(ctx).as_ref(ctx).get();
     if !auth_state.is_logged_in() {
@@ -1328,7 +1328,7 @@ fn launch_command(
                 dispatched = true;
                 let auth_state = AuthStateProvider::handle(ctx).as_ref(ctx).get();
                 let message = if auth_state.is_api_key_authenticated() {
-                    "Your API key is invalid. Please provide a valid key via '--api-key' or the WARP_API_KEY environment variable.".to_string()
+                    "Your API key is invalid. Please provide a valid key via '--api-key' or the ZTERM_API_KEY environment variable.".to_string()
                 } else {
                     format!("Your credentials are invalid. Please log in again with `{cli_name} login`.")
                 };

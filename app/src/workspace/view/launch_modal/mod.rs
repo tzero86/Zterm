@@ -13,27 +13,27 @@ use crate::workspace::view::launch_modal::cta_button::{CTAButton, CTAButtonActio
 use markdown_parser::{parse_markdown, FormattedText, FormattedTextLine};
 use pathfinder_color::ColorU;
 use std::collections::HashMap;
-use warp_core::ui::appearance::Appearance;
-use warp_core::ui::theme::Fill;
-use warpui::assets::asset_cache::AssetSource;
-use warpui::elements::{
+use zterm_core::ui::appearance::Appearance;
+use zterm_core::ui::theme::Fill;
+use zterm_ui::assets::asset_cache::AssetSource;
+use zterm_ui::elements::{
     Align, Border, CacheOption, ChildAnchor, Clipped, ConstrainedBox, Container, CornerRadius,
     CrossAxisAlignment, DropShadow, Empty, Expanded, Flex, FormattedTextElement,
     HighlightedHyperlink, Hoverable, HyperlinkLens, Image, MainAxisAlignment, MainAxisSize,
     MouseStateHandle, OffsetPositioning, ParentAnchor, ParentElement, ParentOffsetBounds, Radius,
     Shrinkable, SizeConstraintCondition, SizeConstraintSwitch, Stack,
 };
-use warpui::fonts::Weight;
-use warpui::keymap::FixedBinding;
-use warpui::platform::Cursor;
-use warpui::presenter::ChildView;
-use warpui::ui_components::components::UiComponent;
-use warpui::{
+use zterm_ui::fonts::Weight;
+use zterm_ui::keymap::FixedBinding;
+use zterm_ui::platform::Cursor;
+use zterm_ui::presenter::ChildView;
+use zterm_ui::ui_components::components::UiComponent;
+use zterm_ui::{
     AppContext, Element, Entity, SingletonEntity, TypedActionView, View, ViewContext, ViewHandle,
 };
 
 pub fn init<S: Slide>(app: &mut AppContext) {
-    use warpui::keymap::macros::*;
+    use zterm_ui::keymap::macros::*;
 
     app.register_fixed_bindings([
         FixedBinding::new("escape", LaunchModalAction::<S>::Close, id!("LaunchModal")),
@@ -371,7 +371,7 @@ impl<S: Slide> LaunchModal<S> {
                                         .with_child(
                                             Container::new(
                                                 ConstrainedBox::new(
-                                                    icon.to_warpui_icon(Fill::Solid(
+                                                    icon.to_zterm_ui_icon(Fill::Solid(
                                                         blended_colors::text_main(
                                                             theme,
                                                             blended_colors::neutral_2(theme),

@@ -8,7 +8,7 @@
 //!
 //! The view owns:
 //! - a child [`KeyboardNavigableButtons`] handle for the two selectable
-//!   cards ("Install Warp's SSH extension" / "Continue without installing"),
+//!   cards ("Install Zterm's SSH extension" / "Continue without installing"),
 //! - the [`SessionId`] this prompt is scoped to (used for event forwarding),
 //! - the current "Don't ask me this again" checked state (purely local to
 //!   this prompt instance; persisted to `ssh_extension_install_mode` only
@@ -17,8 +17,8 @@
 //! Dismissing the block (on click of either option, or when the session is
 //! deregistered) is the parent's responsibility.
 use settings::Setting;
-use warp_core::ui::theme::color::internal_colors;
-use warpui::{
+use zterm_core::ui::theme::color::internal_colors;
+use zterm_ui::{
     elements::{
         Border, ChildView, Container, CornerRadius, CrossAxisAlignment, Flex, Hoverable,
         MainAxisAlignment, MainAxisSize, MouseStateHandle, ParentElement, Radius, Text,
@@ -37,7 +37,7 @@ use crate::{
     send_telemetry_from_ctx,
     server::telemetry::TelemetryEvent,
     terminal::model::session::SessionId,
-    terminal::warpify::settings::{SshExtensionInstallMode, WarpifySettings},
+    terminal::warpify::settings::{SshExtensionInstallMode, ZtermifySettings},
     ui_components::blended_colors,
     Appearance,
 };
@@ -49,14 +49,14 @@ pub enum SshRemoteServerChoiceViewAction {
     Install,
     Skip,
     ToggleDoNotAskAgain,
-    OpenWarpifySettings,
+    OpenZtermifySettings,
 }
 
 #[derive(Clone, Debug)]
 pub enum SshRemoteServerChoiceViewEvent {
     Install,
     Skip,
-    OpenWarpifySettings,
+    OpenZtermifySettings,
 }
 
 /// Choice block prompting the user to install the remote-server binary on the remote host or skip.
@@ -75,9 +75,9 @@ impl SshRemoteServerChoiceView {
         let buttons = ctx.add_typed_action_view(|_| {
             KeyboardNavigableButtons::new(vec![
                 rich_navigation_button(
-                    "Install Warp's SSH extension".to_string(),
+                    "Install Zterm's SSH extension".to_string(),
                     Some(
-                        "Install Warp's extension to enable agent features like file browsing, \
+                        "Install Zterm's extension to enable agent features like file browsing, \
                          code review, and intelligent command completions in this session."
                             .to_string(),
                     ),
@@ -172,14 +172,14 @@ impl SshRemoteServerChoiceView {
             .with_child(Container::new(checkbox_label).with_margin_left(4.).finish())
             .finish();
 
-        // Right: "Manage Warpify settings" link.
+        // Right: "Manage Ztermify settings" link.
         let manage_settings_link = appearance
             .ui_builder()
             .link(
-                "Manage Warpify settings".into(),
+                "Manage Ztermify settings".into(),
                 None,
                 Some(Box::new(|ctx| {
-                    ctx.dispatch_typed_action(SshRemoteServerChoiceViewAction::OpenWarpifySettings);
+                    ctx.dispatch_typed_action(SshRemoteServerChoiceViewAction::OpenZtermifySettings);
                 })),
                 self.manage_settings_mouse_state.clone(),
             )
@@ -265,7 +265,7 @@ impl TypedActionView for SshRemoteServerChoiceView {
             SshRemoteServerChoiceViewAction::Install => {
                 if self.do_not_ask_again {
                     let mode = SshExtensionInstallMode::AlwaysInstall;
-                    WarpifySettings::handle(ctx).update(ctx, |settings, ctx| {
+                    ZtermifySettings::handle(ctx).update(ctx, |settings, ctx| {
                         if let Err(e) = settings.ssh_extension_install_mode.set_value(mode, ctx) {
                             log::error!("Failed to persist ssh_extension_install_mode: {e}");
                         }
@@ -282,7 +282,7 @@ impl TypedActionView for SshRemoteServerChoiceView {
             SshRemoteServerChoiceViewAction::Skip => {
                 if self.do_not_ask_again {
                     let mode = SshExtensionInstallMode::NeverInstall;
-                    WarpifySettings::handle(ctx).update(ctx, |settings, ctx| {
+                    ZtermifySettings::handle(ctx).update(ctx, |settings, ctx| {
                         if let Err(e) = settings.ssh_extension_install_mode.set_value(mode, ctx) {
                             log::error!("Failed to persist ssh_extension_install_mode: {e}");
                         }
@@ -306,8 +306,8 @@ impl TypedActionView for SshRemoteServerChoiceView {
                 );
                 ctx.notify();
             }
-            SshRemoteServerChoiceViewAction::OpenWarpifySettings => {
-                ctx.emit(SshRemoteServerChoiceViewEvent::OpenWarpifySettings);
+            SshRemoteServerChoiceViewAction::OpenZtermifySettings => {
+                ctx.emit(SshRemoteServerChoiceViewEvent::OpenZtermifySettings);
             }
         }
     }

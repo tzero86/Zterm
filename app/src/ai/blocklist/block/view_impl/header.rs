@@ -1,12 +1,12 @@
-//! Renders the AI block "header", which includes a version of the AI "prompt" as it was rendered
+﻿//! Renders the AI block "header", which includes a version of the AI "prompt" as it was rendered
 //! when the query was submitted.
-use warp_core::features::FeatureFlag;
-use warp_util::path::user_friendly_path;
-use warpui::elements::MouseStateHandle;
-use warpui::elements::{ChildView, Hoverable, SavePosition};
-use warpui::platform::Cursor;
-use warpui::EntityId;
-use warpui::{
+use zterm_core::features::FeatureFlag;
+use zterm_util::path::user_friendly_path;
+use zterm_ui::elements::MouseStateHandle;
+use zterm_ui::elements::{ChildView, Hoverable, SavePosition};
+use zterm_ui::platform::Cursor;
+use zterm_ui::EntityId;
+use zterm_ui::{
     elements::{
         ConstrainedBox, Container, CornerRadius, CrossAxisAlignment, Flex, MainAxisAlignment,
         MainAxisSize, ParentElement, Radius, Text,
@@ -22,11 +22,11 @@ use crate::ai::blocklist::{
 };
 use crate::appearance::Appearance;
 use crate::terminal::block_list_element::render_hoverable_block_button;
-use crate::terminal::view::{TerminalAction, WARP_PROMPT_HEIGHT_LINES};
+use crate::terminal::view::{TerminalAction, ZTERM_PROMPT_HEIGHT_LINES};
 use crate::ui_components::blended_colors;
 use crate::ui_components::icons::Icon;
 use crate::view_components::action_button::ActionButton;
-use warpui::elements::Icon as ElementIcon;
+use zterm_ui::elements::Icon as ElementIcon;
 
 /// Data required to render the AI block header.
 pub(super) struct Props<'a> {
@@ -163,7 +163,7 @@ fn render_attached_context_chip(
                         Container::new(
                             ConstrainedBox::new(
                                 Icon::Paperclip
-                                    .to_warpui_icon(block_count_color.into())
+                                    .to_zterm_ui_icon(block_count_color.into())
                                     .finish(),
                             )
                             .with_height(font_size)
@@ -258,5 +258,5 @@ pub(super) fn render_overflow_menu_button(
 ///
 /// This matches the font size used for the warp prompt in completed command blocks.
 fn prompt_font_size(appearance: &Appearance) -> f32 {
-    appearance.monospace_font_size() * WARP_PROMPT_HEIGHT_LINES
+    appearance.monospace_font_size() * ZTERM_PROMPT_HEIGHT_LINES
 }

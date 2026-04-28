@@ -1,6 +1,6 @@
 use pathfinder_color::ColorU;
-use warpui::elements::Align;
-use warpui::Element;
+use zterm_ui::elements::Align;
+use zterm_ui::Element;
 
 use crate::visuals::onboarding_visual::Rect;
 

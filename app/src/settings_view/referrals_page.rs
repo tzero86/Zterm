@@ -1,4 +1,4 @@
-use lazy_static::lazy_static;
+﻿use lazy_static::lazy_static;
 use markdown_parser::{FormattedText, FormattedTextFragment, FormattedTextLine};
 use pathfinder_color::ColorU;
 use pathfinder_geometry::vector::Vector2F;
@@ -24,7 +24,7 @@ use crate::{
     ui_components::blended_colors,
     view_components::ToastFlavor,
 };
-use warpui::{
+use zterm_ui::{
     clipboard::ClipboardContent,
     elements::{
         Align, Border, ConstrainedBox, Container, CornerRadius, CrossAxisAlignment, Element, Fill,

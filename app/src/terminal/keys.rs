@@ -1,6 +1,6 @@
-//! Utilities for terminal keybindings.
+﻿//! Utilities for terminal keybindings.
 
-use warpui::{Entity, ModelContext, SingletonEntity};
+use zterm_ui::{Entity, ModelContext, SingletonEntity};
 
 use crate::{
     settings_view::keybindings::{KeybindingChangedEvent, KeybindingChangedNotifier},

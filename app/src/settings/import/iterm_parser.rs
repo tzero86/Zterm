@@ -6,8 +6,8 @@ use itertools::Itertools;
 use palette::Srgba;
 use pathfinder_color::ColorU;
 use plist::{Dictionary, Value};
-use warp_core::ui::theme::{AnsiColors, TerminalColors, WarpTheme};
-use warpui::{
+use zterm_core::ui::theme::{AnsiColors, TerminalColors, ZtermTheme};
+use zterm_ui::{
     fonts::FontInfo, keymap::Keystroke, platform::mac::utils::unicode_char_to_key, DisplayIdx,
 };
 
@@ -37,7 +37,7 @@ extern crate plist;
 const ITERM_DEFAULT_MONOSPACE_FONT_SIZE: &str = "12";
 const ITERM_DEFAULT_MONOSPACE_FONT_FAMILY: &str = "Monaco";
 
-const WARP_DEFAULT_WORKING_DIRECTORY: ITermWorkingDirectoryStrategy =
+const ZTERM_DEFAULT_WORKING_DIRECTORY: ITermWorkingDirectoryStrategy =
     ITermWorkingDirectoryStrategy::Simple(ITermWorkingDirectory::ReuseLast);
 
 const PIN_TOP: i64 = 2;
@@ -126,7 +126,7 @@ impl ITermTheme {
         mut self,
         suffix: &'static str,
         default_theme: &ITermTheme,
-    ) -> Result<WarpTheme, ThemeError> {
+    ) -> Result<ZtermTheme, ThemeError> {
         if self.foreground == default_theme.foreground
             || self.background == default_theme.background
         {
@@ -149,7 +149,7 @@ impl ITermTheme {
 
         let accent = calculate_accent_color(background, foreground, cursor, bright);
 
-        Ok(WarpTheme::new(
+        Ok(ZtermTheme::new(
             background.into(),
             foreground,
             accent.into(),
@@ -828,12 +828,12 @@ impl ParseableConfig for ITermProfile {
         }
 
         if self.working_directory == default_profile.working_directory
-            || self.working_directory == Some(WARP_DEFAULT_WORKING_DIRECTORY)
+            || self.working_directory == Some(ZTERM_DEFAULT_WORKING_DIRECTORY)
         {
             self.working_directory = None;
         }
 
-        // Warp's default is not to open windows with a custom size,
+        // Zterm's default is not to open windows with a custom size,
         // so there is nothing to check against.
         if self.rows == default_profile.rows {
             self.rows = None;

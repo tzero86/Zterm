@@ -1,9 +1,9 @@
-use std::sync::LazyLock;
+﻿use std::sync::LazyLock;
 
 use ipc::ServerBuilder;
 use parking_lot::Mutex;
-use warp_core::channel::ChannelState;
-use warpui::{Entity, ModelContext, SingletonEntity};
+use zterm_core::channel::ChannelState;
+use zterm_ui::{Entity, ModelContext, SingletonEntity};
 
 use windows::core::Error;
 use windows::Win32::Foundation::{CloseHandle, GetLastError, ERROR_ALREADY_EXISTS, HANDLE};
@@ -82,7 +82,7 @@ fn try_create_mutex() -> Result<Option<MutexHandle>, Error> {
         })
 }
 
-/// A singleton model that is responsible for ensuring there is only one instance of Warp running.
+/// A singleton model that is responsible for ensuring there is only one instance of Zterm running.
 /// Uses a Windows named mutex (via `CreateMutexW`) which is a kernel object automatically cleaned
 /// up by the OS when all handles are closed, including on crash.
 pub(super) struct SingleInstanceManager {
@@ -130,7 +130,7 @@ impl SingleInstanceManager {
         }
     }
 
-    /// Returns whether or not this process should be treated as the main instance of Warp.
+    /// Returns whether or not this process should be treated as the main instance of Zterm.
     ///
     /// NOTE: If an unexpected error occurs, we return `true` since it's better to open a second
     /// instance than to fail to create a first instance.

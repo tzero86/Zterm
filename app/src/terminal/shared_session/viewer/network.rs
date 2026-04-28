@@ -1,4 +1,4 @@
-//! The model that interfaces with the network to
+﻿//! The model that interfaces with the network to
 //! connect to and communicate with the shared session.
 //! Adheres to the [`session-sharing-protocol`].
 
@@ -6,7 +6,7 @@ use anyhow::bail;
 use async_channel::Receiver;
 use instant::Instant;
 use std::{pin::pin, sync::Arc};
-use warpui::r#async::{SpawnedFutureHandle, Timer};
+use zterm_ui::r#async::{SpawnedFutureHandle, Timer};
 
 use futures_util::{stream::AbortHandle, SinkExt, StreamExt};
 
@@ -32,8 +32,8 @@ use session_sharing_protocol::{
 };
 
 use std::time::Duration;
-use warp_core::features::FeatureFlag;
-use warpui::{
+use zterm_core::features::FeatureFlag;
+use zterm_ui::{
     Entity, ModelContext, ModelHandle, RequestState, RetryOption, SingletonEntity, WeakViewHandle,
 };
 use websocket::{Message, Sink, Stream, WebsocketMessage as _};

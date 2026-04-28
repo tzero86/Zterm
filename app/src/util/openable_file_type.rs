@@ -1,10 +1,10 @@
-//! File type detection utilities for determining if files can be opened in Warp.
+﻿//! File type detection utilities for determining if files can be opened in Warp.
 
 #[cfg(feature = "local_fs")]
 use crate::util::file::external_editor::{settings::EditorChoice, Editor, EditorSettings};
 use serde::{Deserialize, Serialize};
 use std::path::Path;
-pub use warp_util::file_type::{is_binary_file, is_file_content_binary, is_markdown_file};
+pub use zterm_util::file_type::{is_binary_file, is_file_content_binary, is_markdown_file};
 
 #[derive(
     Debug,

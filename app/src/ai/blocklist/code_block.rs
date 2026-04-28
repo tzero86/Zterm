@@ -1,4 +1,4 @@
-use crate::ai::blocklist::inline_action::inline_action_header::{
+﻿use crate::ai::blocklist::inline_action::inline_action_header::{
     INLINE_ACTION_HEADER_VERTICAL_PADDING, INLINE_ACTION_HORIZONTAL_PADDING,
 };
 use crate::ai::blocklist::inline_action::inline_action_icons::icon_size;
@@ -6,9 +6,9 @@ use crate::code::editor_management::CodeSource;
 use crate::search::files::icon::icon_from_file_path;
 use crate::search::ItemHighlightState;
 use std::iter;
-use warp_core::ui::theme::Fill;
-use warpui::elements::{ChildView, HighlightedRange, MouseStateHandle};
-use warpui::{
+use zterm_core::ui::theme::Fill;
+use zterm_ui::elements::{ChildView, HighlightedRange, MouseStateHandle};
+use zterm_ui::{
     elements::{
         Border, ConstrainedBox, Container, CornerRadius, CrossAxisAlignment, Empty, Expanded, Flex,
         MainAxisAlignment, MainAxisSize, ParentElement, Radius, Shrinkable, Text,
@@ -16,7 +16,7 @@ use warpui::{
     ui_components::components::UiComponent,
     AppContext, Element, SingletonEntity,
 };
-use warpui::{EventContext, ViewHandle};
+use zterm_ui::{EventContext, ViewHandle};
 
 use crate::code::editor::view::CodeEditorView;
 use crate::ui_components::blended_colors;

@@ -1,7 +1,7 @@
 use std::sync::LazyLock;
 
-use warp_core::ui::appearance::Appearance;
-use warpui::{
+use zterm_core::ui::appearance::Appearance;
+use zterm_ui::{
     elements::{MouseStateHandle, Rect},
     prelude::{stack::*, *},
 };

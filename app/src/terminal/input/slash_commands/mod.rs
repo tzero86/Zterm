@@ -6,11 +6,11 @@ pub use data_source::*;
 pub use view::*;
 
 use ai::skills::SkillReference;
-use warp_core::features::FeatureFlag;
-use warp_core::send_telemetry_from_ctx;
-use warp_core::ui::appearance::Appearance;
-use warpui::clipboard::ClipboardContent;
-use warpui::{SingletonEntity, ViewContext};
+use zterm_core::features::FeatureFlag;
+use zterm_core::send_telemetry_from_ctx;
+use zterm_core::ui::appearance::Appearance;
+use zterm_ui::clipboard::ClipboardContent;
+use zterm_ui::{SingletonEntity, ViewContext};
 
 use crate::ai::blocklist::agent_view::{
     AgentViewEntryOrigin, DismissalStrategy, EphemeralMessage, ENTER_OR_EXIT_CONFIRMATION_WINDOW,
@@ -253,7 +253,7 @@ impl Input {
 
                 self.show_workflows_info_box_on_workflow_selection(
                     WorkflowType::Cloud(Box::new(workflow)),
-                    WorkflowSource::WarpAI,
+                    WorkflowSource::ZtermAI,
                     WorkflowSelectionSource::SlashMenu,
                     None,
                     ctx,
@@ -451,7 +451,7 @@ impl Input {
                 match argument {
                     Some(args) if !args.is_empty() => {
                         use shellexpand::tilde;
-                        use warp_util::path::CleanPathResult;
+                        use zterm_util::path::CleanPathResult;
 
                         let Some(session_id) = self.active_block_session_id() else {
                             return false;

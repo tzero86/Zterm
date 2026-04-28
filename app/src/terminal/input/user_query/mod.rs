@@ -1,4 +1,4 @@
-//! Inline menu for selecting user queries from a conversation.
+﻿//! Inline menu for selecting user queries from a conversation.
 //! Used by the `/fork-from` slash command to let users select which query to fork from.
 
 mod data_source;
@@ -8,8 +8,8 @@ mod view;
 pub use data_source::SelectUserQuery;
 pub use view::{UserQueryMenuEvent, UserQueryMenuView};
 
-use warpui::keymap::Keystroke;
-use warpui::platform::OperatingSystem;
+use zterm_ui::keymap::Keystroke;
+use zterm_ui::platform::OperatingSystem;
 
 use crate::terminal::input::inline_menu::{
     default_navigation_message_items, InlineMenuAction, InlineMenuMessageArgs, InlineMenuRowAction,

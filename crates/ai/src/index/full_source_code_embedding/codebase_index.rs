@@ -7,8 +7,8 @@ use ignore::gitignore::Gitignore;
 use repo_metadata::entry::IgnoredPathStrategy;
 use repo_metadata::Repository;
 use std::{path::Path, sync::Arc};
-use warp_core::safe_error;
-use warpui::{Entity, ModelContext, ModelHandle};
+use zterm_core::safe_error;
+use zterm_ui::{Entity, ModelContext, ModelHandle};
 
 use super::{
     fragment_metadata::{FragmentMetadata, LeafToFragmentMetadata, LeafToFragmentMetadataUpdates},
@@ -46,11 +46,11 @@ cfg_if::cfg_if! {
             full_source_code_embedding::sync_client::CodebaseIndexSyncOperation,
             full_source_code_embedding::FragmentLocation
         };
-        use warp_core::send_telemetry_from_ctx;
-        use warp_core::interval_timer::IntervalTimer;
-        use warpui::r#async::Timer;
-        use warpui::SingletonEntity;
-        use warp_core::sync_queue::SyncQueue;
+        use zterm_core::send_telemetry_from_ctx;
+        use zterm_core::interval_timer::IntervalTimer;
+        use zterm_ui::r#async::Timer;
+        use zterm_ui::SingletonEntity;
+        use zterm_core::sync_queue::SyncQueue;
         use sha2::Digest;
     }
 }
@@ -584,7 +584,7 @@ impl CodebaseIndex {
         let mut flushed_fragment_result = FlushFragmentResult::default();
 
         if !changed_files.deletions().is_empty() {
-            if warp_core::channel::ChannelState::enable_debug_features() {
+            if zterm_core::channel::ChannelState::enable_debug_features() {
                 log::info!(
                     "Trying to remove changed files: {:?}",
                     changed_files.deletions()
@@ -650,7 +650,7 @@ impl CodebaseIndex {
         }
 
         if !changed_files.upsertions.is_empty() {
-            if warp_core::channel::ChannelState::enable_debug_features() {
+            if zterm_core::channel::ChannelState::enable_debug_features() {
                 log::debug!(
                     "Trying to upsert changed files: {:?}",
                     &changed_files.upsertions

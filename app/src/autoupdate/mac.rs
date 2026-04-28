@@ -1,4 +1,4 @@
-#![allow(deprecated)]
+﻿#![allow(deprecated)]
 
 use command::{blocking, r#async::Command};
 use futures::{StreamExt, TryStreamExt as _};
@@ -13,14 +13,14 @@ use std::{
     str,
     time::Duration,
 };
-use warp_core::safe_error;
+use zterm_core::safe_error;
 
 use anyhow::{anyhow, bail, ensure, Context, Result};
 use channel_versions::VersionInfo;
 use nix::unistd::{fchown, getgid};
 use nix::{errno::Errno, unistd::getuid};
-use warp_core::macos::get_bundle_path;
-use warpui::{AppContext, ModelContext, SingletonEntity};
+use zterm_core::macos::get_bundle_path;
+use zterm_ui::{AppContext, ModelContext, SingletonEntity};
 
 use crate::{
     appearance::AppearanceManager,
@@ -45,7 +45,7 @@ const OLD_EXECUTABLE_FILE_NAME: &str = "old";
 const PERMISSIONS_TMP_FILE_NAME: &str = "permission_test";
 
 fn old_executable_file_path() -> PathBuf {
-    warp_core::paths::state_dir().join(OLD_EXECUTABLE_FILE_NAME)
+    zterm_core::paths::state_dir().join(OLD_EXECUTABLE_FILE_NAME)
 }
 
 /// Removes the old executable dir from the app bundle. This is necessary because after an
@@ -138,17 +138,17 @@ pub(super) fn relaunch() -> Result<()> {
     let bundle_path = PathBuf::from(get_bundle_path()?);
     // Set the -n option to open a new instance of the app even if one is
     // running so we still launch the new version even if the user was running
-    // multiple instances of Warp.
+    // multiple instances of Zterm.
     let mut launch_command = OsString::from("/usr/bin/open -n ");
     launch_command.push(bundle_path.as_os_str());
     // Pass a flag to the app to let it know it was restarted as part of the
     // autoupdate process.
-    launch_command.push(format!(" --args {}", warp_cli::finish_update_flag()));
+    launch_command.push(format!(" --args {}", zterm_cli::finish_update_flag()));
     // If we're testing with a local copy of channel_versions.json, have the
     // newly-started binary also reference that same file (so we can test
     // displaying an updated changelog after an autoupdate).
-    if let Ok(path) = env::var("WARP_CHANNEL_VERSIONS_PATH") {
-        launch_command.push(format!(" --env WARP_CHANNEL_VERSIONS_PATH={path}"));
+    if let Ok(path) = env::var("ZTERM_CHANNEL_VERSIONS_PATH") {
+        launch_command.push(format!(" --env ZTERM_CHANNEL_VERSIONS_PATH={path}"));
     }
 
     // We need to make sure that the current Warp process is no longer running
@@ -190,7 +190,7 @@ pub async fn cleanup(update_id: &str) {
 /// This helps prevent accumulation of old update directories from failed downloads,
 /// race conditions, or incomplete cleanups.
 pub async fn cleanup_all_except(preserve_update_id: Option<&str>) {
-    let mut autoupdate_dir = warp_core::paths::cache_dir();
+    let mut autoupdate_dir = zterm_core::paths::cache_dir();
     autoupdate_dir.push("autoupdate");
 
     if !autoupdate_dir.exists() {
@@ -315,7 +315,7 @@ async fn verify_code_signature(component: &str, path: &Path) -> Result<()> {
         .arg("-v")
         .arg(format!(
             "-R=certificate leaf[subject.OU] = \"{}\"",
-            warp_core::macos::APPLE_TEAM_ID
+            zterm_core::macos::APPLE_TEAM_ID
         ))
         .arg(path)
         .output()
@@ -664,7 +664,7 @@ async fn download_dmg(
 }
 
 fn get_download_dir(update_id: &str) -> PathBuf {
-    let mut dir = warp_core::paths::cache_dir();
+    let mut dir = zterm_core::paths::cache_dir();
     dir.push("autoupdate");
     dir.push(update_id);
     dir
@@ -732,12 +732,12 @@ fn dmg_name(channel: Channel) -> String {
 
 fn app_name_prefix(channel: Channel) -> &'static str {
     match channel {
-        Channel::Stable => "Warp",
-        Channel::Preview => "WarpPreview",
+        Channel::Stable => "Zterm",
+        Channel::Preview => "ZtermPreview",
         Channel::Local => "warp",
         Channel::Integration => "integration",
-        Channel::Dev => "WarpDev",
-        Channel::Oss => "warp-oss",
+        Channel::Dev => "ZtermDev",
+        Channel::Oss => "zterm-oss",
     }
 }
 
@@ -748,7 +748,7 @@ fn executable_name(channel: Channel) -> &'static str {
         Channel::Local => "warp",
         Channel::Integration => "integration",
         Channel::Dev => "dev",
-        Channel::Oss => "warp-oss",
+        Channel::Oss => "zterm-oss",
     }
 }
 

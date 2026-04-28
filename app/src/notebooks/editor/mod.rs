@@ -4,8 +4,8 @@ use std::sync::Arc;
 
 use markdown_parser::markdown_parser::CODE_BLOCK_DEFAULT_MARKDOWN_LANG;
 use pathfinder_color::ColorU;
-use warp_core::ui::{builder::CHECK_SVG_PATH, theme::color::internal_colors};
-use warp_editor::{
+use zterm_core::ui::{builder::CHECK_SVG_PATH, theme::color::internal_colors};
+use zterm_editor::{
     content::text::{
         BlockHeaderSize, BlockType as ContentBlockType, BufferBlockStyle, CodeBlockType,
     },
@@ -14,8 +14,8 @@ use warp_editor::{
         ParagraphStyles, RichTextStyles, TableStyle, PARAGRAPH_MIN_HEIGHT,
     },
 };
-use warp_util::user_input::UserInput;
-use warpui::{elements::Border, fonts::FamilyId, ui_components::checkbox::HOVER_BACKGROUND_COLOR};
+use zterm_util::user_input::UserInput;
+use zterm_ui::{elements::Border, fonts::FamilyId, ui_components::checkbox::HOVER_BACKGROUND_COLOR};
 
 use crate::{
     appearance::Appearance,
@@ -40,7 +40,7 @@ mod omnibar;
 pub mod view;
 
 pub use block_insertion_menu::BlockInsertionSource;
-use warpui::elements::ListIndentLevel;
+use zterm_ui::elements::ListIndentLevel;
 
 const NOTEBOOK_LINE_HEIGHT_RATIO: f32 = 1.6;
 const NOTEBOOK_BASELINE_RATIO: f32 = 0.7;
@@ -330,7 +330,7 @@ impl<'a> From<&'a BufferBlockStyle> for BlockType {
 /// Wrapper around the shared [`Workflow`] type with additional context for workflows contained
 /// within a notebook.
 ///
-/// This may be a command block that's part of the notebook text, or an embedded Warp Drive workflow.
+/// This may be a command block that's part of the notebook text, or an embedded Zterm Drive workflow.
 #[derive(Debug, Clone, PartialEq)]
 pub struct NotebookWorkflow {
     /// Definition of the workflow itself.

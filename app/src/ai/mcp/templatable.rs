@@ -4,8 +4,8 @@ use chrono::DateTime;
 use handlebars::get_arguments;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
-use warp_core::ui::appearance::Appearance;
-use warpui::{AppContext, SingletonEntity as _};
+use zterm_core::ui::appearance::Appearance;
+use zterm_ui::{AppContext, SingletonEntity as _};
 
 use crate::{
     cloud_object::{
@@ -17,7 +17,7 @@ use crate::{
         GenericCloudObject, GenericStringObjectFormat, GenericStringObjectUniqueKey,
         JsonObjectType, Revision, ServerCloudObject, UniquePer,
     },
-    drive::items::WarpDriveItem,
+    drive::items::ZtermDriveItem,
     server::{datetime_ext::DateTimeExt, ids::SyncId, sync_queue::QueueItem},
 };
 
@@ -295,7 +295,7 @@ impl StringModel for TemplatableMCPServer {
         _id: SyncId,
         _appearance: &Appearance,
         _templatable_mcp_server: &CloudTemplatableMCPServer,
-    ) -> Option<Box<dyn WarpDriveItem>> {
+    ) -> Option<Box<dyn ZtermDriveItem>> {
         None
     }
 }

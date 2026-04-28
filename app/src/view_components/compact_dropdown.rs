@@ -1,4 +1,4 @@
-use super::dropdown::DropdownAction;
+﻿use super::dropdown::DropdownAction;
 use crate::{
     appearance::Appearance,
     menu::{Event as MenuEvent, Menu, MenuItem, MenuItemFields, MenuVariant},
@@ -6,7 +6,7 @@ use crate::{
     ui_components::icons::Icon,
 };
 use pathfinder_geometry::vector::vec2f;
-use warpui::{
+use zterm_ui::{
     elements::{
         Border, ChildAnchor, ConstrainedBox, CornerRadius, CrossAxisAlignment, Flex,
         Icon as WarpUiIcon, MainAxisAlignment, MouseStateHandle, OffsetPositioning, ParentElement,
@@ -130,7 +130,7 @@ impl<A: Action + Clone> CompactDropdown<A> {
                     .override_icon_color()
                     .unwrap_or_else(|| appearance.theme().active_ui_text_color());
                 button_label
-                    .add_child(self.render_sized_icon(appearance, icon.to_warpui_icon(icon_color)));
+                    .add_child(self.render_sized_icon(appearance, icon.to_zterm_ui_icon(icon_color)));
             }
         }
 

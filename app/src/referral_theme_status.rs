@@ -1,4 +1,4 @@
-use std::sync::Arc;
+﻿use std::sync::Arc;
 
 use crate::{
     auth::AuthStateProvider,
@@ -6,8 +6,8 @@ use crate::{
     server::server_api::referral::{ReferralInfo, ReferralsClient},
 };
 use serde::{Deserialize, Serialize};
-use warp_core::user_preferences::GetUserPreferences as _;
-use warpui::{Entity, ModelContext, SingletonEntity};
+use zterm_core::user_preferences::GetUserPreferences as _;
+use zterm_ui::{Entity, ModelContext, SingletonEntity};
 
 // Note: The name of this key is from before this model was created. For consistency, it should
 // remain the same value

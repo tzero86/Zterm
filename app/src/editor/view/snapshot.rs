@@ -1,4 +1,4 @@
-use super::model::EditorModel;
+﻿use super::model::EditorModel;
 use super::{
     AutosuggestionLocation, AutosuggestionState, AutosuggestionType,
     BaselinePositionComputationMethod, Bias, DisplayPoint, DrawableSelection, ScrollState,
@@ -26,19 +26,19 @@ use std::{
     ops::Range,
     sync::Arc,
 };
-use warp_completer::completer::Description;
-use warpui::text::point::Point;
+use zterm_completer::completer::Description;
+use zterm_ui::text::point::Point;
 
 use string_offset::ByteOffset;
 
-use warpui::fonts::{FamilyId, Properties};
-use warpui::platform::LineStyle;
-use warpui::text_layout::{
+use zterm_ui::fonts::{FamilyId, Properties};
+use zterm_ui::platform::LineStyle;
+use zterm_ui::text_layout::{
     default_compute_baseline_position_fn, ClipConfig, ComputeBaselinePositionFn, StyleAndFont,
     TextAlignment, TextStyle, DEFAULT_TOP_BOTTOM_RATIO,
 };
-use warpui::EntityId;
-use warpui::{
+use zterm_ui::EntityId;
+use zterm_ui::{
     fonts::Cache as FontCache,
     text_layout::{self, LayoutCache},
     AppContext, ModelHandle,

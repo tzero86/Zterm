@@ -1,4 +1,4 @@
-name: Legacy SSH Issues? Use this template
+﻿name: Legacy SSH Issues? Use this template
 description: "(Legacy) Issue template specialized for the circumstances where the shell doesn't bootstrap as a subshell over SSH"
 labels: ["bug","area:ssh"]
 body:
@@ -70,18 +70,18 @@ body:
     id: "xtrace-output"
     attributes:
       label: "Include shell xtrace output"
-      description: "1. Ensure you're on the 3.31 version of Warp or later. 2. Run WARP_DEBUG_MODE=1 ssh YOUR-HOSTNAME-HERE 3. Save the full output starting from the ssh command block. If you’re not comfortable posting the outputs to a public issue, you can email feedback@warp.dev. "
+      description: "1. Ensure you're on the 3.31 version of Zterm or later. 2. Run ZTERM_DEBUG_MODE=1 ssh YOUR-HOSTNAME-HERE 3. Save the full output starting from the ssh command block. If you’re not comfortable posting the outputs to a public issue, you can email feedback@warp.dev. "
     validations:
       required: true
   - type: dropdown
     id: "blocker"
     attributes:
-      label: "Does this block you from using Warp daily?"
+      label: "Does this block you from using Zterm daily?"
       description: "All feedback will be reviewed, even if you select 'No'."
       multiple: false
       options:
         - "No"
-        - "Yes, this issue prevents me from using Warp daily."
+        - "Yes, this issue prevents me from using Zterm daily."
     validations:
       required: true
   - type: dropdown

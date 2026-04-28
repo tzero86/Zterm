@@ -1,10 +1,10 @@
-use itertools::Itertools;
+﻿use itertools::Itertools;
 use std::{collections::HashMap, path::PathBuf, sync::Arc};
 
 use ai::skills::{ParsedSkill, SkillProvider, SkillScope};
 #[cfg(feature = "local_fs")]
-use warpui::assets::asset_cache::AssetSource;
-use warpui::App;
+use zterm_ui::assets::asset_cache::AssetSource;
+use zterm_ui::App;
 
 #[cfg(feature = "local_fs")]
 use super::{blocklist_image_asset_source, ResolvedBlocklistImageSources};
@@ -23,7 +23,7 @@ use crate::{
     search::slash_command_menu::static_commands::commands,
 };
 use ui_components::lightbox::{LightboxImage, LightboxImageSource};
-use warpui::{elements::Empty, Element};
+use zterm_ui::{elements::Empty, Element};
 
 #[test]
 fn query_prefix_highlight_len_highlights_invoke_skill_inputs() {

@@ -1,4 +1,4 @@
-use anyhow::{anyhow, Result};
+﻿use anyhow::{anyhow, Result};
 #[cfg(feature = "local_tty")]
 use futures::future::{BoxFuture, FutureExt};
 use std::{collections::HashMap, path::PathBuf, process::Stdio};
@@ -10,7 +10,7 @@ use crate::terminal::available_shells::AvailableShells;
 use crate::terminal::local_tty::shell::ShellStarterSourceOrWslName;
 #[cfg(feature = "local_tty")]
 use command::r#async::Command;
-use warpui::{Entity, ModelContext, SingletonEntity};
+use zterm_ui::{Entity, ModelContext, SingletonEntity};
 
 #[derive(Debug)]
 pub enum LocalShellState {

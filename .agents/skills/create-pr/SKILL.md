@@ -1,4 +1,4 @@
----
+﻿---
 name: create-pr
 description: Create a pull request in the warp repository for the current branch. Use when the user mentions opening a PR, creating a pull request, submitting changes for review, or preparing code for merge.
 ---
@@ -167,8 +167,8 @@ This provides high-level coverage over rendering "safety" (though not "correctne
 ```rust
 #[test]
 fn test_component_can_layout() {
-    use warpui::App;
-    use warp::test_util::{terminal::initialize_app_for_terminal_view, add_window_with_terminal};
+    use zterm_ui::App;
+    use zterm::test_util::{terminal::initialize_app_for_terminal_view, add_window_with_terminal};
     
     App::test((), |mut app| async move {
         initialize_app_for_terminal_view(&mut app);

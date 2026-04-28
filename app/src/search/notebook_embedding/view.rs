@@ -1,4 +1,4 @@
-use std::{collections::HashSet, ops::Range};
+﻿use std::{collections::HashSet, ops::Range};
 
 use crate::{
     appearance::Appearance,
@@ -12,7 +12,7 @@ use crate::{
 };
 use itertools::Itertools;
 use lazy_static::lazy_static;
-use warpui::{
+use zterm_ui::{
     elements::{
         Align, ConstrainedBox, Container, CornerRadius, Dismiss, Empty, Fill, Flex, ParentElement,
         Radius, SavePosition, ScrollStateHandle, Scrollable, ScrollableElement, Shrinkable,
@@ -333,7 +333,7 @@ impl View for EmbeddingSearchMenu {
         }
     }
 
-    fn render(&self, app: &AppContext) -> Box<dyn warpui::Element> {
+    fn render(&self, app: &AppContext) -> Box<dyn zterm_ui::Element> {
         let appearance = Appearance::as_ref(app);
 
         // So that everything lines up correctly, we apply the corner radius and border on the
@@ -377,7 +377,7 @@ impl View for EmbeddingSearchMenu {
 
 pub mod styles {
     use pathfinder_color::ColorU;
-    use warpui::elements::{Border, DropShadow, ScrollbarWidth};
+    use zterm_ui::elements::{Border, DropShadow, ScrollbarWidth};
 
     use crate::{appearance::Appearance, themes::theme::Fill};
 

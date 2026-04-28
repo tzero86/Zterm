@@ -1,4 +1,4 @@
-// `panic!` causes the app to crash before debug info can be exported. Use `AssertionOutcome::immediate_failure` instead.
+﻿// `panic!` causes the app to crash before debug info can be exported. Use `AssertionOutcome::immediate_failure` instead.
 #![deny(clippy::panic)]
 // `assert!` causes the app to crash before debug info can be exported. Use `integration_assert!` instead.
 #![deny(clippy::assertions_on_constants)]
@@ -16,8 +16,8 @@ use crate::{
     BlocklistAIHistoryModel,
 };
 use warp_multi_agent_api as api;
-use warpui::{integration::AssertionCallback, integration_assert, EntityId};
-use warpui::{integration::AssertionOutcome, SingletonEntity};
+use zterm_ui::{integration::AssertionCallback, integration_assert, EntityId};
+use zterm_ui::{integration::AssertionOutcome, SingletonEntity};
 
 type TextAssertion = Box<dyn Fn(&str) -> bool + 'static>;
 type ActionAssertion = Box<dyn Fn(&AIAgentActionType) -> bool + 'static>;

@@ -1,4 +1,4 @@
-//! SSH-specific implementation of [`RemoteTransport`].
+﻿//! SSH-specific implementation of [`RemoteTransport`].
 //!
 //! [`SshTransport`] uses an existing SSH ControlMaster socket to check/install
 //! the remote server binary and to launch the `remote-server-proxy` process
@@ -10,7 +10,7 @@ use std::process::Stdio;
 use std::sync::Arc;
 
 use anyhow::Result;
-use warpui::r#async::executor;
+use zterm_ui::r#async::executor;
 
 use remote_server::client::RemoteServerClient;
 use remote_server::setup::{self, RemotePlatform, CHECK_TIMEOUT, INSTALL_TIMEOUT};

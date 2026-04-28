@@ -1,4 +1,4 @@
-use crate::ai::agent::conversation::AIConversationId;
+﻿use crate::ai::agent::conversation::AIConversationId;
 use crate::ai::agent_management::telemetry::{AgentManagementTelemetryEvent, ArtifactType};
 use crate::ai::ambient_agents::{
     conversation_output_status_from_conversation, AmbientAgentTaskId, AmbientConversationStatus,
@@ -14,20 +14,20 @@ use crate::view_components::action_button::{ActionButton, PrimaryTheme};
 use crate::workspace::WorkspaceAction;
 use std::path::Path;
 #[cfg(not(target_family = "wasm"))]
-use warp_cli::agent::Harness;
-use warp_core::paths::home_relative_path;
+use zterm_cli::agent::Harness;
+use zterm_core::paths::home_relative_path;
 
 #[cfg(not(target_family = "wasm"))]
 use crate::ai::ambient_agents::AmbientAgentTask;
-use warp_core::send_telemetry_from_ctx;
-use warp_core::ui::icons::Icon;
-use warp_core::ui::theme::{AnsiColorIdentifier, Fill};
-use warpui::elements::{
+use zterm_core::send_telemetry_from_ctx;
+use zterm_core::ui::icons::Icon;
+use zterm_core::ui::theme::{AnsiColorIdentifier, Fill};
+use zterm_ui::elements::{
     Border, ChildView, ConstrainedBox, Container, CornerRadius, CrossAxisAlignment, Empty, Flex,
     MainAxisSize, Padding, ParentElement, Radius, Shrinkable, Text,
 };
-use warpui::fonts::{Properties, Weight};
-use warpui::{
+use zterm_ui::fonts::{Properties, Weight};
+use zterm_ui::{
     AppContext, Element, Entity, EntityId, SingletonEntity, TypedActionView, View, ViewContext,
     ViewHandle,
 };
@@ -263,7 +263,7 @@ impl ConversationEndedTombstoneView {
                         ctx
                     );
                     ctx.clipboard()
-                        .write(warpui::clipboard::ClipboardContent::plain_text(
+                        .write(zterm_ui::clipboard::ClipboardContent::plain_text(
                             branch.clone(),
                         ));
                 }
@@ -349,7 +349,7 @@ impl ConversationEndedTombstoneView {
             Fill::Solid(theme.ansi_fg_green())
         };
         let icon_element = Container::new(
-            ConstrainedBox::new(icon.to_warpui_icon(icon_color).finish())
+            ConstrainedBox::new(icon.to_zterm_ui_icon(icon_color).finish())
                 .with_height(14.)
                 .with_width(14.)
                 .finish(),
@@ -477,7 +477,7 @@ impl ConversationEndedTombstoneView {
         #[cfg(not(target_family = "wasm"))]
         {
             // Hide for non-Oz harnesses (e.g. Claude, Gemini): they can't be
-            // forked into a local Warp conversation. Unknown harness (None) is
+            // forked into a local Zterm conversation. Unknown harness (None) is
             // treated as allowed so plain conversations and pre-load tasks still
             // show the button.
             let harness_allows_continue =
@@ -496,7 +496,7 @@ impl ConversationEndedTombstoneView {
         #[cfg(target_family = "wasm")]
         {
             // Don't show on mobile devices - they can't use the desktop app
-            if !warpui::platform::wasm::is_mobile_device() {
+            if !zterm_ui::platform::wasm::is_mobile_device() {
                 if let Some(ref open_in_warp_button) = self.open_in_warp_button {
                     row.add_child(ChildView::new(open_in_warp_button).finish());
                     has_button = true;

@@ -1,4 +1,4 @@
-//! Inline plan menu for selecting among multiple AI document plans.
+﻿//! Inline plan menu for selecting among multiple AI document plans.
 mod data_source;
 mod search_item;
 mod view;
@@ -6,7 +6,7 @@ mod view;
 pub use view::{InlinePlanMenuEvent, InlinePlanMenuView};
 
 use ai::document::AIDocumentId;
-use warpui::keymap::Keystroke;
+use zterm_ui::keymap::Keystroke;
 
 use crate::ai::document::ai_document_model::AIDocumentVersion;
 use crate::terminal::input::inline_menu::{

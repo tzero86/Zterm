@@ -17,7 +17,7 @@ use std::{
     sync::Arc,
 };
 use vec1::{Vec1, vec1};
-use warp_util::content_version::ContentVersion;
+use zterm_util::content_version::ContentVersion;
 
 use super::{
     anchor::{Anchor, AnchorSide, Anchors},
@@ -34,7 +34,7 @@ use super::{
     undo::{NonAtomicType, UndoActionType, UndoArg, UndoStack},
     validation::validate_content,
 };
-use warp_core::{platform::SessionPlatform, safe_error};
+use zterm_core::{platform::SessionPlatform, safe_error};
 
 use crate::{
     content::{
@@ -53,9 +53,9 @@ use crate::{
 use enum_iterator::all;
 use string_offset::{ByteOffset, CharOffset};
 use sum_tree::{SeekBias, SumTree};
-use warpui::{AppContext, Entity, ModelContext};
-use warpui::{EntityId, ModelHandle, elements::ListIndentLevel};
-use warpui::{
+use zterm_ui::{AppContext, Entity, ModelContext};
+use zterm_ui::{EntityId, ModelHandle, elements::ListIndentLevel};
+use zterm_ui::{
     fonts::Weight,
     text::{TextBuffer, char_slice, point::Point},
 };
@@ -836,7 +836,7 @@ impl Buffer {
         selection_model: ModelHandle<BufferSelectionModel>,
         ctx: &mut ModelContext<Self>,
     ) -> Self {
-        let parse_fn = if warp_core::features::FeatureFlag::MarkdownTables.is_enabled() {
+        let parse_fn = if zterm_core::features::FeatureFlag::MarkdownTables.is_enabled() {
             parse_markdown_with_gfm_tables
         } else {
             parse_markdown

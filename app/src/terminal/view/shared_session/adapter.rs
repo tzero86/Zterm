@@ -1,4 +1,4 @@
-//! An adapter to make session-sharing work with the [`TerminalView`].
+﻿//! An adapter to make session-sharing work with the [`TerminalView`].
 
 use super::sharer::Sharer;
 use super::viewer::Viewer;
@@ -21,9 +21,9 @@ use session_sharing_protocol::common::{ParticipantId, ParticipantList, Role, Ses
 use session_sharing_protocol::sharer::SessionSourceType;
 use std::collections::{HashMap, HashSet};
 use std::time::Duration;
-use warp_core::features::FeatureFlag;
-use warpui::{elements::MouseStateHandle, ModelHandle, ViewContext, ViewHandle};
-use warpui::{AppContext, Element};
+use zterm_core::features::FeatureFlag;
+use zterm_ui::{elements::MouseStateHandle, ModelHandle, ViewContext, ViewHandle};
+use zterm_ui::{AppContext, Element};
 
 /// The kind of shared session this is.
 pub enum Kind {

@@ -34,10 +34,10 @@ use prost::Message;
 use referral::ReferralsClient;
 use team::TeamClient;
 use url::Url;
-use warp_core::context_flag::ContextFlag;
-use warp_core::errors::{register_error, AnyhowErrorExt, ErrorExt};
-use warp_managed_secrets::client::ManagedSecretsClient;
-use warpui::{r#async::BoxFuture, ModelContext};
+use zterm_core::context_flag::ContextFlag;
+use zterm_core::errors::{register_error, AnyhowErrorExt, ErrorExt};
+use zterm_managed_secrets::client::ManagedSecretsClient;
+use zterm_ui::{r#async::BoxFuture, ModelContext};
 use workspace::WorkspaceClient;
 
 use crate::server::telemetry::TelemetryApi;
@@ -57,9 +57,9 @@ use std::borrow::Cow;
 use std::path::Path;
 use std::sync::Arc;
 use std::time::Duration;
-use warp_core::telemetry::TelemetryEvent;
-use warpui::Entity;
-use warpui::SingletonEntity;
+use zterm_core::telemetry::TelemetryEvent;
+use zterm_ui::Entity;
+use zterm_ui::SingletonEntity;
 
 use super::experiments::ServerExperiment;
 use super::experiments::ServerExperiments;
@@ -73,15 +73,15 @@ const EXPERIMENT_ID_HEADER: &str = "X-Warp-Experiment-Id";
 /// more specific error code information, so that the client can discern between different
 /// errors with the same error code.
 /// See errors/http_error_codes.go on the server for possible values.
-const WARP_ERROR_CODE_HEADER: &str = "X-Warp-Error-Code";
+const ZTERM_ERROR_CODE_HEADER: &str = "X-Warp-Error-Code";
 
 /// An error indicating the user is out of credits. The server sends 429s to communicate this
 /// state, but if Cloud Run is overloaded, it can also send 429s that aren't credit-related.
 /// So we use this to distinguish between the two cases.
-const WARP_ERROR_CODE_OUT_OF_CREDITS: &str = "OUT_OF_CREDITS";
+const ZTERM_ERROR_CODE_OUT_OF_CREDITS: &str = "OUT_OF_CREDITS";
 
 /// Error code indicating the user has reached their cloud agent concurrency limit.
-const WARP_ERROR_CODE_AT_CAPACITY: &str = "AT_CLOUD_AGENT_CAPACITY";
+const ZTERM_ERROR_CODE_AT_CAPACITY: &str = "AT_CLOUD_AGENT_CAPACITY";
 
 /// Header used to communicate the source of an agent run (e.g. "CLI", "GITHUB_ACTION").
 pub(crate) const AGENT_SOURCE_HEADER: &str = "X-Oz-Api-Source";
@@ -246,9 +246,9 @@ impl AIApiError {
     /// Returns the appropriate error for a 429 response by checking the X-Warp-Error-Code header.
     fn error_for_429(headers: &::http::HeaderMap) -> Self {
         if headers
-            .get(WARP_ERROR_CODE_HEADER)
+            .get(ZTERM_ERROR_CODE_HEADER)
             .and_then(|v| v.to_str().ok())
-            == Some(WARP_ERROR_CODE_OUT_OF_CREDITS)
+            == Some(ZTERM_ERROR_CODE_OUT_OF_CREDITS)
         {
             AIApiError::QuotaLimit
         } else {
@@ -381,7 +381,7 @@ pub struct ServerApi {
     // We technically use OAuth2 for headless device authentication.
     oauth_client: self::auth::OAuth2Client,
     /// Cached ambient workload token for requests from ambient agents.
-    ambient_workload_token: Arc<Mutex<Option<warp_isolation_platform::WorkloadToken>>>,
+    ambient_workload_token: Arc<Mutex<Option<zterm_isolation_platform::WorkloadToken>>>,
     /// The ambient agent task ID for requests from cloud agents.
     ambient_agent_task_id: Arc<RwLock<Option<AmbientAgentTaskId>>>,
     /// The source of agent runs (e.g. CLI, GitHub Action). Set once at startup and immutable.
@@ -487,7 +487,7 @@ impl ServerApi {
             .set_device_authorization_url(oauth2::DeviceAuthorizationUrl::from_url(device_url))
     }
 
-    pub fn send_graphql_request<'a, QF, O: warp_graphql::client::Operation<QF> + Send + 'a>(
+    pub fn send_graphql_request<'a, QF, O: zterm_graphql::client::Operation<QF> + Send + 'a>(
         &'a self,
         operation: O,
         timeout: Option<Duration>,
@@ -521,7 +521,7 @@ impl ServerApi {
                 headers.insert(name.to_string(), value);
             }
 
-            let options = warp_graphql::client::RequestOptions {
+            let options = zterm_graphql::client::RequestOptions {
                 auth_token: auth_token.bearer_token(),
                 timeout,
                 headers,
@@ -733,14 +733,14 @@ impl ServerApi {
         let status = response.status();
         let is_at_capacity = response
             .headers()
-            .get(WARP_ERROR_CODE_HEADER)
+            .get(ZTERM_ERROR_CODE_HEADER)
             .and_then(|v| v.to_str().ok())
-            == Some(WARP_ERROR_CODE_AT_CAPACITY);
+            == Some(ZTERM_ERROR_CODE_AT_CAPACITY);
         let is_out_of_credits = response
             .headers()
-            .get(WARP_ERROR_CODE_HEADER)
+            .get(ZTERM_ERROR_CODE_HEADER)
             .and_then(|v| v.to_str().ok())
-            == Some(WARP_ERROR_CODE_OUT_OF_CREDITS);
+            == Some(ZTERM_ERROR_CODE_OUT_OF_CREDITS);
 
         // Get the response text first since we may need to try multiple deserializations.
         let response_text = response.text().await.unwrap_or_default();
@@ -1048,9 +1048,9 @@ impl ServerApi {
                 } else if res.status() == http::StatusCode::TOO_MANY_REQUESTS {
                     if res
                         .headers()
-                        .get(WARP_ERROR_CODE_HEADER)
+                        .get(ZTERM_ERROR_CODE_HEADER)
                         .and_then(|v| v.to_str().ok())
-                        == Some(WARP_ERROR_CODE_OUT_OF_CREDITS)
+                        == Some(ZTERM_ERROR_CODE_OUT_OF_CREDITS)
                     {
                         Err(TranscribeError::QuotaLimit)
                     } else {
@@ -1210,7 +1210,7 @@ impl ServerApi {
         }
     }
 
-    /// Fetches updated Warp Channel Versions from Warp Server. If it is the first such request of
+    /// Fetches updated Warp Channel Versions from Zterm Server. If it is the first such request of
     /// the current calendar day, first attempts to call the '/client_version/daily'. If that call
     /// fails or if it not the first request of the calendar day, returns the result of a call to
     /// `/client_version'. The caller can specify whether or not changelog information should be
@@ -1231,9 +1231,9 @@ impl ServerApi {
             .append_pair("include_changelogs", &include_changelogs.to_string());
 
         if include_changelogs {
-            log::info!("Fetching channel versions and changelogs from Warp server");
+            log::info!("Fetching channel versions and changelogs from Zterm server");
         } else {
-            log::info!("Fetching channel versions (without changelogs) from Warp server");
+            log::info!("Fetching channel versions (without changelogs) from Zterm server");
         }
 
         let mut request_builder = self
@@ -1257,7 +1257,7 @@ impl ServerApi {
 
         let response = request_builder.send().await?;
         let versions: ChannelVersions = response.json().await?;
-        log::info!("Received channel versions from Warp server: {versions}");
+        log::info!("Received channel versions from Zterm server: {versions}");
         Ok(versions)
     }
 }

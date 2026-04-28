@@ -1,4 +1,4 @@
-use crate::ai::blocklist::agent_view::AgentViewState;
+﻿use crate::ai::blocklist::agent_view::AgentViewState;
 use crate::terminal::model::block::SerializedBlock;
 use crate::terminal::shared_session::tests::terminal_model_for_viewer;
 use crate::terminal::TerminalView;
@@ -13,8 +13,8 @@ use session_sharing_protocol::common::{
     OrderedTerminalEvent, OrderedTerminalEventType, Scrollback, ScrollbackBlock, WindowSize,
 };
 use std::sync::Arc;
-use warpui::units::Lines;
-use warpui::{App, ViewHandle};
+use zterm_ui::units::Lines;
+use zterm_ui::{App, ViewHandle};
 
 fn ordered_terminal_event_from_bytes(
     bytes: impl Into<Vec<u8>>,

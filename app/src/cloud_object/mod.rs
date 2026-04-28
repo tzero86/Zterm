@@ -24,8 +24,8 @@ use crate::{
     channel::ChannelState,
     drive::{
         folders::{CloudFolderModel, FolderId},
-        items::WarpDriveItem,
-        CloudObjectTypeAndId, OpenWarpDriveObjectArgs, OpenWarpDriveObjectSettings,
+        items::ZtermDriveItem,
+        CloudObjectTypeAndId, OpenZtermDriveObjectArgs, OpenZtermDriveObjectSettings,
     },
     env_vars::CloudEnvVarCollectionModel,
     notebooks::{CloudNotebookModel, NotebookId},
@@ -62,18 +62,18 @@ use std::{
     sync::Arc,
 };
 use url::Url;
-use warp_core::{channel::Channel, features::FeatureFlag};
-use warp_graphql::{
+use zterm_core::{channel::Channel, features::FeatureFlag};
+use zterm_graphql::{
     queries::get_updated_cloud_objects::UpdatedObjectInput, scalars::time::ServerTimestamp,
 };
-use warpui::{AppContext, SingletonEntity};
+use zterm_ui::{AppContext, SingletonEntity};
 
 pub mod breadcrumbs;
 pub mod grab_edit_access_modal;
 pub mod model;
 pub mod toast_message;
 
-pub use warp_server_client::cloud_object::*;
+pub use zterm_server_client::cloud_object::*;
 
 /// A CloudObject represents
 /// therefore shareable and editable (i.e. Notebooks and Workflows). In order
@@ -190,9 +190,9 @@ pub trait CloudObject: Debug {
         true
     }
 
-    /// Creates a new Warp Drive item for this object.  Returns None if this
-    /// object is not rendered in Warp Drive.
-    fn to_warp_drive_item(&self, appearance: &Appearance) -> Option<Box<dyn WarpDriveItem>>;
+    /// Creates a new Zterm Drive item for this object.  Returns None if this
+    /// object is not rendered in Zterm Drive.
+    fn to_warp_drive_item(&self, appearance: &Appearance) -> Option<Box<dyn ZtermDriveItem>>;
 
     /// Returns the web link of this object. Will return none if we do not support web links
     /// for this particular object (i.e. if it's not yet sync'd to the server, or if we don't
@@ -478,18 +478,18 @@ pub trait CloudModelType: Debug + Clone + Send + Sync {
     }
 
     /// Creates a new warp drive item for this model type. Returns None
-    /// if this object does not render in Warp Drive.
+    /// if this object does not render in Zterm Drive.
     fn to_warp_drive_item(
         &self,
         id: SyncId,
         appearance: &Appearance,
         object: &Self::CloudObjectType,
-    ) -> Option<Box<dyn WarpDriveItem>>;
+    ) -> Option<Box<dyn ZtermDriveItem>>;
 
-    /// Returns the display name for this model (e.g. to show in the Warp Drive index)
+    /// Returns the display name for this model (e.g. to show in the Zterm Drive index)
     fn display_name(&self) -> String;
 
-    /// Sets the display name to show in the Warp Drive Index.  Setting the name
+    /// Sets the display name to show in the Zterm Drive Index.  Setting the name
     /// is not currently supported by all object types, hence the default empty
     /// implementation.
     fn set_display_name(&mut self, _name: &str) {}
@@ -795,7 +795,7 @@ where
         self.model.renders_in_warp_drive()
     }
 
-    fn to_warp_drive_item(&self, appearance: &Appearance) -> Option<Box<dyn WarpDriveItem>> {
+    fn to_warp_drive_item(&self, appearance: &Appearance) -> Option<Box<dyn ZtermDriveItem>> {
         self.model.to_warp_drive_item(self.id, appearance, self)
     }
 
@@ -935,7 +935,7 @@ where
 /// can be opened natively in Warp with no web interaction.
 pub fn extract_server_id_and_object_type_from_warp_drive_link(
     url: &Url,
-) -> Option<OpenWarpDriveObjectArgs> {
+) -> Option<OpenZtermDriveObjectArgs> {
     let server_id = url
         .path_segments()
         .and_then(|mut segments| segments.next_back())
@@ -958,13 +958,13 @@ pub fn extract_server_id_and_object_type_from_warp_drive_link(
 
     let invitee_email: Option<String> = query_string.get("invitee_email").map(|s| s.to_string());
 
-    Some(OpenWarpDriveObjectArgs {
+    Some(OpenZtermDriveObjectArgs {
         object_type,
         server_id: match server_id {
             Some(server_id) => server_id.try_into().ok()?,
             _ => return None,
         },
-        settings: OpenWarpDriveObjectSettings {
+        settings: OpenZtermDriveObjectSettings {
             focused_folder_id,
             invitee_email,
         },

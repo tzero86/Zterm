@@ -1,9 +1,9 @@
-mod interaction_mode;
+﻿mod interaction_mode;
 mod serialized_block;
 
 pub use interaction_mode::*;
 pub use serialized_block::*;
-use warp_core::features::FeatureFlag;
+use zterm_core::features::FeatureFlag;
 
 use super::grid::grid_handler::{GridHandler, PerformResetGridChecks};
 use super::grid::{Cursor, RespectDisplayedOutput};
@@ -16,7 +16,7 @@ use super::selection::ScrollDelta;
 use super::session::{command_executor, Sessions};
 pub use super::BlockId;
 use super::{bootstrap::BootstrapStage, find::RegexDFAs};
-use warp_terminal::model::{KeyboardModes, KeyboardModesApplyBehavior};
+use zterm_terminal::model::{KeyboardModes, KeyboardModesApplyBehavior};
 
 use crate::ai::agent::conversation::AIConversationId;
 use crate::ai::blocklist::agent_view::{AgentViewDisplayMode, AgentViewState};
@@ -54,11 +54,11 @@ use hex;
 use instant::Instant;
 use pathfinder_color::ColorU;
 use pathfinder_geometry::vector::Vector2F;
-use warp_core::command::ExitCode;
-use warp_terminal::model::grid::Dimensions as _;
-use warp_util::path::user_friendly_path;
-use warpui::units::{IntoLines, Lines};
-use warpui::{r#async::executor::Background, record_trace_event};
+use zterm_core::command::ExitCode;
+use zterm_terminal::model::grid::Dimensions as _;
+use zterm_util::path::user_friendly_path;
+use zterm_ui::units::{IntoLines, Lines};
+use zterm_ui::{r#async::executor::Background, record_trace_event};
 
 use enum_iterator::all;
 use lazy_static::lazy_static;
@@ -1526,7 +1526,7 @@ impl Block {
     }
 
     /// Whether we render the prompt on the same line, in the context of a finished block. Post-same
-    /// line prompt, we render on the same line for PS1, but not for Warp prompt!
+    /// line prompt, we render on the same line for PS1, but not for Zterm prompt!
     pub fn render_prompt_on_same_line(&self) -> bool {
         self.honor_ps1()
     }
@@ -1933,7 +1933,7 @@ impl Block {
     }
 
     /// Returns the ENTIRE HEIGHT of the prompt and command (no padding top or middle included).
-    /// In the case of combined grid: for Warp prompt, this includes the height of both the Warp prompt
+    /// In the case of combined grid: for Zterm prompt, this includes the height of both the Warp prompt
     /// AND combined grid; for PS1, this is just the combined grid (PS1 is included there).
     pub fn prompt_and_command_height(&self) -> Lines {
         if !self.ready_to_render() {
@@ -1942,7 +1942,7 @@ impl Block {
             // No padding between prompt and command in the case of PS1 (combined grid).
             self.header_grid.prompt_and_command_height()
         } else {
-            // Handle the case of Warp built-in prompt with combined grid.
+            // Handle the case of Zterm built-in prompt with combined grid.
             // Note that we have non-zero `command_padding_top` in this case, unlike above!
             if self.header_grid.is_command_empty() {
                 Lines::zero()
@@ -2175,7 +2175,7 @@ impl Block {
         let escape_char = session.shell_family().escape_char();
 
         // Parse the raw command string to get the top-level command.
-        let command = warp_completer::parsers::simple::top_level_command(
+        let command = zterm_completer::parsers::simple::top_level_command(
             self.command_to_string(),
             escape_char,
         )?;
@@ -2185,7 +2185,7 @@ impl Block {
             .alias_value(command.as_str())
             .map(|s| s.to_owned())
             // An alias can technically expand into an entire command (e.g. "gl" => "PAGER=0 git log").
-            .and_then(|s| warp_completer::parsers::simple::top_level_command(s, escape_char))
+            .and_then(|s| zterm_completer::parsers::simple::top_level_command(s, escape_char))
             // If alias expansion didn't work, then just return the original top-level command.
             .or(Some(command))
     }
@@ -2503,7 +2503,7 @@ impl Block {
 
         self.background_executor
             .spawn(async move {
-                warpui::r#async::Timer::after(std::time::Duration::from_millis(delay_ms)).await;
+                zterm_ui::r#async::Timer::after(std::time::Duration::from_millis(delay_ms)).await;
                 ready_to_render.store(true, Ordering::Relaxed);
                 event_proxy.send_wakeup_event();
             })
@@ -2824,7 +2824,7 @@ impl Block {
     }
 
     pub fn grid_storage_lines(&self) -> usize {
-        use warp_terminal::model::grid::Dimensions as _;
+        use zterm_terminal::model::grid::Dimensions as _;
 
         self.all_grids_iter()
             .map(|grid| grid.grid_storage().total_rows())

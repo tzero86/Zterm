@@ -12,11 +12,11 @@ use chrono::{DateTime, Utc};
 use instant::Instant;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
-use warp_core::user_preferences::GetUserPreferences as _;
-use warp_graphql::scalars::time::ServerTimestamp;
-use warpui::{AppContext, Entity, ModelContext, SingletonEntity};
+use zterm_core::user_preferences::GetUserPreferences as _;
+use zterm_graphql::scalars::time::ServerTimestamp;
+use zterm_ui::{AppContext, Entity, ModelContext, SingletonEntity};
 
-pub use warp_graphql::billing::BonusGrantType;
+pub use zterm_graphql::billing::BonusGrantType;
 
 /// Threshold of ambient-only credits at which we surface upgrade/CTA UI.
 pub const AMBIENT_AGENT_TRIAL_CREDIT_THRESHOLD: i32 = 20;

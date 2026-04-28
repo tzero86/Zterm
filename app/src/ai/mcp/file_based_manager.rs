@@ -1,12 +1,12 @@
-use super::MCPProvider;
+﻿use super::MCPProvider;
 use super::{FileMCPWatcher, FileMCPWatcherEvent};
 use itertools::Itertools as _;
 use repo_metadata::repositories::DetectedRepositories;
 use std::collections::{hash_map::Entry, HashMap, HashSet};
 use std::path::{Path, PathBuf};
 use uuid::Uuid;
-use warp_core::features::FeatureFlag;
-use warpui::{AppContext, Entity, ModelContext, SingletonEntity};
+use zterm_core::features::FeatureFlag;
+use zterm_ui::{AppContext, Entity, ModelContext, SingletonEntity};
 
 use crate::{
     ai::mcp::{
@@ -262,7 +262,7 @@ impl FileBasedMCPManager {
     }
 
     /// Returns `true` if the server identified by `hash` is referenced from the global
-    /// Warp config (`~/.warp/.mcp.json`). Global Warp servers always auto-spawn.
+    /// Zterm config (`~/.warp/.mcp.json`). Global Warp servers always auto-spawn.
     fn is_global_warp_server(&self, hash: u64) -> bool {
         let warp_root = warp_data_dir();
         self.file_based_servers_by_root

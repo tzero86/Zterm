@@ -1,4 +1,4 @@
-use warpui::{AppContext, Entity, ModelContext, ModelHandle, SingletonEntity};
+﻿use zterm_ui::{AppContext, Entity, ModelContext, ModelHandle, SingletonEntity};
 
 use crate::{
     menu::{MenuItem, MenuItemFields},

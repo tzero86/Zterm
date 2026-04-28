@@ -15,7 +15,7 @@ use crate::terminal::alt_screen_reporting::AltScreenReporting;
 use crate::terminal::session_settings::SessionSettings;
 use crate::terminal::settings::{SpacingMode, TerminalSettings};
 use crate::undo_close::UndoCloseStack;
-use crate::user_config::WarpConfig;
+use crate::user_config::ZtermConfig;
 use crate::util::bindings::{self, trigger_to_keystroke, CustomAction};
 use crate::util::links;
 use crate::workspace::sync_inputs::SyncedInputState;
@@ -26,15 +26,15 @@ use enclose::enclose;
 use itertools::Itertools;
 use settings::manager::SettingsManager;
 use settings::Setting as _;
-use warp_core::context_flag::ContextFlag;
-use warp_util::path::user_friendly_path;
-use warpui::actions::StandardAction;
-use warpui::keymap::{Keystroke, Trigger};
-use warpui::platform::menu::{
+use zterm_core::context_flag::ContextFlag;
+use zterm_util::path::user_friendly_path;
+use zterm_ui::actions::StandardAction;
+use zterm_ui::keymap::{Keystroke, Trigger};
+use zterm_ui::platform::menu::{
     CustomMenuItem, Menu, MenuBar, MenuItem, MenuItemProperties, MenuItemPropertyChanges,
 };
-use warpui::windowing::WindowManager;
-use warpui::{AppContext, SingletonEntity};
+use zterm_ui::windowing::WindowManager;
+use zterm_ui::{AppContext, SingletonEntity};
 
 type CheckmarkStatusGetter = dyn 'static + Fn(&mut AppContext) -> bool;
 
@@ -243,7 +243,7 @@ fn make_new_app_menu(ctx: &AppContext) -> Menu {
         None,
     )));
     menu_items.push(MenuItem::Standard(StandardAction::Quit));
-    Menu::new("Warp", menu_items)
+    Menu::new("Zterm", menu_items)
 }
 
 fn make_new_file_menu(ctx: &AppContext) -> Menu {
@@ -375,7 +375,7 @@ fn make_new_edit_menu(ctx: &AppContext) -> Menu {
 
 fn make_new_view_menu(ctx: &AppContext) -> Menu {
     let mut items = vec![
-        updateable_custom_item_without_checkmark(CustomAction::ToggleWarpDrive, ctx),
+        updateable_custom_item_without_checkmark(CustomAction::ToggleZtermDrive, ctx),
         MenuItem::Separator,
         updateable_custom_item_without_checkmark(CustomAction::CommandPalette, ctx),
         updateable_custom_item_without_checkmark(CustomAction::NavigationPalette, ctx),
@@ -605,7 +605,7 @@ fn make_new_drive_menu(ctx: &AppContext) -> Menu {
     ));
     items.extend([
         MenuItem::Separator,
-        updateable_custom_item_without_checkmark(CustomAction::ToggleWarpDrive, ctx),
+        updateable_custom_item_without_checkmark(CustomAction::ToggleZtermDrive, ctx),
         updateable_custom_item_without_checkmark(CustomAction::SearchDrive, ctx),
         updateable_custom_item_without_checkmark(CustomAction::OpenTeamSettings, ctx),
         updateable_custom_item_without_checkmark(CustomAction::OpenAIFactCollection, ctx),
@@ -934,7 +934,7 @@ fn make_new_help_menu() -> Menu {
 fn make_launch_config_menu_items(ctx: &mut AppContext) -> Vec<MenuItem> {
     let mut launch_config_menu_items = vec![];
 
-    let launch_configs = WarpConfig::handle(ctx).as_ref(ctx).launch_configs();
+    let launch_configs = ZtermConfig::handle(ctx).as_ref(ctx).launch_configs();
     for config in launch_configs {
         launch_config_menu_items.push(MenuItem::Custom(CustomMenuItem::new(
             &config.name,

@@ -1,4 +1,4 @@
-use crate::menu::{Event as MenuEvent, Menu, MenuItem, MenuItemFields};
+﻿use crate::menu::{Event as MenuEvent, Menu, MenuItem, MenuItemFields};
 use crate::pane_group::{PaneHeaderAction, PaneHeaderCustomAction};
 use crate::terminal::view::TerminalAction;
 use crate::{
@@ -10,8 +10,8 @@ use pathfinder_color::ColorU;
 use pathfinder_geometry::vector::vec2f;
 use session_sharing_protocol::common::{ParticipantId, ParticipantInfo, Role};
 use session_sharing_protocol::sharer::RoleUpdateReason;
-use warpui::r#async::{SpawnedFutureHandle, Timer};
-use warpui::{
+use zterm_ui::r#async::{SpawnedFutureHandle, Timer};
+use zterm_ui::{
     accessibility::AccessibilityContent,
     elements::{
         Border, ChildAnchor, ChildView, ConstrainedBox, Container, CornerRadius,
@@ -22,7 +22,7 @@ use warpui::{
     ui_components::components::{UiComponent, UiComponentStyles},
     AppContext, Element, Entity, SingletonEntity, TypedActionView, View, ViewContext,
 };
-use warpui::{FocusContext, ViewHandle};
+use zterm_ui::{FocusContext, ViewHandle};
 
 use super::render_util::non_hoverable_participant_avatar;
 
@@ -208,7 +208,7 @@ impl ParticipantAvatarView {
         Container::new(
             ConstrainedBox::new(
                 Icon::Edit
-                    .to_warpui_icon(appearance.theme().foreground())
+                    .to_zterm_ui_icon(appearance.theme().foreground())
                     .finish(),
             )
             .with_height(8.)
@@ -218,7 +218,7 @@ impl ParticipantAvatarView {
         .with_uniform_padding(2.)
         .with_background(background)
         .with_corner_radius(CornerRadius::with_all(
-            warpui::elements::Radius::Percentage(50.),
+            zterm_ui::elements::Radius::Percentage(50.),
         ))
         .finish()
     }
@@ -489,10 +489,10 @@ pub fn render_revoke_all_button(
     appearance: &Appearance,
 ) -> Box<dyn Element> {
     let edit = Icon::Edit
-        .to_warpui_icon(appearance.theme().foreground())
+        .to_zterm_ui_icon(appearance.theme().foreground())
         .finish();
     let slash = Icon::Slash
-        .to_warpui_icon(appearance.theme().terminal_colors().normal.red.into())
+        .to_zterm_ui_icon(appearance.theme().terminal_colors().normal.red.into())
         .finish();
     let mut stack = Stack::new().with_constrain_absolute_children();
 

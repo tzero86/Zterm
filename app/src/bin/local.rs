@@ -1,8 +1,8 @@
-#[path = "channel_config.rs"]
+﻿#[path = "channel_config.rs"]
 mod channel_config;
 
 use anyhow::Result;
-use warp_core::{
+use zterm_core::{
     channel::{Channel, ChannelState},
     features,
 };
@@ -22,7 +22,7 @@ fn main() -> Result<()> {
 
     ChannelState::set(state);
 
-    warp::run()
+    zterm::run()
 }
 
 // If we're not using an external plist, embed the following as the Info.plist.
@@ -35,15 +35,15 @@ embed_plist::embed_info_plist_bytes!(r#"
     <key>CFBundleDevelopmentRegion</key>
     <string>English</string>
     <key>CFBundleDisplayName</key>
-    <string>WarpLocal</string>
+    <string>ZtermLocal</string>
     <key>CFBundleExecutable</key>
     <string>warp</string>
     <key>CFBundleIdentifier</key>
-    <string>dev.warp.Warp-Local</string>
+    <string>dev.zterm.Warp-Local</string>
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
     <key>CFBundleName</key>
-    <string>WarpLocal</string>
+    <string>ZtermLocal</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleShortVersionString</key>
@@ -55,7 +55,7 @@ embed_plist::embed_info_plist_bytes!(r#"
     <key>UIDesignRequiresCompatibility</key>
     <true/>
     <key>CFBundleURLTypes</key>
-    <array><dict><key>CFBundleURLName</key><string>Custom App</string><key>CFBundleURLSchemes</key><array><string>warplocal</string></array></dict></array>
+    <array><dict><key>CFBundleURLName</key><string>Custom App</string><key>CFBundleURLSchemes</key><array><string>ztermlocal</string></array></dict></array>
     <key>NSHumanReadableCopyright</key>
     <string>© 2026, Denver Technologies, Inc</string>
     </dict>

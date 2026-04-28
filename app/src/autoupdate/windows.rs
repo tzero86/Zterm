@@ -1,4 +1,4 @@
-use crate::server::telemetry::TelemetryEvent;
+﻿use crate::server::telemetry::TelemetryEvent;
 use anyhow::anyhow;
 use anyhow::{bail, Result};
 use channel_versions::VersionInfo;
@@ -11,8 +11,8 @@ use std::sync::Arc;
 use std::{fs, io};
 use std::{io::Write as _, time::Duration};
 use tempfile::TempPath;
-use warp_core::channel::{Channel, ChannelState};
-use warpui::AppContext;
+use zterm_core::channel::{Channel, ChannelState};
+use zterm_ui::AppContext;
 
 use super::{release_assets_directory_url, DownloadReady};
 use crate::util::windows::install_dir;
@@ -74,7 +74,7 @@ pub(super) async fn download_update_and_cleanup(
 const UPDATE_LOG_FILENAME: &str = "warp_update.log";
 
 fn autoupdate_log_file() -> Result<PathBuf> {
-    warp_logging::log_directory().map(|dir| dir.join(UPDATE_LOG_FILENAME))
+    zterm_logging::log_directory().map(|dir| dir.join(UPDATE_LOG_FILENAME))
 }
 
 /// Checks the autoupdate log file from a previous update attempt.
@@ -219,7 +219,7 @@ pub(super) fn relaunch() -> Result<()> {
             &log_arg,
             "/update=1",
             // Do not forcibly kill Warp via RestartManager. The installer will wait for
-            // Warp to exit naturally by polling the single-instance mutex instead.
+            // Zterm to exit naturally by polling the single-instance mutex instead.
             "/NOCLOSEAPPLICATIONS",
             &format!("/DIR={}", install_dir.display()),
         ])
@@ -240,7 +240,7 @@ fn installer_file_name() -> Result<String> {
     let app_name_prefix = app_name_prefix(ChannelState::channel());
 
     // For example, on arm64 this is WarpSetup-arm64.exe and on x64 this is
-    // WarpSetup.exe.
+    // ZtermSetup.exe.
     if cfg!(target_arch = "aarch64") {
         Ok(format!("{app_name_prefix}Setup-arm64.exe"))
     } else if cfg!(target_arch = "x86_64") {
@@ -254,11 +254,11 @@ fn installer_file_name() -> Result<String> {
 
 fn app_name_prefix(channel: Channel) -> &'static str {
     match channel {
-        Channel::Stable => "Warp",
-        Channel::Preview => "WarpPreview",
+        Channel::Stable => "Zterm",
+        Channel::Preview => "ZtermPreview",
         Channel::Local => "warp",
         Channel::Integration => "integration",
-        Channel::Dev => "WarpDev",
-        Channel::Oss => "warp-oss",
+        Channel::Dev => "ZtermDev",
+        Channel::Oss => "zterm-oss",
     }
 }

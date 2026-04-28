@@ -3,10 +3,10 @@ use crate::render::model::BlockItem;
 
 use super::super::model::{RenderState, viewport::ViewportItem};
 use super::{RenderContext, RenderableBlock};
-use warp_core::ui::appearance::Appearance;
-use warp_core::ui::theme::color::internal_colors;
-use warpui::elements::{CrossAxisAlignment, Empty, Flex, ParentElement};
-use warpui::{
+use zterm_core::ui::appearance::Appearance;
+use zterm_core::ui::theme::color::internal_colors;
+use zterm_ui::elements::{CrossAxisAlignment, Empty, Flex, ParentElement};
+use zterm_ui::{
     AfterLayoutContext, AppContext, Element, LayoutContext, SingletonEntity, SizeConstraint,
     elements::Container, geometry::vector::vec2f,
 };
@@ -71,8 +71,8 @@ impl RenderableBlock for RenderableHiddenSection {
     fn dispatch_event(
         &mut self,
         _model: &RenderState,
-        event: &warpui::event::DispatchedEvent,
-        ctx: &mut warpui::EventContext,
+        event: &zterm_ui::event::DispatchedEvent,
+        ctx: &mut zterm_ui::EventContext,
         app: &AppContext,
     ) -> bool {
         self.element.dispatch_event(event, ctx, app)

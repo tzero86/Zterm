@@ -1,5 +1,5 @@
-use pathfinder_color::ColorU;
-use warpui::{
+﻿use pathfinder_color::ColorU;
+use zterm_ui::{
     elements::{
         ConstrainedBox, Container, Element, Empty, Flex, MouseStateHandle, ParentElement,
         Shrinkable,

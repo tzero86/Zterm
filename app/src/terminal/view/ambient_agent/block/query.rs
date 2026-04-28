@@ -1,5 +1,5 @@
-use warp_core::ui::appearance::Appearance;
-use warpui::{
+﻿use zterm_core::ui::appearance::Appearance;
+use zterm_ui::{
     elements::ParentElement,
     prelude::{Container, Empty, Flex, Text},
     AppContext, Element, Entity, ModelHandle, SingletonEntity, View, ViewContext,

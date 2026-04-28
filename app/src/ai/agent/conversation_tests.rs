@@ -1,11 +1,11 @@
-use std::collections::HashMap;
+﻿use std::collections::HashMap;
 
 use super::{
     artifact_from_fork_proto, AIConversation, AIConversationAutoexecuteMode, AIConversationId,
 };
 use crate::ai::artifacts::Artifact;
 use crate::persistence::model::AgentConversationData;
-use warp_core::features::FeatureFlag;
+use zterm_core::features::FeatureFlag;
 use warp_multi_agent_api as api;
 
 fn restored_conversation(conversation_data: Option<AgentConversationData>) -> AIConversation {

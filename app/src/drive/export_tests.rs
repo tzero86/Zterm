@@ -1,4 +1,4 @@
-use std::{
+﻿use std::{
     collections::HashMap,
     fs,
     path::{Path, PathBuf},
@@ -8,8 +8,8 @@ use std::{
 use futures::channel::oneshot;
 use parking_lot::Mutex;
 use tempfile::TempDir;
-use warp_util::path::ShellFamily;
-use warpui::{AddSingletonModel, App, SingletonEntity, WindowId};
+use zterm_util::path::ShellFamily;
+use zterm_ui::{AddSingletonModel, App, SingletonEntity, WindowId};
 
 use crate::{
     cloud_object::{

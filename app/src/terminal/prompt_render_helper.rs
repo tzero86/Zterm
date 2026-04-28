@@ -1,4 +1,4 @@
-use crate::ai::blocklist::BlocklistAIInputModel;
+﻿use crate::ai::blocklist::BlocklistAIInputModel;
 use crate::context_chips::display::PromptDisplay;
 use crate::context_chips::spacing;
 use crate::features::FeatureFlag;
@@ -12,10 +12,10 @@ use settings::Setting as _;
 
 use std::fmt;
 use std::num::NonZeroUsize;
-use warp_core::semantic_selection::SemanticSelection;
-use warpui::elements::{DispatchEventResult, SelectionHandle};
-use warpui::ModelAsRef;
-use warpui::{
+use zterm_core::semantic_selection::SemanticSelection;
+use zterm_ui::elements::{DispatchEventResult, SelectionHandle};
+use zterm_ui::ModelAsRef;
+use zterm_ui::{
     elements::{Container, Element, EventHandler, SavePosition, SelectableArea, Text},
     fonts::{Properties, Weight},
     presenter::ChildView,
@@ -39,7 +39,7 @@ use crate::terminal::model::session::Sessions;
 use crate::terminal::view::PADDING_LEFT as TERMINAL_VIEW_PADDING_LEFT;
 
 use crate::terminal::model::ObfuscateSecrets;
-use warpui::units::Pixels;
+use zterm_ui::units::Pixels;
 
 /// How long we're willing to wait after precmd for a marker-based prompt to appear before we
 /// display an empty prompt grid in the input.
@@ -66,7 +66,7 @@ pub fn should_render_ps1_prompt(terminal_model: &TerminalModel, app: &AppContext
     let session_settings = SessionSettings::as_ref(app);
 
     // In the context of session sharing, these values may differ from the local settings i.e.
-    // if the sharer is using PS1 and the viewer is not (using Warp prompt in non-SLP mode).
+    // if the sharer is using PS1 and the viewer is not (using Zterm prompt in non-SLP mode).
     // In this case, we still want to render the prompt on the same line (PS1 should ALWAYS be
     // rendered on the same line).
     // Note that the product behavior for session sharing is normally to respect the local settings

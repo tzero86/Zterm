@@ -1,7 +1,7 @@
 use pathfinder_color::ColorU;
 use settings::Setting as _;
-use warp_editor::editor::NavigationKey;
-use warpui::{
+use zterm_editor::editor::NavigationKey;
+use zterm_ui::{
     accessibility::{AccessibilityContent, WarpA11yRole},
     elements::{
         Align, ChildAnchor, ConstrainedBox, Container, CornerRadius, CrossAxisAlignment,
@@ -22,7 +22,7 @@ use warpui::{
 };
 
 use crate::resource_center::{mark_feature_used_and_write_to_user_defaults, Tip, TipAction};
-use crate::themes::theme::{RespectSystemTheme, ThemeKind, WarpTheme};
+use crate::themes::theme::{RespectSystemTheme, ThemeKind, ZtermTheme};
 use crate::util::traffic_lights::traffic_light_data;
 use crate::workspace::PANEL_HEADER_HEIGHT;
 use crate::{
@@ -34,7 +34,7 @@ use crate::{
     report_if_error,
     settings::{respect_system_theme, ThemeSettings},
     themes::theme::SelectedSystemThemes,
-    user_config::{load_theme_configs, themes_dir, WarpConfig, WarpConfigUpdateEvent},
+    user_config::{load_theme_configs, themes_dir, ZtermConfig, ZtermConfigUpdateEvent},
     util::traffic_lights::{TrafficLightData, TrafficLightSide},
     window_settings::WindowSettings,
 };
@@ -44,7 +44,7 @@ use crate::{
     server::telemetry::TelemetryEvent, ui_components::window_focus_dimming::WindowFocusDimming,
 };
 use crate::{
-    themes::theme::WarpThemeConfig,
+    themes::theme::ZtermThemeConfig,
     ui_components::buttons::{close_button, icon_button},
     ui_components::icons,
 };
@@ -150,7 +150,7 @@ pub struct ThemeChooser {
     search_editor: ViewHandle<EditorView>,
     referral_theme_status: ModelHandle<ReferralThemeStatus>,
     tips_completed: ModelHandle<TipsCompleted>,
-    window_id: warpui::WindowId,
+    window_id: zterm_ui::WindowId,
 }
 
 #[derive(Debug)]
@@ -165,7 +165,7 @@ pub enum ThemeChooserAction {
 }
 
 pub fn init(app: &mut AppContext) {
-    use warpui::keymap::macros::*;
+    use zterm_ui::keymap::macros::*;
 
     app.register_fixed_bindings(vec![
         FixedBinding::new("up", ThemeChooserAction::Up, id!("ThemeChooser")),
@@ -177,7 +177,7 @@ pub fn init(app: &mut AppContext) {
 
 fn theme_chooser_items(
     referral_theme_status: &ReferralThemeStatus,
-    theme_config: &WarpThemeConfig,
+    theme_config: &ZtermThemeConfig,
 ) -> Vec<ThemeChooserItem> {
     let sent_referral_theme_active = referral_theme_status.sent_referral_theme_active();
     let received_referral_theme_active = referral_theme_status.received_referral_theme_active();
@@ -224,9 +224,9 @@ impl ThemeChooser {
             me.update_themes(ctx);
         });
 
-        let warp_config_handle = WarpConfig::handle(ctx);
+        let warp_config_handle = ZtermConfig::handle(ctx);
         ctx.subscribe_to_model(&warp_config_handle, |me, _, event, ctx| {
-            if let WarpConfigUpdateEvent::Themes = event {
+            if let ZtermConfigUpdateEvent::Themes = event {
                 me.update_themes(ctx);
                 ctx.notify();
             }
@@ -247,7 +247,7 @@ impl ThemeChooser {
 
         let themes = theme_chooser_items(
             referral_theme_status.as_ref(ctx),
-            WarpConfig::as_ref(ctx).theme_config(),
+            ZtermConfig::as_ref(ctx).theme_config(),
         );
 
         Self {
@@ -311,7 +311,7 @@ impl ThemeChooser {
         ctx.spawn(
             async move { load_theme_configs(&themes_dir()) },
             move |theme_chooser, loaded_themes, ctx| {
-                ctx.update_model(&WarpConfig::handle(ctx), move |warp_config, ctx| {
+                ctx.update_model(&ZtermConfig::handle(ctx), move |warp_config, ctx| {
                     warp_config.update_theme_config(loaded_themes, ctx);
                 });
                 theme_chooser.update_themes(ctx);
@@ -324,7 +324,7 @@ impl ThemeChooser {
         ctx.spawn(
             async move { load_theme_configs(&themes_dir()) },
             move |theme_chooser, loaded_themes, ctx| {
-                ctx.update_model(&WarpConfig::handle(ctx), move |warp_config, ctx| {
+                ctx.update_model(&ZtermConfig::handle(ctx), move |warp_config, ctx| {
                     warp_config.update_theme_config(loaded_themes, ctx);
                 });
                 theme_chooser.update_themes(ctx);
@@ -518,7 +518,7 @@ impl ThemeChooser {
     fn update_themes(&mut self, ctx: &mut ViewContext<Self>) {
         *self.themes = theme_chooser_items(
             self.referral_theme_status.as_ref(ctx),
-            WarpConfig::as_ref(ctx).theme_config(),
+            ZtermConfig::as_ref(ctx).theme_config(),
         );
     }
 
@@ -878,12 +878,12 @@ impl View for ThemeChooser {
 #[derive(Clone)]
 struct ThemeChooserItem {
     pub kind: ThemeKind,
-    warp_theme: WarpTheme,
+    warp_theme: ZtermTheme,
     mouse_state: MouseStateHandle,
 }
 
 impl ThemeChooserItem {
-    pub fn new(kind: ThemeKind, warp_theme: WarpTheme) -> Self {
+    pub fn new(kind: ThemeKind, warp_theme: ZtermTheme) -> Self {
         Self {
             kind,
             warp_theme,

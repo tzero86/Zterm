@@ -1,12 +1,12 @@
-use parking_lot::FairMutex;
+﻿use parking_lot::FairMutex;
 use serde::{de, Deserialize, Serialize};
 use std::{
     collections::{HashMap, HashSet},
     sync::{Arc, OnceLock},
 };
-use warp_core::ui::icons::Icon;
-use warp_core::user_preferences::GetUserPreferences;
-use warpui::{AppContext, Entity, EntityId, ModelContext, SingletonEntity};
+use zterm_core::ui::icons::Icon;
+use zterm_core::user_preferences::GetUserPreferences;
+use zterm_ui::{AppContext, Entity, EntityId, ModelContext, SingletonEntity};
 
 use crate::{
     auth::{

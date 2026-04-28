@@ -1,8 +1,8 @@
-use crate::appearance::Appearance;
-use warpui::elements::{Container, Flex, MainAxisSize, MouseStateHandle, ParentElement};
-use warpui::ui_components::button::ButtonVariant;
-use warpui::ui_components::components::UiComponent;
-use warpui::{
+﻿use crate::appearance::Appearance;
+use zterm_ui::elements::{Container, Flex, MainAxisSize, MouseStateHandle, ParentElement};
+use zterm_ui::ui_components::button::ButtonVariant;
+use zterm_ui::ui_components::components::UiComponent;
+use zterm_ui::{
     platform::Cursor, AppContext, Element, Entity, SingletonEntity, TypedActionView, View,
     ViewContext,
 };

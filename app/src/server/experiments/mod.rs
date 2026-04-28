@@ -1,4 +1,4 @@
-//! This module is responsible for applying
+﻿//! This module is responsible for applying
 //! server-side experiment state to the client.
 //!
 //! After adding support for your experiment on the server,
@@ -8,17 +8,17 @@
 //! Then, you can use the global [`ServerExperiments`] model
 //! to update and query the latest experiment state.
 //!
-//! See [here](https://www.notion.so/warpdev/Server-side-experiments-dynamic-feature-enablement-c0fb9aed695d4178a19b8830e3269094)
+//! See [here](https://www.notion.so/ztermdev/Server-side-experiments-dynamic-feature-enablement-c0fb9aed695d4178a19b8830e3269094)
 //! for a full guide on the server-side experiment framework.
 
 use crate::features::FeatureFlag;
 use crate::workspaces::user_workspaces::UserWorkspaces;
 use crate::workspaces::workspace::CustomerType;
-use warpui::AppContext;
+use zterm_ui::AppContext;
 #[cfg(not(test))]
-use warpui::SingletonEntity as _;
+use zterm_ui::SingletonEntity as _;
 #[cfg(test)]
-use warpui::SingletonEntity;
+use zterm_ui::SingletonEntity;
 
 mod convert;
 mod model;

@@ -1,13 +1,13 @@
-use std::collections::HashSet;
+﻿use std::collections::HashSet;
 
 use pathfinder_color::ColorU;
-use warp_core::ui::appearance::Appearance;
-use warp_core::ui::theme::color::internal_colors;
-use warp_core::ui::theme::Fill;
-use warpui::elements::{
+use zterm_core::ui::appearance::Appearance;
+use zterm_core::ui::theme::color::internal_colors;
+use zterm_core::ui::theme::Fill;
+use zterm_ui::elements::{
     Align, Border, ConstrainedBox, Container, CornerRadius, DropShadow, Radius, Text,
 };
-use warpui::{
+use zterm_ui::{
     AppContext, Element, Entity, EntityId, ModelHandle, SingletonEntity, View, ViewContext,
     ViewHandle,
 };

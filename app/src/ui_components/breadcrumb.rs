@@ -1,7 +1,7 @@
-use std::fmt::Debug;
+﻿use std::fmt::Debug;
 
 use itertools::{Itertools, Position};
-use warpui::{
+use zterm_ui::{
     elements::{
         CrossAxisAlignment, Flex, Hoverable, MainAxisSize, MouseStateHandle, ParentElement,
         Shrinkable,

@@ -1,4 +1,4 @@
-use crate::{
+﻿use crate::{
     auth::AuthStateProvider,
     changelog_model::ChangelogModel,
     channel::ChannelState,
@@ -10,7 +10,7 @@ use crate::{
     themes::theme::{Blend, Fill as FillTheme},
 };
 use pathfinder_geometry::vector::vec2f;
-use warpui::{
+use zterm_ui::{
     elements::{
         Align, ClippedScrollStateHandle, ClippedScrollable, Container, CornerRadius, Element,
         Empty, Fill, Flex, Hoverable, Icon, MainAxisAlignment, MainAxisSize, MouseStateHandle,

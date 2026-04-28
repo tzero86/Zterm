@@ -6,17 +6,17 @@ use std::sync::Arc;
 use chrono::Utc;
 use itertools::Itertools as _;
 use pathfinder_geometry::vector::vec2f;
-use warp_core::context_flag::ContextFlag;
-use warp_core::features::FeatureFlag;
-use warpui::elements::{
+use zterm_core::context_flag::ContextFlag;
+use zterm_core::features::FeatureFlag;
+use zterm_ui::elements::{
     Border, ChildView, Clipped, ClippedScrollStateHandle, ClippedScrollable, ConstrainedBox,
     Container, CornerRadius, Fill, Flex, MainAxisAlignment, MainAxisSize, MouseStateHandle,
     ParentElement, Radius, SavePosition, Shrinkable,
 };
-use warpui::platform::Cursor;
-use warpui::ui_components::button::{ButtonVariant, TextAndIcon, TextAndIconAlignment};
-use warpui::ui_components::components::UiComponent as _;
-use warpui::{
+use zterm_ui::platform::Cursor;
+use zterm_ui::ui_components::button::{ButtonVariant, TextAndIcon, TextAndIconAlignment};
+use zterm_ui::ui_components::components::UiComponent as _;
+use zterm_ui::{
     units::{IntoPixels, Pixels},
     AppContext, Element, Entity, FocusContext, ModelHandle, SingletonEntity, TypedActionView,
     ViewContext, ViewHandle,
@@ -48,7 +48,7 @@ use crate::send_telemetry_from_ctx;
 use crate::server::{ids::SyncId, telemetry::TelemetryEvent};
 use crate::settings::AISettings;
 use crate::terminal::History;
-use crate::themes::theme::WarpTheme;
+use crate::themes::theme::ZtermTheme;
 use crate::ui_components::icons::Icon;
 use crate::workflows::{WorkflowSelectionSource, WorkflowSource, WorkflowType};
 use crate::workspace::WorkspaceAction;
@@ -89,8 +89,8 @@ pub enum Event {
     OpenNotebook {
         id: SyncId,
     },
-    /// View the relevant object in the Warp Drive sidebar.
-    ViewInWarpDrive {
+    /// View the relevant object in the Zterm Drive sidebar.
+    ViewInZtermDrive {
         id: CloudObjectTypeAndId,
     },
     /// Open a file at the given path.
@@ -161,7 +161,7 @@ impl TypedActionView for WelcomePalette {
     }
 }
 
-impl warpui::View for WelcomePalette {
+impl zterm_ui::View for WelcomePalette {
     fn ui_name() -> &'static str {
         "WelcomePalette"
     }
@@ -625,7 +625,7 @@ impl WelcomePalette {
         })
     }
 
-    fn render_palette_list(&self, theme: &WarpTheme, app: &AppContext) -> Box<dyn Element> {
+    fn render_palette_list(&self, theme: &ZtermTheme, app: &AppContext) -> Box<dyn Element> {
         match self.search_bar_state.as_ref(app).query_result_renderers() {
             None => {
                 self.placeholder_query_renderer
@@ -651,7 +651,7 @@ impl WelcomePalette {
         &self,
         renderers: &[QueryResultRenderer<CommandPaletteItemAction>],
         selected_item: SelectedItem,
-        theme: &WarpTheme,
+        theme: &ZtermTheme,
         app: &AppContext,
     ) -> Box<dyn Element> {
         let selected_index = match selected_item {
@@ -704,7 +704,7 @@ impl WelcomePalette {
                     Some(keystroke) => format!("Add repository {keystroke}"),
                     None => "Add repository".to_string(),
                 },
-                Icon::Plus.to_warpui_icon(theme.foreground()),
+                Icon::Plus.to_zterm_ui_icon(theme.foreground()),
                 MainAxisSize::Max,
                 MainAxisAlignment::Center,
                 vec2f(16., 16.),
@@ -727,7 +727,7 @@ impl WelcomePalette {
                     Some(keystroke) => format!("Terminal session {keystroke}"),
                     None => "Terminal session".to_string(),
                 },
-                Icon::Terminal.to_warpui_icon(theme.foreground()),
+                Icon::Terminal.to_zterm_ui_icon(theme.foreground()),
                 MainAxisSize::Max,
                 MainAxisAlignment::Center,
                 vec2f(16., 16.),
@@ -832,11 +832,11 @@ impl WelcomePalette {
         }
     }
 
-    /// Dispatches `action` to the correct window and [`warpui::View`] by using the current state of
+    /// Dispatches `action` to the correct window and [`zterm_ui::View`] by using the current state of
     /// the [`BindingSource`] model.
     fn dispatch_typed_action_on_view(
         &self,
-        action: &dyn warpui::Action,
+        action: &dyn zterm_ui::Action,
         ctx: &mut ViewContext<Self>,
     ) {
         send_telemetry_from_ctx!(

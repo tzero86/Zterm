@@ -18,14 +18,14 @@ use crate::input_suggestions::{
     DETAILS_PANEL_MARGIN, DETAILS_PANEL_PADDING, HISTORY_DETAILS_PANEL_WIDTH,
     LABEL_PADDING as InputSuggestionsLabelPadding,
 };
-use crate::themes::theme::WarpTheme;
-use warpui::elements::{
+use crate::themes::theme::ZtermTheme;
+use zterm_ui::elements::{
     Align, Border, ConstrainedBox, Container, CornerRadius, CrossAxisAlignment, DragBarSide,
     DropShadow, Element, Empty, Flex, ParentElement, Radius, Resizable, Shrinkable,
     SizeConstraintCondition, SizeConstraintSwitch, Text,
 };
-use warpui::presenter::ChildView;
-use warpui::ui_components::components::{Coords, UiComponent, UiComponentStyles};
+use zterm_ui::presenter::ChildView;
+use zterm_ui::ui_components::components::{Coords, UiComponent, UiComponentStyles};
 
 enum SuggestionsResizeConfig {
     WidthAndHeight,
@@ -187,7 +187,7 @@ impl Input {
         &self,
         margin: f32,
         corner_radius: CornerRadius,
-        theme: &WarpTheme,
+        theme: &ZtermTheme,
         resize_config: SuggestionsResizeConfig,
         menu_positioning: MenuPositioning,
         content: Box<dyn Element>,

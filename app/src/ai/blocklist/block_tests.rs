@@ -1,8 +1,8 @@
-use super::{CollapsibleElementState, CollapsibleExpansionState};
+﻿use super::{CollapsibleElementState, CollapsibleExpansionState};
 use crate::settings::AISettings;
 use crate::test_util::settings::initialize_settings_for_tests;
 use settings::Setting;
-use warpui::{App, SingletonEntity};
+use zterm_ui::{App, SingletonEntity};
 
 #[test]
 fn reasoning_auto_collapses_when_user_has_not_manually_toggled() {

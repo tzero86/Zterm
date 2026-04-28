@@ -1,12 +1,12 @@
-use std::path::PathBuf;
+﻿use std::path::PathBuf;
 use std::sync::Arc;
 use std::time::Duration;
 
 use futures::future::BoxFuture;
 use futures::FutureExt;
 use itertools::Itertools;
-use warpui::r#async::FutureExt as AsyncFutureExt;
-use warpui::{AppContext, Entity, EntityId, ModelContext, ModelHandle, SingletonEntity};
+use zterm_ui::r#async::FutureExt as AsyncFutureExt;
+use zterm_ui::{AppContext, Entity, EntityId, ModelContext, ModelHandle, SingletonEntity};
 
 use crate::ai::agent::{
     conversation::AIConversationId, AIAgentAction, AIAgentActionType, FileGlobResult,
@@ -24,7 +24,7 @@ use crate::{
     },
     TelemetryEvent,
 };
-use warp_core::features::FeatureFlag;
+use zterm_core::features::FeatureFlag;
 
 const FILE_GLOB_TIMEOUT: Duration = Duration::from_secs(10);
 

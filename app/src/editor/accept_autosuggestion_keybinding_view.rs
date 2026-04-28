@@ -1,4 +1,4 @@
-//! This module contains the code for the editable accept autosuggestion keybinding
+﻿//! This module contains the code for the editable accept autosuggestion keybinding
 //! shown inline in the input.
 use crate::appearance::Appearance;
 use crate::editor::ACCEPT_AUTOSUGGESTION_KEYBINDING_NAME;
@@ -13,24 +13,24 @@ use crate::util::bindings::{
 use crate::workspace::WorkspaceAction;
 use lazy_static::lazy_static;
 use pathfinder_geometry::vector::vec2f;
-use warp_core::ui::theme::Fill;
-use warpui::elements::{Border, ChildView, Flex, ParentElement};
-use warpui::elements::{
+use zterm_core::ui::theme::Fill;
+use zterm_ui::elements::{Border, ChildView, Flex, ParentElement};
+use zterm_ui::elements::{
     ConstrainedBox, Container, CrossAxisAlignment, Radius, DEFAULT_UI_LINE_HEIGHT_RATIO,
 };
-use warpui::keymap::Keystroke;
-use warpui::platform::Cursor;
-use warpui::ui_components::components::{UiComponent, UiComponentStyles};
-use warpui::ui_components::keyboard_shortcut::KeyboardShortcut;
-use warpui::ViewContext;
-use warpui::{
+use zterm_ui::keymap::Keystroke;
+use zterm_ui::platform::Cursor;
+use zterm_ui::ui_components::components::{UiComponent, UiComponentStyles};
+use zterm_ui::ui_components::keyboard_shortcut::KeyboardShortcut;
+use zterm_ui::ViewContext;
+use zterm_ui::{
     elements::{
         ChildAnchor, CornerRadius, Element, Hoverable, MouseStateHandle, OffsetPositioning,
         ParentAnchor, ParentOffsetBounds, Stack,
     },
     AppContext, SingletonEntity,
 };
-use warpui::{Entity, TypedActionView, View, ViewHandle};
+use zterm_ui::{Entity, TypedActionView, View, ViewHandle};
 
 use super::EditorElement;
 
@@ -310,7 +310,7 @@ impl View for AcceptAutosuggestionKeybinding {
             let chevron_down = Container::new(
                 ConstrainedBox::new(
                     Icon::ArrowDropDown
-                        .to_warpui_icon(Fill::Solid(font_color))
+                        .to_zterm_ui_icon(Fill::Solid(font_color))
                         .finish(),
                 )
                 .with_height(height_without_border)

@@ -1,9 +1,9 @@
-use crate::server::ids::ServerId;
+﻿use crate::server::ids::ServerId;
 use serde::Serialize;
 use serde_json::{json, Value};
 use strum_macros::{EnumDiscriminants, EnumIter};
-use warp_core::features::FeatureFlag;
-use warp_core::telemetry::{EnablementState, TelemetryEvent, TelemetryEventDesc};
+use zterm_core::features::FeatureFlag;
+use zterm_core::telemetry::{EnablementState, TelemetryEvent, TelemetryEventDesc};
 
 /// The entry point through which Cloud Mode was entered.
 #[derive(Clone, Copy, Debug, Serialize)]
@@ -124,7 +124,7 @@ impl TelemetryEvent for CloudAgentTelemetryEvent {
     }
 
     fn event_descs() -> impl Iterator<Item = Box<dyn TelemetryEventDesc>> {
-        warp_core::telemetry::enum_events::<Self>()
+        zterm_core::telemetry::enum_events::<Self>()
     }
 }
 
@@ -178,4 +178,4 @@ impl TelemetryEventDesc for CloudAgentTelemetryEventDiscriminants {
     }
 }
 
-warp_core::register_telemetry_event!(CloudAgentTelemetryEvent);
+zterm_core::register_telemetry_event!(CloudAgentTelemetryEvent);

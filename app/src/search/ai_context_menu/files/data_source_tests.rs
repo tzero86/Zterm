@@ -1,4 +1,4 @@
-use crate::search::{
+﻿use crate::search::{
     ai_context_menu::{
         files::data_source::{file_data_source_for_pwd, fuzzy_match_files, FileSnapshot},
         mixer::AIContextMenuSearchableAction,
@@ -17,11 +17,11 @@ use std::fs;
 use std::path::PathBuf;
 use std::sync::Arc;
 use tempfile::tempdir;
-use warpui::platform::WindowStyle;
-use warpui::r#async::block_on;
-use warpui::windowing::WindowManager;
-use warpui::SingletonEntity;
-use warpui::{elements::Empty, App, AppContext, Element, Entity, TypedActionView, View};
+use zterm_ui::platform::WindowStyle;
+use zterm_ui::r#async::block_on;
+use zterm_ui::windowing::WindowManager;
+use zterm_ui::SingletonEntity;
+use zterm_ui::{elements::Empty, App, AppContext, Element, Entity, TypedActionView, View};
 struct TestView;
 
 impl Entity for TestView {

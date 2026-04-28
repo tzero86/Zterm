@@ -18,9 +18,9 @@ use markdown_parser::FormattedTextFragment;
 use std::path::Path;
 use std::sync::LazyLock;
 use std::time::Duration;
-use warpui::keymap::Keystroke;
-use warpui::r#async::SpawnedFutureHandle;
-use warpui::{AppContext, Entity, ModelContext, SingletonEntity};
+use zterm_ui::keymap::Keystroke;
+use zterm_ui::r#async::SpawnedFutureHandle;
+use zterm_ui::{AppContext, Entity, ModelContext, SingletonEntity};
 
 /// Trait for tip implementations that can be displayed to users.
 /// Tips provide helpful information with optional links and keybindings.
@@ -70,7 +70,7 @@ pub trait AITip: Clone {
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum AgentTipKind {
     CodebaseContext,
-    WarpDrive,
+    ZtermDrive,
     General,
     Mcp,
     SlashCommands,
@@ -118,8 +118,8 @@ static DEFAULT_TIPS: LazyLock<Vec<AgentTip>> = LazyLock::new(|| {
             description: "Store reusable workflows, notebooks, and prompts in your".to_string(),
             link: Some("https://docs.warp.dev/knowledge-and-collaboration/warp-drive".to_string()),
             binding_name: None,
-            action: Some(WorkspaceAction::OpenWarpDrive),
-            kind: AgentTipKind::WarpDrive,
+            action: Some(WorkspaceAction::OpenZtermDrive),
+            kind: AgentTipKind::ZtermDrive,
         },
         AgentTip {
             description: "Enter a new prompt to redirect the agent while it's running.".to_string(),
@@ -129,7 +129,7 @@ static DEFAULT_TIPS: LazyLock<Vec<AgentTip>> = LazyLock::new(|| {
             kind: AgentTipKind::General,
         },
         AgentTip {
-            description: "`@` to add context from files, blocks, or Warp Drive objects to your prompt.".to_string(),
+            description: "`@` to add context from files, blocks, or Zterm Drive objects to your prompt.".to_string(),
             link: Some("https://docs.warp.dev/agent-platform/local-agents/agent-context/using-to-add-context".to_string()),
             binding_name: None,
             action: None,
@@ -217,7 +217,7 @@ static DEFAULT_TIPS: LazyLock<Vec<AgentTip>> = LazyLock::new(|| {
             link: None,
             binding_name: None,
             action: None,
-            kind: AgentTipKind::WarpDrive,
+            kind: AgentTipKind::ZtermDrive,
         },
         AgentTip {
             description: "`/add-rule` to create a global agent rule.".to_string(),
@@ -290,7 +290,7 @@ static DEFAULT_TIPS: LazyLock<Vec<AgentTip>> = LazyLock::new(|| {
             kind: AgentTipKind::Context,
         },
         AgentTip {
-            description: "Warpify a remote SSH session to enable Oz inside that environment.".to_string(),
+            description: "Ztermify a remote SSH session to enable Oz inside that environment.".to_string(),
             link: Some("https://docs.warp.dev/terminal/warpify".to_string()),
             binding_name: None,
             action: None,
@@ -418,7 +418,7 @@ impl WorkspaceAction {
     pub fn display_text(&self) -> Option<String> {
         match self {
             WorkspaceAction::OpenPalette { .. } => Some("Open palette".to_string()),
-            WorkspaceAction::OpenWarpDrive => Some("Warp Drive.".to_string()),
+            WorkspaceAction::OpenZtermDrive => Some("Zterm Drive.".to_string()),
             WorkspaceAction::ToggleRightPanel => Some("Show diff view".to_string()),
             _ => None,
         }
@@ -526,7 +526,7 @@ impl AITipModel<AgentTip> {
         // Start 60-second cooldown
         let handle = ctx.spawn(
             async {
-                warpui::r#async::Timer::after(Duration::from_secs(60)).await;
+                zterm_ui::r#async::Timer::after(Duration::from_secs(60)).await;
             },
             |me, _, _| {
                 me.cooldown_handle = None;
@@ -558,7 +558,7 @@ impl AITipModel<crate::terminal::view::ambient_agent::CloudModeTip> {
         // Start 60-second cooldown
         let handle = ctx.spawn(
             async {
-                warpui::r#async::Timer::after(Duration::from_secs(60)).await;
+                zterm_ui::r#async::Timer::after(Duration::from_secs(60)).await;
             },
             |me, _, _| {
                 me.cooldown_handle = None;
@@ -579,7 +579,7 @@ impl AITipModel<crate::terminal::view::ambient_agent::CloudModeTip> {
         // Start a new 60-second cooldown
         let handle = ctx.spawn(
             async {
-                warpui::r#async::Timer::after(Duration::from_secs(60)).await;
+                zterm_ui::r#async::Timer::after(Duration::from_secs(60)).await;
             },
             |me, _, _| {
                 me.cooldown_handle = None;

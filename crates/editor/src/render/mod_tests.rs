@@ -1,7 +1,7 @@
 //! End-to-end editor tests.
 
-use warp_core::features::FeatureFlag;
-use warpui::{App, ModelHandle, ReadModel};
+use zterm_core::features::FeatureFlag;
+use zterm_ui::{App, ModelHandle, ReadModel};
 
 use crate::content::{
     buffer::{

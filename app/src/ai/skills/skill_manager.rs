@@ -16,10 +16,10 @@ use ai::skills::{
     get_provider_for_path, parse_bundled_skill, provider_rank, ParsedSkill, SkillProvider,
     SkillReference,
 };
-use warp_core::{
+use zterm_core::{
     channel::ChannelState, features::FeatureFlag, report_error, safe_warn, ui::icons::Icon,
 };
-use warpui::{AppContext, Entity, ModelContext, ModelHandle, SingletonEntity};
+use zterm_ui::{AppContext, Entity, ModelContext, ModelHandle, SingletonEntity};
 
 /// Activation condition for a bundled skill.
 #[derive(Debug, Clone)]
@@ -417,9 +417,9 @@ impl SkillManager {
         }
     }
 
-    /// Load skill definitions bundled with Warp.
+    /// Load skill definitions bundled with Zterm.
     async fn load_bundled_skills() -> HashMap<String, BundledSkill> {
-        let Some(resources_dir) = warp_core::paths::bundled_resources_dir() else {
+        let Some(resources_dir) = zterm_core::paths::bundled_resources_dir() else {
             return HashMap::new();
         };
         let skills_dir = resources_dir.join("bundled").join("skills");
@@ -441,7 +441,7 @@ impl SkillManager {
 
     /// Load Figma-specific bundled skills from the `figma/` subdirectory.
     async fn load_figma_skills() -> HashMap<String, BundledSkill> {
-        let Some(resources_dir) = warp_core::paths::bundled_resources_dir() else {
+        let Some(resources_dir) = zterm_core::paths::bundled_resources_dir() else {
             return HashMap::new();
         };
         let figma_skills_dir = resources_dir
@@ -524,8 +524,8 @@ async fn read_bundled_skills(skills_dir: &Path) -> HashMap<String, ParsedSkill> 
 ///
 /// Supported variables:
 /// - `{{warp_server_url}}` - The server root URL (e.g., `https://api.warp.dev`)
-/// - `{{warp_cli_binary_name}}` - The CLI binary name (e.g., `warp` or `warp-cli`)
-/// - `{{warp_url_scheme}}` - The URL scheme (e.g., `warp`, `warpdev`, `warppreview`)
+/// - `{{zterm_cli_binary_name}}` - The CLI binary name (e.g., `warp` or `warp-cli`)
+/// - `{{zterm_url_scheme}}` - The URL scheme (e.g., `warp`, `ztermdev`, `ztermpreview`)
 /// - `{{settings_schema_path}}` - Path to the bundled JSON settings schema
 /// - `{{settings_file_path}}` - Path to the user's settings TOML file
 fn build_bundled_skill_context() -> HashMap<String, String> {
@@ -535,11 +535,11 @@ fn build_bundled_skill_context() -> HashMap<String, String> {
             ChannelState::server_root_url().into_owned(),
         ),
         (
-            "warp_cli_binary_name".to_owned(),
+            "zterm_cli_binary_name".to_owned(),
             ChannelState::channel().cli_command_name().to_owned(),
         ),
         (
-            "warp_url_scheme".to_owned(),
+            "zterm_url_scheme".to_owned(),
             ChannelState::url_scheme().to_owned(),
         ),
         (
@@ -551,7 +551,7 @@ fn build_bundled_skill_context() -> HashMap<String, String> {
     .collect();
 
     if let Some(schema_path) =
-        warp_core::paths::bundled_resources_dir().map(|dir| dir.join("settings_schema.json"))
+        zterm_core::paths::bundled_resources_dir().map(|dir| dir.join("settings_schema.json"))
     {
         context.insert(
             "settings_schema_path".to_owned(),

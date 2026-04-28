@@ -1,9 +1,9 @@
 use std::{collections::HashMap, path::PathBuf};
 
-use warp_core::ui::theme::color::internal_colors;
-use warp_core::ui::Icon;
-use warp_editor::editor::NavigationKey;
-use warpui::{
+use zterm_core::ui::theme::color::internal_colors;
+use zterm_core::ui::Icon;
+use zterm_editor::editor::NavigationKey;
+use zterm_ui::{
     elements::{
         Border, ChildView, ClippedScrollStateHandle, ClippedScrollable, ConstrainedBox, Container,
         CornerRadius, CrossAxisAlignment, Fill, Flex, Hoverable, MainAxisAlignment, MainAxisSize,
@@ -545,7 +545,7 @@ impl View for TabConfigParamsModal {
             .with_corner_radius(CornerRadius::with_all(Radius::Pixels(3.)))
             .finish();
 
-            let close_icon = ConstrainedBox::new(Icon::X.to_warpui_icon(sub_text).finish())
+            let close_icon = ConstrainedBox::new(Icon::X.to_zterm_ui_icon(sub_text).finish())
                 .with_width(14.)
                 .with_height(14.)
                 .finish();

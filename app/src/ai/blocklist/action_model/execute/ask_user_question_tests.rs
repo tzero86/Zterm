@@ -1,4 +1,4 @@
-use super::*;
+﻿use super::*;
 use crate::ai::agent::conversation::AIConversationId;
 use crate::ai::agent::task::TaskId;
 use crate::ai::agent::{AIAgentAction, AIAgentActionId, AIAgentActionResultType};
@@ -16,7 +16,7 @@ use crate::workspaces::{team_tester::TeamTesterStatus, user_workspaces::UserWork
 use crate::LaunchMode;
 use ai::agent::action::AskUserQuestionItem;
 use ai::agent::action_result::{AskUserQuestionAnswerItem, AskUserQuestionResult};
-use warpui::{App, EntityId, ModelHandle};
+use zterm_ui::{App, EntityId, ModelHandle};
 
 fn build_action(action_id: &str) -> AIAgentAction {
     AIAgentAction {

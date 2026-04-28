@@ -1,6 +1,6 @@
-use std::path::PathBuf;
+﻿use std::path::PathBuf;
 
-use warpui::{
+use zterm_ui::{
     elements::{MouseStateHandle, Text},
     Element,
 };

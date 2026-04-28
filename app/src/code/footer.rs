@@ -6,30 +6,30 @@ use lsp::{
     LanguageId, LanguageServerId, LspManagerModel, LspManagerModelEvent, LspServerModel,
     LspState as LspModelState,
 };
-use warp_core::send_telemetry_from_ctx;
+use zterm_core::send_telemetry_from_ctx;
 
 use crate::code::lsp_telemetry::{LspControlActionType, LspEnablementSource, LspTelemetryEvent};
 use pathfinder_color::ColorU;
 use pathfinder_geometry::vector::vec2f;
-use warp_core::ui::theme::color::internal_colors;
-use warp_core::ui::theme::{Fill as ThemeFill, WarpTheme};
-use warp_core::ui::{appearance::Appearance, Icon};
-use warpui::elements::{
+use zterm_core::ui::theme::color::internal_colors;
+use zterm_core::ui::theme::{Fill as ThemeFill, ZtermTheme};
+use zterm_core::ui::{appearance::Appearance, Icon};
+use zterm_ui::elements::{
     ChildAnchor, ChildView, Dismiss, Empty, Hoverable, MainAxisSize, MouseStateHandle,
     ParentAnchor, ParentOffsetBounds, Rect, Shrinkable,
 };
-use warpui::platform::Cursor;
-use warpui::ui_components::components::{UiComponent, UiComponentStyles};
-use warpui::{
+use zterm_ui::platform::Cursor;
+use zterm_ui::ui_components::components::{UiComponent, UiComponentStyles};
+use zterm_ui::{
     elements::{
         Border, ConstrainedBox, Container, CornerRadius, CrossAxisAlignment, Fill, Flex,
         MainAxisAlignment, OffsetPositioning, Padding, ParentElement, Radius, Stack,
     },
     AppContext, Element, Entity, ModelHandle, SingletonEntity, View, WeakModelHandle,
 };
-use warpui::{TypedActionView, ViewContext, ViewHandle};
+use zterm_ui::{TypedActionView, ViewContext, ViewHandle};
 
-use warp_core::ui::theme::AnsiColorIdentifier;
+use zterm_core::ui::theme::AnsiColorIdentifier;
 
 #[cfg(feature = "local_fs")]
 use crate::ai::persisted_workspace::PersistedWorkspaceEvent;
@@ -167,7 +167,7 @@ enum LSPServerRenderStatus {
 }
 
 impl LSPServerRenderStatus {
-    fn to_icon_color(&self, theme: &WarpTheme) -> ColorU {
+    fn to_icon_color(&self, theme: &ZtermTheme) -> ColorU {
         match self {
             LSPServerRenderStatus::Available => AnsiColorIdentifier::Green
                 .to_ansi_color(&theme.terminal_colors().normal)
@@ -285,11 +285,11 @@ impl CodeFooterView {
         })
     }
 
-    fn render_tab_config_info_icon(theme: &WarpTheme) -> Box<dyn Element> {
+    fn render_tab_config_info_icon(theme: &ZtermTheme) -> Box<dyn Element> {
         Container::new(
             ConstrainedBox::new(
                 Icon::Info
-                    .to_warpui_icon(theme.active_ui_text_color())
+                    .to_zterm_ui_icon(theme.active_ui_text_color())
                     .finish(),
             )
             .with_width(12.)
@@ -1170,7 +1170,7 @@ impl CodeFooterView {
             mouse_states.open_logs.clone(),
             move || {
                 Icon::Code1
-                    .to_warpui_icon(ThemeFill::Solid(text_color))
+                    .to_zterm_ui_icon(ThemeFill::Solid(text_color))
                     .finish()
             },
             "Open logs",
@@ -1192,7 +1192,7 @@ impl CodeFooterView {
             mouse_states.restart_server.clone(),
             move || {
                 Icon::RefreshCcw
-                    .to_warpui_icon(ThemeFill::Solid(text_color))
+                    .to_zterm_ui_icon(ThemeFill::Solid(text_color))
                     .finish()
             },
             "Restart server",
@@ -1237,7 +1237,7 @@ impl CodeFooterView {
             mouse_states.start_server.clone(),
             move || {
                 Icon::Play
-                    .to_warpui_icon(ThemeFill::Solid(text_color))
+                    .to_zterm_ui_icon(ThemeFill::Solid(text_color))
                     .finish()
             },
             "Start server",
@@ -1259,7 +1259,7 @@ impl CodeFooterView {
             mouse_states.remove_server.clone(),
             move || {
                 Icon::Trash
-                    .to_warpui_icon(ThemeFill::Solid(text_color))
+                    .to_zterm_ui_icon(ThemeFill::Solid(text_color))
                     .finish()
             },
             "Remove server",
@@ -1282,7 +1282,7 @@ impl CodeFooterView {
             mouse_states.restart_all.clone(),
             move || {
                 Icon::RefreshCcw
-                    .to_warpui_icon(ThemeFill::Solid(text_color))
+                    .to_zterm_ui_icon(ThemeFill::Solid(text_color))
                     .finish()
             },
             if is_plural {
@@ -1338,7 +1338,7 @@ impl CodeFooterView {
             mouse_states.start_all.clone(),
             move || {
                 Icon::Play
-                    .to_warpui_icon(ThemeFill::Solid(text_color))
+                    .to_zterm_ui_icon(ThemeFill::Solid(text_color))
                     .finish()
             },
             if !is_plural {
@@ -1366,7 +1366,7 @@ impl CodeFooterView {
             mouse_states.manage_servers.clone(),
             move || {
                 Icon::Gear
-                    .to_warpui_icon(ThemeFill::Solid(text_color))
+                    .to_zterm_ui_icon(ThemeFill::Solid(text_color))
                     .finish()
             },
             "Manage servers",
@@ -1376,7 +1376,7 @@ impl CodeFooterView {
 
     /// Computes the aggregate indicator color across all tracked servers.
     /// Priority: Failed > Busy > Stopped > Available.
-    fn aggregate_indicator_color(&self, theme: &WarpTheme, app: &AppContext) -> ColorU {
+    fn aggregate_indicator_color(&self, theme: &ZtermTheme, app: &AppContext) -> ColorU {
         if self.lsp_servers.is_empty() {
             return LSPServerRenderStatus::Stopped.to_icon_color(theme);
         }
@@ -1449,7 +1449,7 @@ impl CodeFooterView {
     }
 
     fn render_status_text(
-        theme: &WarpTheme,
+        theme: &ZtermTheme,
         appearance: &Appearance,
         message: String,
     ) -> Box<dyn Element> {

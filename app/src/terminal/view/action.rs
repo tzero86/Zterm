@@ -8,11 +8,11 @@ use command_corrections::Correction;
 use pathfinder_geometry::vector::Vector2F;
 use session_sharing_protocol::common::Role;
 use session_sharing_protocol::sharer::RoleUpdateReason;
-use warp_util::user_input::UserInput;
-use warpui::elements::HyperlinkUrl;
-use warpui::event::ModifiersState;
-use warpui::units::Lines;
-use warpui::EntityId;
+use zterm_util::user_input::UserInput;
+use zterm_ui::elements::HyperlinkUrl;
+use zterm_ui::event::ModifiersState;
+use zterm_ui::units::Lines;
+use zterm_ui::EntityId;
 
 use crate::ai::agent::conversation::AIConversationId;
 use crate::ai::agent::AIAgentExchangeId;
@@ -281,7 +281,7 @@ pub enum TerminalAction {
     OpenCodeInWarp {
         path: PathBuf,
         layout: crate::util::file::external_editor::settings::EditorLayout,
-        line_col: Option<warp_util::path::LineAndColumnArg>,
+        line_col: Option<zterm_util::path::LineAndColumnArg>,
     },
     OpenWorkflowModal,
     OpenWorkflowModalForAIWorkflow(Workflow),
@@ -293,13 +293,13 @@ pub enum TerminalAction {
     /// Starts a subshell in the active session.
     TriggerSubshellBootstrap,
     /// If the user says "no" to Warpification, possibly requesting not to be asked again
-    DismissWarpifyBanner(RememberForWarpification),
+    DismissZtermifyBanner(RememberForWarpification),
     /// Triggers the banner asking to turn the running block into a subshell. The String is the
     /// command that the user entered.
     ShowSubshellBanner(String),
-    /// Triggers the banner asking to Warpify the active ssh session. The String is the
+    /// Triggers the banner asking to Ztermify the active ssh session. The String is the
     /// command that the user entered.
-    ShowWarpifySshBanner(String, Option<String>),
+    ShowZtermifySshBanner(String, Option<String>),
     InsertMostRecentCommandCorrection,
     AliasExpansionBanner(AliasExpansionBannerAction),
     OpenInWarpBanner(OpenInWarpBannerAction),
@@ -330,8 +330,8 @@ pub enum TerminalAction {
     /// it if possible.
     SelectAIAttachedBlock(BlockIndex),
     DragAndDropFiles(Vec<String>),
-    /// Triggers an ssh session to warpify, even if there is no Warpify Block.
-    WarpifySSHSession,
+    /// Triggers an ssh session to warpify, even if there is no Ztermify Block.
+    ZtermifySSHSession,
     NotifySshErrorBlock(SshErrorBlockAction),
     /// Sets the input mode to Agent Mode
     SetInputModeAgent,
@@ -357,7 +357,7 @@ pub enum TerminalAction {
     GenerateCodebaseIndex,
     /// This is for debugging, dev only for now
     LoadAgentModeConversation,
-    ShowWarpifySettings,
+    ShowZtermifySettings,
     /// Removes a pending attachment (image or file) by index in the unified list.
     DeleteAttachment {
         index: usize,
@@ -580,9 +580,9 @@ impl fmt::Debug for TerminalAction {
             OpenBlockListContextMenu => f.write_str("OpenBlockListContextMenu"),
             AskAIAssistant { block_index } => write!(f, "AskAIAssistant({block_index:?})"),
             TriggerSubshellBootstrap => f.write_str("TriggerSubshellBootstrap"),
-            DismissWarpifyBanner(remember) => write!(f, "DismissWarpifyBanner({remember:?})"),
+            DismissZtermifyBanner(remember) => write!(f, "DismissZtermifyBanner({remember:?})"),
             ShowSubshellBanner(_) => f.write_str("ShowSubshellBanner"),
-            ShowWarpifySshBanner(_, _) => f.write_str("ShowWarpifySshBanner"),
+            ShowZtermifySshBanner(_, _) => f.write_str("ShowZtermifySshBanner"),
             InsertMostRecentCommandCorrection => f.write_str("InsertMostRecentCommandCorrection"),
             AliasExpansionBanner(action) => write!(f, "AliasExpansionBanner({action:?}"),
             OpenInWarpBanner(action) => write!(f, "OpenInWarpBanner({action:?})"),
@@ -620,7 +620,7 @@ impl fmt::Debug for TerminalAction {
             ExecuteRewindFromInlineMenu { .. } => write!(f, "ExecuteRewindFromInlineMenu"),
             SelectAIAttachedBlock(_) => write!(f, "SelectAIAttachedBlock"),
             DragAndDropFiles(_) => write!(f, "DragAndDropFiles"),
-            WarpifySSHSession => write!(f, "WarpifySSHSession"),
+            ZtermifySSHSession => write!(f, "ZtermifySSHSession"),
             NotifySshErrorBlock(action) => write!(f, "NotifySshErrorBlock({action:?})"),
             SetInputModeAgent => write!(f, "SetInputModeAgent"),
             SetInputModeTerminal => write!(f, "SetInputModeTerminal"),
@@ -644,7 +644,7 @@ impl fmt::Debug for TerminalAction {
             ShowInitializationBlock => write!(f, "ShowInitializationBlock"),
             GenerateCodebaseIndex => write!(f, "GenerateIndexForRepo"),
             LoadAgentModeConversation => write!(f, "LoadAgentModeConversation"),
-            ShowWarpifySettings => write!(f, "ShowWarpifySettings"),
+            ShowZtermifySettings => write!(f, "ShowZtermifySettings"),
             DeleteAttachment { index } => write!(f, "DeleteAttachment({index:?})"),
             WriteCodebaseIndex => write!(f, "PersistCodebaseIndex"),
             ToggleAutoexecuteMode => write!(f, "ToggleAutoexecuteMode"),

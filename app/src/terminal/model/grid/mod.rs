@@ -1,4 +1,4 @@
-mod displayed_output;
+﻿mod displayed_output;
 pub mod grid_handler;
 mod grid_storage;
 mod indexing;
@@ -9,7 +9,7 @@ pub(super) mod grapheme_cursor;
 #[cfg(test)]
 mod tests;
 
-pub use warp_terminal::model::grid::row;
+pub use zterm_terminal::model::grid::row;
 
 pub use displayed_output::RespectDisplayedOutput;
 pub use grid_storage::*;

@@ -36,21 +36,21 @@ use inheritance::{InheritanceDetails, InheritanceState};
 use itertools::Itertools;
 use pathfinder_geometry::vector::vec2f;
 use session_sharing_protocol::common::{Guest, PendingGuest, SessionId, TeamAclData};
-use warp_core::ui::appearance::Appearance;
-use warp_editor::editor::NavigationKey;
-use warpui::elements::{
+use zterm_core::ui::appearance::Appearance;
+use zterm_editor::editor::NavigationKey;
+use zterm_ui::elements::{
     Align, ChildAnchor, ChildView, Fill, Highlight, MainAxisSize, MouseStateHandle,
     OffsetPositioning, ParentAnchor, PositionedElementAnchor, PositionedElementOffsetBounds,
     SavePosition, ScrollStateHandle, Scrollable, ScrollableElement, ScrollbarWidth, Shrinkable,
     Stack, UniformList, UniformListState,
 };
-use warpui::fonts::{Properties, Weight};
-use warpui::platform::Cursor;
-use warpui::ui_components::button::{ButtonVariant, TextAndIcon, TextAndIconAlignment};
-use warpui::ui_components::components::Coords;
-use warpui::FocusContext;
-use warpui::WeakViewHandle;
-use warpui::{
+use zterm_ui::fonts::{Properties, Weight};
+use zterm_ui::platform::Cursor;
+use zterm_ui::ui_components::button::{ButtonVariant, TextAndIcon, TextAndIconAlignment};
+use zterm_ui::ui_components::components::Coords;
+use zterm_ui::FocusContext;
+use zterm_ui::WeakViewHandle;
+use zterm_ui::{
     clipboard::ClipboardContent,
     elements::{
         Border, ConstrainedBox, Container, CornerRadius, CrossAxisAlignment, Dismiss, Empty, Flex,
@@ -198,7 +198,7 @@ pub enum SharingDialogAction {
 }
 
 pub fn init(app: &mut AppContext) {
-    use warpui::keymap::macros::*;
+    use zterm_ui::keymap::macros::*;
 
     app.register_fixed_bindings([FixedBinding::new(
         "escape",
@@ -392,11 +392,11 @@ impl SharingDialog {
         }
     }
 
-    /// The Warp Drive server ID for the target object. `None` if the target is not a Warp Drive
+    /// The Zterm Drive server ID for the target object. `None` if the target is not a Zterm Drive
     /// object or AI conversation.
     fn target_cloud_object_id(&self, app: &AppContext) -> Option<ServerId> {
         match self.target.as_ref() {
-            Some(ShareableObject::WarpDriveObject(id)) => Some(*id),
+            Some(ShareableObject::ZtermDriveObject(id)) => Some(*id),
             Some(ShareableObject::AIConversation(id)) => BlocklistAIHistoryModel::as_ref(app)
                 .get_server_conversation_metadata(id)
                 .map(|m| ServerId::from_string_lossy(m.metadata.uid.uid())),
@@ -404,7 +404,7 @@ impl SharingDialog {
         }
     }
 
-    /// The targeted Warp Drive object, or `None` if the target is not a known Warp Drive object.
+    /// The targeted Zterm Drive object, or `None` if the target is not a known Zterm Drive object.
     fn target_cloud_object<'a>(&self, app: &'a AppContext) -> Option<&'a dyn CloudObject> {
         self.target_cloud_object_id(app)
             .and_then(|id| CloudModel::as_ref(app).get_by_uid(&id.uid()))
@@ -415,7 +415,7 @@ impl SharingDialog {
         self.target
             .as_ref()
             .and_then(|target| match target {
-                ShareableObject::WarpDriveObject(server_id) => CloudModel::as_ref(app)
+                ShareableObject::ZtermDriveObject(server_id) => CloudModel::as_ref(app)
                     .get_by_uid(&server_id.uid())
                     .map(|object| object.display_name()),
                 ShareableObject::Session { .. } => Some("session".to_string()),
@@ -445,7 +445,7 @@ impl SharingDialog {
         match self.target.as_ref() {
             // Always treat session contents as "editable," so that the sharing dialog is shown.
             Some(ShareableObject::Session { .. }) => ContentEditability::Editable,
-            Some(ShareableObject::WarpDriveObject(id)) => {
+            Some(ShareableObject::ZtermDriveObject(id)) => {
                 CloudViewModel::as_ref(app).object_editability(&id.uid(), app)
             }
             // Always treat AI conversations as "editable," so that the sharing dialog is shown.
@@ -457,7 +457,7 @@ impl SharingDialog {
     /// The current user's access level on the shared object.
     fn access_level(&self, app: &AppContext) -> SharingAccessLevel {
         match self.target.as_ref() {
-            Some(ShareableObject::WarpDriveObject(id)) => {
+            Some(ShareableObject::ZtermDriveObject(id)) => {
                 CloudViewModel::as_ref(app).access_level(&id.uid(), app)
             }
             Some(ShareableObject::AIConversation(id)) => {
@@ -578,10 +578,10 @@ impl SharingDialog {
     /// Report a telemetry event for opening this sharing dialog.
     ///
     /// This should be called by views that contain a sharing dialog whenever they open it (i.e.
-    /// panes and the Warp Drive index).
+    /// panes and the Zterm Drive index).
     pub fn report_open(&self, source: SharingDialogSource, ctx: &mut ViewContext<Self>) {
         let event = match self.target.as_ref() {
-            Some(ShareableObject::WarpDriveObject(id)) => {
+            Some(ShareableObject::ZtermDriveObject(id)) => {
                 match CloudModel::as_ref(ctx).get_by_uid(&id.uid()) {
                     Some(object) => TelemetryEvent::OpenedSharingDialog(OpenedSharingDialogEvent {
                         source,
@@ -621,7 +621,7 @@ impl SharingDialog {
 
     fn owner(&self, app: &AppContext) -> Option<Subject> {
         match self.target.as_ref()? {
-            ShareableObject::WarpDriveObject(id) => {
+            ShareableObject::ZtermDriveObject(id) => {
                 let owner = CloudModel::as_ref(app)
                     .get_by_uid(&id.uid())?
                     .permissions()
@@ -910,7 +910,7 @@ impl SharingDialog {
                         source: SharedSessionActionSource::SharingDialog,
                     })
                 }
-                Some(ShareableObject::WarpDriveObject(_))
+                Some(ShareableObject::ZtermDriveObject(_))
                 | Some(ShareableObject::AIConversation(_)) => {
                     Some(TelemetryEvent::ObjectLinkCopied { link: url.clone() })
                 }
@@ -981,7 +981,7 @@ impl SharingDialog {
                 }
 
                 // Add Remove option for non-team guests, or for team guests in non-session contexts
-                // (team removal is supported for WarpDrive objects and AI conversations, but not sessions)
+                // (team removal is supported for ZtermDrive objects and AI conversations, but not sessions)
                 if !is_team_guest || !is_session {
                     items.push(MenuItem::Separator);
                     items.push(
@@ -1027,7 +1027,7 @@ impl SharingDialog {
         }
 
         match &self.target {
-            Some(ShareableObject::WarpDriveObject(object_id)) => {
+            Some(ShareableObject::ZtermDriveObject(object_id)) => {
                 let guest_identifier = guest.subject.to_guest_identifier(ctx);
                 if let Some(guest_identifier) = guest_identifier {
                     let object_id = *object_id;
@@ -1096,7 +1096,7 @@ impl SharingDialog {
         ctx.notify();
 
         match &self.target {
-            Some(ShareableObject::WarpDriveObject(object_id)) => {
+            Some(ShareableObject::ZtermDriveObject(object_id)) => {
                 self.set_targeted_guest_access_for_object(idx, access_level, *object_id, ctx);
             }
             Some(ShareableObject::Session { handle, .. }) => {
@@ -1433,7 +1433,7 @@ impl SharingDialog {
             invite_button = invite_button.disabled();
         }
 
-        // For Warp Drive targets, we can't update permissions while there's a pending change.
+        // For Zterm Drive targets, we can't update permissions while there's a pending change.
         if self
             .target_cloud_object(app)
             .is_some_and(|object| object.metadata().has_pending_online_only_change())
@@ -1580,7 +1580,7 @@ impl SharingDialog {
         }
 
         match &self.target {
-            Some(ShareableObject::WarpDriveObject(object_id)) => {
+            Some(ShareableObject::ZtermDriveObject(object_id)) => {
                 UpdateManager::handle(ctx).update(ctx, |update_manager, ctx| {
                     update_manager.add_object_guests(
                         *object_id,
@@ -2425,7 +2425,7 @@ impl SharingDialog {
                 TextAndIcon::new(
                     TextAndIconAlignment::IconFirst,
                     "Copy link",
-                    Icon::Link.to_warpui_icon(copy_button_foreground),
+                    Icon::Link.to_zterm_ui_icon(copy_button_foreground),
                     MainAxisSize::Min,
                     MainAxisAlignment::SpaceBetween,
                     vec2f(12., 12.),
@@ -2560,7 +2560,7 @@ impl TypedActionView for SharingDialog {
             }
             SharingDialogAction::SetLinkPermissions(access_level) => {
                 self.set_open_menu(OpenMenuState::None, ctx);
-                if let Some(ShareableObject::WarpDriveObject(id)) = self.target.as_ref() {
+                if let Some(ShareableObject::ZtermDriveObject(id)) = self.target.as_ref() {
                     UpdateManager::handle(ctx).update(ctx, move |update_manager, ctx| {
                         update_manager.set_object_link_permissions(*id, *access_level, ctx);
                     });

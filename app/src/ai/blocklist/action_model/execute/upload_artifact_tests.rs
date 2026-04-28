@@ -1,8 +1,8 @@
-use std::fs;
+﻿use std::fs;
 use std::path::{Path, PathBuf};
 
 use async_channel::unbounded;
-use warpui::{App, EntityId, ModelHandle};
+use zterm_ui::{App, EntityId, ModelHandle};
 
 use crate::ai::agent::task::TaskId;
 use crate::ai::agent::{

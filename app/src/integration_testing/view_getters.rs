@@ -1,4 +1,4 @@
-//! Various view getters with cardinality assumptions to reduce boilerplate
+﻿//! Various view getters with cardinality assumptions to reduce boilerplate
 //! needed to get a view from the view tree.
 //! We should migrate to these view getters because to make it easier to work
 //! with tabs and panes. The old view getters use `tab_idx` without considering
@@ -24,8 +24,8 @@ use crate::{
     workflows::{workflow_view::WorkflowView, CategoriesView},
     workspace::Workspace,
 };
-use warpui::Entity;
-use warpui::{async_assert, integration::AssertionCallback, App, View, ViewHandle, WindowId};
+use zterm_ui::Entity;
+use zterm_ui::{async_assert, integration::AssertionCallback, App, View, ViewHandle, WindowId};
 
 /// This identifier is useful when you'd like to weakly identify a terminal view
 /// without actually grabbing a handle to it. Often useful when writing reusable assertions.

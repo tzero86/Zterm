@@ -1,9 +1,9 @@
 use std::sync::Arc;
 
 use serde::{Deserialize, Serialize};
-use warp_core::context_flag::ContextFlag;
-use warp_core::features::FeatureFlag;
-use warpui::{AppContext, SingletonEntity};
+use zterm_core::context_flag::ContextFlag;
+use zterm_core::features::FeatureFlag;
+use zterm_ui::{AppContext, SingletonEntity};
 
 pub mod categories;
 use anyhow::Result;
@@ -28,8 +28,8 @@ use crate::cloud_object::{
 };
 use crate::server::cloud_objects::update_manager::InitiatedBy;
 
-use crate::drive::items::workflow::WarpDriveWorkflow;
-use crate::drive::items::WarpDriveItem;
+use crate::drive::items::workflow::ZtermDriveWorkflow;
+use crate::drive::items::ZtermDriveItem;
 use crate::drive::CloudObjectTypeAndId;
 use crate::notebooks::{NotebookId, NotebookLocation};
 use crate::persistence::ModelEvent;
@@ -53,7 +53,7 @@ pub enum WorkflowSource {
         team_uid: ServerId,
     },
     PersonalCloud,
-    WarpAI,
+    ZtermAI,
     Notebook {
         notebook_id: Option<NotebookId>,
         team_uid: Option<ServerId>,
@@ -67,11 +67,11 @@ pub enum WorkflowSource {
 
 #[derive(Copy, Clone, Debug, Deserialize, Serialize, Eq, PartialEq, Hash, PartialOrd)]
 pub enum WorkflowSelectionSource {
-    WarpDrive,
+    ZtermDrive,
     CommandPalette,
     UniversalSearch,
     Voltron,
-    WarpAI,
+    ZtermAI,
     Notebook,
     SlashMenu,
     UpArrowHistory,
@@ -146,7 +146,7 @@ crate::server_id_traits! { WorkflowId, "Workflow" }
 pub enum AIWorkflowOrigin {
     CommandSearch,
     AgentMode,
-    LegacyWarpAI,
+    LegacyZtermAI,
 }
 
 /// Wrapper type for a workflow that may be saved locally or using cloud sync.
@@ -156,7 +156,7 @@ pub enum WorkflowType {
     Local(Workflow),
     /// Saved workflows from personal or team collections, saved using cloud-sync.
     Cloud(Box<CloudWorkflow>),
-    /// Ephemeral/transient workflows created from Warp AI output
+    /// Ephemeral/transient workflows created from Zterm AI output
     AIGenerated {
         workflow: Workflow,
         origin: AIWorkflowOrigin,
@@ -353,8 +353,8 @@ impl CloudModelType for CloudWorkflowModel {
         id: SyncId,
         _appearance: &Appearance,
         workflow: &CloudWorkflow,
-    ) -> Option<Box<dyn WarpDriveItem>> {
-        Some(Box::new(WarpDriveWorkflow::new(
+    ) -> Option<Box<dyn ZtermDriveItem>> {
+        Some(Box::new(ZtermDriveWorkflow::new(
             self.cloud_object_type_and_id(id),
             workflow.clone(),
         )))

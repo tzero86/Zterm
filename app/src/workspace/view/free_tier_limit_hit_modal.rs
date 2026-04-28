@@ -10,22 +10,22 @@ use markdown_parser::{FormattedText, FormattedTextFragment, FormattedTextLine};
 use pathfinder_color::ColorU;
 use pathfinder_geometry::vector::vec2f;
 use thousands::Separable;
-use warp_core::send_telemetry_from_ctx;
-use warp_core::ui::appearance::Appearance;
-use warp_core::ui::theme::{Fill, WarpTheme};
-use warp_graphql::billing::{PlanPricing, StripeSubscriptionPlan};
-use warpui::elements::{
+use zterm_core::send_telemetry_from_ctx;
+use zterm_core::ui::appearance::Appearance;
+use zterm_core::ui::theme::{Fill, ZtermTheme};
+use zterm_graphql::billing::{PlanPricing, StripeSubscriptionPlan};
+use zterm_ui::elements::{
     Align, Border, CacheOption, ChildAnchor, ConstrainedBox, Container, CornerRadius,
     CrossAxisAlignment, DropShadow, Flex, FormattedTextElement, HighlightedHyperlink, Image,
     MainAxisAlignment, MainAxisSize, MouseStateHandle, OffsetPositioning, ParentAnchor,
     ParentElement, ParentOffsetBounds, Radius, Stack,
 };
-use warpui::fonts::Weight;
-use warpui::keymap::FixedBinding;
-use warpui::platform::Cursor;
-use warpui::ui_components::button::ButtonVariant;
-use warpui::ui_components::components::{UiComponent, UiComponentStyles};
-use warpui::{AppContext, Element, Entity, SingletonEntity, TypedActionView, View, ViewContext};
+use zterm_ui::fonts::Weight;
+use zterm_ui::keymap::FixedBinding;
+use zterm_ui::platform::Cursor;
+use zterm_ui::ui_components::button::ButtonVariant;
+use zterm_ui::ui_components::components::{UiComponent, UiComponentStyles};
+use zterm_ui::{AppContext, Element, Entity, SingletonEntity, TypedActionView, View, ViewContext};
 
 const BUTTON_DIAMETER: f32 = 20.;
 const MODAL_HEIGHT: f32 = 440.;
@@ -33,7 +33,7 @@ const LEFT_PANEL_WIDTH: f32 = 360.;
 const RIGHT_PANEL_WIDTH: f32 = 360.;
 
 pub fn init(app: &mut AppContext) {
-    use warpui::keymap::macros::*;
+    use zterm_ui::keymap::macros::*;
 
     app.register_fixed_bindings([FixedBinding::new(
         "escape",
@@ -97,7 +97,7 @@ impl FreeTierLimitHitModal {
     fn render_checklist_item_dynamic(
         text: String,
         appearance: &Appearance,
-        theme: &WarpTheme,
+        theme: &ZtermTheme,
     ) -> Box<dyn Element> {
         let formatted_text = FormattedText::new([FormattedTextLine::Line(vec![
             FormattedTextFragment::plain_text(text),
@@ -108,7 +108,7 @@ impl FreeTierLimitHitModal {
                 Container::new(
                     ConstrainedBox::new(
                         Icon::CheckCircleBroken
-                            .to_warpui_icon(Fill::Solid(theme.ansi_fg_green()))
+                            .to_zterm_ui_icon(Fill::Solid(theme.ansi_fg_green()))
                             .finish(),
                     )
                     .with_width(14.)
@@ -240,7 +240,7 @@ impl FreeTierLimitHitModal {
                                         Container::new(
                                             ConstrainedBox::new(
                                                 Icon::CheckCircleBroken
-                                                    .to_warpui_icon(Fill::Solid(theme.ansi_fg_green()))
+                                                    .to_zterm_ui_icon(Fill::Solid(theme.ansi_fg_green()))
                                                     .finish(),
                                             )
                                             .with_width(14.)
@@ -283,7 +283,7 @@ impl FreeTierLimitHitModal {
                                         Container::new(
                                             ConstrainedBox::new(
                                                 Icon::CheckCircleBroken
-                                                    .to_warpui_icon(Fill::Solid(theme.ansi_fg_green()))
+                                                    .to_zterm_ui_icon(Fill::Solid(theme.ansi_fg_green()))
                                                     .finish(),
                                             )
                                             .with_width(14.)

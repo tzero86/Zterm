@@ -1,4 +1,4 @@
-//! Periodically shuts down idle LSP servers.
+﻿//! Periodically shuts down idle LSP servers.
 //!
 //! Every `SCAN_INTERVAL` this singleton scans for workspaces that have a running LSP server
 //! but no associated:
@@ -12,8 +12,8 @@ use std::time::Duration;
 
 use futures::stream::AbortHandle;
 use lsp::LspManagerModel;
-use warpui::r#async::Timer;
-use warpui::{AppContext, Entity, ModelContext, SingletonEntity};
+use zterm_ui::r#async::Timer;
+use zterm_ui::{AppContext, Entity, ModelContext, SingletonEntity};
 
 use crate::code::local_code_editor::LocalCodeEditorView;
 use crate::terminal::TerminalView;

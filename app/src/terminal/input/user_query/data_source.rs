@@ -1,8 +1,8 @@
-//! Data source for the user query menu.
+﻿//! Data source for the user query menu.
 
 use itertools::Itertools;
 use ordered_float::OrderedFloat;
-use warpui::{AppContext, Entity, SingletonEntity};
+use zterm_ui::{AppContext, Entity, SingletonEntity};
 
 use crate::ai::agent::conversation::AIConversationId;
 use crate::ai::agent::AIAgentExchangeId;

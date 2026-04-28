@@ -1,4 +1,4 @@
-use crate::appearance::Appearance;
+﻿use crate::appearance::Appearance;
 use crate::context_chips::display_chip::{
     chip_container, render_git_diff_stats_content, render_udi_chip, udi_font_size, GitLineChanges,
     UdiChipConfig,
@@ -17,14 +17,14 @@ use crate::terminal::model::grid::Dimensions;
 use crate::terminal::safe_mode_settings::get_secret_obfuscation_mode;
 use crate::terminal::SizeInfo;
 use pathfinder_geometry::vector::vec2f;
-use warpui::elements::{
+use zterm_ui::elements::{
     Align, Border, ConstrainedBox, Container, CornerRadius, CrossAxisAlignment, Flex, Highlight,
     ParentElement, Radius, Shrinkable, Wrap,
 };
-use warpui::fonts::{Properties, Weight};
-use warpui::ui_components::components::{UiComponent, UiComponentStyles};
-use warpui::units::IntoPixels;
-use warpui::{AppContext, Element, SingletonEntity};
+use zterm_ui::fonts::{Properties, Weight};
+use zterm_ui::ui_components::components::{UiComponent, UiComponentStyles};
+use zterm_ui::units::IntoPixels;
+use zterm_ui::{AppContext, Element, SingletonEntity};
 
 /// Renders a navigation session.
 pub fn render_navigation_session(

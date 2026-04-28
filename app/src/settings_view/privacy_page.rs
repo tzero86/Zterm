@@ -6,28 +6,28 @@ use std::time::Duration;
 
 use pathfinder_geometry::vector::vec2f;
 
-use warp_core::ui::theme::color::internal_colors;
-use warpui::r#async::{SpawnedFutureHandle, Timer};
+use zterm_core::ui::theme::color::internal_colors;
+use zterm_ui::r#async::{SpawnedFutureHandle, Timer};
 
 use regex::Regex;
 use settings::Setting as _;
-use warp_core::context_flag::ContextFlag;
-use warp_core::features::FeatureFlag;
-use warp_core::ui::theme::WarpTheme;
-use warpui::elements::{
+use zterm_core::context_flag::ContextFlag;
+use zterm_core::features::FeatureFlag;
+use zterm_core::ui::theme::ZtermTheme;
+use zterm_ui::elements::{
     Align, ChildAnchor, ChildView, ConstrainedBox, Container, CornerRadius, CrossAxisAlignment,
     Empty, Expanded, Flex, Hoverable, MainAxisAlignment, MainAxisSize, MouseStateHandle,
     OffsetPositioning, ParentAnchor, ParentElement, ParentOffsetBounds, Radius, Rect, Shrinkable,
     Stack, Text,
 };
-use warpui::keymap::ContextPredicate;
-use warpui::platform::Cursor;
-use warpui::ui_components::button::{ButtonVariant, TextAndIcon, TextAndIconAlignment};
-use warpui::ui_components::{
+use zterm_ui::keymap::ContextPredicate;
+use zterm_ui::platform::Cursor;
+use zterm_ui::ui_components::button::{ButtonVariant, TextAndIcon, TextAndIconAlignment};
+use zterm_ui::ui_components::{
     components::{Coords, UiComponent, UiComponentStyles},
     switch::{SwitchStateHandle, TooltipConfig},
 };
-use warpui::{
+use zterm_ui::{
     Action, AppContext, Element, Entity, ModelHandle, SingletonEntity, TypedActionView,
     UpdateModel, View, ViewContext, ViewHandle,
 };
@@ -69,14 +69,14 @@ use super::{
 };
 
 use crate::modal::{Modal, ModalEvent, ModalViewState};
-use warpui::fonts::Weight;
+use zterm_ui::fonts::Weight;
 
 const FONT_SIZE: f32 = 12.;
 
 const SAFE_MODE_TITLE: &str = "Secret redaction";
 static SAFE_MODE_DESCRIPTION: LazyLock<&'static str> = LazyLock::new(|| {
     "When this setting is enabled, Warp will scan blocks, the contents of \
-        Warp Drive objects, and Oz prompts for potential sensitive \
+        Zterm Drive objects, and Oz prompts for potential sensitive \
         information and prevent saving or sending this data to any \
         servers. You can customize this list via regexes."
 });
@@ -1087,7 +1087,7 @@ impl SecretRedactionWidget {
         let info_icon = Container::new(
             ConstrainedBox::new(
                 Icon::Info
-                    .to_warpui_icon(
+                    .to_zterm_ui_icon(
                         appearance
                             .theme()
                             .hint_text_color(appearance.theme().background()),
@@ -1127,7 +1127,7 @@ impl SecretRedactionWidget {
         TextAndIcon::new(
             TextAndIconAlignment::IconFirst,
             text,
-            Icon::Plus.to_warpui_icon(appearance.theme().active_ui_text_color()),
+            Icon::Plus.to_zterm_ui_icon(appearance.theme().active_ui_text_color()),
             MainAxisSize::Min,
             MainAxisAlignment::SpaceBetween,
             vec2f(16., 16.),
@@ -1821,7 +1821,7 @@ impl SettingsWidget for NetworkLogWidget {
                 ui_builder
                     .paragraph(
                         "We've built a native console that allows you to view all communications \
-                        from Warp to external servers to ensure you feel comfortable that your \
+                        from Zterm to external servers to ensure you feel comfortable that your \
                         work is always kept safe."
                             .to_owned(),
                     )
@@ -2040,6 +2040,6 @@ mod styles {
     pub const DESCRIPTION_LINE_MARGIN_BOTTOM: f32 = 6.;
 }
 
-fn description_text_color(theme: &WarpTheme) -> warp_core::ui::theme::Fill {
+fn description_text_color(theme: &ZtermTheme) -> zterm_core::ui::theme::Fill {
     theme.sub_text_color(theme.surface_2())
 }

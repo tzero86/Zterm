@@ -5,9 +5,9 @@ use super::OnboardingSlide;
 use pathfinder_color::ColorU;
 use pathfinder_geometry::vector::vec2f;
 use ui_components::{button, Component as _, Options as _};
-use warp_core::send_telemetry_from_ctx;
-use warp_core::ui::{appearance::Appearance, theme::color::internal_colors, Icon};
-use warpui::{
+use zterm_core::send_telemetry_from_ctx;
+use zterm_core::ui::{appearance::Appearance, theme::color::internal_colors, Icon};
+use zterm_ui::{
     elements::{
         shimmering_text::{ShimmerConfig, ShimmeringTextElement, ShimmeringTextStateHandle},
         Align, ChildAnchor, ConstrainedBox, Container, CrossAxisAlignment, Flex,
@@ -139,7 +139,7 @@ impl IntroSlide {
         let theme = appearance.theme();
 
         let logo_fill = internal_colors::fg_overlay_4(theme);
-        let logo = ConstrainedBox::new(Icon::WarpLogoLight.to_warpui_icon(logo_fill).finish())
+        let logo = ConstrainedBox::new(Icon::WarpLogoLight.to_zterm_ui_icon(logo_fill).finish())
             .with_width(64.)
             .with_height(64.)
             .finish();

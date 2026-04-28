@@ -1,4 +1,4 @@
-use async_broadcast::InactiveReceiver;
+﻿use async_broadcast::InactiveReceiver;
 use parking_lot::FairMutex;
 use pathfinder_geometry::vector::Vector2F;
 use session_sharing_protocol::common::{
@@ -14,7 +14,7 @@ use std::any::Any;
 
 use std::sync::Arc;
 
-use warpui::{AppContext, ModelHandle, SingletonEntity, ViewHandle, WeakViewHandle, WindowId};
+use zterm_ui::{AppContext, ModelHandle, SingletonEntity, ViewHandle, WeakViewHandle, WindowId};
 
 use crate::ai::active_agent_views_model::ActiveAgentViewsModel;
 use crate::ai::agent::conversation::ConversationStatus;

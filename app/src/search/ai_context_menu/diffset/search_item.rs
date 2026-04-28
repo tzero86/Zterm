@@ -1,4 +1,4 @@
-use crate::appearance::Appearance;
+﻿use crate::appearance::Appearance;
 use crate::code_review::diff_state::DiffMode;
 use crate::search::ai_context_menu::mixer::AIContextMenuSearchableAction;
 use crate::search::ai_context_menu::styles;
@@ -6,10 +6,10 @@ use crate::search::item::SearchItem;
 use crate::search::result_renderer::ItemHighlightState;
 use fuzzy_match::FuzzyMatchResult;
 use ordered_float::OrderedFloat;
-use warpui::elements::{
+use zterm_ui::elements::{
     ConstrainedBox, Container, CrossAxisAlignment, Flex, Icon, ParentElement, Text,
 };
-use warpui::{AppContext, Element, SingletonEntity};
+use zterm_ui::{AppContext, Element, SingletonEntity};
 
 #[derive(Debug, Clone)]
 pub struct DiffSetSearchItem {

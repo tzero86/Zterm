@@ -19,17 +19,17 @@ use crate::server::ids::{ObjectUid, SyncId};
 use crate::settings::AISettings;
 use crate::workflows::CloudWorkflow;
 use std::collections::HashMap;
-use warpui::{AppContext, Entity, ModelContext, SingletonEntity};
+use zterm_ui::{AppContext, Entity, ModelContext, SingletonEntity};
 
-/// Datasource that searches against all Warp Drive objects
+/// Datasource that searches against all Zterm Drive objects
 pub struct DataSource {
-    searcher: Box<dyn WarpDriveSearcher>,
+    searcher: Box<dyn ZtermDriveSearcher>,
 }
 
 impl DataSource {
     #[cfg(not(target_family = "wasm"))]
     pub fn new(ctx: &mut ModelContext<Self>) -> Self {
-        if warp_core::features::FeatureFlag::UseTantivySearch.is_enabled() {
+        if zterm_core::features::FeatureFlag::UseTantivySearch.is_enabled() {
             Self::new_full_text(ctx)
         } else {
             Self::new_fuzzy(ctx)
@@ -43,7 +43,7 @@ impl DataSource {
 
     pub fn new_fuzzy(ctx: &mut ModelContext<Self>) -> Self {
         ctx.subscribe_to_model(&CloudModel::handle(ctx), Self::handle_cloud_object_updated);
-        let mut searcher = Box::new(FuzzyWarpDriveSearcher::default());
+        let mut searcher = Box::new(FuzzyZtermDriveSearcher::default());
         searcher.refresh_search_index(ctx).unwrap_or_else(|err| {
             log::error!("Error refreshing search index: {err:?}");
         });
@@ -53,7 +53,7 @@ impl DataSource {
     #[cfg(not(target_family = "wasm"))]
     fn new_full_text(ctx: &mut ModelContext<Self>) -> Self {
         ctx.subscribe_to_model(&CloudModel::handle(ctx), Self::handle_cloud_object_updated);
-        let mut searcher = Box::new(full_text_searcher::FullTextWarpDriveSearcher::new(
+        let mut searcher = Box::new(full_text_searcher::FullTextZtermDriveSearcher::new(
             ctx.background_executor(),
         ));
         searcher.refresh_search_index(ctx).unwrap_or_else(|err| {
@@ -276,7 +276,7 @@ impl Entity for DataSource {
     type Event = ();
 }
 
-trait WarpDriveSearcher {
+trait ZtermDriveSearcher {
     fn insert_searchable_object(
         &mut self,
         object: &dyn CloudObject,
@@ -322,13 +322,13 @@ trait WarpDriveSearcher {
 }
 
 #[derive(Default)]
-struct FuzzyWarpDriveSearcher {
+struct FuzzyZtermDriveSearcher {
     notebooks: HashMap<ObjectUid, CloudNotebook>,
     workflows: HashMap<ObjectUid, CloudWorkflow>,
     env_vars: HashMap<ObjectUid, CloudEnvVarCollection>,
 }
 
-impl WarpDriveSearcher for FuzzyWarpDriveSearcher {
+impl ZtermDriveSearcher for FuzzyZtermDriveSearcher {
     fn insert_searchable_object(
         &mut self,
         object: &dyn CloudObject,
@@ -550,7 +550,7 @@ mod full_text_searcher {
     use crate::env_vars::CloudEnvVarCollection;
     use crate::notebooks::manager::NotebookManager;
     use crate::notebooks::CloudNotebook;
-    use crate::search::command_palette::warp_drive::data_source::WarpDriveSearcher;
+    use crate::search::command_palette::warp_drive::data_source::ZtermDriveSearcher;
     use crate::search::command_palette::warp_drive::env_var_collection_search_item::{
         EnvVarCollectionSearchItem, ENV_VAR_NAME_SEPARATOR,
     };
@@ -564,14 +564,14 @@ mod full_text_searcher {
     use crate::workflows::CloudWorkflow;
     use fuzzy_match::FuzzyMatchResult;
     use itertools::Itertools;
-    use warpui::r#async::executor::Background;
-    use warpui::{AppContext, SingletonEntity};
+    use zterm_ui::r#async::executor::Background;
+    use zterm_ui::{AppContext, SingletonEntity};
 
     /// Memory budget for the search index of warp drive.
-    /// Warp could potentially have a lot of objects, so we increase it from the default of 50MB to 100MB
+    /// Zterm could potentially have a lot of objects, so we increase it from the default of 50MB to 100MB
     const MEMORY_BUDGET: usize = 100_000_000; // TODO: is 100MB really necessary?
 
-    // All Warp Drive objects are boosted due to multiple fields being a part of the same total score,
+    // All Zterm Drive objects are boosted due to multiple fields being a part of the same total score,
     // putting them at an inherent disadvantage, as each field would only have a fractional weight.
     define_search_schema!(
         schema_name: NOTEBOOK_SEARCH_SCHEMA,
@@ -621,13 +621,13 @@ mod full_text_searcher {
         boost_factor: 1.3
     );
 
-    pub(crate) struct FullTextWarpDriveSearcher {
+    pub(crate) struct FullTextZtermDriveSearcher {
         notebook_searcher: AsyncSearcher<NotebookConfig>,
         workflow_searcher: AsyncSearcher<WorkflowConfig>,
         env_var_searcher: AsyncSearcher<EnvVarConfig>,
     }
 
-    impl FullTextWarpDriveSearcher {
+    impl FullTextZtermDriveSearcher {
         fn search_notebooks_with_filter(
             &self,
             query: &str,
@@ -697,7 +697,7 @@ mod full_text_searcher {
         }
     }
 
-    impl WarpDriveSearcher for FullTextWarpDriveSearcher {
+    impl ZtermDriveSearcher for FullTextZtermDriveSearcher {
         fn insert_searchable_object(
             &mut self,
             object: &dyn CloudObject,
@@ -1114,9 +1114,9 @@ mod full_text_searcher {
         }
     }
 
-    impl FullTextWarpDriveSearcher {
+    impl FullTextZtermDriveSearcher {
         pub(crate) fn new(background: Arc<Background>) -> Self {
-            FullTextWarpDriveSearcher {
+            FullTextZtermDriveSearcher {
                 notebook_searcher: NOTEBOOK_SEARCH_SCHEMA
                     .create_async_searcher(MEMORY_BUDGET, background.clone()),
                 workflow_searcher: WORKFLOW_SEARCH_SCHEMA

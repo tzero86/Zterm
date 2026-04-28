@@ -1,4 +1,4 @@
-pub mod ai_agent_tasks;
+﻿pub mod ai_agent_tasks;
 pub mod blockgrid;
 pub mod settings;
 pub mod terminal;
@@ -21,7 +21,7 @@ macro_rules! assert_eventually {
                 pass = true;
                 break;
             }
-            warpui::r#async::Timer::after(std::time::Duration::from_millis(5)).await;
+            zterm_ui::r#async::Timer::after(std::time::Duration::from_millis(5)).await;
         }
         if !pass {
             panic!("{}", format_args!($($arg)+));

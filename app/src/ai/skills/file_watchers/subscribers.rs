@@ -1,11 +1,11 @@
-use std::pin::Pin;
+﻿use std::pin::Pin;
 
 use futures::Future;
 
 use ai::skills::{read_skills, ParsedSkill, SKILL_PROVIDER_DEFINITIONS};
 use async_channel::Sender;
 use repo_metadata::{repository::RepositorySubscriber, Repository, RepositoryUpdate};
-use warpui::ModelContext;
+use zterm_ui::ModelContext;
 
 /// Messages sent from [`RepositorySubscriber`]s to [`SkillManager`].
 pub enum SkillRepositoryMessage {

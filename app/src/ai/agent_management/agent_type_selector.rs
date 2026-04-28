@@ -1,4 +1,4 @@
-//! Agent type selector modal.
+﻿//! Agent type selector modal.
 //!
 //! This modal is displayed when users click "New agent" to choose between
 //! cloud and local agent modes.
@@ -7,18 +7,18 @@ use crate::appearance::Appearance;
 use crate::ui_components::icons::Icon;
 use pathfinder_color::ColorU;
 use pathfinder_geometry::vector::vec2f;
-use warp_core::ui::color::blend::Blend;
-use warp_core::ui::theme::color::internal_colors;
-use warpui::elements::{
+use zterm_core::ui::color::blend::Blend;
+use zterm_core::ui::theme::color::internal_colors;
+use zterm_ui::elements::{
     Align, Border, ConstrainedBox, Container, CornerRadius, CrossAxisAlignment, Dismiss,
     DropShadow, Element, Flex, Hoverable, MainAxisAlignment, MainAxisSize, MouseStateHandle,
     ParentElement, Radius, Shrinkable, Text,
 };
-use warpui::fonts::{Properties, Weight};
-use warpui::keymap::{FixedBinding, Keystroke};
-use warpui::platform::Cursor;
-use warpui::ui_components::components::{Coords, UiComponent, UiComponentStyles};
-use warpui::{AppContext, Entity, SingletonEntity, TypedActionView, View, ViewContext};
+use zterm_ui::fonts::{Properties, Weight};
+use zterm_ui::keymap::{FixedBinding, Keystroke};
+use zterm_ui::platform::Cursor;
+use zterm_ui::ui_components::components::{Coords, UiComponent, UiComponentStyles};
+use zterm_ui::{AppContext, Entity, SingletonEntity, TypedActionView, View, ViewContext};
 
 // Modal dimensions based on Figma design.
 const MODAL_WIDTH: f32 = 440.;
@@ -79,7 +79,7 @@ pub struct AgentTypeSelector {
 }
 
 pub fn init(app: &mut AppContext) {
-    use warpui::keymap::macros::*;
+    use zterm_ui::keymap::macros::*;
 
     app.register_fixed_bindings(vec![
         FixedBinding::new(
@@ -223,7 +223,7 @@ impl AgentTypeSelector {
                 (base_background, base_border)
             };
 
-            let avatar_icon = ConstrainedBox::new(icon.to_warpui_icon(icon_color).finish())
+            let avatar_icon = ConstrainedBox::new(icon.to_zterm_ui_icon(icon_color).finish())
                 .with_width(AVATAR_ICON_SIZE)
                 .with_height(AVATAR_ICON_SIZE)
                 .finish();

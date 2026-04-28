@@ -1,4 +1,4 @@
-mod v1;
+﻿mod v1;
 
 use serde::Deserialize;
 
@@ -57,8 +57,8 @@ pub struct CLIAgentEvent {
 #[cfg_attr(not(feature = "local_tty"), allow(dead_code))]
 const VERSIONED_PARSERS: &[EventParser] = &[v1::parse];
 
-/// The current CLI agent protocol version this build of Warp supports.
-/// Exported as the `WARP_CLI_AGENT_PROTOCOL_VERSION` env var on the PTY
+/// The current CLI agent protocol version this build of Zterm supports.
+/// Exported as the `ZTERM_CLI_AGENT_PROTOCOL_VERSION` env var on the PTY
 /// so plugins can negotiate a compatible payload format.
 #[cfg_attr(not(feature = "local_tty"), allow(dead_code))]
 pub const fn current_protocol_version() -> u32 {

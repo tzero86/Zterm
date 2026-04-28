@@ -1,6 +1,6 @@
-use std::sync::Arc;
-use warp_core::ui::appearance::Appearance;
-use warpui::{
+﻿use std::sync::Arc;
+use zterm_core::ui::appearance::Appearance;
+use zterm_ui::{
     elements::Empty, platform::WindowStyle, App, AppContext, Element, Entity, TypedActionView,
     View, ViewContext,
 };

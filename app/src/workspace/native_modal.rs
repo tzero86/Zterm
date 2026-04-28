@@ -1,23 +1,23 @@
-use crate::appearance::Appearance;
+﻿use crate::appearance::Appearance;
 use crate::terminal::general_settings::{GeneralSettings, GeneralSettingsChangedEvent};
 use crate::ui_components::dialog::{dialog_styles, Dialog};
 use settings::Setting as _;
-use warp_core::ui::theme::Fill;
-use warpui::elements::{Align, Container, Empty, Flex, ParentElement};
-use warpui::keymap::FixedBinding;
-use warpui::modals::{AlertDialogWithCallbacks, AppModalCallback};
-use warpui::ui_components::components::{Coords, UiComponent};
-use warpui::{
+use zterm_core::ui::theme::Fill;
+use zterm_ui::elements::{Align, Container, Empty, Flex, ParentElement};
+use zterm_ui::keymap::FixedBinding;
+use zterm_ui::modals::{AlertDialogWithCallbacks, AppModalCallback};
+use zterm_ui::ui_components::components::{Coords, UiComponent};
+use zterm_ui::{
     elements::MouseStateHandle,
     fonts::Weight,
     platform::Cursor,
     ui_components::{button::ButtonVariant, components::UiComponentStyles, text::Span},
     Element, Entity, TypedActionView, View,
 };
-use warpui::{AppContext, ModelHandle, SingletonEntity, ViewContext};
+use zterm_ui::{AppContext, ModelHandle, SingletonEntity, ViewContext};
 
 pub(super) fn init(app: &mut AppContext) {
-    use warpui::keymap::macros::*;
+    use zterm_ui::keymap::macros::*;
 
     app.register_fixed_bindings(vec![
         FixedBinding::new("escape", NativeModalAction::Close, id!("NativeModal")),
@@ -120,7 +120,7 @@ impl View for NativeModal {
         "NativeModal"
     }
 
-    fn render(&self, app: &warpui::AppContext) -> Box<dyn warpui::Element> {
+    fn render(&self, app: &zterm_ui::AppContext) -> Box<dyn zterm_ui::Element> {
         let Some(alert_dialog) = self.alert_dialog.as_ref() else {
             log::warn!("No alert dialog was set for the native modal");
             return Empty::new().finish();

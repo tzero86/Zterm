@@ -1,4 +1,4 @@
-use std::sync::Arc;
+﻿use std::sync::Arc;
 
 use crate::ai::blocklist::agent_view::AgentViewController;
 use crate::ai::blocklist::{BlocklistAIHistoryEvent, BlocklistAIHistoryModel};
@@ -13,8 +13,8 @@ use crate::{
     terminal::input::MenuPositioningProvider,
 };
 use std::path::PathBuf;
-use warp_core::features::FeatureFlag;
-use warpui::{
+use zterm_core::features::FeatureFlag;
+use zterm_ui::{
     elements::{
         ChildView, Clipped, Container, CrossAxisAlignment, Element, Flex, MainAxisAlignment,
         MainAxisSize, ParentElement, Wrap,

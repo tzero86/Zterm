@@ -1,12 +1,12 @@
-mod model;
+﻿mod model;
 
 pub use model::*;
 use pathfinder_color::ColorU;
 
 use std::borrow::Cow;
 
-use warp_core::{features::FeatureFlag, ui::appearance::Appearance};
-use warpui::{
+use zterm_core::{features::FeatureFlag, ui::appearance::Appearance};
+use zterm_ui::{
     elements::{Border, Container, CrossAxisAlignment, Expanded, Flex, ParentElement, Text},
     keymap::Keystroke,
     ui_components::components::{Coords, UiComponent, UiComponentStyles},
@@ -267,7 +267,7 @@ pub fn render_agent_shortcuts_view(
 }
 
 pub mod styles {
-    use warp_core::ui::appearance::Appearance;
+    use zterm_core::ui::appearance::Appearance;
 
     pub fn keystroke_size(appearance: &Appearance) -> f32 {
         font_size(appearance) + 2.

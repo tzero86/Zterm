@@ -1,13 +1,13 @@
-use std::{path::PathBuf, sync::Arc};
+﻿use std::{path::PathBuf, sync::Arc};
 
 use anyhow::{Context, Result};
 use serde::Serialize;
-use warp_cli::agent::OutputFormat;
-use warp_cli::artifact::{
+use zterm_cli::agent::OutputFormat;
+use zterm_cli::artifact::{
     ArtifactCommand, DownloadArtifactArgs, GetArtifactArgs, UploadArtifactArgs,
 };
-use warp_cli::GlobalOptions;
-use warpui::{platform::TerminationMode, AppContext, ModelContext, SingletonEntity};
+use zterm_cli::GlobalOptions;
+use zterm_ui::{platform::TerminationMode, AppContext, ModelContext, SingletonEntity};
 
 use crate::ai::artifact_download::{download_artifact_bytes, download_destination};
 #[cfg(test)]
@@ -129,7 +129,7 @@ impl ArtifactCommandRunner {
     }
 }
 
-impl warpui::Entity for ArtifactCommandRunner {
+impl zterm_ui::Entity for ArtifactCommandRunner {
     type Event = ();
 }
 

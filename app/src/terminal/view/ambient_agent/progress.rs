@@ -1,17 +1,17 @@
-//! Progress steps UI component for displaying multi-step loading/setup flows.
+﻿//! Progress steps UI component for displaying multi-step loading/setup flows.
 
 use std::borrow::Cow;
 use std::time::Duration;
 
 use pathfinder_geometry::vector::vec2f;
-use warp_core::ui::appearance::Appearance;
-use warp_core::ui::Icon;
-use warpui::elements::{
+use zterm_core::ui::appearance::Appearance;
+use zterm_core::ui::Icon;
+use zterm_ui::elements::{
     Border, ChildAnchor, ConstrainedBox, Container, CornerRadius, CrossAxisAlignment, Flex,
     MainAxisAlignment, MainAxisSize, OffsetPositioning, ParentElement, PositionedElementAnchor,
     PositionedElementOffsetBounds, Radius, Rect, SavePosition, Stack, Text,
 };
-use warpui::{AppContext, Element, WindowId};
+use zterm_ui::{AppContext, Element, WindowId};
 
 /// The state of a progress step.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -174,7 +174,7 @@ fn render_indicator(state: ProgressStepState, appearance: &Appearance) -> Box<dy
         ProgressStepState::Completed => {
             let check_icon = ConstrainedBox::new(
                 Icon::Check
-                    .to_warpui_icon(theme.main_text_color(background))
+                    .to_zterm_ui_icon(theme.main_text_color(background))
                     .finish(),
             )
             .with_width(ICON_SIZE)

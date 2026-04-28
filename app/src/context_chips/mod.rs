@@ -1,4 +1,4 @@
-// TODO: restrict what we make public here.
+﻿// TODO: restrict what we make public here.
 mod builtins;
 pub mod context_chip;
 pub mod current_prompt;
@@ -20,7 +20,7 @@ use std::time::Duration;
 use context_chip::PromptGenerator;
 use serde::{Deserialize, Serialize};
 use smol_str::SmolStr;
-use warpui::{
+use zterm_ui::{
     color::ColorU,
     elements::Text,
     fonts::{Properties, Weight},

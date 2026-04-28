@@ -1,4 +1,4 @@
-use super::super::buffer::{AnchorRangeExt, TextSummary};
+﻿use super::super::buffer::{AnchorRangeExt, TextSummary};
 use super::buffer::StylizedChar;
 use super::{buffer, Anchor, Buffer, DisplayPoint, Edit, Point, ToCharOffset};
 use crate::util::extensions::SliceExt as _;
@@ -10,8 +10,8 @@ use std::{
 };
 use string_offset::CharOffset;
 use sum_tree::{self, Cursor, Dimension, SeekBias, SumTree};
-use warpui::text_layout::TextStyle;
-use warpui::{AppContext, ModelHandle};
+use zterm_ui::text_layout::TextStyle;
+use zterm_ui::{AppContext, ModelHandle};
 
 pub struct FoldMap {
     buffer: ModelHandle<Buffer>,

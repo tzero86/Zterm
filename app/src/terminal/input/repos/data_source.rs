@@ -1,8 +1,8 @@
-//! Async data source for the inline repos menu.
+﻿//! Async data source for the inline repos menu.
 
 use std::path::PathBuf;
 
-use warpui::{AppContext, Entity, SingletonEntity};
+use zterm_ui::{AppContext, Entity, SingletonEntity};
 
 use crate::ai::persisted_workspace::PersistedWorkspace;
 use crate::search::data_source::{Query, QueryResult};

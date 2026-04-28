@@ -1,11 +1,11 @@
 use pathfinder_color::ColorU;
 use pathfinder_geometry::vector::vec2f;
 use regex_automata::hybrid::BuildError;
-use warp_editor::editor::NavigationKey;
-use warpui::elements::{Align, Dash};
-use warpui::ui_components::components::UiComponent;
-use warpui::FocusContext;
-use warpui::{
+use zterm_editor::editor::NavigationKey;
+use zterm_ui::elements::{Align, Dash};
+use zterm_ui::ui_components::components::UiComponent;
+use zterm_ui::FocusContext;
+use zterm_ui::{
     accessibility::{AccessibilityContent, WarpA11yRole},
     elements::{
         Border, ChildAnchor, Clipped, ConstrainedBox, Container, CornerRadius, CrossAxisAlignment,
@@ -475,7 +475,7 @@ impl BlockFilterEditor {
             };
             let icon = Container::new(
                 ConstrainedBox::new(
-                    icon.to_warpui_icon(appearance.theme().active_ui_text_color())
+                    icon.to_zterm_ui_icon(appearance.theme().active_ui_text_color())
                         .finish(),
                 )
                 .with_height(size)
@@ -641,7 +641,7 @@ impl View for BlockFilterEditor {
             |state| {
                 let context_line_icon = ConstrainedBox::new(
                     Icon::DistributeSpacingVertical
-                        .to_warpui_icon(
+                        .to_zterm_ui_icon(
                             blended_colors::text_main(
                                 appearance.theme(),
                                 appearance.theme().background(),

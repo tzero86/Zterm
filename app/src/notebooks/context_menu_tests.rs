@@ -1,8 +1,8 @@
 use pathfinder_geometry::vector::vec2f;
 use string_offset::ByteOffset;
-use warp_core::ui::appearance::Appearance;
-use warp_editor::model::CoreEditorModel;
-use warpui::{platform::WindowStyle, App};
+use zterm_core::ui::appearance::Appearance;
+use zterm_editor::model::CoreEditorModel;
+use zterm_ui::{platform::WindowStyle, App};
 
 use crate::search::files::model::FileSearchModel;
 

@@ -1,7 +1,7 @@
 use asset_macro::bundled_asset;
 use markdown_parser::{FormattedText, FormattedTextFragment, FormattedTextLine};
-use warp_core::ui::theme::WarpTheme;
-use warpui::assets::asset_cache::{AssetCache, AssetState};
+use zterm_core::ui::theme::ZtermTheme;
+use zterm_ui::assets::asset_cache::{AssetCache, AssetState};
 
 use crate::ai::blocklist::inline_action::requested_action::RenderableAction;
 use crate::appearance::Appearance;
@@ -9,43 +9,43 @@ use crate::terminal::shell::ShellType;
 use crate::terminal::warpify;
 use crate::terminal::warpify::render::SSH_DOCS_URL;
 use crate::ui_components::icons::Icon as UiIcon;
-use warpui::elements::{HighlightedHyperlink, Hoverable, Icon, MouseStateHandle};
-use warpui::keymap::FixedBinding;
-use warpui::AppContext;
-use warpui::{
+use zterm_ui::elements::{HighlightedHyperlink, Hoverable, Icon, MouseStateHandle};
+use zterm_ui::keymap::FixedBinding;
+use zterm_ui::AppContext;
+use zterm_ui::{
     elements::{Border, Container, CrossAxisAlignment, Flex, ParentElement},
     Element, Entity, SingletonEntity, TypedActionView, View, ViewContext,
 };
 
 #[derive(Debug, Clone)]
-pub enum SshWarpifyBlockEvent {
-    WarpifySession,
+pub enum SshZtermifyBlockEvent {
+    ZtermifySession,
     Cancel,
     Interrupt,
 }
 
 #[derive(Debug, Clone, Eq, PartialEq)]
-pub enum SshWarpifyBlockAction {
+pub enum SshZtermifyBlockAction {
     Interrupt,
     Focus,
 }
 
-pub struct SshWarpifyBlock {
+pub struct SshZtermifyBlock {
     block_mouse_state: MouseStateHandle,
     ssh_command: String,
 }
 
 pub fn init(app: &mut AppContext) {
-    use warpui::keymap::macros::*;
+    use zterm_ui::keymap::macros::*;
 
     app.register_fixed_bindings([FixedBinding::new(
         "ctrl-c",
-        SshWarpifyBlockAction::Interrupt,
-        id!(SshWarpifyBlock::ui_name()),
+        SshZtermifyBlockAction::Interrupt,
+        id!(SshZtermifyBlock::ui_name()),
     )]);
 }
 
-impl SshWarpifyBlock {
+impl SshZtermifyBlock {
     #[allow(clippy::new_without_default)]
     pub fn new(ssh_command: String) -> Self {
         Self {
@@ -60,14 +60,14 @@ impl SshWarpifyBlock {
     }
 }
 
-impl Entity for SshWarpifyBlock {
-    type Event = SshWarpifyBlockEvent;
+impl Entity for SshZtermifyBlock {
+    type Event = SshZtermifyBlockEvent;
 }
 
-impl SshWarpifyBlock {
-    fn render_title_ui(&self, theme: &WarpTheme, appearance: &Appearance) -> Box<dyn Element> {
+impl SshZtermifyBlock {
+    fn render_title_ui(&self, theme: &ZtermTheme, appearance: &Appearance) -> Box<dyn Element> {
         let icon = Icon::new(UiIcon::Warp.into(), theme.active_ui_detail());
-        warpify::render::header_row("Warpifying SSH Session...", icon, theme, appearance)
+        warpify::render::header_row("Ztermifying SSH Session...", icon, theme, appearance)
     }
 }
 
@@ -92,9 +92,9 @@ pub fn warpify_description(
         .finish()
 }
 
-impl View for SshWarpifyBlock {
+impl View for SshZtermifyBlock {
     fn ui_name() -> &'static str {
-        "SshWarpifyBlock"
+        "SshZtermifyBlock"
     }
 
     fn render(&self, app: &AppContext) -> Box<dyn Element> {
@@ -124,21 +124,21 @@ impl View for SshWarpifyBlock {
                 .finish()
         })
         .on_click(|ctx, _, _| {
-            ctx.dispatch_typed_action(SshWarpifyBlockAction::Focus);
+            ctx.dispatch_typed_action(SshZtermifyBlockAction::Focus);
         })
         .finish()
     }
 }
 
-impl TypedActionView for SshWarpifyBlock {
-    type Action = SshWarpifyBlockAction;
+impl TypedActionView for SshZtermifyBlock {
+    type Action = SshZtermifyBlockAction;
 
     fn handle_action(&mut self, action: &Self::Action, ctx: &mut ViewContext<Self>) {
         match action {
-            SshWarpifyBlockAction::Interrupt => {
-                ctx.emit(SshWarpifyBlockEvent::Interrupt);
+            SshZtermifyBlockAction::Interrupt => {
+                ctx.emit(SshZtermifyBlockEvent::Interrupt);
             }
-            SshWarpifyBlockAction::Focus => {
+            SshZtermifyBlockAction::Focus => {
                 self.focus(ctx);
             }
         }

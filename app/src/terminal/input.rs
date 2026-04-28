@@ -192,7 +192,7 @@ use crate::{
     settings_view::{flags, SettingsSection},
     terminal::view::inline_banner::{PromptSuggestionsEvent, PromptSuggestionsView},
     ui_components::{blended_colors, icons::Icon},
-    user_config::WarpConfig,
+    user_config::ZtermConfig,
     util::bindings::{self, CustomAction},
     util::image::MAX_IMAGE_COUNT_FOR_QUERY,
     view_components::{DismissibleToast, ToastFlavor},
@@ -249,9 +249,9 @@ use std::{
 use string_offset::CharOffset;
 use vec1::Vec1;
 use vim::vim::{VimHandler, VimMode};
-use warp_completer::util::parse_current_commands_and_tokens;
+use zterm_completer::util::parse_current_commands_and_tokens;
 
-use warp_completer::{
+use zterm_completer::{
     completer::{
         self, CompleterOptions, CompletionContext, CompletionsFallbackStrategy, Description, Match,
         MatchStrategy, MatchType, PathSeparators, SuggestionResults,
@@ -260,14 +260,14 @@ use warp_completer::{
     parsers::{simple::command_at_cursor_position, LiteCommand},
     signatures::CommandRegistry,
 };
-use warp_core::user_preferences::GetUserPreferences as _;
-use warp_core::{
+use zterm_core::user_preferences::GetUserPreferences as _;
+use zterm_core::{
     context_flag::ContextFlag,
     ui::theme::{color::internal_colors, AnsiColorIdentifier},
 };
-use warp_editor::editor::NavigationKey;
-use warp_util::path::ShellFamily;
-use warpui::{
+use zterm_editor::editor::NavigationKey;
+use zterm_util::path::ShellFamily;
+use zterm_ui::{
     accessibility::{AccessibilityContent, ActionAccessibilityContent, WarpA11yRole},
     clipboard::{ClipboardContent, ImageData},
     clipboard_utils::CLIPBOARD_IMAGE_MIME_TYPES,
@@ -295,7 +295,7 @@ use warpui::{
     AppContext, Entity, EntityId, FocusContext, ModelAsRef, ModelHandle, SingletonEntity,
     TypedActionView, View, ViewContext, ViewHandle, WeakViewHandle,
 };
-pub use warpui::{
+pub use zterm_ui::{
     elements::{ParentElement as _, Stack},
     geometry::vector::{vec2f, Vector2F},
     WindowId,
@@ -854,7 +854,7 @@ struct ViewerCommandExecutionRequest {
 /// Where a command execution request originates from.
 #[derive(Clone)]
 pub enum CommandExecutionSource {
-    /// A non-shared command execution request from Warp AI++.
+    /// A non-shared command execution request from Zterm AI++.
     /// Shared commands use the SharedSession variant instead.
     AI {
         /// Metadata associated with the execution.
@@ -1728,7 +1728,7 @@ impl DeferredRemoteOperations {
 }
 
 pub fn init(app: &mut AppContext) {
-    use warpui::keymap::macros::*;
+    use zterm_ui::keymap::macros::*;
 
     if cfg!(feature = "integration_tests") {
         app.register_fixed_bindings([
@@ -2656,7 +2656,7 @@ impl Input {
             .app_workflows()
             .cloned()
             .collect_vec();
-        let local_user_workflows = WarpConfig::as_ref(ctx).local_user_workflows().clone();
+        let local_user_workflows = ZtermConfig::as_ref(ctx).local_user_workflows().clone();
 
         let workflows_search_view = ctx.add_typed_action_view(|ctx| {
             workflows::CategoriesView::new(local_user_workflows, app_workflows, ctx)
@@ -3893,7 +3893,7 @@ impl Input {
 
         self.show_workflows_info_box_on_workflow_selection(
             WorkflowType::Cloud(Box::new(workflow)),
-            WorkflowSource::WarpAI,
+            WorkflowSource::ZtermAI,
             WorkflowSelectionSource::SlashMenu,
             None,
             ctx,
@@ -6706,7 +6706,7 @@ impl Input {
             .string_model;
 
         if shell_type == ShellType::Fish {
-            // Warp currently doesn't support newlines in Fish, just prepend the vars
+            // Zterm currently doesn't support newlines in Fish, just prepend the vars
             let mut command = env_vars.export_variables_for_shell(ShellType::Fish);
             command.push(' ');
             Some(command)
@@ -8984,7 +8984,7 @@ impl Input {
                             // the completions finish quickly, since that causes a jittery UX.
                             let _ = ctx.spawn(
                                 async move {
-                                    warpui::r#async::Timer::after(Duration::from_millis(750)).await;
+                                    zterm_ui::r#async::Timer::after(Duration::from_millis(750)).await;
                                     old_buffer_text_original
                                 },
                                 move |input, old_buffer_text_original, ctx| {
@@ -9603,7 +9603,7 @@ impl Input {
                                             .map(|session| session.is_wsl())
                                             .unwrap_or(false);
 
-                                        let relative_path = warp_util::path::to_relative_path(
+                                        let relative_path = zterm_util::path::to_relative_path(
                                             is_wsl,
                                             &absolute_path,
                                             Path::new(pwd),
@@ -9680,7 +9680,7 @@ impl Input {
                         None => image_filepaths.clone(),
                     };
                     let paths_str =
-                        warpui::clipboard_utils::escaped_paths_str(&transformed, shell_family);
+                        zterm_ui::clipboard_utils::escaped_paths_str(&transformed, shell_family);
 
                     self.editor.update(ctx, |editor, ctx| {
                         editor.user_insert(&paths_str, ctx);
@@ -9726,7 +9726,7 @@ impl Input {
 
         // Check if we should insert clipboard text in advance
         let mut already_inserted_text = false;
-        if warpui::clipboard::should_insert_text_on_paste(&content) {
+        if zterm_ui::clipboard::should_insert_text_on_paste(&content) {
             self.insert_clipboard_text_content(ctx, content.clone());
             already_inserted_text = true;
         }
@@ -9738,7 +9738,7 @@ impl Input {
             self.handle_pasted_image_data(content.clone(), ctx) == 0
         } else if content.num_paths() > 0 {
             // Else, we check the pasted file paths for any images.
-            let image_filepaths = warpui::clipboard_utils::get_image_filepaths_from_paths(
+            let image_filepaths = zterm_ui::clipboard_utils::get_image_filepaths_from_paths(
                 content.paths.as_deref().unwrap_or(&[]),
             );
             let num_images_expected = image_filepaths.len();
@@ -12485,7 +12485,7 @@ impl Input {
         if let Some(workflow_state) = self.workflows_state.selected_workflow_state.as_ref() {
             if let WorkflowType::Cloud(workflow) = &workflow_state.workflow_type {
                 send_telemetry_from_ctx!(
-                    TelemetryEvent::ExecutedWarpDrivePrompt {
+                    TelemetryEvent::ExecutedZtermDrivePrompt {
                         id: workflow.id.into_server().map(Into::into),
                         selection_source: workflow_state.workflow_selection_source,
                     },
@@ -13252,7 +13252,7 @@ impl Input {
                                 .cloned(),
                             workflow_selection_source: selected_workflow_state
                                 .workflow_selection_source,
-                            // This is only `Some()` for WarpDrive workflows; we don't track
+                            // This is only `Some()` for ZtermDrive workflows; we don't track
                             // ID for execution of local workflows because they have no such
                             // unique ID.
                             workflow_id: selected_workflow_state.workflow_type.server_id(),
@@ -13623,7 +13623,7 @@ impl Input {
                 ..Default::default()
             },
         )
-        .with_icon(icon.to_warpui_icon(
+        .with_icon(icon.to_zterm_ui_icon(
             blended_colors::text_main(appearance.theme(), appearance.theme().background()).into(),
         ))
         .with_close_button(close_button)
@@ -14108,7 +14108,7 @@ impl View for Input {
         }
     }
 
-    fn keymap_context(&self, app: &AppContext) -> warpui::keymap::Context {
+    fn keymap_context(&self, app: &AppContext) -> zterm_ui::keymap::Context {
         let mut ctx = Self::default_keymap_context();
         let ai_settings = AISettings::as_ref(app);
 

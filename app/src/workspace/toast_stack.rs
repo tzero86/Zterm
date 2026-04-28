@@ -1,4 +1,4 @@
-use warpui::{Entity, ModelContext, SingletonEntity, WindowId};
+﻿use zterm_ui::{Entity, ModelContext, SingletonEntity, WindowId};
 
 use crate::{
     view_components::{DismissibleToast, ToastType},

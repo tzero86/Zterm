@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+﻿use std::collections::HashMap;
 
 use super::{
     settings_page::{
@@ -27,9 +27,9 @@ use crate::{
 };
 use itertools::Itertools;
 
-use warp_core::ui::theme::color::internal_colors;
-use warpui::{elements::Wrap, units::Pixels};
-use warpui::{
+use zterm_core::ui::theme::color::internal_colors;
+use zterm_ui::{elements::Wrap, units::Pixels};
+use zterm_ui::{
     elements::{
         Align, Border, ClippedScrollStateHandle, ClippedScrollable, Container, CornerRadius, Empty,
         EventHandler, Fill, Flex, Hoverable, MouseState, MouseStateHandle, ParentElement, Radius,
@@ -40,11 +40,11 @@ use warpui::{
     ui_components::components::{Coords, UiComponent, UiComponentStyles},
     AppContext, Element, Entity, SingletonEntity, TypedActionView, View, ViewContext, ViewHandle,
 };
-use warpui::{
+use zterm_ui::{
     elements::{ConstrainedBox, DispatchEventResult},
     presenter::ChildView,
 };
-use warpui::{
+use zterm_ui::{
     elements::{CrossAxisAlignment, Text},
     keymap::DescriptionContext,
 };
@@ -376,7 +376,7 @@ impl KeybindingRow {
                                 .with_margin_right(CLEAR_CANCEL_BUTTONS_SPACING)
                                 .finish(),
                         )
-                        .with_cross_axis_alignment(warpui::elements::CrossAxisAlignment::Center)
+                        .with_cross_axis_alignment(zterm_ui::elements::CrossAxisAlignment::Center)
                         .finish(),
                 )
                 .finish(),

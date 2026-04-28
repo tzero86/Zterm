@@ -14,7 +14,7 @@ use warp::{
     },
     workspace::WorkspaceAction,
 };
-use warpui::{async_assert_eq, App};
+use zterm_ui::{async_assert_eq, App};
 
 use crate::util::write_all_rc_files_for_test;
 

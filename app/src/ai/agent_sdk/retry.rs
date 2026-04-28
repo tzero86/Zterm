@@ -1,4 +1,4 @@
-//! Shared retry primitives for HTTP-backed operations in the agent SDK.
+﻿//! Shared retry primitives for HTTP-backed operations in the agent SDK.
 //!
 //! Both the end-of-run snapshot upload pipeline and the handoff snapshot download pipeline
 //! need to retry transient HTTP failures on a bounded, predictable schedule. This module
@@ -9,8 +9,8 @@ use std::future::Future;
 use std::time::Duration;
 
 use anyhow::{anyhow, Result};
-use warpui::duration_with_jitter;
-use warpui::r#async::Timer;
+use zterm_ui::duration_with_jitter;
+use zterm_ui::r#async::Timer;
 
 pub(crate) use crate::server::retry_strategies::is_transient_http_error;
 

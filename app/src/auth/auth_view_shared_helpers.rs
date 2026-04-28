@@ -1,13 +1,13 @@
-use pathfinder_color::ColorU;
-use warp_core::channel::ChannelState;
-use warp_core::features::FeatureFlag;
-use warp_core::ui::{
+﻿use pathfinder_color::ColorU;
+use zterm_core::channel::ChannelState;
+use zterm_core::features::FeatureFlag;
+use zterm_core::ui::{
     appearance::Appearance,
     builder::UiBuilder,
     color::{darken, lighten},
     theme::ColorScheme,
 };
-use warpui::{
+use zterm_ui::{
     assets::asset_cache::AssetSource,
     elements::{
         Border, CacheOption, ConstrainedBox, Container, CornerRadius, CrossAxisAlignment, Fill,
@@ -175,8 +175,8 @@ where
         ..Default::default()
     };
 
-    let paragraph_1 = "All of Warp’s non-cloud features work offline.";
-    let paragraph_2 = "However, we require users to be online when using Warp for the first time in order to enable Warp's AI and cloud features.";
+    let paragraph_1 = "All of Zterm’s non-cloud features work offline.";
+    let paragraph_2 = "However, we require users to be online when using Zterm for the first time in order to enable Warp's AI and cloud features.";
     let paragraph_3 = "We offer cloud features to all users, and so we need an internet connection to meter AI usage, prevent abuse, and associate cloud objects with users. If you opt to use Warp logged-out, a unique ID will be attached to an anonymous user account in order to support these features.";
 
     Container::new(

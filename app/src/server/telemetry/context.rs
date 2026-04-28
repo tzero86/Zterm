@@ -1,4 +1,4 @@
-//! Module that builds a static context to attach to each of our events that are sent to Rudderstack.
+﻿//! Module that builds a static context to attach to each of our events that are sent to Rudderstack.
 //! This is needed so we know the backing operating system and version of each telemetry event.
 
 use super::rudder_message::Message as RudderMessage;
@@ -10,7 +10,7 @@ use serde_json::{json, Value};
 use std::sync::OnceLock;
 
 #[cfg(target_family = "wasm")]
-use warpui::platform::wasm;
+use zterm_ui::platform::wasm;
 
 static TELEMETRY_CONTEXT: OnceLock<TelemetryContext> = OnceLock::new();
 

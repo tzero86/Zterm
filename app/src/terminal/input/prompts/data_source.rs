@@ -1,10 +1,10 @@
-use fuzzy_match::FuzzyMatchResult;
+﻿use fuzzy_match::FuzzyMatchResult;
 use ordered_float::OrderedFloat;
-use warp_core::ui::icons::Icon;
-use warpui::elements::{ConstrainedBox, Container, Highlight, Text};
-use warpui::fonts::{Properties, Weight};
-use warpui::text_layout::ClipConfig;
-use warpui::{AppContext, Element, Entity, ModelContext, ModelHandle, SingletonEntity as _};
+use zterm_core::ui::icons::Icon;
+use zterm_ui::elements::{ConstrainedBox, Container, Highlight, Text};
+use zterm_ui::fonts::{Properties, Weight};
+use zterm_ui::text_layout::ClipConfig;
+use zterm_ui::{AppContext, Element, Entity, ModelContext, ModelHandle, SingletonEntity as _};
 
 use crate::appearance::Appearance;
 use crate::cloud_object::model::persistence::CloudModel;
@@ -164,7 +164,7 @@ impl SearchItem for PromptSearchItem {
         let icon_color = inline_styles::icon_color(appearance);
         let icon_size = inline_styles::font_size(appearance);
 
-        let icon = Icon::Prompt.to_warpui_icon(icon_color).finish();
+        let icon = Icon::Prompt.to_zterm_ui_icon(icon_color).finish();
 
         Container::new(
             ConstrainedBox::new(icon)
@@ -209,7 +209,7 @@ impl SearchItem for PromptSearchItem {
         &self,
         highlight_state: ItemHighlightState,
         appearance: &Appearance,
-    ) -> Option<warp_core::ui::theme::Fill> {
+    ) -> Option<zterm_core::ui::theme::Fill> {
         inline_styles::item_background(highlight_state, appearance)
     }
 

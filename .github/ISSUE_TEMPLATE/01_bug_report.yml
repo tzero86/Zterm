@@ -1,4 +1,4 @@
-name: Bug Report
+﻿name: Bug Report
 description: "Found a bug? Please search through our open issues and docs, to make sure it isn't already submitted. If you have an SSH related issue, please use the SSH Template below"
 labels: ["bug", "ready-to-implement"]
 body:
@@ -85,7 +85,7 @@ body:
       description: "Is this a regression (used to work in a previous Warp version)?"
       multiple: false
       options:
-        - "No, this bug or issue has existed throughout my experience using Warp"
+        - "No, this bug or issue has existed throughout my experience using Zterm"
         - "Yes, this bug started recently or with an X Warp version"
     validations:
       required: true
@@ -100,18 +100,18 @@ body:
     id: "additional-context"
     attributes:
       label: "Additional context"
-      description: "Add any other context about the problem here. If using Warp on Linux, tell us if you're using X11 or Wayland. If the issue is graphical, run Warp with the following command `RUST_LOG=wgpu_core=info,wgpu_hal=info MESA_DEBUG=1 EGL_LOG_LEVEL=debug warp-terminal` attach logs and tell us the result of `eglinfo`."
+      description: "Add any other context about the problem here. If using Zterm on Linux, tell us if you're using X11 or Wayland. If the issue is graphical, run Zterm with the following command `RUST_LOG=wgpu_core=info,wgpu_hal=info MESA_DEBUG=1 EGL_LOG_LEVEL=debug warp-terminal` attach logs and tell us the result of `eglinfo`."
     validations:
       required: false
   - type: dropdown
     id: "blocker"
     attributes:
-      label: "Does this block you from using Warp daily?"
+      label: "Does this block you from using Zterm daily?"
       description: "All feedback will be reviewed, even if you select 'No'."
       multiple: false
       options:
         - "No"
-        - "Yes, this issue prevents me from using Warp daily."
+        - "Yes, this issue prevents me from using Zterm daily."
     validations:
       required: true
   - type: dropdown

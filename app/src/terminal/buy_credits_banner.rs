@@ -5,20 +5,20 @@ use itertools::Itertools as _;
 use markdown_parser::{FormattedText, FormattedTextFragment, FormattedTextLine};
 use pathfinder_color::ColorU;
 use pathfinder_geometry::vector::vec2f;
-use warp_core::ui::appearance::Appearance;
-use warp_core::ui::Icon;
-use warp_graphql::billing::AddonCreditsOption;
-use warpui::elements::{
+use zterm_core::ui::appearance::Appearance;
+use zterm_core::ui::Icon;
+use zterm_graphql::billing::AddonCreditsOption;
+use zterm_ui::elements::{
     Align, Border, ChildAnchor, ChildView, ConstrainedBox, Container, CornerRadius,
     CrossAxisAlignment, DropShadow, Expanded, Flex, FormattedTextElement, HighlightedHyperlink,
     Hoverable, Icon as WarpUiIcon, MainAxisAlignment, MainAxisSize, MouseStateHandle,
     OffsetPositioning, ParentAnchor, ParentElement as _, ParentOffsetBounds, Radius, Shrinkable,
     SizeConstraintCondition, SizeConstraintSwitch, Stack, Text,
 };
-use warpui::fonts::Weight;
-use warpui::ui_components::button::ButtonVariant;
-use warpui::ui_components::components::{Coords, UiComponent as _, UiComponentStyles};
-use warpui::{AppContext, Element, Entity, SingletonEntity as _, View, ViewContext, ViewHandle};
+use zterm_ui::fonts::Weight;
+use zterm_ui::ui_components::button::ButtonVariant;
+use zterm_ui::ui_components::components::{Coords, UiComponent as _, UiComponentStyles};
+use zterm_ui::{AppContext, Element, Entity, SingletonEntity as _, View, ViewContext, ViewHandle};
 
 use crate::ai::request_usage_model::{
     AIRequestUsageModel, AIRequestUsageModelEvent, BuyCreditsBannerDisplayState,
@@ -33,7 +33,7 @@ use crate::server::telemetry::{OutOfCreditsBannerAction, TelemetryEvent};
 use crate::settings_view::create_discount_badge;
 use crate::view_components::Dropdown;
 use crate::workspaces::user_workspaces::{UserWorkspaces, UserWorkspacesEvent};
-use warp_graphql::error::BudgetExceededError;
+use zterm_graphql::error::BudgetExceededError;
 
 #[derive(Default)]
 struct MouseStates {
@@ -384,7 +384,7 @@ impl BuyCreditsBanner {
         let alert_icon = Container::new(
             ConstrainedBox::new(
                 Icon::AlertCircle
-                    .to_warpui_icon(theme.foreground())
+                    .to_zterm_ui_icon(theme.foreground())
                     .finish(),
             )
             .with_height(16.)
@@ -505,7 +505,7 @@ impl BuyCreditsBanner {
             Container::new(
                 ConstrainedBox::new(
                     Icon::AlertCircle
-                        .to_warpui_icon(theme.foreground())
+                        .to_zterm_ui_icon(theme.foreground())
                         .finish(),
                 )
                 .with_height(16.)
@@ -579,8 +579,8 @@ impl BuyCreditsBanner {
                 .with_hyperlink_font_color(theme.accent().into_solid())
                 .register_default_click_handlers_with_action_support(
                     |hyperlink_lens, event, _ctx| match hyperlink_lens {
-                        warpui::elements::HyperlinkLens::Url(_url) => {}
-                        warpui::elements::HyperlinkLens::Action(action_ref) => {
+                        zterm_ui::elements::HyperlinkLens::Url(_url) => {}
+                        zterm_ui::elements::HyperlinkLens::Action(action_ref) => {
                             if let Some(action) = action_ref.as_any().downcast_ref::<Action>() {
                                 event.dispatch_typed_action(action.clone());
                             }
@@ -818,7 +818,7 @@ impl View for BuyCreditsBanner {
 
         match display_state {
             BuyCreditsBannerDisplayState::Hidden => {
-                Container::new(warpui::elements::Empty::new().finish()).finish()
+                Container::new(zterm_ui::elements::Empty::new().finish()).finish()
             }
             BuyCreditsBannerDisplayState::OutOfCredits => {
                 self.render_out_of_credits(appearance, app)
@@ -839,7 +839,7 @@ pub enum Action {
     ToggleAutoReload,
 }
 
-impl warpui::TypedActionView for BuyCreditsBanner {
+impl zterm_ui::TypedActionView for BuyCreditsBanner {
     type Action = Action;
 
     fn handle_action(&mut self, action: &Self::Action, ctx: &mut ViewContext<Self>) {

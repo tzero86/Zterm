@@ -1,9 +1,9 @@
-use std::collections::HashMap;
+﻿use std::collections::HashMap;
 
 use itertools::Itertools;
 use session_sharing_protocol::common::SessionId;
 
-use warpui::{
+use zterm_ui::{
     AppContext, Entity, EntityId, ModelContext, SingletonEntity, ViewHandle, WeakViewHandle,
     WindowId,
 };

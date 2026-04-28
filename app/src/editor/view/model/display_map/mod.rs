@@ -1,4 +1,4 @@
-mod fold_map;
+﻿mod fold_map;
 
 use super::buffer::{self, Anchor, Buffer, Edit, StylizedChar, ToCharOffset, ToPoint};
 use crate::editor::soft_wrap::{self, DisplayPointAndClampDirection, SoftWrapPoint, SoftWrapState};
@@ -8,8 +8,8 @@ use fold_map::FoldMap;
 use std::cmp;
 use std::ops::Range;
 use string_offset::CharOffset;
-use warpui::text::point::Point;
-use warpui::{AppContext, Entity, ModelContext, ModelHandle};
+use zterm_ui::text::point::Point;
+use zterm_ui::{AppContext, Entity, ModelContext, ModelHandle};
 
 #[derive(Copy, Clone)]
 pub enum Bias {

@@ -1,4 +1,4 @@
-use editing::sort_entries_for_file_tree;
+﻿use editing::sort_entries_for_file_tree;
 use itertools::Itertools;
 use pathfinder_geometry::rect::RectF;
 use pathfinder_geometry::vector::Vector2F;
@@ -13,22 +13,22 @@ use std::collections::{HashMap, HashSet};
 use std::ops::Range;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
-use warp_util::path::LineAndColumnArg;
-use warp_util::standardized_path::StandardizedPath;
+use zterm_util::path::LineAndColumnArg;
+use zterm_util::standardized_path::StandardizedPath;
 
 use repo_metadata::repositories::DetectedRepositories;
-use warp_core::send_telemetry_from_ctx;
-use warpui::elements::{
+use zterm_core::send_telemetry_from_ctx;
+use zterm_ui::elements::{
     AcceptedByDropTarget, Align, Clipped, ConstrainedBox, Container, Dismiss, Draggable,
     DraggableState, Empty, FormattedTextElement, MainAxisAlignment, Percentage, Rect, SavePosition,
     Scrollable, Shrinkable,
 };
-use warpui::fonts::Style;
-use warpui::keymap::FixedBinding;
-use warpui::platform::Cursor;
-use warpui::text_layout::TextAlignment;
-use warpui::{clipboard::ClipboardContent, id, ViewContext, WeakViewHandle};
-use warpui::{
+use zterm_ui::fonts::Style;
+use zterm_ui::keymap::FixedBinding;
+use zterm_ui::platform::Cursor;
+use zterm_ui::text_layout::TextAlignment;
+use zterm_ui::{clipboard::ClipboardContent, id, ViewContext, WeakViewHandle};
+use zterm_ui::{
     elements::{
         ChildAnchor, ChildView, CrossAxisAlignment, Flex, Hoverable, MainAxisSize,
         MouseStateHandle, OffsetPositioning, ParentAnchor, ParentElement, ParentOffsetBounds,
@@ -39,7 +39,7 @@ use warpui::{
     AppContext, Element, Entity, EventContext, SingletonEntity as _, TypedActionView, View,
     ViewHandle,
 };
-use warpui::{BlurContext, ModelHandle};
+use zterm_ui::{BlurContext, ModelHandle};
 
 use crate::code::active_file::{ActiveFileEvent, ActiveFileModel};
 use crate::coding_panel_enablement_state::CodingPanelEnablementState;
@@ -64,10 +64,10 @@ use crate::{
     view_components::DismissibleToast,
     workspace::ToastStack,
 };
-use warp_core::features::FeatureFlag;
-use warp_core::ui::theme::{color::internal_colors, Fill};
-use warp_core::HostId;
-use warpui::ui_components::components::UiComponent;
+use zterm_core::features::FeatureFlag;
+use zterm_core::ui::theme::{color::internal_colors, Fill};
+use zterm_core::HostId;
+use zterm_ui::ui_components::components::UiComponent;
 
 mod editing;
 mod render;
@@ -985,8 +985,8 @@ impl FileTreeView {
             .collect();
 
         // Ancestor-dedup only local inputs. Shared with `GlobalSearchView`
-        // via `warp_util::path::group_roots_by_common_ancestor`.
-        let grouping = warp_util::path::group_roots_by_common_ancestor(&local_inputs);
+        // via `zterm_util::path::group_roots_by_common_ancestor`.
+        let grouping = zterm_util::path::group_roots_by_common_ancestor(&local_inputs);
 
         // Final displayed order: local surviving roots (in input order),
         // followed by preserved remote roots (in their existing order).
@@ -1786,7 +1786,7 @@ impl FileTreeView {
         let expand_icon = match expand_icon {
             Some(icon) => {
                 let chevron_icon_color = item_highlight_state.text_and_icon_color(appearance);
-                icon.to_warpui_icon(chevron_icon_color.into()).finish()
+                icon.to_zterm_ui_icon(chevron_icon_color.into()).finish()
             }
             None => Empty::new().finish(),
         };
@@ -1805,7 +1805,7 @@ impl FileTreeView {
         // Add the icon for the item.
         let icon_color = item_highlight_state.text_and_icon_color(appearance);
         let icon = match render_state.icon {
-            ImageOrIcon::Icon(icon) => icon.to_warpui_icon(icon_color.into()).finish(),
+            ImageOrIcon::Icon(icon) => icon.to_zterm_ui_icon(icon_color.into()).finish(),
             ImageOrIcon::Image(image) => image,
         };
         header_row.add_child(
@@ -2637,7 +2637,7 @@ impl FileTreeView {
                         ScrollbarWidth::Auto,
                         theme.nonactive_ui_detail().into(),
                         theme.active_ui_detail().into(),
-                        warpui::elements::Fill::None,
+                        zterm_ui::elements::Fill::None,
                     )
                     .with_overlayed_scrollbar()
                     .finish(),
@@ -2684,7 +2684,7 @@ impl FileTreeView {
                 Container::new(
                     ConstrainedBox::new(
                         Icon::AlertTriangle
-                            .to_warpui_icon(Fill::Solid(internal_colors::neutral_6(theme)))
+                            .to_zterm_ui_icon(Fill::Solid(internal_colors::neutral_6(theme)))
                             .finish(),
                     )
                     .with_width(24.)
@@ -2749,7 +2749,7 @@ impl FileTreeView {
 
         // Create loading icon
         let loading_icon = Icon::Loading
-            .to_warpui_icon(warp_core::ui::theme::Fill::Solid(
+            .to_zterm_ui_icon(zterm_core::ui::theme::Fill::Solid(
                 internal_colors::neutral_6(theme),
             ))
             .finish();
@@ -2771,7 +2771,7 @@ impl FileTreeView {
         header_row.add_child(loading_icon);
 
         let folder_icon = Icon::Folder
-            .to_warpui_icon(warp_core::ui::theme::Fill::Solid(
+            .to_zterm_ui_icon(zterm_core::ui::theme::Fill::Solid(
                 internal_colors::neutral_6(theme),
             ))
             .finish();
@@ -2896,7 +2896,7 @@ impl View for FileTreeView {
             if let CodingPanelEnablementState::RemoteSession { has_remote_server } = self.enablement
             {
                 // When the session has a remote server connection (Auto SSH
-                // Warpification / mode 1), show a loading state — the server
+                // Ztermification / mode 1), show a loading state — the server
                 // may push repo metadata momentarily. For other SSH modes
                 // (tmux, subshell) no data will arrive, so show the disabled
                 // error instead.

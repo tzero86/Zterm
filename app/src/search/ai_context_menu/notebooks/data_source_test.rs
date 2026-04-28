@@ -1,10 +1,10 @@
-#[cfg(test)]
+﻿#[cfg(test)]
 mod tests {
     use std::sync::Arc;
 
     use chrono::{Duration, Utc};
     use settings::manager::SettingsManager;
-    use warpui::{App, SingletonEntity};
+    use zterm_ui::{App, SingletonEntity};
 
     use crate::auth::AuthStateProvider;
     use crate::cloud_object::model::persistence::CloudModel;

@@ -1,4 +1,4 @@
-use warpui::ModelContext;
+use zterm_ui::ModelContext;
 
 use crate::content::{buffer::BufferSnapshot, edit::PreciseDelta, version::BufferVersion};
 

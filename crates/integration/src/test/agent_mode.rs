@@ -23,7 +23,7 @@ use warp::{
     settings::SelectionSettings,
 };
 use warp_multi_agent_api as api;
-use warpui::{async_assert, integration::TestStep, text::SelectionType, Event, SingletonEntity};
+use zterm_ui::{async_assert, integration::TestStep, text::SelectionType, Event, SingletonEntity};
 
 cfg_if::cfg_if! {
     if #[cfg(target_os = "linux")] {
@@ -104,7 +104,7 @@ fn builder_with_setup() -> Builder {
 }
 
 fn markdown_visuals_fixture_directory() -> String {
-    let fixture_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../warpui_core/test_data");
+    let fixture_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../zterm_ui_core/test_data");
     fixture_dir
         .canonicalize()
         .unwrap_or(fixture_dir)

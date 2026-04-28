@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+﻿use std::collections::HashSet;
 
 use crate::ai::agent::{
     AIAgentActionType, AIAgentExchange, AIAgentOutput, AIAgentOutputMessageType,
@@ -562,7 +562,7 @@ fn test_new_moved_messages_subtask_preserves_messages() {
 }
 
 // =============================================================================
-// Tests for Warp docs subagent classification
+// Tests for Zterm docs subagent classification
 // =============================================================================
 
 #[test]

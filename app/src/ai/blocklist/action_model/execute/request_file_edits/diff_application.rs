@@ -1,4 +1,4 @@
-//! Module containing helper code to apply suggested diffs from an LLM
+﻿//! Module containing helper code to apply suggested diffs from an LLM
 //! to a set of files on the user's filesystem.
 
 use std::{
@@ -13,7 +13,7 @@ use ai::diff_validation::{
 };
 use itertools::Itertools;
 use vec1::Vec1;
-use warpui::r#async::executor::Background;
+use zterm_ui::r#async::executor::Background;
 
 use crate::{
     ai::{

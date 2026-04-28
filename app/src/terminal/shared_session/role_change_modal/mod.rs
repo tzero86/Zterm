@@ -1,7 +1,7 @@
-use session_sharing_protocol::common::{ParticipantId, Role, RoleRequestId};
-use warpui::elements::Empty;
-use warpui::presenter::ChildView;
-use warpui::{
+﻿use session_sharing_protocol::common::{ParticipantId, Role, RoleRequestId};
+use zterm_ui::elements::Empty;
+use zterm_ui::presenter::ChildView;
+use zterm_ui::{
     ui_components::components::{Coords, UiComponentStyles},
     AppContext, Element, Entity, View, ViewContext, ViewHandle,
 };

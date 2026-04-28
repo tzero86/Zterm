@@ -1,4 +1,4 @@
-//! Common utilities for agent SDK commands.
+﻿//! Common utilities for agent SDK commands.
 
 use std::fmt;
 use std::future::Future;
@@ -7,13 +7,13 @@ use std::time::Duration;
 
 use futures::TryFutureExt;
 use inquire::{InquireError, Select};
-use warp_cli::agent::Harness;
-use warp_cli::environment::{EnvironmentCreateArgs, EnvironmentUpdateArgs};
-use warpui::r#async::FutureExt;
-use warpui::{AppContext, GetSingletonModelHandle, SingletonEntity as _, UpdateModel};
+use zterm_cli::agent::Harness;
+use zterm_cli::environment::{EnvironmentCreateArgs, EnvironmentUpdateArgs};
+use zterm_ui::r#async::FutureExt;
+use zterm_ui::{AppContext, GetSingletonModelHandle, SingletonEntity as _, UpdateModel};
 
 use crate::ai::agent::conversation::ServerAIConversationMetadata;
-use crate::ai::agent_sdk::driver::{AgentDriverError, WARP_DRIVE_SYNC_TIMEOUT};
+use crate::ai::agent_sdk::driver::{AgentDriverError, ZTERM_DRIVE_SYNC_TIMEOUT};
 use crate::ai::ambient_agents::AmbientAgentTaskId;
 use crate::ai::cloud_environments::CloudAmbientAgentEnvironment;
 use crate::ai::llms::{LLMId, LLMPreferences};
@@ -134,14 +134,14 @@ where
     }
 }
 
-/// Refresh Warp Drive before executing an operation.
+/// Refresh Zterm Drive before executing an operation.
 pub fn refresh_warp_drive(
     ctx: &AppContext,
 ) -> impl Future<Output = anyhow::Result<()>> + Send + 'static {
     UpdateManager::as_ref(ctx)
         .initial_load_complete()
-        .with_timeout(WARP_DRIVE_SYNC_TIMEOUT)
-        .map_err(|_| anyhow::anyhow!("Timed out waiting for Warp Drive to sync"))
+        .with_timeout(ZTERM_DRIVE_SYNC_TIMEOUT)
+        .map_err(|_| anyhow::anyhow!("Timed out waiting for Zterm Drive to sync"))
 }
 
 /// Fetch the conversation's server metadata and validate that its harness matches the caller's
@@ -213,7 +213,7 @@ pub enum EnvironmentChoice {
 
 impl EnvironmentChoice {
     /// Resolve the environment to use when creating an agent integration.
-    /// Warp Drive *must* have been synced first.
+    /// Zterm Drive *must* have been synced first.
     pub fn resolve_for_create(
         args: EnvironmentCreateArgs,
         ctx: &AppContext,
@@ -252,7 +252,7 @@ impl EnvironmentChoice {
 
             // If there are no synced environments, require the user to create one or use --no-environment.
             if options.len() == 1 {
-                let cli_name = warp_cli::binary_name().unwrap_or_else(|| "warp".to_string());
+                let cli_name = zterm_cli::binary_name().unwrap_or_else(|| "warp".to_string());
                 return Err(ResolveConfigurationError::Other(anyhow::anyhow!(
                     "No environments are configured for this account.\n\
 You can create an environment with `{cli_name} environment create`.\n\
@@ -279,7 +279,7 @@ Without an environment, the agent will not be able to access private repositorie
 
     /// Resolve the environment to use when updating an agent integration. If the user did not
     /// request any changes to the environment, this returns `Ok(None)`.
-    /// Warp Drive *must* have been synced first.
+    /// Zterm Drive *must* have been synced first.
     pub fn resolve_for_update(
         args: EnvironmentUpdateArgs,
         ctx: &AppContext,

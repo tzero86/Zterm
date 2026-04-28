@@ -1,4 +1,4 @@
-use crate::ai::mcp::templatable::GalleryData;
+﻿use crate::ai::mcp::templatable::GalleryData;
 use crate::ai::mcp::MCPServerUpdate;
 use crate::modal::Modal;
 use crate::modal::ModalEvent;
@@ -59,10 +59,10 @@ use std::cmp::Ordering;
 use std::{collections::HashMap, path::PathBuf};
 use strum::IntoEnumIterator;
 use uuid::Uuid;
-use warp_core::features::FeatureFlag;
-use warp_core::send_telemetry_from_ctx;
-use warp_core::ui::{appearance::AppearanceEvent, theme::color::internal_colors, Icon};
-use warpui::{
+use zterm_core::features::FeatureFlag;
+use zterm_core::send_telemetry_from_ctx;
+use zterm_core::ui::{appearance::AppearanceEvent, theme::color::internal_colors, Icon};
+use zterm_ui::{
     elements::{
         Align, Border, ChildView, ConstrainedBox, Container, CornerRadius, CrossAxisAlignment,
         Expanded, Fill, Flex, FormattedTextElement, HighlightedHyperlink, MainAxisAlignment,
@@ -1292,7 +1292,7 @@ impl MCPServersListPageView {
                     ));
                 } else if !filtered_gallery_cards.is_empty() {
                     page.add_child(self.render_server_cards_section(
-                        "Shared from Warp",
+                        "Shared from Zterm",
                         &filtered_gallery_cards,
                         appearance,
                         app,

@@ -1,4 +1,4 @@
-use crate::pane_group::PaneId;
+﻿use crate::pane_group::PaneId;
 use crate::search::command_palette::navigation::render::CommandRenderInfo;
 use crate::search::command_palette::navigation::search_item::SearchItem;
 use crate::search::command_palette::navigation::DataSource;
@@ -8,7 +8,7 @@ use crate::session_management::{CommandContext, SessionNavigationData, SessionSo
 use fuzzy_match::match_indices_case_insensitive;
 use itertools::Itertools;
 use std::ops::Range;
-use warpui::{AppContext, ModelHandle};
+use zterm_ui::{AppContext, ModelHandle};
 
 /// A session that was fuzzy matched against a search term.
 pub struct MatchedSession {
@@ -254,7 +254,7 @@ mod full_text_searcher {
     use crate::session_management::{SessionNavigationData, SessionSource};
     use itertools::Itertools;
     use std::collections::HashMap;
-    use warpui::{AppContext, ModelHandle};
+    use zterm_ui::{AppContext, ModelHandle};
 
     define_search_schema!(
         schema_name: SESSION_SEARCH_SCHEMA,

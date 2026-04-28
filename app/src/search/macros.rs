@@ -1,4 +1,4 @@
-/// Converts Rust types to FullTextSearchFieldTypes variants
+﻿/// Converts Rust types to FullTextSearchFieldTypes variants
 #[macro_export]
 macro_rules! type_to_field_type {
     ($t:ty) => {
@@ -45,8 +45,8 @@ pub use get_factor_or_default;
 /// Here is an example of using this schema to create a simple searcher:
 /// ```
 /// use itertools::Itertools;
-/// use warp::define_search_schema;
-/// use warp::search::searcher::{SimpleFullTextSearcher, DEFAULT_MEMORY_BUDGET};
+/// use zterm::define_search_schema;
+/// use zterm::search::searcher::{SimpleFullTextSearcher, DEFAULT_MEMORY_BUDGET};
 ///
 /// define_search_schema!(
 ///     schema_name: MY_SCHEMA,

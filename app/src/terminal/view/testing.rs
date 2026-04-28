@@ -1,5 +1,5 @@
-//! Module for test-only convenience methods on `TerminalView`.
-use warpui::ModelHandle;
+﻿//! Module for test-only convenience methods on `TerminalView`.
+use zterm_ui::ModelHandle;
 
 use crate::terminal::find::TerminalFindModel;
 cfg_if::cfg_if! {
@@ -7,7 +7,7 @@ cfg_if::cfg_if! {
         use std::sync::Arc;
 
         use parking_lot::FairMutex;
-        use warpui::{ViewContext};
+        use zterm_ui::{ViewContext};
 
         use crate::{
             ai::blocklist::SerializedBlockListItem, pane_group::TerminalViewResources,
@@ -15,7 +15,7 @@ cfg_if::cfg_if! {
         };
         use crate::terminal::model::session::Sessions;
         use crate::terminal::model_events::ModelEventDispatcher;
-        use crate::terminal::view::WARP_PROMPT_HEIGHT_LINES;
+        use crate::terminal::view::ZTERM_PROMPT_HEIGHT_LINES;
         use crate::terminal::{SizeInfo, TerminalModel};
 
         use crate::context_chips::prompt_type::PromptType;
@@ -33,7 +33,7 @@ impl TerminalView {
         ctx: &mut ViewContext<Self>,
     ) -> Self {
         use pathfinder_geometry::vector::vec2f;
-        use warpui::units::{IntoPixels as _, Pixels};
+        use zterm_ui::units::{IntoPixels as _, Pixels};
 
         use crate::{
             server::server_api::ServerApiProvider,
@@ -69,7 +69,7 @@ impl TerminalView {
             block_padding,
             size: size_info,
             max_block_scroll_limit,
-            warp_prompt_height_lines: WARP_PROMPT_HEIGHT_LINES,
+            warp_prompt_height_lines: ZTERM_PROMPT_HEIGHT_LINES,
         };
 
         let server_api = ServerApiProvider::new_for_test().get();

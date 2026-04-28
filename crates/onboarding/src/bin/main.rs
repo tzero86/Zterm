@@ -9,12 +9,12 @@ use onboarding::{
 use pathfinder_color::ColorU;
 use rust_embed::RustEmbed;
 use std::borrow::Cow;
-use warp_core::ui::icons::Icon;
-use warp_core::ui::theme::{AnsiColor, AnsiColors, Details, Fill, Image, TerminalColors};
-use warp_core::ui::{appearance::Appearance, theme::WarpTheme};
-use warpui::assets::asset_cache::AssetSource;
-use warpui::platform;
-use warpui::{
+use zterm_core::ui::icons::Icon;
+use zterm_core::ui::theme::{AnsiColor, AnsiColors, Details, Fill, Image, TerminalColors};
+use zterm_core::ui::{appearance::Appearance, theme::ZtermTheme};
+use zterm_ui::assets::asset_cache::AssetSource;
+use zterm_ui::platform;
+use zterm_ui::{
     elements::{
         Container, CrossAxisAlignment, Flex, MainAxisAlignment, MainAxisSize, ParentElement,
     },
@@ -41,7 +41,7 @@ impl AssetProvider for Assets {
 
 fn main() -> Result<()> {
     // Initialize logging for the onboarding binary.
-    warp_logging::init(warp_logging::LogConfig {
+    zterm_logging::init(zterm_logging::LogConfig {
         is_cli: false,
         log_destination: None,
     })?;
@@ -266,7 +266,7 @@ impl View for OnboardingMainView {
         }
     }
 
-    fn on_focus(&mut self, focus_ctx: &warpui::FocusContext, ctx: &mut ViewContext<Self>) {
+    fn on_focus(&mut self, focus_ctx: &zterm_ui::FocusContext, ctx: &mut ViewContext<Self>) {
         if let OnboardingMainState::Onboarding(view) = &self.state {
             if focus_ctx.is_self_focused() {
                 ctx.focus(view);
@@ -385,8 +385,8 @@ fn adeberry_colors() -> TerminalColors {
     TerminalColors::new(ADEBERRY_NORMAL_COLORS, ADEBERRY_BRIGHT_COLORS)
 }
 
-fn dark_theme() -> WarpTheme {
-    WarpTheme::new(
+fn dark_theme() -> ZtermTheme {
+    ZtermTheme::new(
         Fill::Solid(ColorU::from_u32(0x000000FF)),
         ColorU::from_u32(0xffffffff),
         Fill::Solid(ColorU::from_u32(0x19AAD8FF)),
@@ -398,8 +398,8 @@ fn dark_theme() -> WarpTheme {
     )
 }
 
-fn light_theme() -> WarpTheme {
-    WarpTheme::new(
+fn light_theme() -> ZtermTheme {
+    ZtermTheme::new(
         Fill::Solid(ColorU::white()),
         ColorU::new(17, 17, 17, 0xFF),
         Fill::Solid(ColorU::from_u32(0x00c2ffff)),
@@ -411,8 +411,8 @@ fn light_theme() -> WarpTheme {
     )
 }
 
-fn phenomenon() -> WarpTheme {
-    WarpTheme::new(
+fn phenomenon() -> ZtermTheme {
+    ZtermTheme::new(
         Fill::Solid(ColorU::from_u32(0x121212FF)),
         ColorU::from_u32(0xFAF9F6FF),
         Fill::Solid(ColorU::from_u32(0x2E5D9EFF)),
@@ -430,8 +430,8 @@ fn phenomenon() -> WarpTheme {
     )
 }
 
-fn adeberry() -> WarpTheme {
-    WarpTheme::new(
+fn adeberry() -> ZtermTheme {
+    ZtermTheme::new(
         Fill::Solid(ColorU::from_u32(0x1D2022FF)),
         ColorU::from_u32(0xE4EEF5FF),
         Fill::Solid(ColorU::from_u32(0x6C96B4FF)),
@@ -443,7 +443,7 @@ fn adeberry() -> WarpTheme {
     )
 }
 
-fn build_appearance(theme: WarpTheme, ctx: &mut AppContext) -> Appearance {
+fn build_appearance(theme: ZtermTheme, ctx: &mut AppContext) -> Appearance {
     let ui_font_family =
         load_default_ui_font_family(ctx).expect("unable to load default ui font family");
 

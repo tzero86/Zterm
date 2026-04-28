@@ -138,7 +138,7 @@ use ai::index::full_source_code_embedding::manager::CodebaseIndexManager;
 #[cfg(all(target_os = "macos", feature = "crash_reporting"))]
 use sentry::protocol::{Attachment, AttachmentType};
 use serde_json;
-use warpui::notification::NotificationSendError;
+use zterm_ui::notification::NotificationSendError;
 
 use super::hoa_onboarding::{
     mark_hoa_onboarding_completed, HoaOnboardingFlow, HoaOnboardingFlowEvent, HoaOnboardingStep,
@@ -159,7 +159,7 @@ use crate::code::editor_management::CodeManager;
 use crate::code::editor_management::CodeSource;
 use crate::code_review::telemetry_event::CodeReviewPaneEntrypoint;
 use crate::drive::export::ExportManager;
-use crate::drive::settings::WarpDriveSettings;
+use crate::drive::settings::ZtermDriveSettings;
 use crate::launch_configs::launch_config::WindowTemplate;
 use crate::pane_group::{
     AIFactPane, CodeReviewPanelArg, Direction as PaneGroupDirection, EnvironmentManagementPane,
@@ -185,7 +185,7 @@ use crate::terminal::available_shells::AvailableShell;
 use crate::terminal::available_shells::AvailableShells;
 use crate::terminal::block_list_viewport::InputMode;
 use crate::terminal::ligature_settings::should_use_ligature_rendering;
-use crate::terminal::warpify::settings::WarpifySettings;
+use crate::terminal::warpify::settings::ZtermifySettings;
 use crate::ui_components::avatar::{Avatar, AvatarContent, StatusElementTypes};
 
 #[cfg(target_family = "wasm")]
@@ -208,8 +208,8 @@ use crate::billing::shared_objects_creation_denied_modal::{
 #[cfg(target_family = "wasm")]
 use crate::wasm_nux_dialog::WasmNUXDialog;
 
-use crate::drive::items::WarpDriveItemId;
-use crate::drive::settings::WarpDriveSettingsChangedEvent;
+use crate::drive::items::ZtermDriveItemId;
+use crate::drive::settings::ZtermDriveSettingsChangedEvent;
 use crate::env_vars::{
     manager::{EnvVarCollectionManager, EnvVarCollectionSource},
     CloudEnvVarCollection,
@@ -233,7 +233,7 @@ use crate::drive::import::modal::{ImportModal, ImportModalEvent};
 use crate::drive::workflows::arguments::ArgumentsState;
 use crate::drive::workflows::modal::{WorkflowModal, WorkflowModalEvent};
 use crate::drive::{
-    CloudObjectTypeAndId, DriveObjectType, DrivePanel, DrivePanelEvent, OpenWarpDriveObjectSettings,
+    CloudObjectTypeAndId, DriveObjectType, DrivePanel, DrivePanelEvent, OpenZtermDriveObjectSettings,
 };
 use crate::experiments::{BlockOnboarding, Experiment};
 use crate::menu::{
@@ -279,8 +279,8 @@ use crate::server::server_api::{ServerApi, ServerApiEvent, ServerApiProvider, Se
 use crate::server::telemetry::{
     AddTabWithShellSource, AnonymousUserSignupEntrypoint, CloseTarget, EnvVarTelemetryMetadata,
     FileTreeSource, KnowledgePaneEntrypoint, LaunchConfigUiLocation,
-    MCPServerCollectionPaneEntrypoint, OpenedWarpAISource, SharingDialogSource, TierLimitHitEvent,
-    WarpDriveSource,
+    MCPServerCollectionPaneEntrypoint, OpenedZtermAISource, SharingDialogSource, TierLimitHitEvent,
+    ZtermDriveSource,
 };
 use crate::session_management::{SessionNavigationData, SessionSource};
 use crate::settings::{
@@ -318,7 +318,7 @@ use crate::workspace::cli_install;
 use crate::workspaces::user_workspaces::UserWorkspaces;
 use crate::{report_if_error, AgentNotificationsModel};
 use ::settings::{Setting, ToggleableSetting};
-use warp_core::features::FeatureFlag;
+use zterm_core::features::FeatureFlag;
 
 use crate::search::{self, QueryFilter};
 use crate::terminal::view::{
@@ -338,7 +338,7 @@ use crate::user_config::{
     find_unused_worktree_config_path, materialize_default_worktree_config, sanitize_toml_base_name,
     tab_configs_dir,
 };
-use crate::user_config::{WarpConfig, WarpConfigUpdateEvent};
+use crate::user_config::{ZtermConfig, ZtermConfigUpdateEvent};
 use crate::util::bindings::{
     keybinding_name_to_display_string, keybinding_name_to_keystroke, trigger_to_keystroke,
 };
@@ -386,22 +386,22 @@ use std::convert::TryFrom;
 use std::time::Duration;
 #[cfg(target_os = "macos")]
 use std::time::{SystemTime, UNIX_EPOCH};
-use warp_core::context_flag::ContextFlag;
-use warp_core::semantic_selection::SemanticSelection;
-use warp_util::path::{user_friendly_path, LineAndColumnArg};
-use warpui::fonts::Weight;
-use warpui::modals::{AlertDialogWithCallbacks, AppModalCallback};
-use warpui::windowing::{StateEvent, WindowManager};
+use zterm_core::context_flag::ContextFlag;
+use zterm_core::semantic_selection::SemanticSelection;
+use zterm_util::path::{user_friendly_path, LineAndColumnArg};
+use zterm_ui::fonts::Weight;
+use zterm_ui::modals::{AlertDialogWithCallbacks, AppModalCallback};
+use zterm_ui::windowing::{StateEvent, WindowManager};
 
-use warp_core::user_preferences::GetUserPreferences as _;
-use warpui::clipboard::ClipboardContent;
+use zterm_core::user_preferences::GetUserPreferences as _;
+use zterm_ui::clipboard::ClipboardContent;
 #[cfg(target_family = "wasm")]
-use warpui::elements::Percentage;
-use warpui::elements::{
+use zterm_ui::elements::Percentage;
+use zterm_ui::elements::{
     CacheOption, DispatchEventResult, DropTarget, EventHandler, Image, MouseInBehavior, Rect,
 };
-use warpui::ui_components::button::{Button, ButtonVariant};
-use warpui::{elements::MouseStateHandle, fonts::Properties};
+use zterm_ui::ui_components::button::{Button, ButtonVariant};
+use zterm_ui::{elements::MouseStateHandle, fonts::Properties};
 
 use crate::{autoupdate, channel::ChannelState};
 
@@ -481,17 +481,17 @@ use std::path::PathBuf;
 use std::process;
 use std::sync::{mpsc, Mutex};
 use std::{cmp::Ordering, sync::Arc};
-use warp_core::ui::theme::{color::internal_colors, phenomenon::PhenomenonStyle, Fill};
-use warp_core::ui::{color::coloru_with_opacity, Icon};
-use warp_editor::editor::NavigationKey;
-use warpui::keymap::Context;
-use warpui::notification::{RequestPermissionsOutcome, UserNotification};
-use warpui::platform::{
+use zterm_core::ui::theme::{color::internal_colors, phenomenon::PhenomenonStyle, Fill};
+use zterm_core::ui::{color::coloru_with_opacity, Icon};
+use zterm_editor::editor::NavigationKey;
+use zterm_ui::keymap::Context;
+use zterm_ui::notification::{RequestPermissionsOutcome, UserNotification};
+use zterm_ui::platform::{
     Cursor, FilePickerConfiguration, FullscreenState, SystemTheme, TerminationMode,
 };
-use warpui::text_layout::ClipConfig;
-use warpui::ui_components::components::{Coords, UiComponent, UiComponentStyles};
-use warpui::{
+use zterm_ui::text_layout::ClipConfig;
+use zterm_ui::ui_components::components::{Coords, UiComponent, UiComponentStyles};
+use zterm_ui::{
     accessibility::{
         AccessibilityContent, AccessibilityVerbosity, ActionAccessibilityContent, WarpA11yRole,
     },
@@ -506,7 +506,7 @@ use warpui::{
     geometry::vector::{vec2f, Vector2F},
     AppContext, Entity, TypedActionView, UpdateView, View, ViewContext, ViewHandle,
 };
-use warpui::{
+use zterm_ui::{
     EntityId, FocusContext, ModelHandle, SingletonEntity, UpdateModel, ViewAsRef, WeakViewHandle,
     WindowId,
 };
@@ -601,7 +601,7 @@ pub(crate) const TOGGLE_NOTIFICATION_MAILBOX_BINDING_NAME: &str =
 
 // these won't have to be public after we deprecate the code mode v1 project explorer which is defined in terminal
 pub(crate) const TOGGLE_PROJECT_EXPLORER_BINDING_NAME: &str = "workspace:toggle_project_explorer";
-pub(crate) const TOGGLE_WARP_DRIVE_BINDING_NAME: &str = "workspace:toggle_warp_drive";
+pub(crate) const TOGGLE_ZTERM_DRIVE_BINDING_NAME: &str = "workspace:toggle_zterm_drive";
 pub(crate) const TOGGLE_RIGHT_PANEL_BINDING_NAME: &str = "workspace:toggle_right_panel";
 pub(crate) const TOGGLE_VERTICAL_TABS_PANEL_BINDING_NAME: &str =
     "workspace:toggle_vertical_tabs_panel";
@@ -618,7 +618,7 @@ pub(crate) const TOGGLE_TAB_CONFIGS_MENU_BINDING_NAME: &str = "workspace:toggle_
 pub(crate) const LEFT_PANEL_PROJECT_EXPLORER_BINDING_NAME: &str =
     "workspace:left_panel_project_explorer";
 pub(crate) const LEFT_PANEL_GLOBAL_SEARCH_BINDING_NAME: &str = "workspace:left_panel_global_search";
-pub(crate) const LEFT_PANEL_WARP_DRIVE_BINDING_NAME: &str = "workspace:left_panel_warp_drive";
+pub(crate) const LEFT_PANEL_ZTERM_DRIVE_BINDING_NAME: &str = "workspace:left_panel_zterm_drive";
 pub(crate) const LEFT_PANEL_AGENT_CONVERSATIONS_BINDING_NAME: &str =
     "workspace:left_panel_agent_conversations";
 
@@ -755,8 +755,8 @@ impl ShowTabBar {
 #[cfg(target_family = "wasm")]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum SimplifiedWasmTabBarContent {
-    /// Viewing a Warp Drive object (notebook, workflow, env vars, AI facts, MCP servers)
-    WarpDriveObject,
+    /// Viewing a Zterm Drive object (notebook, workflow, env vars, AI facts, MCP servers)
+    ZtermDriveObject,
     /// Participating in a shared session (viewer or writer). Contains the optional ambient agent task ID.
     SharedSession { task_id: Option<AmbientAgentTaskId> },
     /// Viewing a conversation transcript. Contains the optional ambient agent task ID.
@@ -1373,7 +1373,7 @@ impl Workspace {
                 if let Some(id) = id_to_force_expand {
                     self.open_notebook(
                         &NotebookSource::Existing(id),
-                        &OpenWarpDriveObjectSettings::default(),
+                        &OpenZtermDriveObjectSettings::default(),
                         ctx,
                         true,
                     );
@@ -1389,7 +1389,7 @@ impl Workspace {
                 if let Some(id) = id_to_force_expand {
                     self.open_workflow_with_existing(
                         id,
-                        &OpenWarpDriveObjectSettings::default(),
+                        &OpenZtermDriveObjectSettings::default(),
                         ctx,
                     );
                     CloudModel::handle(ctx).update(ctx, |cloud_model, ctx| {
@@ -1937,7 +1937,7 @@ impl Workspace {
                         );
                     });
                 } else {
-                    WarpConfig::handle(ctx).update(ctx, |warp_config, ctx| {
+                    ZtermConfig::handle(ctx).update(ctx, |warp_config, ctx| {
                         warp_config.remove_tab_config_by_path(path, ctx);
                     });
                 }
@@ -2279,7 +2279,7 @@ impl Workspace {
             |hover_state| {
                 let icon = ConstrainedBox::new(
                     icons::Icon::X
-                        .to_warpui_icon(Fill::Solid(PhenomenonStyle::modal_close_button_text()))
+                        .to_zterm_ui_icon(Fill::Solid(PhenomenonStyle::modal_close_button_text()))
                         .finish(),
                 )
                 .with_width(16.)
@@ -2405,7 +2405,7 @@ impl Workspace {
         );
     }
 
-    /// Subscribes to `WarpConfigUpdateEvent::TabConfigErrors` and shows a persistent
+    /// Subscribes to `ZtermConfigUpdateEvent::TabConfigErrors` and shows a persistent
     /// error toast for each tab config file that failed to parse.  Uses `object_id`
     /// keyed by file path so that re-saving the same file auto-dismisses the stale
     /// toast.
@@ -2413,9 +2413,9 @@ impl Workspace {
         toast_stack: ViewHandle<DismissibleToastStack<WorkspaceAction>>,
         ctx: &mut ViewContext<Self>,
     ) {
-        ctx.subscribe_to_model(&WarpConfig::handle(ctx), move |_me, _, event, ctx| {
+        ctx.subscribe_to_model(&ZtermConfig::handle(ctx), move |_me, _, event, ctx| {
             match event {
-                WarpConfigUpdateEvent::TabConfigs => {
+                ZtermConfigUpdateEvent::TabConfigs => {
                     // On every tab config reload, dismiss error toasts for
                     // files that now parse successfully.  The model has already
                     // been updated with the current error set before this event
@@ -2430,7 +2430,7 @@ impl Workspace {
                         toast_stack.dismiss_toasts_by_prefix("tab_config_error:", ctx);
                     });
                 }
-                WarpConfigUpdateEvent::TabConfigErrors(errors) => {
+                ZtermConfigUpdateEvent::TabConfigErrors(errors) => {
                     let home_dir = dirs::home_dir();
                     for error in errors {
                         let object_id = format!("tab_config_error:{}", error.file_path.display());
@@ -2464,17 +2464,17 @@ impl Workspace {
         });
     }
 
-    /// Subscribes to `WarpConfigUpdateEvent::SettingsErrors` and
+    /// Subscribes to `ZtermConfigUpdateEvent::SettingsErrors` and
     /// `SettingsErrorsCleared` to update the workspace settings-error banner
     /// and mirror the state into the settings pane for its nav-rail footer.
     fn subscribe_to_settings_errors(ctx: &mut ViewContext<Self>) {
-        ctx.subscribe_to_model(&WarpConfig::handle(ctx), |me, _, event, ctx| match event {
-            WarpConfigUpdateEvent::SettingsErrors(error) => {
+        ctx.subscribe_to_model(&ZtermConfig::handle(ctx), |me, _, event, ctx| match event {
+            ZtermConfigUpdateEvent::SettingsErrors(error) => {
                 me.settings_file_error = Some(error.clone());
                 me.sync_settings_error_state_into_settings_pane(ctx);
                 ctx.notify();
             }
-            WarpConfigUpdateEvent::SettingsErrorsCleared => {
+            ZtermConfigUpdateEvent::SettingsErrorsCleared => {
                 me.settings_file_error = None;
                 me.sync_settings_error_state_into_settings_pane(ctx);
                 ctx.notify();
@@ -2865,8 +2865,8 @@ impl Workspace {
             }
         });
 
-        ctx.subscribe_to_model(&WarpDriveSettings::handle(ctx), |me, _, event, ctx| {
-            if let WarpDriveSettingsChangedEvent::EnableWarpDrive { .. } = event {
+        ctx.subscribe_to_model(&ZtermDriveSettings::handle(ctx), |me, _, event, ctx| {
+            if let ZtermDriveSettingsChangedEvent::EnableZtermDrive { .. } = event {
                 me.update_left_panel_available_views(ctx);
                 ctx.notify();
             }
@@ -3769,7 +3769,7 @@ impl Workspace {
                 LeftPanelDisplayedTab::GlobalSearch => ToolPanelView::GlobalSearch {
                     entry_focus: GlobalSearchEntryFocus::Results,
                 },
-                LeftPanelDisplayedTab::WarpDrive => ToolPanelView::WarpDrive,
+                LeftPanelDisplayedTab::ZtermDrive => ToolPanelView::ZtermDrive,
                 LeftPanelDisplayedTab::ConversationListView => ToolPanelView::ConversationListView,
             };
             lp.restore_active_view_from_snapshot(active_view, ctx);
@@ -3837,13 +3837,13 @@ impl Workspace {
             self.add_tab_from_existing_pane(home_pane, 0, ctx);
 
             // If we can't start a terminal session to run the onboarding flow, show the Warp Home
-            // placeholder along with Warp Drive.
+            // placeholder along with Zterm Drive.
             true
         };
         let initial_tab = self.active_tab_pane_group().clone();
 
         if open_warp_drive {
-            // We open Warp Drive automatically in two cases:
+            // We open Zterm Drive automatically in two cases:
             // * The user is new to Warp, and went through the overall onboarding flow
             // * The user is on the web, so we can't open a terminal session.
             let initial_load_complete = UpdateManager::as_ref(ctx).initial_load_complete();
@@ -3851,9 +3851,9 @@ impl Workspace {
                 // New Warp users can have non-welcome objects if they were directly invited OR if
                 // linked objects were copied over from an anonymous user.
                 if CloudModel::as_ref(ctx).has_non_welcome_objects() {
-                    me.open_or_toggle_warp_drive(false, false, ctx);
+                    me.open_or_toggle_zterm_drive(false, false, ctx);
 
-                    // After opening Warp Drive, if we rendered the Warp Home placeholder panel, replace it with one of
+                    // After opening Zterm Drive, if we rendered the Warp Home placeholder panel, replace it with one of
                     // the user's own objects.
                     if show_warp_home {
                         let cloud_model = CloudModel::as_ref(ctx);
@@ -4041,7 +4041,7 @@ impl Workspace {
                 // Open the transcript details panel by default on WASM (unless on mobile)
                 #[cfg(target_family = "wasm")]
                 {
-                    if !warpui::platform::wasm::is_mobile_device() {
+                    if !zterm_ui::platform::wasm::is_mobile_device() {
                         me.current_workspace_state.is_transcript_details_panel_open = true;
                         me.transcript_info_button.update(ctx, |button, ctx| {
                             button.set_active(true, ctx);
@@ -4161,7 +4161,7 @@ impl Workspace {
                             .ambient_agent_task_id();
                         if task_id.is_some() {
                             // Open the details panel for shared ambient agent sessions (unless on mobile)
-                            if !warpui::platform::wasm::is_mobile_device() {
+                            if !zterm_ui::platform::wasm::is_mobile_device() {
                                 me.current_workspace_state.is_transcript_details_panel_open = true;
                                 me.transcript_info_button.update(ctx, |button, ctx| {
                                     button.set_active(true, ctx);
@@ -4248,10 +4248,10 @@ impl Workspace {
             }
         }
 
-        // Check if focused pane is a Warp Drive object
+        // Check if focused pane is a Zterm Drive object
         let focused_pane_id = pane_group.focused_pane_id(ctx);
         if focused_pane_id.is_warp_drive_object_pane() {
-            return Some(SimplifiedWasmTabBarContent::WarpDriveObject);
+            return Some(SimplifiedWasmTabBarContent::ZtermDriveObject);
         }
 
         None
@@ -4350,7 +4350,7 @@ impl Workspace {
 
         self.tips_completed.update(ctx, |tips_completed, ctx| {
             mark_feature_used_and_write_to_user_defaults(
-                Tip::Action(TipAction::WarpAI),
+                Tip::Action(TipAction::ZtermAI),
                 tips_completed,
                 ctx,
             );
@@ -4410,8 +4410,8 @@ impl Workspace {
             .has_warp_drive_initialized_sections(app)
     }
 
-    /// Check if Warp Drive view is focused within.
-    /// Routes to the appropriate Warp Drive panel.
+    /// Check if Zterm Drive view is focused within.
+    /// Routes to the appropriate Zterm Drive panel.
     fn is_warp_drive_view_focused(&self, ctx: &mut ViewContext<Self>) -> bool {
         let app = ctx;
         self.left_panel_view.is_self_or_child_focused(app)
@@ -4613,7 +4613,7 @@ impl Workspace {
     }
 
     /// This function shifts focus to the panel on the left.
-    /// The current focusable panels are: Warp Drive, theme chooser, AI, and resource center (keyboard shortcuts page only)
+    /// The current focusable panels are: Zterm Drive, theme chooser, AI, and resource center (keyboard shortcuts page only)
     fn focus_left_panel(&mut self, ctx: &mut ViewContext<Self>) {
         // Starts from terminal
         if self.active_tab_pane_group().is_self_or_child_focused(ctx) {
@@ -4633,7 +4633,7 @@ impl Workspace {
         {
             self.focus_active_tab(ctx);
         }
-        // Starts from a left panel: Warp Drive
+        // Starts from a left panel: Zterm Drive
         else if self.is_warp_drive_view_focused(ctx) {
             if self.current_workspace_state.is_right_panel_open() {
                 self.set_selected_object(None, ctx);
@@ -4678,7 +4678,7 @@ impl Workspace {
                 ctx.focus(&self.theme_chooser_view);
             }
         }
-        // Starts from a left panel: Warp Drive, theme chooser
+        // Starts from a left panel: Zterm Drive, theme chooser
         else if self.is_warp_drive_view_focused(ctx)
             || self.theme_chooser_view.is_self_or_child_focused(ctx)
         {
@@ -5631,7 +5631,7 @@ impl Workspace {
             AgentManagementViewEvent::OpenPlanNotebook { notebook_uid } => {
                 self.open_notebook(
                     &NotebookSource::Existing((*notebook_uid).into()),
-                    &OpenWarpDriveObjectSettings::default(),
+                    &OpenZtermDriveObjectSettings::default(),
                     ctx,
                     false,
                 );
@@ -5777,7 +5777,7 @@ impl Workspace {
                 let pane_group = self.active_tab_pane_group().clone();
                 self.handle_file_tree_event(pane_group, pane_group_event, ctx);
             }
-            LeftPanelEvent::WarpDrive(drive_event) => {
+            LeftPanelEvent::ZtermDrive(drive_event) => {
                 self.handle_warp_drive_event(drive_event, ctx);
             }
             LeftPanelEvent::OpenFileWithTarget {
@@ -5945,7 +5945,7 @@ impl Workspace {
     #[cfg(not(target_family = "wasm"))]
     fn view_logs(&mut self, ctx: &mut ViewContext<Self>) {
         ctx.spawn(
-            async { tokio::task::spawn_blocking(warp_logging::create_log_bundle_zip).await },
+            async { tokio::task::spawn_blocking(zterm_logging::create_log_bundle_zip).await },
             |me, result, ctx| match result {
                 Ok(Ok(path)) => {
                     ctx.open_file_path_in_explorer(&path);
@@ -6094,7 +6094,7 @@ impl Workspace {
 
         // 4. User tab configs
         if FeatureFlag::TabConfigs.is_enabled() {
-            let tab_configs = WarpConfig::as_ref(ctx).tab_configs().to_vec();
+            let tab_configs = ZtermConfig::as_ref(ctx).tab_configs().to_vec();
 
             // Count occurrences of each config name so we can disambiguate
             // duplicates in the menu (e.g. "My Tab Config", "My Tab Config (1)").
@@ -6602,7 +6602,7 @@ impl Workspace {
             return;
         }
 
-        if *WarpDriveSettings::as_ref(ctx)
+        if *ZtermDriveSettings::as_ref(ctx)
             .sharing_onboarding_block_shown
             .value()
         {
@@ -6776,7 +6776,7 @@ impl Workspace {
         ctx.notify();
     }
 
-    /// Opens the Warp Drive object identified by `uid` in a new pane
+    /// Opens the Zterm Drive object identified by `uid` in a new pane
     /// if it has a pane representation.
     fn open_warp_drive_object_in_new_pane(&mut self, uid: &ObjectUid, ctx: &mut ViewContext<Self>) {
         let Some(object) = CloudModel::as_ref(ctx).get_by_uid(uid) else {
@@ -6788,7 +6788,7 @@ impl Workspace {
             ObjectType::Notebook => {
                 self.open_notebook(
                     &NotebookSource::Existing(sync_id),
-                    &OpenWarpDriveObjectSettings::default(),
+                    &OpenZtermDriveObjectSettings::default(),
                     ctx,
                     true,
                 );
@@ -6796,7 +6796,7 @@ impl Workspace {
             ObjectType::Workflow => {
                 self.open_workflow_in_pane(
                     &WorkflowOpenSource::Existing(sync_id),
-                    &OpenWarpDriveObjectSettings::default(),
+                    &OpenZtermDriveObjectSettings::default(),
                     WorkflowViewMode::View,
                     ctx,
                 );
@@ -6825,7 +6825,7 @@ impl Workspace {
     pub fn open_notebook(
         &mut self,
         source: &NotebookSource,
-        settings: &OpenWarpDriveObjectSettings,
+        settings: &OpenZtermDriveObjectSettings,
         ctx: &mut ViewContext<Self>,
         default_to_new_pane: bool,
     ) {
@@ -6883,9 +6883,9 @@ impl Workspace {
 
             if let Some(focused_folder_id) = focused_folder_id {
                 // Only focus the notebook if we don't want to focus a parent folder instead
-                self.open_or_toggle_warp_drive(false, false, ctx);
+                self.open_or_toggle_zterm_drive(false, false, ctx);
                 self.set_selected_object(
-                    Some(WarpDriveItemId::Object(
+                    Some(ZtermDriveItemId::Object(
                         CloudObjectTypeAndId::from_id_and_type(
                             focused_folder_id,
                             ObjectType::Folder,
@@ -6895,7 +6895,7 @@ impl Workspace {
                 );
             } else {
                 self.set_selected_object(
-                    Some(WarpDriveItemId::Object(
+                    Some(ZtermDriveItemId::Object(
                         CloudObjectTypeAndId::from_id_and_type(*notebook_id, ObjectType::Notebook),
                     )),
                     ctx,
@@ -6904,11 +6904,11 @@ impl Workspace {
         }
     }
 
-    /// Open a Warp Drive workflow in response to an intent URL.
+    /// Open a Zterm Drive workflow in response to an intent URL.
     pub fn open_workflow_from_intent(
         &mut self,
         workflow_id: SyncId,
-        settings: &OpenWarpDriveObjectSettings,
+        settings: &OpenZtermDriveObjectSettings,
         ctx: &mut ViewContext<Self>,
     ) {
         // If running workflows is supported, do so. Otherwise, or if the workflow isn't in memory,
@@ -6918,7 +6918,7 @@ impl Workspace {
         if ContextFlag::RunWorkflow.is_enabled() && settings.invitee_email.is_none() {
             match CloudModel::as_ref(ctx).get_workflow(&workflow_id).cloned() {
                 Some(workflow) => {
-                    self.open_or_toggle_warp_drive(false, false, ctx);
+                    self.open_or_toggle_zterm_drive(false, false, ctx);
                     self.run_cloud_workflow_in_active_input(
                         workflow,
                         WorkflowSelectionSource::Undefined,
@@ -6930,7 +6930,7 @@ impl Workspace {
                     // that will focus the workflow instead.
                     if let Some(focused_folder) = settings.focused_folder_id.map(SyncId::ServerId) {
                         self.set_selected_object(
-                            Some(WarpDriveItemId::Object(
+                            Some(ZtermDriveItemId::Object(
                                 CloudObjectTypeAndId::from_id_and_type(
                                     focused_folder,
                                     ObjectType::Folder,
@@ -6950,7 +6950,7 @@ impl Workspace {
     pub fn open_workflow_in_pane(
         &mut self,
         source: &WorkflowOpenSource,
-        settings: &OpenWarpDriveObjectSettings,
+        settings: &OpenZtermDriveObjectSettings,
         mode: WorkflowViewMode,
         ctx: &mut ViewContext<Self>,
     ) {
@@ -7028,7 +7028,7 @@ impl Workspace {
 
         if let EnvVarCollectionSource::Existing(env_var_collection_id) = source {
             self.set_selected_object(
-                Some(WarpDriveItemId::Object(
+                Some(ZtermDriveItemId::Object(
                     CloudObjectTypeAndId::from_generic_string_object(
                         GenericStringObjectFormat::Json(
                             crate::cloud_object::JsonObjectType::EnvVarCollection,
@@ -7436,7 +7436,7 @@ impl Workspace {
         });
 
         // Focus WD index item
-        self.set_selected_object(Some(WarpDriveItemId::AIFactCollection), ctx);
+        self.set_selected_object(Some(ZtermDriveItemId::AIFactCollection), ctx);
     }
 
     /// Open the Execution Profile Editor pane
@@ -7510,13 +7510,13 @@ impl Workspace {
     }
 
     /// Find an active session and pre-fill the input editor the Warp executable with the
-    /// [`warp_cli::Command::DumpDebugInfo`] subcommand.
+    /// [`zterm_cli::Command::DumpDebugInfo`] subcommand.
     fn dump_debug_info(&mut self, ctx: &mut ViewContext<Self>) {
         if let Some(exec) = std::env::current_exe()
             .ok()
             .map(|path| path.to_string_lossy().into_owned())
         {
-            let command = format!("{exec} {}", warp_cli::dump_debug_info_flag());
+            let command = format!("{exec} {}", zterm_cli::dump_debug_info_flag());
             // Get the active session for this tab if it exists.
             let mut active_session_handle = self
                 .active_tab_pane_group()
@@ -7663,7 +7663,7 @@ impl Workspace {
         ctx.notify();
     }
 
-    pub fn open_or_toggle_warp_drive(
+    pub fn open_or_toggle_zterm_drive(
         &mut self,
         toggle: bool,
         explicit_user_action: bool,
@@ -7676,36 +7676,36 @@ impl Workspace {
         self.current_workspace_state.is_warp_drive_open =
             if toggle { !was_warp_drive_open } else { true };
 
-        // Set selected object to None upon toggle close of Warp Drive
+        // Set selected object to None upon toggle close of Zterm Drive
         if !self.current_workspace_state.is_warp_drive_open {
             self.set_selected_object(None, ctx);
             self.focus_active_tab(ctx);
         }
 
-        // Reset focused index when opening/toggling Warp Drive open
+        // Reset focused index when opening/toggling Zterm Drive open
         if self.current_workspace_state.is_warp_drive_open {
             self.reset_focused_index_in_warp_drive(true, ctx);
         }
 
         ctx.notify();
 
-        // Telemetry and welcome tip logic is only for when the user explicitly opens Warp Drive
-        // AND warp drive wasn't open before. There are other scenarios where we open Warp Drive like:
+        // Telemetry and welcome tip logic is only for when the user explicitly opens Zterm Drive
+        // AND warp drive wasn't open before. There are other scenarios where we open Zterm Drive like:
         // new user onboarding, user joins a team, etc so we want to avoid counting those.
         if explicit_user_action
             && !was_warp_drive_open
             && self.current_workspace_state.is_warp_drive_open
         {
             send_telemetry_from_ctx!(
-                TelemetryEvent::WarpDriveOpened {
-                    source: WarpDriveSource::Legacy,
+                TelemetryEvent::ZtermDriveOpened {
+                    source: ZtermDriveSource::Legacy,
                     is_code_mode_v2: false
                 },
                 ctx
             );
             self.tips_completed.update(ctx, |tips_completed, ctx| {
                 mark_feature_used_and_write_to_user_defaults(
-                    Tip::Action(TipAction::OpenWarpDrive),
+                    Tip::Action(TipAction::OpenZtermDrive),
                     tips_completed,
                     ctx,
                 );
@@ -8511,7 +8511,7 @@ impl Workspace {
                 let theme = appearance.theme();
                 let search_icon = ConstrainedBox::new(
                     icons::Icon::SearchSmall
-                        .to_warpui_icon(theme.sub_text_color(theme.surface_2()))
+                        .to_zterm_ui_icon(theme.sub_text_color(theme.surface_2()))
                         .finish(),
                 )
                 .with_width(16.)
@@ -8633,7 +8633,7 @@ impl Workspace {
                     .finish()
                 })
                 .with_cursor(Cursor::PointingHand)
-                .on_click(|ctx: &mut warpui::elements::EventContext, _, _| {
+                .on_click(|ctx: &mut zterm_ui::elements::EventContext, _, _| {
                     ctx.dispatch_typed_action(WorkspaceAction::OpenWorktreeAddRepoPicker);
                     ctx.dispatch_typed_action(crate::menu::MenuAction::Close(true));
                 })
@@ -8868,7 +8868,7 @@ impl Workspace {
                 ctx.notify();
             }
             LaunchConfigModalEvent::SuccessfullySavedConfig(launch_config) => {
-                ctx.update_model(&WarpConfig::handle(ctx), move |warp_config, ctx| {
+                ctx.update_model(&ZtermConfig::handle(ctx), move |warp_config, ctx| {
                     warp_config.append_launch_config(launch_config, ctx);
                 });
                 ctx.notify();
@@ -9029,7 +9029,7 @@ impl Workspace {
                     });
                 });
             },
-            warpui::platform::FilePickerConfiguration::new().folders_only(),
+            zterm_ui::platform::FilePickerConfiguration::new().folders_only(),
         );
     }
 
@@ -9103,7 +9103,7 @@ impl Workspace {
             .map(crate::util::git::list_local_branches_sync)
             .unwrap_or_default();
         let branch_refs: HashSet<&str> = branches.iter().map(|s| s.as_str()).collect();
-        Some(warp_util::worktree_names::generate_worktree_branch_name(
+        Some(zterm_util::worktree_names::generate_worktree_branch_name(
             &branch_refs,
         ))
     }
@@ -9143,7 +9143,7 @@ impl Workspace {
         } else {
             let branches = crate::util::git::list_local_branches_sync(Path::new(repo));
             let branch_refs: HashSet<&str> = branches.iter().map(|s| s.as_str()).collect();
-            warp_util::worktree_names::generate_worktree_branch_name(&branch_refs)
+            zterm_util::worktree_names::generate_worktree_branch_name(&branch_refs)
         };
 
         let toml_content = crate::tab_configs::build_worktree_config_toml(
@@ -9229,7 +9229,7 @@ impl Workspace {
                     });
                 });
             },
-            warpui::platform::FilePickerConfiguration::new().folders_only(),
+            zterm_ui::platform::FilePickerConfiguration::new().folders_only(),
         );
     }
 
@@ -9250,7 +9250,7 @@ impl Workspace {
         };
         let branches = crate::util::git::list_local_branches_sync(Path::new(&repo_path));
         let branch_refs: HashSet<&str> = branches.iter().map(|s| s.as_str()).collect();
-        let branch_name = warp_util::worktree_names::generate_worktree_branch_name(&branch_refs);
+        let branch_name = zterm_util::worktree_names::generate_worktree_branch_name(&branch_refs);
         let repo_display_name = Path::new(&repo_path)
             .file_name()
             .map(|name| name.to_string_lossy().to_string())
@@ -9330,7 +9330,7 @@ impl Workspace {
                     persisted.user_added_workspace(path_buf, ctx);
                 });
             },
-            warpui::platform::FilePickerConfiguration::new().folders_only(),
+            zterm_ui::platform::FilePickerConfiguration::new().folders_only(),
         );
     }
 
@@ -9391,7 +9391,7 @@ impl Workspace {
                 // If saved workflow id matches the one that is currently displayed, then refresh workflow info box + input
                 self.maybe_refresh_workflow_info_box_and_input(workflow_id, ctx);
             }
-            WorkflowModalEvent::ViewInWarpDrive(id) => {
+            WorkflowModalEvent::ViewInZtermDrive(id) => {
                 self.view_in_and_focus_warp_drive(*id, ctx);
             }
             WorkflowModalEvent::AiAssistUpgradeError(team_uid, user_id) => {
@@ -9460,7 +9460,7 @@ impl Workspace {
                     // Proc same behavior as DrivePanelEvent::RunWorkflow
                     self.run_cloud_workflow_in_active_input(
                         workflow.clone(),
-                        WorkflowSelectionSource::WarpDrive,
+                        WorkflowSelectionSource::ZtermDrive,
                         TerminalSessionFallbackBehavior::default(),
                         ctx,
                     );
@@ -10851,7 +10851,7 @@ impl Workspace {
     pub fn add_tab_for_cloud_notebook(
         &mut self,
         notebook_id: SyncId,
-        settings: &OpenWarpDriveObjectSettings,
+        settings: &OpenZtermDriveObjectSettings,
         ctx: &mut ViewContext<Self>,
     ) {
         // TODO: We should validate that this notebook exists and fallback if it doesn't
@@ -10869,7 +10869,7 @@ impl Workspace {
     fn add_tab_for_cloud_workflow(
         &mut self,
         workflow_id: SyncId,
-        settings: &OpenWarpDriveObjectSettings,
+        settings: &OpenZtermDriveObjectSettings,
         ctx: &mut ViewContext<Self>,
     ) {
         let panes_layout = PanesLayout::Snapshot(Box::new(PaneNodeSnapshot::Leaf(LeafSnapshot {
@@ -11998,7 +11998,7 @@ impl Workspace {
 
     #[cfg(target_os = "macos")]
     pub fn sync_window_button_visibility(&self, ctx: &mut ViewContext<Self>) {
-        use warpui::platform::mac::WindowExt;
+        use zterm_ui::platform::mac::WindowExt;
         let show = if FeatureFlag::FullScreenZenMode.is_enabled()
             && TabSettings::as_ref(ctx)
                 .workspace_decoration_visibility
@@ -12364,7 +12364,7 @@ impl Workspace {
                 _ => self.open_navigation_palette(ctx),
             },
             PaletteMode::LaunchConfig => self.open_launch_config_palette(ctx),
-            PaletteMode::WarpDrive => self.open_warp_drive_palette(ctx),
+            PaletteMode::ZtermDrive => self.open_warp_drive_palette(ctx),
             PaletteMode::Files => self.open_files_palette(ctx),
             PaletteMode::Conversations => self.open_conversations_palette(ctx),
             PaletteMode::ConversationsAndRepos => self.open_recent_repos_and_convos_palette(ctx),
@@ -12457,12 +12457,12 @@ impl Workspace {
             }
             CommandPaletteEvent::OpenNotebook { id } => self.open_notebook(
                 &NotebookSource::Existing(*id),
-                &OpenWarpDriveObjectSettings::default(),
+                &OpenZtermDriveObjectSettings::default(),
                 ctx,
                 true,
             ),
-            CommandPaletteEvent::ViewInWarpDrive { id } => {
-                self.view_in_and_focus_warp_drive(WarpDriveItemId::Object(*id), ctx);
+            CommandPaletteEvent::ViewInZtermDrive { id } => {
+                self.view_in_and_focus_warp_drive(ZtermDriveItemId::Object(*id), ctx);
             }
             #[allow(unused_variables)]
             CommandPaletteEvent::OpenFile {
@@ -12499,14 +12499,14 @@ impl Workspace {
     }
 
     /// This function is used when we set a selected object, which is an object open in an active pane.
-    /// We do not want to focus Warp Drive, instead we want to focus the editor of the open object.
-    fn view_in_warp_drive(&mut self, item_id: WarpDriveItemId, ctx: &mut ViewContext<Self>) {
+    /// We do not want to focus Zterm Drive, instead we want to focus the editor of the open object.
+    fn view_in_warp_drive(&mut self, item_id: ZtermDriveItemId, ctx: &mut ViewContext<Self>) {
         self.open_left_panel(ctx);
         self.left_panel_view.update(ctx, |left_panel, ctx| {
-            left_panel.handle_action(&LeftPanelAction::WarpDrive, ctx);
+            left_panel.handle_action(&LeftPanelAction::ZtermDrive, ctx);
         });
 
-        if let WarpDriveItemId::Object(object_id) = item_id {
+        if let ZtermDriveItemId::Object(object_id) = item_id {
             CloudModel::handle(ctx).update(ctx, |model, ctx| {
                 model.force_expand_object_and_ancestors_cloud_id(object_id, ctx);
             });
@@ -12518,10 +12518,10 @@ impl Workspace {
         });
     }
 
-    /// This function is used when we want to view an item in Warp Drive AND focus Warp Drive.
+    /// This function is used when we want to view an item in Zterm Drive AND focus Zterm Drive.
     pub fn view_in_and_focus_warp_drive(
         &mut self,
-        item_id: WarpDriveItemId,
+        item_id: ZtermDriveItemId,
         ctx: &mut ViewContext<Self>,
     ) {
         self.view_in_warp_drive(item_id, ctx);
@@ -12545,7 +12545,7 @@ impl Workspace {
         });
     }
 
-    /// View an object in Warp Drive and open its sharing settings.
+    /// View an object in Zterm Drive and open its sharing settings.
     fn open_object_sharing_settings(
         &mut self,
         object_id: CloudObjectTypeAndId,
@@ -12553,7 +12553,7 @@ impl Workspace {
         source: SharingDialogSource,
         ctx: &mut ViewContext<Self>,
     ) {
-        self.view_in_warp_drive(WarpDriveItemId::Object(object_id), ctx);
+        self.view_in_warp_drive(ZtermDriveItemId::Object(object_id), ctx);
         self.update_warp_drive_view(ctx, |warp_drive, ctx| {
             warp_drive.reset_and_open_to_main_index(ctx);
             warp_drive.open_object_sharing_settings(object_id, invitee_email, source, ctx);
@@ -12612,7 +12612,7 @@ impl Workspace {
 
                     request_type = Some(ChangelogRequestType::WindowLaunch);
                     // Do not show changelog on quake mode window or if it has already been shown
-                    // or if we are opening Warp Drive on start up
+                    // or if we are opening Zterm Drive on start up
                     quake_mode_window_id() != Some(ctx.window_id())
                         && !Settings::has_changelog_been_shown(version, ctx)
                         && !*opening_warp_drive_on_start_up
@@ -12740,9 +12740,9 @@ impl Workspace {
             SettingsViewEvent::LaunchNetworkLogging => {
                 self.open_network_log_pane(ctx);
             }
-            SettingsViewEvent::OpenWarpDrive => {
+            SettingsViewEvent::OpenZtermDrive => {
                 self.close_all_overlays(ctx);
-                self.open_or_toggle_warp_drive(
+                self.open_or_toggle_zterm_drive(
                     false, /* toggle */
                     false, /* explicit_user_action */
                     ctx,
@@ -13040,7 +13040,7 @@ impl Workspace {
             pane_group::Event::OpenCloudWorkflowForEdit(workflow_id) => self
                 .open_workflow_with_existing(
                     *workflow_id,
-                    &OpenWarpDriveObjectSettings::default(),
+                    &OpenZtermDriveObjectSettings::default(),
                     ctx,
                 ),
             pane_group::Event::OpenWorkflowModalWithTemporary(workflow) => {
@@ -13102,7 +13102,7 @@ impl Workspace {
             } => {
                 self.move_to_drive_space(*cloud_object_type_and_id, *space, ctx);
             }
-            pane_group::Event::OpenWarpDriveLink {
+            pane_group::Event::OpenZtermDriveLink {
                 open_warp_drive_args,
             } => {
                 let object_found = CloudModel::as_ref(ctx)
@@ -13129,7 +13129,7 @@ impl Workspace {
                         true,
                     ),
                     ObjectType::Workflow => self.view_in_and_focus_warp_drive(
-                        WarpDriveItemId::Object(CloudObjectTypeAndId::Workflow(SyncId::ServerId(
+                        ZtermDriveItemId::Object(CloudObjectTypeAndId::Workflow(SyncId::ServerId(
                             server_id,
                         ))),
                         ctx,
@@ -13137,20 +13137,20 @@ impl Workspace {
                     ObjectType::GenericStringObject(GenericStringObjectFormat::Json(
                         JsonObjectType::EnvVarCollection,
                     )) => self.view_in_and_focus_warp_drive(
-                        WarpDriveItemId::Object(CloudObjectTypeAndId::from_generic_string_object(
+                        ZtermDriveItemId::Object(CloudObjectTypeAndId::from_generic_string_object(
                             GenericStringObjectFormat::Json(JsonObjectType::EnvVarCollection),
                             SyncId::ServerId(server_id),
                         )),
                         ctx,
                     ),
                     ObjectType::Folder => self.view_in_and_focus_warp_drive(
-                        WarpDriveItemId::Object(CloudObjectTypeAndId::Folder(SyncId::ServerId(
+                        ZtermDriveItemId::Object(CloudObjectTypeAndId::Folder(SyncId::ServerId(
                             server_id,
                         ))),
                         ctx,
                     ),
                     _ => {
-                        log::warn!("Attempted to open an unsupported Warp Drive link")
+                        log::warn!("Attempted to open an unsupported Zterm Drive link")
                     }
                 }
             }
@@ -13279,7 +13279,7 @@ impl Workspace {
                 // Focus an existing pane by its locator (used when avoiding duplicate file panes during undo close pane)
                 self.focus_pane(*locator, ctx);
             }
-            pane_group::Event::ViewInWarpDrive(id) => {
+            pane_group::Event::ViewInZtermDrive(id) => {
                 self.view_in_and_focus_warp_drive(*id, ctx);
             }
             // If focused pane contains an object, then set selected state in WD to that object
@@ -13309,7 +13309,7 @@ impl Workspace {
 
                     if let Some(workflow_id) = active_workflow_id {
                         self.set_selected_object(
-                            Some(WarpDriveItemId::Object(
+                            Some(ZtermDriveItemId::Object(
                                 CloudObjectTypeAndId::from_id_and_type(
                                     workflow_id,
                                     ObjectType::Workflow,
@@ -13332,7 +13332,7 @@ impl Workspace {
 
                     if let Some(notebook_id) = notebook_id {
                         self.set_selected_object(
-                            Some(WarpDriveItemId::Object(
+                            Some(ZtermDriveItemId::Object(
                                 CloudObjectTypeAndId::from_id_and_type(
                                     notebook_id,
                                     ObjectType::Notebook,
@@ -13354,7 +13354,7 @@ impl Workspace {
 
                     if let Some(env_var_collection_id) = env_var_collection_id {
                         self.set_selected_object(
-                            Some(WarpDriveItemId::Object(
+                            Some(ZtermDriveItemId::Object(
                                 CloudObjectTypeAndId::from_generic_string_object(
                                     GenericStringObjectFormat::Json(
                                         crate::cloud_object::JsonObjectType::EnvVarCollection,
@@ -13374,7 +13374,7 @@ impl Workspace {
                     let workflow_id = workflow_pane.get_view(ctx).as_ref(ctx).workflow_id();
 
                     self.set_selected_object(
-                        Some(WarpDriveItemId::Object(
+                        Some(ZtermDriveItemId::Object(
                             CloudObjectTypeAndId::from_id_and_type(
                                 workflow_id,
                                 ObjectType::Workflow,
@@ -13388,7 +13388,7 @@ impl Workspace {
                 else if let Some(_ai_fact_pane) =
                     pane_group.ai_fact_pane_by_pane_id(focused_pane_id)
                 {
-                    self.set_selected_object(Some(WarpDriveItemId::AIFactCollection), ctx);
+                    self.set_selected_object(Some(ZtermDriveItemId::AIFactCollection), ctx);
                     active_object_open_in_pane = true;
                 }
 
@@ -13434,7 +13434,7 @@ impl Workspace {
                 host_id,
                 indexed_path,
             } => {
-                use warp_util::standardized_path::StandardizedPath;
+                use zterm_util::standardized_path::StandardizedPath;
 
                 if let Ok(std_path) = StandardizedPath::try_new(indexed_path) {
                     let remote_id = RemoteRepositoryIdentifier::new(host_id.clone(), std_path);
@@ -13682,7 +13682,7 @@ impl Workspace {
                 ctx.notify();
             }
             pane_group::Event::ClearHoveredTabIndex => self.hovered_tab_index = None,
-            pane_group::Event::OpenWarpDriveObjectInPane(uid) => {
+            pane_group::Event::OpenZtermDriveObjectInPane(uid) => {
                 self.open_warp_drive_object_in_new_pane(uid, ctx);
             }
             pane_group::Event::OpenSuggestedAgentModeWorkflowModal { workflow_and_id } => {
@@ -13903,7 +13903,7 @@ impl Workspace {
                     self.left_panel_view
                         .read(ctx, |left_panel, _| match target_view {
                             LeftPanelTargetView::FileTree => left_panel.is_file_tree_active(),
-                            LeftPanelTargetView::WarpDrive => left_panel.is_warp_drive_active(),
+                            LeftPanelTargetView::ZtermDrive => left_panel.is_warp_drive_active(),
                         });
 
                 if self.active_tab_pane_group().as_ref(ctx).left_panel_open && is_target_active {
@@ -13918,7 +13918,7 @@ impl Workspace {
                     self.left_panel_view.update(ctx, |left_panel, ctx| {
                         let action = match target_view {
                             LeftPanelTargetView::FileTree => LeftPanelAction::ProjectExplorer,
-                            LeftPanelTargetView::WarpDrive => LeftPanelAction::WarpDrive,
+                            LeftPanelTargetView::ZtermDrive => LeftPanelAction::ZtermDrive,
                         };
                         left_panel.handle_action_with_force_open(&action, *force_open, ctx);
                     });
@@ -14391,7 +14391,7 @@ impl Workspace {
             DrivePanelEvent::RunWorkflow(workflow) => {
                 self.run_cloud_workflow_in_active_input(
                     workflow.as_ref().clone(),
-                    WorkflowSelectionSource::WarpDrive,
+                    WorkflowSelectionSource::ZtermDrive,
                     TerminalSessionFallbackBehavior::default(),
                     ctx,
                 );
@@ -14422,27 +14422,27 @@ impl Workspace {
             DrivePanelEvent::OpenWorkflowModalWithCloudWorkflow(workflow_id) => {
                 self.open_workflow_with_existing(
                     *workflow_id,
-                    &OpenWarpDriveObjectSettings::default(),
+                    &OpenZtermDriveObjectSettings::default(),
                     ctx,
                 );
             }
             DrivePanelEvent::OpenSearch => {
                 self.open_palette_action(
-                    PaletteMode::WarpDrive,
-                    PaletteSource::WarpDrive,
+                    PaletteMode::ZtermDrive,
+                    PaletteSource::ZtermDrive,
                     None,
                     ctx,
                 );
             }
             DrivePanelEvent::OpenNotebook(source) => {
-                self.open_notebook(source, &OpenWarpDriveObjectSettings::default(), ctx, true)
+                self.open_notebook(source, &OpenZtermDriveObjectSettings::default(), ctx, true)
             }
             DrivePanelEvent::OpenEnvVarCollection(source) => {
                 self.open_env_var_collection(source, false, ctx)
             }
             DrivePanelEvent::OpenWorkflowInPane(source, mode) => self.open_workflow_in_pane(
                 source,
-                &OpenWarpDriveObjectSettings::default(),
+                &OpenZtermDriveObjectSettings::default(),
                 *mode,
                 ctx,
             ),
@@ -14450,7 +14450,7 @@ impl Workspace {
                 self.open_ai_fact_collection_pane(None, None, ctx);
                 send_telemetry_from_ctx!(
                     TelemetryEvent::KnowledgePaneOpened {
-                        entrypoint: KnowledgePaneEntrypoint::WarpDrive,
+                        entrypoint: KnowledgePaneEntrypoint::ZtermDrive,
                     },
                     ctx
                 );
@@ -14460,12 +14460,12 @@ impl Workspace {
 
                 send_telemetry_from_ctx!(
                     TelemetryEvent::MCPServerCollectionPaneOpened {
-                        entrypoint: MCPServerCollectionPaneEntrypoint::WarpDrive,
+                        entrypoint: MCPServerCollectionPaneEntrypoint::ZtermDrive,
                     },
                     ctx
                 );
             }
-            DrivePanelEvent::FocusWarpDrive => {
+            DrivePanelEvent::FocusZtermDrive => {
                 ctx.focus(&self.left_panel_view);
             }
             DrivePanelEvent::OpenSharedObjectsCreationDeniedModal(object_type, team_uid) => {
@@ -14534,7 +14534,7 @@ impl Workspace {
         ctx.focus_self();
         ctx.notify();
         self.set_selected_object(
-            Some(WarpDriveItemId::Object(workflow.cloud_object_type_and_id())),
+            Some(ZtermDriveItemId::Object(workflow.cloud_object_type_and_id())),
             ctx,
         );
     }
@@ -14873,7 +14873,7 @@ impl Workspace {
                             ctx.notify();
                         });
                     }
-                    TranslateUsingWarpAI => {
+                    TranslateUsingZtermAI => {
                         active_input_handle.update(ctx, |input, ctx| {
                             let content = format!("# {query}");
                             input.focus_input_box(ctx);
@@ -14886,7 +14886,7 @@ impl Workspace {
                     AcceptNotebook(sync_id) => {
                         self.open_notebook(
                             &NotebookSource::Existing(*sync_id),
-                            &OpenWarpDriveObjectSettings::default(),
+                            &OpenZtermDriveObjectSettings::default(),
                             ctx,
                             true,
                         );
@@ -14898,7 +14898,7 @@ impl Workspace {
                             ctx,
                         );
                     }
-                    OpenWarpAI => {
+                    OpenZtermAI => {
                         if !AISettings::as_ref(ctx).is_any_ai_enabled(ctx) {
                             return;
                         }
@@ -15034,14 +15034,14 @@ impl Workspace {
                                             },
                                         ) {
                                             new_toast = DismissibleToast::success(
-                                                "Plan synced to your Warp Drive".to_string(),
+                                                "Plan synced to your Zterm Drive".to_string(),
                                             )
                                             .with_object_id(object_id_clone)
                                             .with_link(
                                                 ToastLink::new("View".to_string())
                                                     .with_onclick_action(
-                                                        WorkspaceAction::ViewObjectInWarpDrive(
-                                                            WarpDriveItemId::Object(
+                                                        WorkspaceAction::ViewObjectInZtermDrive(
+                                                            ZtermDriveItemId::Object(
                                                                 CloudObjectTypeAndId::Notebook(
                                                                     notebook.id,
                                                                 ),
@@ -15061,8 +15061,8 @@ impl Workspace {
                                     {
                                         new_toast = new_toast.with_link(
                                             ToastLink::new("View".to_string()).with_onclick_action(
-                                                WorkspaceAction::ViewObjectInWarpDrive(
-                                                    WarpDriveItemId::Object(
+                                                WorkspaceAction::ViewObjectInZtermDrive(
+                                                    ZtermDriveItemId::Object(
                                                         CloudObjectTypeAndId::Workflow(workflow.id),
                                                     ),
                                                 ),
@@ -15605,7 +15605,7 @@ impl Workspace {
         });
     }
 
-    fn set_selected_object(&mut self, id: Option<WarpDriveItemId>, ctx: &mut ViewContext<Self>) {
+    fn set_selected_object(&mut self, id: Option<ZtermDriveItemId>, ctx: &mut ViewContext<Self>) {
         // Set Warp drive index selected state
         self.update_warp_drive_view(ctx, |drive_panel, ctx| {
             drive_panel.set_selected_object(id, ctx);
@@ -15752,10 +15752,10 @@ impl Workspace {
                 self.run_workflow_in_active_input(
                     &WorkflowType::AIGenerated {
                         workflow,
-                        origin: AIWorkflowOrigin::LegacyWarpAI,
+                        origin: AIWorkflowOrigin::LegacyZtermAI,
                     },
-                    WorkflowSource::WarpAI,
-                    WorkflowSelectionSource::WarpAI,
+                    WorkflowSource::ZtermAI,
+                    WorkflowSelectionSource::ZtermAI,
                     None,
                     TerminalSessionFallbackBehavior::default(),
                     ctx,
@@ -16361,7 +16361,7 @@ impl Workspace {
     fn open_workflow_with_existing(
         &mut self,
         workflow_id: SyncId,
-        settings: &OpenWarpDriveObjectSettings,
+        settings: &OpenZtermDriveObjectSettings,
         ctx: &mut ViewContext<Self>,
     ) {
         let source = WorkflowOpenSource::Existing(workflow_id);
@@ -16381,7 +16381,7 @@ impl Workspace {
         };
         self.open_workflow_in_pane(
             &source,
-            &OpenWarpDriveObjectSettings::default(),
+            &OpenZtermDriveObjectSettings::default(),
             WorkflowViewMode::Create,
             ctx,
         );
@@ -16402,7 +16402,7 @@ impl Workspace {
         };
         self.open_workflow_in_pane(
             &source,
-            &OpenWarpDriveObjectSettings::default(),
+            &OpenZtermDriveObjectSettings::default(),
             WorkflowViewMode::Create,
             ctx,
         );
@@ -16434,7 +16434,7 @@ impl Workspace {
             .with_child(
                 Text::new_inline(AI_ASSISTANT_FEATURE_NAME, appearance.ui_font_family(), 14.)
                     .with_style(Properties {
-                        weight: warpui::fonts::Weight::Bold,
+                        weight: zterm_ui::fonts::Weight::Bold,
                         ..Default::default()
                     })
                     .finish(),
@@ -16594,11 +16594,11 @@ impl Workspace {
                         .left_panel_views
                         .first()
                         .copied()
-                        .unwrap_or(ToolPanelView::WarpDrive)
+                        .unwrap_or(ToolPanelView::ZtermDrive)
                     {
                         ToolPanelView::ProjectExplorer => "Project explorer",
                         ToolPanelView::GlobalSearch { .. } => "Global search",
-                        ToolPanelView::WarpDrive => "Warp Drive",
+                        ToolPanelView::ZtermDrive => "Zterm Drive",
                         ToolPanelView::ConversationListView => "Agent conversations",
                     }
                 } else {
@@ -16648,11 +16648,11 @@ impl Workspace {
                 .left_panel_views
                 .first()
                 .copied()
-                .unwrap_or(ToolPanelView::WarpDrive)
+                .unwrap_or(ToolPanelView::ZtermDrive)
             {
                 ToolPanelView::ProjectExplorer => "Project explorer",
                 ToolPanelView::GlobalSearch { .. } => "Global search",
-                ToolPanelView::WarpDrive => "Warp Drive",
+                ToolPanelView::ZtermDrive => "Zterm Drive",
                 ToolPanelView::ConversationListView => "Agent conversations",
             }
         } else {
@@ -16715,7 +16715,7 @@ impl Workspace {
         };
 
         // Build the button content: Diff icon + optional diff stats
-        let icon = ConstrainedBox::new(icons::Icon::Diff.to_warpui_icon(font_color).finish())
+        let icon = ConstrainedBox::new(icons::Icon::Diff.to_zterm_ui_icon(font_color).finish())
             .with_width(16.)
             .with_height(16.)
             .finish();
@@ -16871,7 +16871,7 @@ impl Workspace {
                     .with_spacing(10.)
                     .with_child(
                         ConstrainedBox::new(
-                            icons::Icon::Search.to_warpui_icon(text_color).finish(),
+                            icons::Icon::Search.to_zterm_ui_icon(text_color).finish(),
                         )
                         .with_width(16.)
                         .with_height(16.)
@@ -16934,7 +16934,7 @@ impl Workspace {
             .is_user_web_anonymous_user()
             .unwrap_or_default();
 
-        // Simplified mode for viewing Warp Drive objects, shared sessions, or conversation transcripts on WASM
+        // Simplified mode for viewing Zterm Drive objects, shared sessions, or conversation transcripts on WASM
         #[cfg(target_family = "wasm")]
         if let Some(content_type) = self.get_simplified_wasm_tab_bar_content(ctx) {
             // Use MainAxisAlignment::SpaceBetween and expand to fill width
@@ -16946,8 +16946,8 @@ impl Workspace {
             // Left: Warp logo - clickable to link to warp.dev
             let warp_logo = Hoverable::new(self.mouse_states.warp_logo.clone(), |_state| {
                 ConstrainedBox::new(
-                    warp_core::ui::Icon::Warp
-                        .to_warpui_icon(appearance.theme().foreground())
+                    zterm_core::ui::Icon::Warp
+                        .to_zterm_ui_icon(appearance.theme().foreground())
                         .finish(),
                 )
                 .with_height(24.)
@@ -16970,12 +16970,12 @@ impl Workspace {
             let task_id = match content_type {
                 SimplifiedWasmTabBarContent::ConversationTranscript { task_id }
                 | SimplifiedWasmTabBarContent::SharedSession { task_id } => task_id,
-                SimplifiedWasmTabBarContent::WarpDriveObject => None,
+                SimplifiedWasmTabBarContent::ZtermDriveObject => None,
             };
 
             // Show info button for conversation transcripts and shared sessions (if there's content to display)
             let should_show_info_button =
-                !matches!(content_type, SimplifiedWasmTabBarContent::WarpDriveObject)
+                !matches!(content_type, SimplifiedWasmTabBarContent::ZtermDriveObject)
                     && self
                         .active_tab_pane_group()
                         .as_ref(ctx)
@@ -17002,7 +17002,7 @@ impl Workspace {
             }
 
             // Hide "Open in Warp" button on mobile devices
-            if !warpui::platform::wasm::is_mobile_device() {
+            if !zterm_ui::platform::wasm::is_mobile_device() {
                 right_row.add_child(ChildView::new(&self.open_in_warp_button).finish());
             }
             tab_bar.add_child(right_row.finish());
@@ -17906,7 +17906,7 @@ impl Workspace {
         let icon = ConstrainedBox::new(
             Container::new(
                 icons::Icon::CloudOffline
-                    .to_warpui_icon(appearance.theme().foreground())
+                    .to_zterm_ui_icon(appearance.theme().foreground())
                     .finish(),
             )
             .with_uniform_padding(3.)
@@ -18422,7 +18422,7 @@ impl Workspace {
 
         // Left side: alert icon + bold heading + regular description, all inline.
         let icon =
-            ConstrainedBox::new(Icon::AlertCircle.to_warpui_icon(text_color.into()).finish())
+            ConstrainedBox::new(Icon::AlertCircle.to_zterm_ui_icon(text_color.into()).finish())
                 .with_width(16.)
                 .with_height(16.)
                 .finish();
@@ -18523,7 +18523,7 @@ impl Workspace {
                                     // `x-close.svg`), matching the Figma
                                     // design. `Icon::XCircle` wraps the x in
                                     // a circle which is not what we want.
-                                    Icon::X.to_warpui_icon(text_color.into()).finish(),
+                                    Icon::X.to_zterm_ui_icon(text_color.into()).finish(),
                                 )
                                 .with_width(16.)
                                 .with_height(16.)
@@ -18586,7 +18586,7 @@ impl Workspace {
             if let Some(icon) = icon {
                 row.add_child(
                     Container::new(
-                        ConstrainedBox::new(icon.to_warpui_icon(text_color.into()).finish())
+                        ConstrainedBox::new(icon.to_zterm_ui_icon(text_color.into()).finish())
                             .with_width(14.)
                             .with_height(14.)
                             .finish(),
@@ -18831,7 +18831,7 @@ impl Workspace {
         }
 
         #[cfg(target_family = "wasm")]
-        if !warpui::platform::wasm::is_mobile_device()
+        if !zterm_ui::platform::wasm::is_mobile_device()
             && self
                 .current_workspace_state
                 .is_transcript_details_panel_open
@@ -18912,7 +18912,7 @@ impl Workspace {
                 )
             }
             HeaderToolbarItemKind::ToolsPanel => {
-                if !pane_group.left_panel_open || warpui::platform::is_mobile_device() {
+                if !pane_group.left_panel_open || zterm_ui::platform::is_mobile_device() {
                     return None;
                 }
                 Some(ChildView::new(&self.left_panel_view).finish())
@@ -19019,7 +19019,7 @@ impl Workspace {
         let general_settings = GeneralSettings::as_ref(app);
         let theme_settings = ThemeSettings::as_ref(app);
         let ssh_settings = SshSettings::as_ref(app);
-        let warpify_settings = WarpifySettings::as_ref(app);
+        let warpify_settings = ZtermifySettings::as_ref(app);
         let terminal_settings = TerminalSettings::as_ref(app);
         let pane_settings = PaneSettings::as_ref(app);
         let keys_settings = KeysSettings::as_ref(app);
@@ -19060,7 +19060,7 @@ impl Workspace {
             .value()
             .same_line_prompt_enabled()
         {
-            context.set.insert(flags::WARP_SAME_LINE_PROMPT_FLAG);
+            context.set.insert(flags::ZTERM_SAME_LINE_PROMPT_FLAG);
         }
 
         if *ssh_settings.enable_legacy_ssh_wrapper.value() {
@@ -19567,8 +19567,8 @@ impl Workspace {
                 entry_focus: GlobalSearchEntryFocus::Results,
             });
         }
-        if WarpDriveSettings::is_warp_drive_enabled(ctx) {
-            views.push(ToolPanelView::WarpDrive);
+        if ZtermDriveSettings::is_warp_drive_enabled(ctx) {
+            views.push(ToolPanelView::ZtermDrive);
         }
         views
     }
@@ -19954,7 +19954,7 @@ impl TypedActionView for Workspace {
                 // the currently active session in the log out modal.
                 ctx.dispatch_global_action("app:maybe_log_out", ());
             }
-            ExportAllWarpDriveObjects => {
+            ExportAllZtermDriveObjects => {
                 self.export_all_warp_drive_objects(ctx);
             }
             CopyVersion(version) => self.copy_version(version, ctx),
@@ -20067,7 +20067,7 @@ impl TypedActionView for Workspace {
                             owner: personal_drive,
                             initial_folder_id: None,
                         },
-                        &OpenWarpDriveObjectSettings::default(),
+                        &OpenZtermDriveObjectSettings::default(),
                         ctx,
                         true,
                     );
@@ -20129,7 +20129,7 @@ impl TypedActionView for Workspace {
                     };
                     self.open_workflow_in_pane(
                         &source,
-                        &OpenWarpDriveObjectSettings::default(),
+                        &OpenZtermDriveObjectSettings::default(),
                         WorkflowViewMode::Create,
                         ctx,
                     );
@@ -20147,7 +20147,7 @@ impl TypedActionView for Workspace {
                     };
                     self.open_workflow_in_pane(
                         &source,
-                        &OpenWarpDriveObjectSettings::default(),
+                        &OpenZtermDriveObjectSettings::default(),
                         WorkflowViewMode::Create,
                         ctx,
                     );
@@ -20188,9 +20188,9 @@ impl TypedActionView for Workspace {
                 self.finish_tab_rename(ctx);
                 self.current_workspace_state.is_tab_being_dragged = true;
             }
-            OpenWarpDrive => {
-                if WarpDriveSettings::is_warp_drive_enabled(ctx) {
-                    self.open_left_panel_view(&LeftPanelAction::WarpDrive, ctx);
+            OpenZtermDrive => {
+                if ZtermDriveSettings::is_warp_drive_enabled(ctx) {
+                    self.open_left_panel_view(&LeftPanelAction::ZtermDrive, ctx);
                 }
             }
             ToggleLeftPanel => {
@@ -20228,10 +20228,10 @@ impl TypedActionView for Workspace {
                             ctx
                         );
                     } else if warp_drive_active {
-                        // Tools panel opened with Warp Drive as the active view
+                        // Tools panel opened with Zterm Drive as the active view
                         send_telemetry_from_ctx!(
-                            TelemetryEvent::WarpDriveOpened {
-                                source: WarpDriveSource::LeftPanelToolbelt,
+                            TelemetryEvent::ZtermDriveOpened {
+                                source: ZtermDriveSource::LeftPanelToolbelt,
                                 is_code_mode_v2: true
                             },
                             ctx
@@ -20535,7 +20535,7 @@ impl TypedActionView for Workspace {
             ToggleAIAssistant => {
                 self.toggle_ai_assistant_panel(ctx);
                 send_telemetry_from_ctx!(
-                    TelemetryEvent::ToggleWarpAI {
+                    TelemetryEvent::ToggleZtermAI {
                         opened: self.current_workspace_state.is_ai_assistant_panel_open
                     },
                     ctx
@@ -20546,8 +20546,8 @@ impl TypedActionView for Workspace {
                     self.toggle_ai_assistant_panel(ctx);
                     if self.current_workspace_state.is_ai_assistant_panel_open {
                         send_telemetry_from_ctx!(
-                            TelemetryEvent::OpenedWarpAI {
-                                source: OpenedWarpAISource::GlobalEntryButton
+                            TelemetryEvent::OpenedZtermAI {
+                                source: OpenedZtermAISource::GlobalEntryButton
                             },
                             ctx
                         );
@@ -20561,8 +20561,8 @@ impl TypedActionView for Workspace {
             ClickedAIAssistantWarmWelcome => {
                 self.toggle_ai_assistant_panel(ctx);
                 send_telemetry_from_ctx!(
-                    TelemetryEvent::OpenedWarpAI {
-                        source: OpenedWarpAISource::WarmWelcome
+                    TelemetryEvent::OpenedZtermAI {
+                        source: OpenedZtermAISource::WarmWelcome
                     },
                     ctx
                 );
@@ -20579,7 +20579,7 @@ impl TypedActionView for Workspace {
                 // Blocking is ok here only because this action is only registered in dev and local
                 // builds to aid in debugging and development.
                 let access_token =
-                    warpui::r#async::block_on(self.server_api.get_or_refresh_access_token());
+                    zterm_ui::r#async::block_on(self.server_api.get_or_refresh_access_token());
                 if let Ok(token) = access_token {
                     if let Some(bearer) = token.bearer_token() {
                         ctx.clipboard().write(ClipboardContent::plain_text(bearer));
@@ -20698,7 +20698,7 @@ impl TypedActionView for Workspace {
                 });
                 self.open_workflow_with_existing(
                     *workflow_id,
-                    &OpenWarpDriveObjectSettings::default(),
+                    &OpenZtermDriveObjectSettings::default(),
                     ctx,
                 );
             }
@@ -20762,7 +20762,7 @@ impl TypedActionView for Workspace {
             }
             FocusLeftPanel => self.focus_left_panel(ctx),
             FocusRightPanel => self.focus_right_panel(ctx),
-            ViewObjectInWarpDrive(item_id) => {
+            ViewObjectInZtermDrive(item_id) => {
                 // Focus newly created object in WD
                 self.view_in_and_focus_warp_drive(*item_id, ctx);
             }
@@ -20790,8 +20790,8 @@ impl TypedActionView for Workspace {
                         workflow,
                         origin: AIWorkflowOrigin::AgentMode,
                     },
-                    WorkflowSource::WarpAI,
-                    WorkflowSelectionSource::WarpAI,
+                    WorkflowSource::ZtermAI,
+                    WorkflowSelectionSource::ZtermAI,
                     None,
                     TerminalSessionFallbackBehavior::default(),
                     ctx,
@@ -21018,7 +21018,7 @@ impl TypedActionView for Workspace {
             }
             OpenNotebook { id } => self.open_notebook(
                 &NotebookSource::Existing(*id),
-                &OpenWarpDriveObjectSettings::default(),
+                &OpenZtermDriveObjectSettings::default(),
                 ctx,
                 true,
             ),
@@ -21176,7 +21176,7 @@ impl TypedActionView for Workspace {
                     };
                     self.open_workflow_in_pane(
                         &source,
-                        &OpenWarpDriveObjectSettings::default(),
+                        &OpenZtermDriveObjectSettings::default(),
                         WorkflowViewMode::Create,
                         ctx,
                     );
@@ -21194,7 +21194,7 @@ impl TypedActionView for Workspace {
                     };
                     self.open_workflow_in_pane(
                         &source,
-                        &OpenWarpDriveObjectSettings::default(),
+                        &OpenZtermDriveObjectSettings::default(),
                         WorkflowViewMode::Create,
                         ctx,
                     );
@@ -21432,11 +21432,11 @@ impl TypedActionView for Workspace {
                     self.toggle_left_panel_view(&LeftPanelAction::ProjectExplorer, is_showing, ctx);
                 }
             }
-            ToggleWarpDrive => {
-                if WarpDriveSettings::is_warp_drive_enabled(ctx) {
+            ToggleZtermDrive => {
+                if ZtermDriveSettings::is_warp_drive_enabled(ctx) {
                     let is_showing =
-                        self.left_panel_view.as_ref(ctx).active_view() == ToolPanelView::WarpDrive;
-                    self.toggle_left_panel_view(&LeftPanelAction::WarpDrive, is_showing, ctx);
+                        self.left_panel_view.as_ref(ctx).active_view() == ToolPanelView::ZtermDrive;
+                    self.toggle_left_panel_view(&LeftPanelAction::ZtermDrive, is_showing, ctx);
                 }
             }
             ToggleGlobalSearch => {
@@ -21663,7 +21663,7 @@ impl View for Workspace {
         self.sync_window_button_visibility(ctx);
     }
 
-    fn keymap_context(&self, app: &AppContext) -> warpui::keymap::Context {
+    fn keymap_context(&self, app: &AppContext) -> zterm_ui::keymap::Context {
         let mut context = Self::default_keymap_context();
 
         if NetworkStatus::as_ref(app).is_online() {
@@ -21737,8 +21737,8 @@ impl View for Workspace {
             }
         };
 
-        if WarpDriveSettings::is_warp_drive_enabled(app) {
-            context.set.insert(flags::ENABLE_WARP_DRIVE);
+        if ZtermDriveSettings::is_warp_drive_enabled(app) {
+            context.set.insert(flags::ENABLE_ZTERM_DRIVE);
         }
 
         if AISettings::as_ref(app).is_any_ai_enabled(app)
@@ -21755,7 +21755,7 @@ impl View for Workspace {
         }
 
         if self.team_uid(app).is_some() {
-            context.set.insert("WarpDrive_BelongsToTeam");
+            context.set.insert("ZtermDrive_BelongsToTeam");
         }
 
         if self.auth_state.is_anonymous_or_logged_out() {
@@ -21783,7 +21783,7 @@ impl View for Workspace {
 
         let default_terminal = DefaultTerminal::as_ref(app);
         if default_terminal.is_warp_default() {
-            context.set.insert(flags::WARP_IS_DEFAULT_TERMINAL);
+            context.set.insert(flags::ZTERM_IS_DEFAULT_TERMINAL);
         }
 
         if FeatureFlag::DebugMode.is_enabled() {
@@ -21856,7 +21856,7 @@ impl View for Workspace {
 
         let tab_bar_mode = self.tab_bar_mode(app);
 
-        // For WASM simplified tab bar views (Warp Drive objects, shared sessions, conversation transcripts),
+        // For WASM simplified tab bar views (Zterm Drive objects, shared sessions, conversation transcripts),
         // we render the tab bar outside of panels so that the details panel only affects content below the tab bar.
         cfg_if::cfg_if! {
             if #[cfg(target_family = "wasm")] {
@@ -21896,7 +21896,7 @@ impl View for Workspace {
         #[cfg(target_family = "wasm")]
         {
             let pane_group = self.active_tab_pane_group().as_ref(app);
-            if warpui::platform::wasm::is_mobile_device() && pane_group.left_panel_open {
+            if zterm_ui::platform::wasm::is_mobile_device() && pane_group.left_panel_open {
                 let scrim = Rect::new()
                     .with_background(Fill::Solid(ColorU::new(
                         0,
@@ -22000,7 +22000,7 @@ impl View for Workspace {
 
         // Transcript details panel overlay (right side, mobile only)
         #[cfg(target_family = "wasm")]
-        if warpui::platform::wasm::is_mobile_device()
+        if zterm_ui::platform::wasm::is_mobile_device()
             && self
                 .current_workspace_state
                 .is_transcript_details_panel_open

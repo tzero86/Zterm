@@ -1,5 +1,5 @@
-use warpui::platform::OperatingSystem;
-use warpui::{
+﻿use zterm_ui::platform::OperatingSystem;
+use zterm_ui::{
     keymap::{EditableBinding, Keystroke, Trigger},
     App,
 };

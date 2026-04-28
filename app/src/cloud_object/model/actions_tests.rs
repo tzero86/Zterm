@@ -1,4 +1,4 @@
-use warpui::App;
+﻿use zterm_ui::App;
 
 use super::{ObjectAction, ObjectActionSubtype, ObjectActionType, ObjectActions};
 

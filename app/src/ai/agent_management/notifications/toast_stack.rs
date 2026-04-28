@@ -1,20 +1,20 @@
-use std::time::Duration;
+﻿use std::time::Duration;
 
 use pathfinder_geometry::vector::vec2f;
-use warp_core::ui::color::blend::Blend;
-use warp_core::ui::theme::color::internal_colors;
-use warpui::elements::{
+use zterm_core::ui::color::blend::Blend;
+use zterm_core::ui::theme::color::internal_colors;
+use zterm_ui::elements::{
     Border, ChildAnchor, ConstrainedBox, Container, CornerRadius, CrossAxisAlignment,
     DispatchEventResult, Element, EventHandler, Flex, Hoverable, MouseStateHandle,
     OffsetPositioning, Padding, ParentElement, PositionedElementAnchor,
     PositionedElementOffsetBounds, Radius, SavePosition, Shrinkable, Stack,
 };
-use warpui::keymap::Keystroke;
-use warpui::platform::Cursor;
-use warpui::r#async::{SpawnedFutureHandle, Timer};
-use warpui::ui_components::components::{Coords, UiComponent, UiComponentStyles};
-use warpui::ui_components::keyboard_shortcut::KeyboardShortcut;
-use warpui::{AppContext, Entity, SingletonEntity, TypedActionView, View, ViewContext, ViewHandle};
+use zterm_ui::keymap::Keystroke;
+use zterm_ui::platform::Cursor;
+use zterm_ui::r#async::{SpawnedFutureHandle, Timer};
+use zterm_ui::ui_components::components::{Coords, UiComponent, UiComponentStyles};
+use zterm_ui::ui_components::keyboard_shortcut::KeyboardShortcut;
+use zterm_ui::{AppContext, Entity, SingletonEntity, TypedActionView, View, ViewContext, ViewHandle};
 
 use crate::ai::agent_management::notifications::item_rendering::{
     create_notification_artifact_buttons_view, handle_notification_artifact_buttons_event,
@@ -367,7 +367,7 @@ fn render_toast(
     appearance: &Appearance,
 ) -> Box<dyn Element> {
     let theme = appearance.theme();
-    let on_expand: OnExpandClick = Box::new(move |ctx: &mut warpui::EventContext| {
+    let on_expand: OnExpandClick = Box::new(move |ctx: &mut zterm_ui::EventContext| {
         ctx.dispatch_typed_action(AgentNotificationToastAction::ToggleMessageExpanded(id));
     });
     let keybinding_hint = keystroke.map(|ks| render_keybinding_hint(ks, appearance));

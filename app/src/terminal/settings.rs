@@ -1,10 +1,10 @@
-use serde::{Deserialize, Serialize};
+﻿use serde::{Deserialize, Serialize};
 
 use crate::settings::{AISettings, InputSettings, TerminalSpacing};
 use settings::{
     macros::define_settings_group, RespectUserSyncSetting, SupportedPlatforms, SyncToCloud,
 };
-use warpui::{units::Pixels, AppContext, SingletonEntity};
+use zterm_ui::{units::Pixels, AppContext, SingletonEntity};
 
 #[derive(
     Clone,

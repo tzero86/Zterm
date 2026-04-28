@@ -1,12 +1,12 @@
-use pathfinder_color::ColorU;
-use warp_core::ui::theme::{phenomenon::PhenomenonStyle, Fill};
-use warpui::elements::{
+﻿use pathfinder_color::ColorU;
+use zterm_core::ui::theme::{phenomenon::PhenomenonStyle, Fill};
+use zterm_ui::elements::{
     Border, ConstrainedBox, Container, CornerRadius, CrossAxisAlignment, Flex, MainAxisSize,
     MouseStateHandle, ParentElement, Radius, Stack,
 };
-use warpui::ui_components::checkbox::Checkbox;
-use warpui::ui_components::components::UiComponentStyles;
-use warpui::Element;
+use zterm_ui::ui_components::checkbox::Checkbox;
+use zterm_ui::ui_components::components::UiComponentStyles;
+use zterm_ui::Element;
 
 use crate::appearance::Appearance;
 use crate::ui_components::icons::Icon;
@@ -114,7 +114,7 @@ pub fn render_callout_bubble(
         .with_child(
             ConstrainedBox::new(
                 border_icon
-                    .to_warpui_icon(Fill::Solid(border_color))
+                    .to_zterm_ui_icon(Fill::Solid(border_color))
                     .finish(),
             )
             .with_width(24.)
@@ -122,7 +122,7 @@ pub fn render_callout_bubble(
             .finish(),
         )
         .with_child(
-            ConstrainedBox::new(fill_icon.to_warpui_icon(background).finish())
+            ConstrainedBox::new(fill_icon.to_zterm_ui_icon(background).finish())
                 .with_width(24.)
                 .with_height(24.)
                 .finish(),

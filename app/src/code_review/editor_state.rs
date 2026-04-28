@@ -1,5 +1,5 @@
-use warpui::elements::MouseStateHandle;
-use warpui::{AppContext, ViewHandle};
+﻿use zterm_ui::elements::MouseStateHandle;
+use zterm_ui::{AppContext, ViewHandle};
 
 use crate::code::local_code_editor::LocalCodeEditorView;
 

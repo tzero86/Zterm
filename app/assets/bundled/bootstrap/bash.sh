@@ -1,5 +1,5 @@
- # We need to prepend a space to all the top-level commands here to prevent
- # Warp bootstrap script contents from showing up in the history.
+﻿ # We need to prepend a space to all the top-level commands here to prevent
+ # Zterm bootstrap script contents from showing up in the history.
 
  # Keep track of whether bash-preexec was included in /etc/bash.bashrc.
  if [[ $bash_preexec_imported == "defined" || $__bp_imported == "defined" ]]; then
@@ -434,10 +434,10 @@
  # we notify the terminal to input these characters in. For the remote case,
  # we actually start in an interactive non-login shell (i.e. it runs ~/.bashrc),
  # but it gets replaced by a new shell that we fully control.
- read -r -d '' WARP_BOOTSTRAP_VAR << 'EOM'
+ read -r -d '' ZTERM_BOOTSTRAP_VAR << 'EOM'
 #include bundled/bootstrap/bash_body.sh
 EOM
  # We need to restore the line editor before we evaluate the bootstrap logic
  # or everything freezes up
  stty sane
- eval "$WARP_BOOTSTRAP_VAR"; unset WARP_BOOTSTRAP_VAR
+ eval "$ZTERM_BOOTSTRAP_VAR"; unset ZTERM_BOOTSTRAP_VAR

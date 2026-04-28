@@ -1,4 +1,4 @@
-pub(crate) mod convert_conversation;
+﻿pub(crate) mod convert_conversation;
 mod convert_from;
 mod convert_to;
 mod r#impl;
@@ -17,9 +17,9 @@ use serde::Serialize;
 use std::path::Path;
 use std::pin::Pin;
 use std::sync::Arc;
-use warp_core::channel::ChannelState;
-use warp_core::execution_mode::AppExecutionMode;
-use warp_core::features::FeatureFlag;
+use zterm_core::channel::ChannelState;
+use zterm_core::execution_mode::AppExecutionMode;
+use zterm_core::features::FeatureFlag;
 
 use crate::ai::agent::conversation::AIConversationId;
 use crate::ai::ambient_agents::AmbientAgentTaskId;
@@ -35,8 +35,8 @@ use crate::ai::mcp::TemplatableMCPServerManager;
 use crate::settings::AISettings;
 use crate::terminal::safe_mode_settings::get_secret_obfuscation_mode;
 use crate::workspaces::user_workspaces::UserWorkspaces;
-use warp_core::user_preferences::GetUserPreferences;
-use warpui::{AppContext, EntityId, SingletonEntity as _};
+use zterm_core::user_preferences::GetUserPreferences;
+use zterm_ui::{AppContext, EntityId, SingletonEntity as _};
 
 /// Unique, server-generated conversation-scoped token to be roundtripped to the API when sending
 /// requests that follow-up within a given conversation.

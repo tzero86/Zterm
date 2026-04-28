@@ -7,7 +7,7 @@ use crate::content::{
     text::{BlockType, BufferBlockStyle, IndentBehavior, TextStyles},
 };
 use string_offset::CharOffset;
-use warpui::App;
+use zterm_ui::App;
 
 #[test]
 fn test_no_blocks() {
