@@ -25,9 +25,7 @@ use crate::ai::artifacts::{
 };
 use crate::appearance::Appearance;
 use crate::send_telemetry_from_ctx;
-use crate::ui_components::icon_with_status::{
-    render_icon_with_status, IconWithStatusSizing, IconWithStatusVariant,
-};
+use crate::ui_components::icon_with_status::{render_icon_with_status, IconWithStatusVariant};
 use crate::util::time_format::format_elapsed_since;
 use crate::view_components::action_button::ActionButtonTheme;
 use crate::workspace::WorkspaceAction;
@@ -399,20 +397,8 @@ fn render_message_text(message: &str, expanded: bool, appearance: &Appearance) -
         .finish()
 }
 
-const NOTIFICATION_AVATAR_SIZING: IconWithStatusSizing = IconWithStatusSizing {
-    icon_size: 16.,
-    padding: 8.,
-    badge_icon_size: 12.,
-    badge_padding: 2.,
-    overall_size_override: None,
-    badge_offset: (6., 6.),
-    // Notifications never render in cloud/ambient mode today, but every sizing needs to
-    // declare these fields. Defaults mirror the badge sizing so a future switch to the
-    // cloud badge here is visually reasonable without further tuning.
-    cloud_icon_size: 14.,
-    cloud_offset: (6., 6.),
-    status_in_cloud_icon_size: 10.,
-};
+/// Total size of the agent avatar component rendered alongside each notification.
+const NOTIFICATION_AVATAR_SIZE: f32 = 32.;
 
 fn render_agent_avatar(
     agent: NotificationSourceAgent,
@@ -431,12 +417,7 @@ fn render_agent_avatar(
             is_ambient,
         },
     };
-    render_icon_with_status(
-        variant,
-        &NOTIFICATION_AVATAR_SIZING,
-        theme,
-        theme.surface_2(),
-    )
+    render_icon_with_status(variant, NOTIFICATION_AVATAR_SIZE, theme, theme.surface_2())
 }
 
 fn notification_category_to_conversation_status(

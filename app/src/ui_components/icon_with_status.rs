@@ -21,29 +21,61 @@ const OZ_AMBIENT_BACKGROUND_COLOR: ColorU = ColorU {
     a: 255,
 };
 
-/// Sizing configuration for the icon circle and its status badge.
-pub(crate) struct IconWithStatusSizing {
-    pub(crate) icon_size: f32,
-    pub(crate) padding: f32,
-    pub(crate) badge_icon_size: f32,
-    pub(crate) badge_padding: f32,
-    /// The overall constrained size for the stack.
-    /// When set, overrides the default `icon_size + padding * 2`.
-    pub(crate) overall_size_override: Option<f32>,
-    /// Offset of the status badge from the bottom-right corner of the circle.
-    /// Positive x pushes right, positive y pushes down.
-    pub(crate) badge_offset: (f32, f32),
-    /// Size (width = height) of the white cloud shape drawn at the bottom-right when the
-    /// agent is running in ambient/cloud mode. Larger than `badge_icon_size` so it can
-    /// visually contain a status icon.
-    pub(crate) cloud_icon_size: f32,
-    /// Offset of the cloud's bottom-right corner from the bottom-right corner of the
-    /// circle when rendered in ambient/cloud mode. Positive x pushes right, positive y
-    /// pushes down.
-    pub(crate) cloud_offset: (f32, f32),
-    /// Size of the status icon when it is rendered inside the cloud lobe (no ring, no
-    /// background).
-    pub(crate) status_in_cloud_icon_size: f32,
+// Sub-component size ratios, expressed as fractions of `total_size`. Match the Figma
+// reference (https://www.figma.com/design/chk9pwt35jTJhf9KnHmZyE/Components?node-id=6447-4288):
+// in a `total` box the brand circle is ~76% wide and the status badge is ~57% wide,
+// with the badge's bottom-right anchored at the box's bottom-right corner. With these
+// ratios the badge center sits *inside* the brand circle (not on its edge), giving the
+// design's intended overlap.
+const CIRCLE_RATIO: f32 = 0.76;
+const ICON_RATIO: f32 = 0.43;
+const BADGE_RATIO: f32 = 0.57;
+const BADGE_ICON_RATIO: f32 = 0.34;
+const CLOUD_RATIO: f32 = 0.57;
+const STATUS_IN_CLOUD_RATIO: f32 = 0.285;
+/// Pulls the badge / cloud overlay slightly inside the parent's bottom-right corner
+/// (toward the brand circle's center) instead of anchoring its BR exactly at the
+/// parent BR. Expressed as a fraction of `total_size`.
+const OVERLAY_INSET_RATIO: f32 = 0.05;
+
+fn circle_size(total: f32) -> f32 {
+    total * CIRCLE_RATIO
+}
+
+fn icon_size(total: f32) -> f32 {
+    total * ICON_RATIO
+}
+
+fn circle_padding(total: f32) -> f32 {
+    (circle_size(total) - icon_size(total)) / 2.
+}
+
+fn badge_size(total: f32) -> f32 {
+    total * BADGE_RATIO
+}
+
+fn badge_icon_size(total: f32) -> f32 {
+    total * BADGE_ICON_RATIO
+}
+
+fn badge_padding(total: f32) -> f32 {
+    (badge_size(total) - badge_icon_size(total)) / 4.
+}
+
+fn cloud_icon_size(total: f32) -> f32 {
+    total * CLOUD_RATIO
+}
+
+fn status_in_cloud_size(total: f32) -> f32 {
+    total * STATUS_IN_CLOUD_RATIO
+}
+
+/// Returns the pixel offset applied to the overlay's `BottomRight → BottomRight`
+/// anchor. A negative value pulls the overlay BR inside the parent BR by
+/// `OVERLAY_INSET_RATIO * total`, so the badge / cloud sit a bit further "into" the
+/// brand circle (up and to the left) rather than hugging the parent's BR corner.
+fn corner_overlay_offset(total: f32, _overlay_size: f32) -> f32 {
+    -total * OVERLAY_INSET_RATIO
 }
 
 /// What to render inside the circle.
@@ -68,44 +100,31 @@ pub(crate) enum IconWithStatusVariant {
     },
 }
 
-/// Renders an icon inside a circle with an optional status badge overlay. When `is_ambient`
-/// is set on an agent variant, the status badge is replaced by a white cloud containing the
-/// status icon.
+/// Renders an icon-with-status component sized entirely from a single `total_size`. All
+/// sub-components (brand circle, status badge, cloud lobe) are derived proportionally,
+/// so callers only need to pick the size they want.
+///
+/// When `is_ambient` is set on an agent variant, the status badge is replaced by a
+/// white cloud containing the status icon.
 pub(crate) fn render_icon_with_status(
     variant: IconWithStatusVariant,
-    sizing: &IconWithStatusSizing,
+    total_size: f32,
     theme: &WarpTheme,
     badge_ring_background: WarpThemeFill,
 ) -> Box<dyn Element> {
     let sub_text = theme.sub_text_color(theme.background());
 
     match variant {
-        IconWithStatusVariant::Neutral { icon, icon_color } => {
-            let inner = ConstrainedBox::new(icon.to_warpui_icon(icon_color).finish())
-                .with_width(sizing.icon_size)
-                .with_height(sizing.icon_size)
-                .finish();
-            Container::new(inner)
-                .with_uniform_padding(sizing.padding)
-                .with_background(internal_colors::fg_overlay_2(theme))
-                .with_corner_radius(CornerRadius::with_all(Radius::Pixels(
-                    (sizing.icon_size + sizing.padding * 2.) / 2.,
-                )))
-                .finish()
-        }
-        IconWithStatusVariant::NeutralElement { icon_element } => {
-            let inner = ConstrainedBox::new(icon_element)
-                .with_width(sizing.icon_size)
-                .with_height(sizing.icon_size)
-                .finish();
-            Container::new(inner)
-                .with_uniform_padding(sizing.padding)
-                .with_background(internal_colors::fg_overlay_2(theme))
-                .with_corner_radius(CornerRadius::with_all(Radius::Pixels(
-                    (sizing.icon_size + sizing.padding * 2.) / 2.,
-                )))
-                .finish()
-        }
+        IconWithStatusVariant::Neutral { icon, icon_color } => render_circle(
+            icon.to_warpui_icon(icon_color).finish(),
+            internal_colors::fg_overlay_2(theme),
+            total_size,
+        ),
+        IconWithStatusVariant::NeutralElement { icon_element } => render_circle(
+            icon_element,
+            internal_colors::fg_overlay_2(theme),
+            total_size,
+        ),
         IconWithStatusVariant::OzAgent { status, is_ambient } => {
             let circle_background = if is_ambient {
                 ThemeFill::Solid(OZ_AMBIENT_BACKGROUND_COLOR)
@@ -120,32 +139,21 @@ pub(crate) fn render_icon_with_status(
             } else {
                 WarpIcon::Oz
             };
-            let inner = ConstrainedBox::new(
+            let circle = render_circle(
                 oz_glyph
                     .to_warpui_icon(theme.main_text_color(theme.background()))
                     .finish(),
+                circle_background,
+                total_size,
+            );
+            attach_status_overlay(
+                circle,
+                status.as_ref(),
+                is_ambient,
+                total_size,
+                theme,
+                badge_ring_background,
             )
-            .with_width(sizing.icon_size)
-            .with_height(sizing.icon_size)
-            .finish();
-            let circle = Container::new(inner)
-                .with_uniform_padding(sizing.padding)
-                .with_background(circle_background)
-                .with_corner_radius(CornerRadius::with_all(Radius::Pixels(
-                    (sizing.icon_size + sizing.padding * 2.) / 2.,
-                )))
-                .finish();
-            if is_ambient {
-                render_with_cloud_status_badge(circle, status.as_ref(), sizing, theme)
-            } else {
-                render_with_optional_status_badge(
-                    circle,
-                    status.as_ref(),
-                    sizing,
-                    theme,
-                    badge_ring_background,
-                )
-            }
         }
         IconWithStatusVariant::CLIAgent {
             agent,
@@ -163,29 +171,56 @@ pub(crate) fn render_icon_with_status(
                         .finish()
                 })
                 .unwrap_or_else(|| WarpIcon::Terminal.to_warpui_icon(sub_text).finish());
-            let inner = ConstrainedBox::new(icon_element)
-                .with_width(sizing.icon_size)
-                .with_height(sizing.icon_size)
-                .finish();
-            let circle = Container::new(inner)
-                .with_uniform_padding(sizing.padding)
-                .with_background(ThemeFill::Solid(brand_color))
-                .with_corner_radius(CornerRadius::with_all(Radius::Pixels(
-                    (sizing.icon_size + sizing.padding * 2.) / 2.,
-                )))
-                .finish();
-            if is_ambient {
-                render_with_cloud_status_badge(circle, status.as_ref(), sizing, theme)
-            } else {
-                render_with_optional_status_badge(
-                    circle,
-                    status.as_ref(),
-                    sizing,
-                    theme,
-                    badge_ring_background,
-                )
-            }
+            let circle = render_circle(icon_element, ThemeFill::Solid(brand_color), total_size);
+            attach_status_overlay(
+                circle,
+                status.as_ref(),
+                is_ambient,
+                total_size,
+                theme,
+                badge_ring_background,
+            )
         }
+    }
+}
+
+/// Builds the brand-circle container around `icon_element`. The circle's diameter is
+/// `circle_size(total)` and the icon glyph is `icon_size(total)`, with the rest going
+/// to symmetric padding around the glyph.
+fn render_circle(
+    icon_element: Box<dyn Element>,
+    background: WarpThemeFill,
+    total_size: f32,
+) -> Box<dyn Element> {
+    let icon = icon_size(total_size);
+    let padding = circle_padding(total_size);
+    let inner = ConstrainedBox::new(icon_element)
+        .with_width(icon)
+        .with_height(icon)
+        .finish();
+    Container::new(inner)
+        .with_uniform_padding(padding)
+        .with_background(background)
+        .with_corner_radius(CornerRadius::with_all(Radius::Pixels(
+            circle_size(total_size) / 2.,
+        )))
+        .finish()
+}
+
+/// Wraps a brand circle with the appropriate status overlay (badge for non-ambient runs,
+/// cloud lobe for ambient runs). Both overlays are derived from `total_size`.
+fn attach_status_overlay(
+    circle: Box<dyn Element>,
+    status: Option<&ConversationStatus>,
+    is_ambient: bool,
+    total_size: f32,
+    theme: &WarpTheme,
+    badge_ring_background: WarpThemeFill,
+) -> Box<dyn Element> {
+    if is_ambient {
+        render_with_cloud_status_badge(circle, status, total_size, theme)
+    } else {
+        render_with_optional_status_badge(circle, status, total_size, theme, badge_ring_background)
     }
 }
 
@@ -194,25 +229,27 @@ pub(crate) fn render_icon_with_status(
 fn render_with_cloud_status_badge(
     circle: Box<dyn Element>,
     status: Option<&ConversationStatus>,
-    sizing: &IconWithStatusSizing,
+    total_size: f32,
     theme: &WarpTheme,
 ) -> Box<dyn Element> {
+    let cloud_diameter = cloud_icon_size(total_size);
     let cloud = ConstrainedBox::new(
         WarpIcon::CloudFilled
             .to_warpui_icon(WarpThemeFill::Solid(ColorU::white()))
             .finish(),
     )
-    .with_width(sizing.cloud_icon_size)
-    .with_height(sizing.cloud_icon_size)
+    .with_width(cloud_diameter)
+    .with_height(cloud_diameter)
     .finish();
 
     let cloud_with_status: Box<dyn Element> = match status {
         Some(status) => {
             let (icon, color) = status.status_icon_and_color(theme);
+            let inner = status_in_cloud_size(total_size);
             let status_icon =
                 ConstrainedBox::new(icon.to_warpui_icon(WarpThemeFill::Solid(color)).finish())
-                    .with_width(sizing.status_in_cloud_icon_size)
-                    .with_height(sizing.status_in_cloud_icon_size)
+                    .with_width(inner)
+                    .with_height(inner)
                     .finish();
             let mut stack = Stack::new().with_child(cloud);
             // The CloudFilled SVG's visual center of mass sits below the container's
@@ -233,26 +270,25 @@ fn render_with_cloud_status_badge(
         None => cloud,
     };
 
-    let circle_size = sizing.icon_size + sizing.padding * 2.;
-    let overall_size = sizing.overall_size_override.unwrap_or(circle_size);
+    let cloud_offset = corner_overlay_offset(total_size, cloud_diameter);
     let mut stack = Stack::new().with_child(
         ConstrainedBox::new(circle)
-            .with_width(overall_size)
-            .with_height(overall_size)
+            .with_width(total_size)
+            .with_height(total_size)
             .finish(),
     );
     stack.add_positioned_child(
         cloud_with_status,
         OffsetPositioning::offset_from_parent(
-            vec2f(sizing.cloud_offset.0, sizing.cloud_offset.1),
+            vec2f(cloud_offset, cloud_offset),
             ParentOffsetBounds::Unbounded,
             ParentAnchor::BottomRight,
             ChildAnchor::BottomRight,
         ),
     );
     ConstrainedBox::new(stack.finish())
-        .with_width(overall_size)
-        .with_height(overall_size)
+        .with_width(total_size)
+        .with_height(total_size)
         .finish()
 }
 
@@ -260,7 +296,7 @@ fn render_with_cloud_status_badge(
 fn render_with_optional_status_badge(
     circle: Box<dyn Element>,
     status: Option<&ConversationStatus>,
-    sizing: &IconWithStatusSizing,
+    total_size: f32,
     theme: &WarpTheme,
     badge_ring_background: WarpThemeFill,
 ) -> Box<dyn Element> {
@@ -268,40 +304,41 @@ fn render_with_optional_status_badge(
         return circle;
     };
     let (icon, color) = status.status_icon_and_color(theme);
+    let badge_icon_diameter = badge_icon_size(total_size);
+    let pad = badge_padding(total_size);
     let badge_icon = ConstrainedBox::new(icon.to_warpui_icon(WarpThemeFill::Solid(color)).finish())
-        .with_width(sizing.badge_icon_size)
-        .with_height(sizing.badge_icon_size)
+        .with_width(badge_icon_diameter)
+        .with_height(badge_icon_diameter)
         .finish();
     let badge = Container::new(badge_icon)
-        .with_uniform_padding(sizing.badge_padding)
+        .with_uniform_padding(pad)
         .with_corner_radius(CornerRadius::with_all(Radius::Percentage(50.)))
         .finish();
     // Cutout ring that visually separates the badge from the circle.
     let badge_with_ring = Container::new(badge)
-        .with_uniform_padding(sizing.badge_padding)
+        .with_uniform_padding(pad)
         .with_background(badge_ring_background)
         .with_corner_radius(CornerRadius::with_all(Radius::Percentage(50.)))
         .finish();
 
-    let circle_size = sizing.icon_size + sizing.padding * 2.;
-    let overall_size = sizing.overall_size_override.unwrap_or(circle_size);
+    let badge_corner_offset = corner_overlay_offset(total_size, badge_size(total_size));
     let mut stack = Stack::new().with_child(
         ConstrainedBox::new(circle)
-            .with_width(overall_size)
-            .with_height(overall_size)
+            .with_width(total_size)
+            .with_height(total_size)
             .finish(),
     );
     stack.add_positioned_child(
         badge_with_ring,
         OffsetPositioning::offset_from_parent(
-            vec2f(sizing.badge_offset.0, sizing.badge_offset.1),
-            ParentOffsetBounds::ParentBySize,
+            vec2f(badge_corner_offset, badge_corner_offset),
+            ParentOffsetBounds::Unbounded,
             ParentAnchor::BottomRight,
             ChildAnchor::BottomRight,
         ),
     );
     ConstrainedBox::new(stack.finish())
-        .with_width(overall_size)
-        .with_height(overall_size)
+        .with_width(total_size)
+        .with_height(total_size)
         .finish()
 }

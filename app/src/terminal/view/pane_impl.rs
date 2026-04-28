@@ -31,7 +31,7 @@ use crate::terminal::TerminalView;
 use crate::ui_components::agent_icon::terminal_view_agent_icon_variant;
 use crate::ui_components::blended_colors;
 use crate::ui_components::buttons::icon_button_with_color;
-use crate::ui_components::icon_with_status::{render_icon_with_status, IconWithStatusSizing};
+use crate::ui_components::icon_with_status::render_icon_with_status;
 use crate::ui_components::icons;
 use crate::workspace::tab_settings::TabSettings;
 use settings::Setting as _;
@@ -48,20 +48,9 @@ use warpui::ui_components::components::UiComponentStyles;
 use warpui::WeakModelHandle;
 use warpui::{AppContext, Element, ModelHandle, SingletonEntity, TypedActionView, ViewContext};
 
-/// Sizing for the agent icon-with-status circle rendered in the pane header title slot.
-/// Mirrors `VERTICAL_TABS_AGENT_SIZING` so the pane header and vertical tabs render the same
-/// logical run with matching visuals.
-const PANE_HEADER_AGENT_SIZING: IconWithStatusSizing = IconWithStatusSizing {
-    icon_size: 10.,
-    padding: 5.,
-    badge_icon_size: 9.,
-    badge_padding: 1.5,
-    overall_size_override: Some(20.),
-    badge_offset: (2., 2.),
-    cloud_icon_size: 16.,
-    cloud_offset: (2., 2.),
-    status_in_cloud_icon_size: 8.,
-};
+/// Total size of the agent icon-with-status component rendered in the pane header.
+/// Sub-components (circle, badge, cloud) are derived inside `render_icon_with_status`.
+const PANE_HEADER_AGENT_SIZE: f32 = 18.;
 
 impl TerminalView {
     /// Returns a reference to the focus handle if one has been set.
@@ -305,12 +294,7 @@ impl TerminalView {
         };
         let theme = appearance.theme();
         let render_agent_circle = |variant| {
-            render_icon_with_status(
-                variant,
-                &PANE_HEADER_AGENT_SIZING,
-                theme,
-                theme.background(),
-            )
+            render_icon_with_status(variant, PANE_HEADER_AGENT_SIZE, theme, theme.background())
         };
         let pane_indicator = if should_render_ambient_agent_indicator {
             // Shared/viewed ambient session: route through the shared helper so the pane header

@@ -6,7 +6,7 @@ use crate::appearance::Appearance;
 use crate::drive::sharing::dialog::SharingDialog;
 use crate::menu::Menu;
 use crate::ui_components::agent_icon::conversation_or_task_agent_icon_variant;
-use crate::ui_components::icon_with_status::{render_icon_with_status, IconWithStatusSizing};
+use crate::ui_components::icon_with_status::render_icon_with_status;
 use crate::ui_components::icons::Icon;
 use crate::ui_components::menu_button::{icon_button_with_context_menu, MenuDirection};
 use crate::util::time_format::format_approx_duration_from_now_utc;
@@ -38,22 +38,11 @@ const ICON_SPACING: f32 = 4.;
 /// Offset for the sharing dialog from the item row
 const DIALOG_OFFSET_PIXELS: f32 = -16.;
 
-/// Sizing for the agent icon-with-status circle rendered in each conversation list row.
-/// Sized to match the surrounding `render_status_element` footprint
+/// Total size of the agent icon-with-status component rendered in each conversation list
+/// row. Sized to match the surrounding `render_status_element` footprint
 /// (`font_size + STATUS_ELEMENT_PADDING * 2.`) so adopting the unified icon doesn't
-/// shift row heights. Values are scaled proportionally against the vertical-tab / pane
-/// header constants so the surface still visually reads as "the same icon" just smaller.
-const LIST_ITEM_AGENT_SIZING: IconWithStatusSizing = IconWithStatusSizing {
-    icon_size: 10.,
-    padding: 3.,
-    badge_icon_size: 8.,
-    badge_padding: 1.,
-    overall_size_override: Some(16.),
-    badge_offset: (2., 2.),
-    cloud_icon_size: 12.,
-    cloud_offset: (2., 2.),
-    status_in_cloud_icon_size: 7.,
-};
+/// shift row heights.
+const LIST_ITEM_AGENT_SIZE: f32 = 16.;
 
 /// Generate a position ID for a conversation list item
 fn conversation_item_position_id(id: &ConversationOrTaskId) -> String {
@@ -221,7 +210,7 @@ pub fn render_item(props: ItemProps<'_>, app: &AppContext) -> Box<dyn Element> {
     let icon_element: Box<dyn Element> =
         match conversation_or_task_agent_icon_variant(conversation, app) {
             Some(variant) => {
-                render_icon_with_status(variant, &LIST_ITEM_AGENT_SIZING, theme, theme.background())
+                render_icon_with_status(variant, LIST_ITEM_AGENT_SIZE, theme, theme.background())
             }
             None => render_status_element(&conversation.status(app), font_size, appearance),
         };

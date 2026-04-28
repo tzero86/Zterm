@@ -11,9 +11,7 @@ use crate::terminal::cli_agent_sessions::CLIAgentSessionsModel;
 use crate::terminal::view::TerminalViewState;
 use crate::terminal::CLIAgent;
 use crate::ui_components::agent_icon::terminal_view_agent_icon_variant;
-use crate::ui_components::icon_with_status::{
-    render_icon_with_status, IconWithStatusSizing, IconWithStatusVariant,
-};
+use crate::ui_components::icon_with_status::{render_icon_with_status, IconWithStatusVariant};
 use crate::workspace::view::vertical_tabs::telemetry::{
     VerticalTabsChipEntrypoint, VerticalTabsTelemetryEvent,
 };
@@ -109,43 +107,10 @@ const TAB_COLOR_HOVER_OPACITY: Opacity = 50;
 // Circular icon constants
 const ICON_WITH_STATUS_GAP: f32 = 8.;
 pub(super) const VERTICAL_TABS_DETAIL_SIDECAR_POSITION_ID: &str = "vertical_tabs:detail_sidecar";
-const VERTICAL_TABS_STATUS_BADGE_ICON_SIZE: f32 = 9.;
-const VERTICAL_TABS_STATUS_BADGE_PADDING: f32 = 1.5;
-const VERTICAL_TABS_STATUS_BADGE_OFFSET: (f32, f32) = (2., 2.);
-// Cloud lobe sizing for ambient/cloud-mode agent icons, matching the Figma spec at
-// https://www.figma.com/design/chk9pwt35jTJhf9KnHmZyE/Components?node-id=6535-4010. The
-// 20x20 brand-color circle sits in the top-left of the 24x24 stack; the white cloud's
-// container is pushed past the stack's bottom-right corner so the visible cloud shape
-// (which has transparent aspect-ratio padding inside the square container) ends up
-// extending ~6px past the circle's right edge and ~5px past its bottom edge, matching
-// Figma. Status icon is centered inside the cloud.
-const VERTICAL_TABS_CLOUD_ICON_SIZE: f32 = 20.;
-const VERTICAL_TABS_CLOUD_OFFSET: (f32, f32) = (2., 3.);
-const VERTICAL_TABS_STATUS_IN_CLOUD_ICON_SIZE: f32 = 9.;
 
-const VERTICAL_TABS_SIZING: IconWithStatusSizing = IconWithStatusSizing {
-    icon_size: 16.,
-    padding: 4.,
-    badge_icon_size: VERTICAL_TABS_STATUS_BADGE_ICON_SIZE,
-    badge_padding: VERTICAL_TABS_STATUS_BADGE_PADDING,
-    overall_size_override: None,
-    badge_offset: VERTICAL_TABS_STATUS_BADGE_OFFSET,
-    cloud_icon_size: VERTICAL_TABS_CLOUD_ICON_SIZE,
-    cloud_offset: VERTICAL_TABS_CLOUD_OFFSET,
-    status_in_cloud_icon_size: VERTICAL_TABS_STATUS_IN_CLOUD_ICON_SIZE,
-};
-
-const VERTICAL_TABS_AGENT_SIZING: IconWithStatusSizing = IconWithStatusSizing {
-    icon_size: 10.,
-    padding: 5.,
-    badge_icon_size: VERTICAL_TABS_STATUS_BADGE_ICON_SIZE,
-    badge_padding: VERTICAL_TABS_STATUS_BADGE_PADDING,
-    overall_size_override: Some(24.),
-    badge_offset: VERTICAL_TABS_STATUS_BADGE_OFFSET,
-    cloud_icon_size: VERTICAL_TABS_CLOUD_ICON_SIZE,
-    cloud_offset: VERTICAL_TABS_CLOUD_OFFSET,
-    status_in_cloud_icon_size: VERTICAL_TABS_STATUS_IN_CLOUD_ICON_SIZE,
-};
+/// Total size of the icon-with-status component rendered for each vertical-tabs row.
+/// Sub-components (circle, badge, cloud) are derived inside `render_icon_with_status`.
+const VERTICAL_TABS_ICON_SIZE: f32 = 24.;
 
 fn vtab_pane_row_position_id(pane_group_id: EntityId, pane_id: PaneId) -> String {
     format!("vertical_tabs:pane_row:{pane_group_id:?}:{pane_id}")
@@ -279,14 +244,7 @@ fn render_pane_icon_with_status(
     variant: IconWithStatusVariant,
     theme: &WarpTheme,
 ) -> Box<dyn Element> {
-    let sizing = match &variant {
-        IconWithStatusVariant::OzAgent { .. } => &VERTICAL_TABS_AGENT_SIZING,
-        IconWithStatusVariant::CLIAgent { status, .. } if status.is_some() => {
-            &VERTICAL_TABS_AGENT_SIZING
-        }
-        _ => &VERTICAL_TABS_SIZING,
-    };
-    render_icon_with_status(variant, sizing, theme, theme.background())
+    render_icon_with_status(variant, VERTICAL_TABS_ICON_SIZE, theme, theme.background())
 }
 
 #[derive(Clone, Default)]
@@ -3548,61 +3506,65 @@ fn render_summary_pane_kind_icons(
 ) -> Box<dyn Element> {
     let theme = appearance.theme();
     match icons {
-        SummaryPaneKindIcons::Single(kind) => render_summary_pane_kind_icon_circle(
-            kind,
-            VERTICAL_TABS_SIZING.icon_size,
-            VERTICAL_TABS_SIZING.padding,
-            appearance,
-        ),
+        SummaryPaneKindIcons::Single(kind) => {
+            render_summary_pane_kind_icon_circle(kind, VERTICAL_TABS_ICON_SIZE, appearance)
+        }
         SummaryPaneKindIcons::Pair { primary, secondary } => {
-            let sizing = &VERTICAL_TABS_AGENT_SIZING;
-            let circle_size = sizing.icon_size + sizing.padding * 2.;
-            let overall_size = sizing.overall_size_override.unwrap_or(circle_size);
-            let primary_icon = render_summary_pane_kind_icon_circle(
-                primary,
-                sizing.icon_size,
-                sizing.padding,
-                appearance,
-            );
-            let secondary_icon = render_summary_pane_kind_icon_circle(
-                secondary,
-                sizing.badge_icon_size,
-                sizing.badge_padding,
-                appearance,
-            );
+            // The secondary icon sits at the BR of the primary at roughly badge
+            // proportions, with a small cutout ring separating it from the primary.
+            let primary_total = VERTICAL_TABS_ICON_SIZE;
+            let secondary_total = VERTICAL_TABS_ICON_SIZE * 0.5;
+            let ring_padding = secondary_total * 0.1;
+            let primary_icon =
+                render_summary_pane_kind_icon_circle(primary, primary_total, appearance);
+            let secondary_icon =
+                render_summary_pane_kind_icon_circle(secondary, secondary_total, appearance);
             let secondary_with_ring = Container::new(secondary_icon)
-                .with_uniform_padding(sizing.badge_padding)
+                .with_uniform_padding(ring_padding)
                 .with_background(theme.background())
                 .with_corner_radius(CornerRadius::with_all(Radius::Percentage(50.)))
                 .finish();
 
+            // Same 45° placement as `render_with_optional_status_badge`: secondary's
+            // center sits on the primary circle's edge.
+            let primary_radius = primary_total / 2.;
+            let secondary_outer = secondary_total + ring_padding * 2.;
+            let secondary_radius = secondary_outer / 2.;
+            let secondary_corner_offset = primary_radius * std::f32::consts::FRAC_1_SQRT_2
+                + secondary_radius
+                - primary_total / 2.;
+
             let mut stack = Stack::new().with_child(
                 ConstrainedBox::new(primary_icon)
-                    .with_width(overall_size)
-                    .with_height(overall_size)
+                    .with_width(primary_total)
+                    .with_height(primary_total)
                     .finish(),
             );
             stack.add_positioned_child(
                 secondary_with_ring,
                 OffsetPositioning::offset_from_parent(
-                    vec2f(sizing.badge_offset.0, sizing.badge_offset.1),
-                    ParentOffsetBounds::ParentBySize,
+                    vec2f(secondary_corner_offset, secondary_corner_offset),
+                    ParentOffsetBounds::Unbounded,
                     ParentAnchor::BottomRight,
                     ChildAnchor::BottomRight,
                 ),
             );
             ConstrainedBox::new(stack.finish())
-                .with_width(overall_size)
-                .with_height(overall_size)
+                .with_width(primary_total)
+                .with_height(primary_total)
                 .finish()
         }
     }
 }
 
+// Inline rendering for non-agent summary kinds — for an icon (e.g. Terminal, Code,
+// Notebook) sized to fill its `total_size` bounding box.
+const SUMMARY_INLINE_ICON_RATIO: f32 = 2. / 3.;
+const SUMMARY_INLINE_PADDING_RATIO: f32 = (1. - SUMMARY_INLINE_ICON_RATIO) / 2.;
+
 fn render_summary_pane_kind_icon_circle(
     kind: SummaryPaneKind,
-    icon_size: f32,
-    padding: f32,
+    total_size: f32,
     appearance: &Appearance,
 ) -> Box<dyn Element> {
     let theme = appearance.theme();
@@ -3611,19 +3573,10 @@ fn render_summary_pane_kind_icon_circle(
     // mode). Non-ambient agent kinds and all other pane kinds fall through to the inline
     // circle rendering below.
     if let Some(variant) = ambient_agent_variant(&kind) {
-        let sizing = IconWithStatusSizing {
-            icon_size,
-            padding,
-            badge_icon_size: VERTICAL_TABS_STATUS_BADGE_ICON_SIZE,
-            badge_padding: VERTICAL_TABS_STATUS_BADGE_PADDING,
-            overall_size_override: Some(icon_size + padding * 2.),
-            badge_offset: VERTICAL_TABS_STATUS_BADGE_OFFSET,
-            cloud_icon_size: VERTICAL_TABS_CLOUD_ICON_SIZE,
-            cloud_offset: VERTICAL_TABS_CLOUD_OFFSET,
-            status_in_cloud_icon_size: VERTICAL_TABS_STATUS_IN_CLOUD_ICON_SIZE,
-        };
-        return render_icon_with_status(variant, &sizing, theme, theme.background());
+        return render_icon_with_status(variant, total_size, theme, theme.background());
     }
+    let icon_size = total_size * SUMMARY_INLINE_ICON_RATIO;
+    let padding = total_size * SUMMARY_INLINE_PADDING_RATIO;
     let (icon_element, background): (Box<dyn Element>, ElementFill) = match kind {
         SummaryPaneKind::OzAgent { .. } => (
             WarpIcon::Oz.to_warpui_icon(oz_icon_fill(theme)).finish(),
