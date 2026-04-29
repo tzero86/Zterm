@@ -4,19 +4,25 @@ use anyhow::{anyhow, Result};
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
 use std::time::Duration;
-use futures::{StreamExt, TryStreamExt};
+use futures::StreamExt;
+use bytes::BytesMut;
+use std::sync::Arc;
+use tokio::sync::Mutex;
+use crate::ai::local_llm::LocalLLMProvider;
 
 #[derive(Clone)]
 pub struct LocalLLMClient {
+    provider: LocalLLMProvider,
     base_url: String,
     client: Client,
     timeout_secs: u64,
 }
 
 impl LocalLLMClient {
-    /// Create a new client for the given base URL
-    pub fn new(base_url: impl Into<String>) -> Self {
+    /// Create a new client for the given provider and base URL
+    pub fn new(provider: LocalLLMProvider, base_url: impl Into<String>) -> Self {
         Self {
+            provider,
             base_url: base_url.into(),
             client: Client::new(),
             timeout_secs: 300,
@@ -56,14 +62,45 @@ impl LocalLLMClient {
 
         use futures::stream::StreamExt;
         
+        let buffer = Arc::new(Mutex::new(BytesMut::new()));
+
         let stream = response.bytes_stream()
-            .then(|bytes_result| async move {
-                match bytes_result {
-                    Ok(chunk) => {
-                        let text = String::from_utf8_lossy(&chunk);
-                        parse_sse_line(&text)
+            .then(move |bytes_result| {
+                let buffer = Arc::clone(&buffer);
+                async move {
+                    match bytes_result {
+                        Ok(chunk) => {
+                            let mut buf = buffer.lock().await;
+                            buf.extend_from_slice(&chunk);
+                            
+                            // Find newline and extract text in a scoped block
+                            let (complete_text, bytes_to_keep) = {
+                                let text = String::from_utf8_lossy(&buf);
+                                
+                                if let Some(last_newline_pos) = text.rfind('\n') {
+                                    let complete = text[..=last_newline_pos].to_string();
+                                    let incomplete = text[last_newline_pos + 1..].to_string();
+                                    (Some(complete), incomplete.len())
+                                } else {
+                                    (None, 0)
+                                }
+                            };
+                            
+                            if let Some(complete_text) = complete_text {
+                                // Now text borrow is dropped, we can mutate buf
+                                let total_len = buf.len();
+                                let _ = buf.split_to(total_len - bytes_to_keep);
+                                parse_sse_line(&complete_text)
+                            } else {
+                                // No complete line yet, wait for more data
+                                Ok(ChatChunk {
+                                    content: None,
+                                    finish_reason: None,
+                                })
+                            }
+                        }
+                        Err(e) => Err(anyhow!("Stream error: {}", e)),
                     }
-                    Err(e) => Err(anyhow!("Stream error: {}", e)),
                 }
             })
             .boxed();
@@ -73,14 +110,8 @@ impl LocalLLMClient {
 
     /// List models available from this provider
     pub async fn list_models(&self) -> Result<Vec<LocalModel>> {
-        // Try Ollama format first, fall back to OpenAI
-        let is_ollama = self.base_url.contains("11434");
-
-        let url = if is_ollama {
-            format!("{}/api/tags", self.base_url.trim_end_matches("/v1"))
-        } else {
-            format!("{}/models", self.base_url)
-        };
+        let is_ollama = matches!(self.provider, LocalLLMProvider::Ollama);
+        let url = self.provider.models_endpoint(&self.base_url);
 
         let response = self
             .client
@@ -106,11 +137,7 @@ impl LocalLLMClient {
     pub async fn health_check(&self) -> Result<u64> {
         let start = std::time::Instant::now();
 
-        let health_url = if self.base_url.contains("11434") {
-            self.base_url.trim_end_matches("/v1").to_string()
-        } else {
-            format!("{}/models", self.base_url)
-        };
+        let health_url = self.provider.health_endpoint(&self.base_url);
 
         let response = self
             .client

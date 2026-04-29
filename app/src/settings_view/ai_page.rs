@@ -92,8 +92,8 @@ use super::{
 /// When `None`, the page shows all widgets (legacy/full view).
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum AISubpage {
-    /// The main "WarpAgent" page: global AI toggle + Active AI + Input + Other sections.
-    WarpAgent,
+    /// The main "ZtermAgent" page: global AI toggle + Active AI + Input + Other sections.
+    ZtermAgent,
     /// Agent profiles and permissions.
     Profiles,
     /// Knowledge / Rules settings.
@@ -105,7 +105,7 @@ pub enum AISubpage {
 impl AISubpage {
     pub fn from_section(section: SettingsSection) -> Option<Self> {
         match section {
-            SettingsSection::WarpAgent => Some(Self::WarpAgent),
+            SettingsSection::ZtermAgent => Some(Self::ZtermAgent),
             SettingsSection::AgentProfiles => Some(Self::Profiles),
             SettingsSection::Knowledge => Some(Self::Knowledge),
             SettingsSection::ThirdPartyCLIAgents => Some(Self::ThirdPartyCLIAgents),
@@ -1308,10 +1308,6 @@ impl AISettingsPageView {
                     ctx.dispatch_typed_action(AISettingsPageAction::CreateProfile);
                 })
         });
-
-        add_profile_button.update(ctx, |button, ctx| {
-            button.set_disabled(!is_any_ai_enabled, ctx);
-        });
         let agent_toolbar_inline_editor = ctx.add_typed_action_view(|ctx| {
             AgentToolbarInlineEditor::new(AgentToolbarEditorMode::AgentView, ctx)
         });
@@ -1476,7 +1472,7 @@ impl AISettingsPageView {
                     widgets.push(Box::new(CloudAgentComputerUseWidget::default()));
                 }
             }
-            Some(AISubpage::WarpAgent) => {
+            Some(AISubpage::ZtermAgent) => {
                 // Oz page: global toggle + Active AI + Input + Other
                 widgets.push(Box::new(GlobalAIWidget::default()));
                 if ai_settings
@@ -1738,11 +1734,6 @@ impl AISettingsPageView {
         );
         Self::refresh_mcp_allowlist_dropdown(&self.mcp_allowlist_dropdown, ctx);
         Self::refresh_mcp_denylist_dropdown(&self.mcp_denylist_dropdown, ctx);
-
-        let is_any_ai_enabled = AISettings::as_ref(ctx).is_any_ai_enabled(ctx);
-        self.add_profile_button.update(ctx, |button, ctx| {
-            button.set_disabled(!is_any_ai_enabled, ctx);
-        });
     }
 
     fn reset_execution_profile_mouse_state_handles(&mut self, ctx: &mut ViewContext<Self>) {
@@ -3077,7 +3068,7 @@ impl SettingsWidget for GlobalAIWidget {
             .with_cross_axis_alignment(CrossAxisAlignment::Center)
             .with_child(
                 Text::new_inline(
-                    "Warp Agent",
+                    "Zterm Agent",
                     appearance.ui_font_family(),
                     PRIMARY_HEADER_FONT_SIZE,
                 )
@@ -3418,7 +3409,7 @@ impl SettingsWidget for UsageWidget {
                 }
             } else {
                 vec![
-                    FormattedTextFragment::hyperlink("Contact support", "mailto:support@warp.dev"),
+                    FormattedTextFragment::hyperlink("Contact support", "mailto:support@zterm.dev"),
                     FormattedTextFragment::plain_text(" for more AI usage."),
                 ]
             }

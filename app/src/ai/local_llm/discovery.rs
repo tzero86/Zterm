@@ -23,7 +23,7 @@ pub async fn discover_providers() -> Vec<(LocalLLMProvider, u64)> {
 /// Try connecting to a provider at its default base URL
 async fn try_provider(provider: LocalLLMProvider) -> anyhow::Result<u64> {
     let base_url = provider.default_base_url();
-    let client = LocalLLMClient::new(base_url);
+    let client = LocalLLMClient::new(provider, base_url);
     client.health_check().await
 }
 
@@ -33,6 +33,6 @@ pub async fn list_models_for_provider(
     base_url: Option<&str>,
 ) -> anyhow::Result<Vec<LocalModel>> {
     let url = base_url.unwrap_or(provider.default_base_url());
-    let client = LocalLLMClient::new(url);
+    let client = LocalLLMClient::new(provider, url);
     client.list_models().await
 }

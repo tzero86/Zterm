@@ -628,7 +628,7 @@ impl SettingsWidget for SubshellsWidget {
     type View = ZtermifyPageView;
 
     fn search_terms(&self) -> &str {
-        "warpify subshell"
+        "ztermify subshell"
     }
 
     fn render(
@@ -655,7 +655,7 @@ impl SettingsWidget for SSHWidget {
     type View = ZtermifyPageView;
 
     fn search_terms(&self) -> &str {
-        "warpify ssh"
+        "ztermify ssh"
     }
 
     fn render(

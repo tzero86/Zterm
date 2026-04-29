@@ -201,12 +201,12 @@ pub enum SettingsSection {
     ZtermDrive,
     Ztermify,
     /// Internal backing-page identifier for AISettingsPageView. Multiple subpages
-    /// (WarpAgent, AgentProfiles, Knowledge, ThirdPartyCLIAgents) share this single
+    /// (ZtermAgent, AgentProfiles, Knowledge, ThirdPartyCLIAgents) share this single
     /// backing page, so this variant is needed as the key in `settings_pages`.
-    /// External callers should navigate to a specific subpage (e.g. `WarpAgent`) instead.
+    /// External callers should navigate to a specific subpage (e.g. `ZtermAgent`) instead.
     AI,
     // ── Agents umbrella subpages ──
-    WarpAgent,
+    ZtermAgent,
     AgentProfiles,
     AgentMCPServers,
     Knowledge,
@@ -235,7 +235,7 @@ impl Display for SettingsSection {
             SettingsSection::SharedBlocks => write!(f, "Shared blocks"),
             SettingsSection::MCPServers => write!(f, "MCP Servers"),
             SettingsSection::ZtermDrive => write!(f, "Zterm Drive"),
-            SettingsSection::WarpAgent => write!(f, "Warp Agent"),
+            SettingsSection::ZtermAgent => write!(f, "Zterm Agent"),
             SettingsSection::AgentProfiles => write!(f, "Profiles"),
             SettingsSection::AgentMCPServers => write!(f, "MCP servers"),
             SettingsSection::Knowledge => write!(f, "Knowledge"),
@@ -259,7 +259,7 @@ impl SettingsSection {
     pub fn is_ai_subpage(&self) -> bool {
         matches!(
             self,
-            Self::WarpAgent
+            Self::ZtermAgent
                 | Self::AgentProfiles
                 | Self::AgentMCPServers
                 | Self::Knowledge
@@ -296,7 +296,7 @@ impl SettingsSection {
     /// The ordered list of AI subpage sections shown under the Agents umbrella.
     pub fn ai_subpages() -> &'static [Self] {
         &[
-            Self::WarpAgent,
+            Self::ZtermAgent,
             Self::AgentProfiles,
             Self::AgentMCPServers,
             Self::Knowledge,
@@ -336,7 +336,7 @@ impl FromStr for SettingsSection {
             "Ztermify" => Ok(Self::Ztermify),
             "ZtermDrive" | "Zterm Drive" => Ok(Self::ZtermDrive),
             // This page was called "Oz" at one point, keep for backward compatibility.
-            "Oz" | "Warp Agent" => Ok(Self::WarpAgent),
+            "Oz" | "Zterm Agent" => Ok(Self::ZtermAgent),
             "Profiles" | "AgentProfiles" => Ok(Self::AgentProfiles),
             "MCP servers" | "AgentMCPServers" => Ok(Self::AgentMCPServers),
             "Knowledge" => Ok(Self::Knowledge),
@@ -1217,7 +1217,7 @@ impl SettingsView {
 
         // Resolve the initial page: map internal backing-page sections to their default subpage.
         let initial_page = match page {
-            Some(SettingsSection::AI) => SettingsSection::WarpAgent,
+            Some(SettingsSection::AI) => SettingsSection::ZtermAgent,
             Some(SettingsSection::Code) => SettingsSection::CodeIndexing,
             Some(section) if section.is_subpage() => section,
             other => other.unwrap_or_default(),
@@ -1849,7 +1849,7 @@ impl SettingsView {
         // Map internal backing-page sections to their default subpage.
         // External callers should use subpage variants directly.
         let section = match section {
-            SettingsSection::AI => SettingsSection::WarpAgent,
+            SettingsSection::AI => SettingsSection::ZtermAgent,
             SettingsSection::Code => SettingsSection::CodeIndexing,
             other => other,
         };

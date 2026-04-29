@@ -61,17 +61,7 @@ impl ExecutionProfileView {
                 })
         });
 
-        let is_any_ai_enabled = AISettings::as_ref(ctx).is_any_ai_enabled(ctx);
-
-        edit_button.update(ctx, |button, ctx| {
-            button.set_disabled(!is_any_ai_enabled, ctx);
-        });
-
-        ctx.subscribe_to_model(&AISettings::handle(ctx), |me, _, _, ctx| {
-            let is_any_ai_enabled = AISettings::as_ref(ctx).is_any_ai_enabled(ctx);
-            me.edit_button.update(ctx, |button, ctx| {
-                button.set_disabled(!is_any_ai_enabled, ctx);
-            });
+        ctx.subscribe_to_model(&AISettings::handle(ctx), |_me, _, _, ctx| {
             ctx.notify();
         });
 

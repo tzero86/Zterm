@@ -5573,7 +5573,7 @@ impl Workspace {
     fn handle_ai_fact_view_event(&mut self, event: &AIFactViewEvent, ctx: &mut ViewContext<Self>) {
         match event {
             AIFactViewEvent::OpenSettings => {
-                self.show_settings_with_section(Some(SettingsSection::WarpAgent), ctx);
+                self.show_settings_with_section(Some(SettingsSection::ZtermAgent), ctx);
             }
             #[allow(unused_variables)]
             AIFactViewEvent::OpenFile(path) => {
@@ -8286,7 +8286,7 @@ impl Workspace {
 
         #[cfg(not(target_family = "wasm"))]
         items.push(
-            MenuItemFields::new("View Warp logs")
+            MenuItemFields::new("View Logs")
                 .with_on_select_action(WorkspaceAction::ViewLogs)
                 .into_item(),
         );
