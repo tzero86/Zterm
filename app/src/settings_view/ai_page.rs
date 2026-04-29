@@ -5802,6 +5802,9 @@ impl LocalLLMWidget {
     ) -> Box<dyn Element> {
         let ai_settings = AISettings::as_ref(app);
         let is_any_ai_enabled = ai_settings.is_any_ai_enabled(app);
+        
+        // Initialize LocalLLMSettings singleton if not already done
+        let _ = LocalLLMSettings::handle(app);
         let local_llm_settings = LocalLLMSettings::as_ref(app);
 
         let enabled = local_llm_settings.enabled;
