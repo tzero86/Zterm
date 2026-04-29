@@ -1,4 +1,4 @@
-﻿#[path = "ansi_handler.rs"]
+#[path = "ansi_handler.rs"]
 mod ansi_handler;
 #[path = "filtering.rs"]
 mod filtering;
@@ -31,8 +31,8 @@ use zterm_terminal::model::grid::CellType;
 use zterm_terminal::model::grid::FlatStorage;
 pub use zterm_terminal::model::TermMode;
 use zterm_terminal::model::{KeyboardModes, KeyboardModesApplyBehavior};
-use zterm_util::path::CleanPathResult;
 use zterm_ui::color::ColorU;
+use zterm_util::path::CleanPathResult;
 
 use crate::terminal::event_listener::ChannelEventListener;
 use crate::terminal::model::ansi::{self, Color, CursorStyle, Handler, NamedColor};

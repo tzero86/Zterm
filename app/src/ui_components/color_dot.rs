@@ -1,4 +1,4 @@
-﻿use pathfinder_color::ColorU;
+use pathfinder_color::ColorU;
 use pathfinder_geometry::vector::vec2f;
 use ui_components::tooltip::{Params as TooltipParams, Tooltip as TooltipComponent};
 use ui_components::{Component as _, Options as ComponentOptions};
@@ -40,7 +40,11 @@ pub(crate) fn render_color_dot(
 ) -> Hoverable {
     Hoverable::new(mouse_state, move |state| {
         let overlay: Option<Box<dyn Element>> = if is_no_color {
-            Some(Icon::SlashCircle.to_zterm_ui_icon(foreground_color).finish())
+            Some(
+                Icon::SlashCircle
+                    .to_zterm_ui_icon(foreground_color)
+                    .finish(),
+            )
         } else {
             None
         };

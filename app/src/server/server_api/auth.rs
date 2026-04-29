@@ -371,7 +371,9 @@ impl AuthClient for ServerApi {
             .ok_or_else(|| anyhow!("Expected valid response.data"))?;
 
         match response.user {
-            zterm_graphql::queries::get_user::UserResult::UserOutput(user_output) => Ok(user_output),
+            zterm_graphql::queries::get_user::UserResult::UserOutput(user_output) => {
+                Ok(user_output)
+            }
             zterm_graphql::queries::get_user::UserResult::Unknown => {
                 Err(anyhow!("Unable to fetch user"))
             }

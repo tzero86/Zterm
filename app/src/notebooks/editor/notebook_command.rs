@@ -26,7 +26,6 @@ use zterm_editor::{
 };
 
 use markdown_parser::markdown_parser::CODE_BLOCK_DEFAULT_MARKDOWN_LANG;
-use zterm_util::user_input::UserInput;
 use zterm_ui::{elements::Align, r#async::SpawnedFutureHandle, AppContext};
 use zterm_ui::{
     elements::{
@@ -38,6 +37,7 @@ use zterm_ui::{
     Element, Entity, ModelAsRef, ModelContext, ModelHandle, SingletonEntity, ViewHandle,
     WeakModelHandle, WindowId,
 };
+use zterm_util::user_input::UserInput;
 
 use crate::{
     appearance::Appearance,

@@ -1,4 +1,4 @@
-﻿use std::{
+use std::{
     collections::{HashMap, HashSet},
     path::PathBuf,
 };
@@ -26,8 +26,8 @@ use serde::{Deserialize, Serialize};
 use zterm_completer::parsers::simple::decompose_command;
 use zterm_core::user_preferences::GetUserPreferences;
 use zterm_core::{features::FeatureFlag, settings::Setting};
-use zterm_util::path::EscapeChar;
 use zterm_ui::{AppContext, Entity, EntityId, ModelContext, SingletonEntity};
+use zterm_util::path::EscapeChar;
 
 use super::BlocklistAIHistoryModel;
 

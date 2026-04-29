@@ -1,4 +1,4 @@
-﻿use zterm_core::ui::theme::color::internal_colors;
+use zterm_core::ui::theme::color::internal_colors;
 use zterm_ui::elements::new_scrollable::{ScrollableAppearance, SingleAxisConfig};
 use zterm_ui::elements::{
     Border, ChildView, ClippedScrollStateHandle, ConstrainedBox, Container, CornerRadius,
@@ -12,7 +12,9 @@ use zterm_ui::keymap::macros::id;
 use zterm_ui::keymap::FixedBinding;
 use zterm_ui::platform::Cursor;
 use zterm_ui::ui_components::components::{UiComponent, UiComponentStyles};
-use zterm_ui::{AppContext, Entity, SingletonEntity, TypedActionView, View, ViewContext, ViewHandle};
+use zterm_ui::{
+    AppContext, Entity, SingletonEntity, TypedActionView, View, ViewContext, ViewHandle,
+};
 
 use crate::ai::agent_management::notifications::item::NotificationFilter;
 use crate::ai::agent_management::notifications::item_rendering::{
@@ -56,7 +58,9 @@ impl Entity for NotificationMailboxView {
 
 #[derive(Debug, Clone)]
 pub enum NotificationMailboxViewEvent {
-    NavigateToTerminal { terminal_view_id: zterm_ui::EntityId },
+    NavigateToTerminal {
+        terminal_view_id: zterm_ui::EntityId,
+    },
     Dismissed,
 }
 

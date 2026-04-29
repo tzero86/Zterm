@@ -1,4 +1,4 @@
-﻿use crate::ai::blocklist::BlocklistAIPermissions;
+use crate::ai::blocklist::BlocklistAIPermissions;
 use crate::ai::execution_profiles::profiles::{
     AIExecutionProfilesModel, AIExecutionProfilesModelEvent, ClientProfileId,
 };
@@ -498,7 +498,9 @@ fn render_allowlist_denylist_row(
             .finish(),
     )
     .with_margin_left(8.)
-    .with_border(zterm_ui::elements::Border::left(1.).with_border_fill(appearance.theme().outline()))
+    .with_border(
+        zterm_ui::elements::Border::left(1.).with_border_fill(appearance.theme().outline()),
+    )
     .with_padding_left(8.)
     .finish()
 }

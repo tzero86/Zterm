@@ -29,12 +29,12 @@ use repo_metadata::{
     repository::{RepositorySubscriber, SubscriberId},
     CanonicalizedPath, Repository, RepositoryUpdate,
 };
+use watcher::{BulkFilesystemWatcher, BulkFilesystemWatcherEvent};
+use zterm_ui::ModelHandle;
+use zterm_ui::{r#async::SpawnedFutureHandle, AppContext, Entity, ModelContext, SingletonEntity};
 use zterm_util::content_version::ContentVersion;
 use zterm_util::file::FileSaveError;
 use zterm_util::file::{FileId, FileLoadError};
-use zterm_ui::ModelHandle;
-use zterm_ui::{r#async::SpawnedFutureHandle, AppContext, Entity, ModelContext, SingletonEntity};
-use watcher::{BulkFilesystemWatcher, BulkFilesystemWatcherEvent};
 
 pub mod text_file_reader;
 pub use text_file_reader::{TextFileReadResult, TextFileSegment};

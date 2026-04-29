@@ -1,7 +1,7 @@
 //! Local LLM provider enum and configuration
 
-use serde::{Deserialize, Serialize};
 use schemars::JsonSchema;
+use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 pub enum LocalLLMProvider {
@@ -32,20 +32,14 @@ impl LocalLLMProvider {
 
     pub fn models_endpoint(&self, base_url: &str) -> String {
         match self {
-            Self::Ollama => format!(
-                "{}/api/tags",
-                base_url.trim_end_matches("/v1")
-            ),
+            Self::Ollama => format!("{}/api/tags", base_url.trim_end_matches("/v1")),
             _ => format!("{}/models", base_url),
         }
     }
 
     pub fn health_endpoint(&self, base_url: &str) -> String {
         match self {
-            Self::Ollama => format!(
-                "{}/",
-                base_url.trim_end_matches("/v1")
-            ),
+            Self::Ollama => format!("{}/", base_url.trim_end_matches("/v1")),
             _ => format!("{}/models", base_url),
         }
     }

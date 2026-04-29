@@ -1,4 +1,4 @@
-﻿use std::collections::HashMap;
+use std::collections::HashMap;
 use std::sync::Arc;
 use std::time::Duration;
 
@@ -11,9 +11,9 @@ use itertools::Itertools;
 use parking_lot::FairMutex;
 use zterm_core::command::ExitCode;
 use zterm_core::execution_mode::AppExecutionMode;
-use zterm_util::path::ShellFamily;
 use zterm_ui::r#async::{Spawnable, Timer};
 use zterm_ui::{Entity, EntityId, ModelContext, ModelHandle, SingletonEntity};
+use zterm_util::path::ShellFamily;
 
 use crate::ai::agent::{
     AIAgentActionId, AIAgentActionType, AIAgentPtyWriteMode, ReadShellCommandOutputResult,

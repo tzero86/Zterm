@@ -1,4 +1,4 @@
-﻿pub(crate) mod agent_input_footer;
+pub(crate) mod agent_input_footer;
 mod agent_message_bar;
 mod agent_view_block;
 pub mod child_agent_status_card;
@@ -16,8 +16,8 @@ pub use agent_view_block::*;
 pub use controller::*;
 pub use ephemeral_message_model::*;
 pub use inline_agent_view_header::*;
-use zterm_ui::fonts::Properties;
 pub use zero_state_block::*;
+use zterm_ui::fonts::Properties;
 
 use std::sync::LazyLock;
 

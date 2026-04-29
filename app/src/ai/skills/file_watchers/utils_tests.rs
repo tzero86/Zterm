@@ -1,4 +1,4 @@
-﻿use repo_metadata::{
+use repo_metadata::{
     entry::{DirectoryEntry, Entry, FileMetadata},
     file_tree_store::FileTreeState,
     repositories::DetectedRepositories,
@@ -500,8 +500,10 @@ fn find_skill_directories_in_tree_finds_root_skills() {
             app.add_singleton_model(|_| DetectedRepositories::default());
             let repo_handle = watcher.update(&mut app, |w, ctx| {
                 w.add_directory(
-                    zterm_util::standardized_path::StandardizedPath::from_local_canonicalized(&repo)
-                        .unwrap(),
+                    zterm_util::standardized_path::StandardizedPath::from_local_canonicalized(
+                        &repo,
+                    )
+                    .unwrap(),
                     ctx,
                 )
                 .unwrap()
@@ -511,8 +513,10 @@ fn find_skill_directories_in_tree_finds_root_skills() {
             let model_handle = app.add_singleton_model(RepoMetadataModel::new);
             model_handle.update(&mut app, |model, ctx| {
                 let key =
-                    zterm_util::standardized_path::StandardizedPath::from_local_canonicalized(&repo)
-                        .unwrap();
+                    zterm_util::standardized_path::StandardizedPath::from_local_canonicalized(
+                        &repo,
+                    )
+                    .unwrap();
                 model.insert_test_state(key, state, ctx);
             });
 
@@ -644,8 +648,10 @@ fn find_skill_directories_in_tree_finds_subdirectory_skills() {
             app.add_singleton_model(|_| DetectedRepositories::default());
             let repo_handle = watcher.update(&mut app, |w, ctx| {
                 w.add_directory(
-                    zterm_util::standardized_path::StandardizedPath::from_local_canonicalized(&repo)
-                        .unwrap(),
+                    zterm_util::standardized_path::StandardizedPath::from_local_canonicalized(
+                        &repo,
+                    )
+                    .unwrap(),
                     ctx,
                 )
                 .unwrap()
@@ -655,8 +661,10 @@ fn find_skill_directories_in_tree_finds_subdirectory_skills() {
             let model_handle = app.add_singleton_model(RepoMetadataModel::new);
             model_handle.update(&mut app, |model, ctx| {
                 let key =
-                    zterm_util::standardized_path::StandardizedPath::from_local_canonicalized(&repo)
-                        .unwrap();
+                    zterm_util::standardized_path::StandardizedPath::from_local_canonicalized(
+                        &repo,
+                    )
+                    .unwrap();
                 model.insert_test_state(key, state, ctx);
             });
 
@@ -683,8 +691,10 @@ fn find_skill_directories_in_tree_empty_repo() {
         vfs.mkdir("repo/src");
 
         let src = Entry::Directory(DirectoryEntry {
-            path: zterm_util::standardized_path::StandardizedPath::try_from_local(&repo.join("src"))
-                .unwrap(),
+            path: zterm_util::standardized_path::StandardizedPath::try_from_local(
+                &repo.join("src"),
+            )
+            .unwrap(),
             children: vec![],
             ignored: false,
             loaded: true,
@@ -701,8 +711,10 @@ fn find_skill_directories_in_tree_empty_repo() {
             app.add_singleton_model(|_| DetectedRepositories::default());
             let repo_handle = watcher.update(&mut app, |w, ctx| {
                 w.add_directory(
-                    zterm_util::standardized_path::StandardizedPath::from_local_canonicalized(&repo)
-                        .unwrap(),
+                    zterm_util::standardized_path::StandardizedPath::from_local_canonicalized(
+                        &repo,
+                    )
+                    .unwrap(),
                     ctx,
                 )
                 .unwrap()
@@ -712,8 +724,10 @@ fn find_skill_directories_in_tree_empty_repo() {
             let model_handle = app.add_singleton_model(RepoMetadataModel::new);
             model_handle.update(&mut app, |model, ctx| {
                 let key =
-                    zterm_util::standardized_path::StandardizedPath::from_local_canonicalized(&repo)
-                        .unwrap();
+                    zterm_util::standardized_path::StandardizedPath::from_local_canonicalized(
+                        &repo,
+                    )
+                    .unwrap();
                 model.insert_test_state(key, state, ctx);
             });
 

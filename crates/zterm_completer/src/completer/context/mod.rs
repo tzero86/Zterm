@@ -13,8 +13,8 @@ use async_trait::async_trait;
 use smol_str::SmolStr;
 use typed_path::{TypedPath, TypedPathBuf};
 use zterm_core::command::ExitCode;
-use zterm_util::path::{EscapeChar, ShellFamily};
 use zterm_ui::platform::OperatingSystem;
+use zterm_util::path::{EscapeChar, ShellFamily};
 
 use crate::{completer::TopLevelCommandCaseSensitivity, signatures::CommandRegistry};
 

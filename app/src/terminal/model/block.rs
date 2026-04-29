@@ -1,4 +1,4 @@
-﻿mod interaction_mode;
+mod interaction_mode;
 mod serialized_block;
 
 pub use interaction_mode::*;
@@ -56,9 +56,9 @@ use pathfinder_color::ColorU;
 use pathfinder_geometry::vector::Vector2F;
 use zterm_core::command::ExitCode;
 use zterm_terminal::model::grid::Dimensions as _;
-use zterm_util::path::user_friendly_path;
 use zterm_ui::units::{IntoLines, Lines};
 use zterm_ui::{r#async::executor::Background, record_trace_event};
+use zterm_util::path::user_friendly_path;
 
 use enum_iterator::all;
 use lazy_static::lazy_static;

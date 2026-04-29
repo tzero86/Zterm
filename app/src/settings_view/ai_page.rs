@@ -10,7 +10,7 @@ use crate::ai::execution_profiles::profiles::{
 };
 use crate::ai::execution_profiles::{ActionPermission, WriteToPtyPermission};
 use crate::ai::llms::{LLMId, LLMPreferences, LLMPreferencesEvent};
-use crate::ai::local_llm::{LocalLLMSettings};
+use crate::ai::local_llm::LocalLLMSettings;
 use crate::ai::mcp::TemplatableMCPServerManager;
 use crate::ai::paths::host_native_absolute_path;
 use crate::auth::auth_manager::{AuthManager, LoginGatedFeature};
@@ -3058,10 +3058,6 @@ impl SettingsWidget for GlobalAIWidget {
         let is_ai_disabled_due_to_remote_session_org_policy =
             AISettings::as_ref(app).is_ai_disabled_due_to_remote_session_org_policy(app);
 
-        let is_anonymous = AuthStateProvider::as_ref(app)
-            .get()
-            .is_anonymous_or_logged_out();
-
         let mut row = Flex::row()
             .with_main_axis_size(MainAxisSize::Max)
             .with_main_axis_alignment(MainAxisAlignment::SpaceBetween)
@@ -3094,8 +3090,8 @@ impl SettingsWidget for GlobalAIWidget {
             );
         }
 
-        // Show sign-up button for anonymous users, toggle for logged-in users
-        if is_anonymous {
+        // Local-first design: profiles available to all users
+        if false {
             row.add_child(
                 Flex::row()
                     .with_cross_axis_alignment(CrossAxisAlignment::Center)
@@ -5838,26 +5834,22 @@ impl LocalLLMWidget {
                     Flex::column()
                         .with_child(
                             Flex::row()
-                                .with_child(
-                                    Box::new(
-                                        Text::new_inline(
-                                            "Provider: ",
-                                            appearance.ui_font_family(),
-                                            CONTENT_FONT_SIZE,
-                                        )
-                                        .with_color(appearance.theme().active_ui_text_color().into()),
-                                    ),
-                                )
-                                .with_child(
-                                    Box::new(
-                                        Text::new_inline(
-                                            local_llm_settings.provider.display_name(),
-                                            appearance.ui_font_family(),
-                                            CONTENT_FONT_SIZE,
-                                        )
-                                        .with_color(appearance.theme().accent().into_solid()),
-                                    ),
-                                )
+                                .with_child(Box::new(
+                                    Text::new_inline(
+                                        "Provider: ",
+                                        appearance.ui_font_family(),
+                                        CONTENT_FONT_SIZE,
+                                    )
+                                    .with_color(appearance.theme().active_ui_text_color().into()),
+                                ))
+                                .with_child(Box::new(
+                                    Text::new_inline(
+                                        local_llm_settings.provider.display_name(),
+                                        appearance.ui_font_family(),
+                                        CONTENT_FONT_SIZE,
+                                    )
+                                    .with_color(appearance.theme().accent().into_solid()),
+                                ))
                                 .finish(),
                         )
                         .finish(),
@@ -5874,19 +5866,17 @@ impl LocalLLMWidget {
                 column.add_child(
                     Container::new(
                         Flex::column()
-                            .with_child(
-                                Box::new(
-                                    Text::new_inline(
-                                        format!(
-                                            "Status: Enabled (using {} mode)",
-                                            local_llm_settings.provider.display_name()
-                                        ),
-                                        appearance.ui_font_family(),
-                                        CONTENT_FONT_SIZE,
-                                    )
-                                    .with_color(appearance.theme().accent().into_solid()),
-                                ),
-                            )
+                            .with_child(Box::new(
+                                Text::new_inline(
+                                    format!(
+                                        "Status: Enabled (using {} mode)",
+                                        local_llm_settings.provider.display_name()
+                                    ),
+                                    appearance.ui_font_family(),
+                                    CONTENT_FONT_SIZE,
+                                )
+                                .with_color(appearance.theme().accent().into_solid()),
+                            ))
                             .finish(),
                     )
                     .with_padding_left(16.)
@@ -5899,16 +5889,14 @@ impl LocalLLMWidget {
                 column.add_child(
                     Container::new(
                         Flex::column()
-                            .with_child(
-                                Box::new(
-                                    Text::new_inline(
-                                        "Status: Disabled - Enable to use local LLM",
-                                        appearance.ui_font_family(),
-                                        CONTENT_FONT_SIZE,
-                                    )
-                                    .with_color(appearance.theme().disabled_ui_text_color().into()),
-                                ),
-                            )
+                            .with_child(Box::new(
+                                Text::new_inline(
+                                    "Status: Disabled - Enable to use local LLM",
+                                    appearance.ui_font_family(),
+                                    CONTENT_FONT_SIZE,
+                                )
+                                .with_color(appearance.theme().disabled_ui_text_color().into()),
+                            ))
                             .finish(),
                     )
                     .with_padding_left(16.)
@@ -5927,26 +5915,24 @@ impl LocalLLMWidget {
                         Flex::column()
                             .with_child(
                                 Flex::row()
-                                    .with_child(
-                                        Box::new(
-                                            Text::new_inline(
-                                                "Selected Model: ",
-                                                appearance.ui_font_family(),
-                                                CONTENT_FONT_SIZE,
-                                            )
-                                            .with_color(appearance.theme().active_ui_text_color().into()),
+                                    .with_child(Box::new(
+                                        Text::new_inline(
+                                            "Selected Model: ",
+                                            appearance.ui_font_family(),
+                                            CONTENT_FONT_SIZE,
+                                        )
+                                        .with_color(
+                                            appearance.theme().active_ui_text_color().into(),
                                         ),
-                                    )
-                                    .with_child(
-                                        Box::new(
-                                            Text::new_inline(
-                                                model_name,
-                                                appearance.ui_font_family(),
-                                                CONTENT_FONT_SIZE,
-                                            )
-                                            .with_color(appearance.theme().accent().into_solid()),
-                                        ),
-                                    )
+                                    ))
+                                    .with_child(Box::new(
+                                        Text::new_inline(
+                                            model_name,
+                                            appearance.ui_font_family(),
+                                            CONTENT_FONT_SIZE,
+                                        )
+                                        .with_color(appearance.theme().accent().into_solid()),
+                                    ))
                                     .finish(),
                             )
                             .finish(),

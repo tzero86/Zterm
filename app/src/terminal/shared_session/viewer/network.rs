@@ -1,4 +1,4 @@
-﻿//! The model that interfaces with the network to
+//! The model that interfaces with the network to
 //! connect to and communicate with the shared session.
 //! Adheres to the [`session-sharing-protocol`].
 
@@ -32,11 +32,11 @@ use session_sharing_protocol::{
 };
 
 use std::time::Duration;
+use websocket::{Message, Sink, Stream, WebsocketMessage as _};
 use zterm_core::features::FeatureFlag;
 use zterm_ui::{
     Entity, ModelContext, ModelHandle, RequestState, RetryOption, SingletonEntity, WeakViewHandle,
 };
-use websocket::{Message, Sink, Stream, WebsocketMessage as _};
 
 use crate::{
     auth::{auth_state::AuthState, AuthStateProvider, UserUid},

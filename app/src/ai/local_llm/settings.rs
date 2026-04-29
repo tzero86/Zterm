@@ -1,8 +1,8 @@
 //! Local LLM settings and configuration
 
-use serde::{Deserialize, Serialize};
-use schemars::JsonSchema;
 use crate::ai::local_llm::LocalLLMProvider;
+use schemars::JsonSchema;
+use serde::{Deserialize, Serialize};
 use zterm_ui::{Entity, SingletonEntity};
 
 /// Settings for local LLM inference

@@ -1,5 +1,5 @@
-use zterm_managed_secrets::{ManagedSecretValue, UploadKey, init_envelope};
 use wasm_bindgen::prelude::*;
+use zterm_managed_secrets::{ManagedSecretValue, UploadKey, init_envelope};
 
 /// Called once when the WASM module is instantiated.
 #[wasm_bindgen(start)]

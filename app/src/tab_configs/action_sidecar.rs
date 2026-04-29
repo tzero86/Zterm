@@ -1,4 +1,3 @@
-﻿use zterm_util::path::user_friendly_path;
 use zterm_ui::{
     elements::{
         Border, ConstrainedBox, Container, CornerRadius, CrossAxisAlignment, Flex, MainAxisSize,
@@ -11,6 +10,7 @@ use zterm_ui::{
     },
     AppContext, Element, SingletonEntity,
 };
+use zterm_util::path::user_friendly_path;
 
 use crate::{
     appearance::Appearance, settings::ai::DefaultSessionMode, tab_configs::TabConfig,

@@ -1751,7 +1751,8 @@ impl RootView {
             workspace_setting,
         };
 
-        let auth_onboarding_state = AuthOnboardingState::Terminal(workspace_args.create_workspace(ctx));
+        let auth_onboarding_state =
+            AuthOnboardingState::Terminal(workspace_args.create_workspace(ctx));
 
         let needs_sso_link_view = ctx.add_typed_action_view(|_| NeedsSsoLinkView::new());
 

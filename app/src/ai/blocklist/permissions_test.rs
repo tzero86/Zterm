@@ -1,9 +1,9 @@
-﻿use std::path::PathBuf;
+use std::path::PathBuf;
 
 use uuid::Uuid;
 
-use zterm_util::path::EscapeChar;
 use zterm_ui::{App, EntityId, ModelHandle};
+use zterm_util::path::EscapeChar;
 
 use zterm_core::execution_mode::ExecutionMode;
 

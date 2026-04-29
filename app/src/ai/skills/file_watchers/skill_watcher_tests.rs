@@ -1,4 +1,4 @@
-﻿use std::{
+use std::{
     collections::{HashMap, HashSet},
     fs,
 };
@@ -10,8 +10,8 @@ use repo_metadata::{
     TargetFile,
 };
 use tempfile::TempDir;
-use zterm_util::standardized_path::StandardizedPath;
 use zterm_ui::App;
+use zterm_util::standardized_path::StandardizedPath;
 
 use super::SkillWatcher;
 

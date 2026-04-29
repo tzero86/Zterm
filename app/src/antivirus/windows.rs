@@ -1,11 +1,11 @@
-﻿use crate::antivirus::telemetry::AntivirusInfoTelemetryEvent;
+use crate::antivirus::telemetry::AntivirusInfoTelemetryEvent;
 use crate::antivirus::{AntivirusInfo, AntivirusInfoEvent};
-use zterm_core::send_telemetry_from_ctx;
-use zterm_ui::ModelContext;
 use windows::Win32::System::Com::{
     CoCreateInstance, CoInitializeEx, CoUninitialize, CLSCTX_ALL, COINIT_APARTMENTTHREADED,
 };
 use windows::Win32::System::SecurityCenter::*;
+use zterm_core::send_telemetry_from_ctx;
+use zterm_ui::ModelContext;
 
 impl AntivirusInfo {
     #[cfg(windows)]

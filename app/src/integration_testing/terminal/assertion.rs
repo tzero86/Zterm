@@ -1,7 +1,6 @@
-﻿use pathfinder_geometry::rect::RectF;
+use pathfinder_geometry::rect::RectF;
 use regex::Regex;
 use settings::Setting as _;
-use zterm_util::path::user_friendly_path;
 use zterm_ui::{
     async_assert, async_assert_eq,
     integration::{AssertionCallback, AssertionOutcome},
@@ -9,6 +8,7 @@ use zterm_ui::{
     windowing::WindowManager,
     App, SingletonEntity, ViewHandle, WindowId,
 };
+use zterm_util::path::user_friendly_path;
 
 use crate::{
     ai::blocklist::agent_view::AgentViewState,

@@ -50,13 +50,13 @@ use std::collections::HashMap;
 use std::path::PathBuf;
 use std::str::FromStr;
 use teams_page::{TeamsPageView, TeamsPageViewEvent};
+use warpify_page::{ZtermifyPageAction, ZtermifyPageView};
 use zterm_core::send_telemetry_from_ctx;
 use zterm_core::{
     channel::ChannelState, context_flag::ContextFlag, features::FeatureFlag,
     settings::ToggleableSetting as _, ui::theme::color::internal_colors,
 };
 use zterm_editor::editor::NavigationKey;
-use warpify_page::{ZtermifyPageAction, ZtermifyPageView};
 use zterm_ui::Element;
 use zterm_ui::{
     elements::{

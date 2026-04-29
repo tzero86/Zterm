@@ -1,7 +1,6 @@
-﻿//! Renders the AI block "header", which includes a version of the AI "prompt" as it was rendered
+//! Renders the AI block "header", which includes a version of the AI "prompt" as it was rendered
 //! when the query was submitted.
 use zterm_core::features::FeatureFlag;
-use zterm_util::path::user_friendly_path;
 use zterm_ui::elements::MouseStateHandle;
 use zterm_ui::elements::{ChildView, Hoverable, SavePosition};
 use zterm_ui::platform::Cursor;
@@ -13,6 +12,7 @@ use zterm_ui::{
     },
     AppContext, Element, SingletonEntity, ViewHandle,
 };
+use zterm_util::path::user_friendly_path;
 
 use crate::ai::agent::conversation::AIConversationId;
 use crate::ai::agent::AIAgentExchangeId;

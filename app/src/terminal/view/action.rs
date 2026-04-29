@@ -8,11 +8,11 @@ use command_corrections::Correction;
 use pathfinder_geometry::vector::Vector2F;
 use session_sharing_protocol::common::Role;
 use session_sharing_protocol::sharer::RoleUpdateReason;
-use zterm_util::user_input::UserInput;
 use zterm_ui::elements::HyperlinkUrl;
 use zterm_ui::event::ModifiersState;
 use zterm_ui::units::Lines;
 use zterm_ui::EntityId;
+use zterm_util::user_input::UserInput;
 
 use crate::ai::agent::conversation::AIConversationId;
 use crate::ai::agent::AIAgentExchangeId;

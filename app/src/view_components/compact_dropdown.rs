@@ -1,4 +1,4 @@
-﻿use super::dropdown::DropdownAction;
+use super::dropdown::DropdownAction;
 use crate::{
     appearance::Appearance,
     menu::{Event as MenuEvent, Menu, MenuItem, MenuItemFields, MenuVariant},
@@ -129,8 +129,9 @@ impl<A: Action + Clone> CompactDropdown<A> {
                 let icon_color = fields
                     .override_icon_color()
                     .unwrap_or_else(|| appearance.theme().active_ui_text_color());
-                button_label
-                    .add_child(self.render_sized_icon(appearance, icon.to_zterm_ui_icon(icon_color)));
+                button_label.add_child(
+                    self.render_sized_icon(appearance, icon.to_zterm_ui_icon(icon_color)),
+                );
             }
         }
 

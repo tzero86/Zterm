@@ -1,4 +1,4 @@
-﻿use std::sync::Arc;
+use std::sync::Arc;
 
 use async_channel::Sender;
 use futures_util::stream::AbortHandle;
@@ -12,8 +12,8 @@ use session_sharing_protocol::{
     },
     sharer::{DownstreamMessage, ReconnectToken, UpstreamMessage},
 };
-use zterm_ui::{App, ModelHandle};
 use websocket::{Message, WebsocketMessage as _};
+use zterm_ui::{App, ModelHandle};
 
 use crate::{
     auth::{auth_manager::AuthManager, AuthStateProvider},

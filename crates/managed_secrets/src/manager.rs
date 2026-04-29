@@ -165,7 +165,8 @@ impl ManagedSecretManager {
         async move {
             // We only need the workload token for the duration of the request.
             let workload_token =
-                zterm_isolation_platform::issue_workload_token(Some(Duration::from_mins(5))).await?;
+                zterm_isolation_platform::issue_workload_token(Some(Duration::from_mins(5)))
+                    .await?;
             let gql_secrets = client
                 .get_task_secrets(task_id, workload_token.token)
                 .await?;

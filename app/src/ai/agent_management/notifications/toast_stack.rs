@@ -1,4 +1,4 @@
-﻿use std::time::Duration;
+use std::time::Duration;
 
 use pathfinder_geometry::vector::vec2f;
 use zterm_core::ui::color::blend::Blend;
@@ -14,7 +14,9 @@ use zterm_ui::platform::Cursor;
 use zterm_ui::r#async::{SpawnedFutureHandle, Timer};
 use zterm_ui::ui_components::components::{Coords, UiComponent, UiComponentStyles};
 use zterm_ui::ui_components::keyboard_shortcut::KeyboardShortcut;
-use zterm_ui::{AppContext, Entity, SingletonEntity, TypedActionView, View, ViewContext, ViewHandle};
+use zterm_ui::{
+    AppContext, Entity, SingletonEntity, TypedActionView, View, ViewContext, ViewHandle,
+};
 
 use crate::ai::agent_management::notifications::item_rendering::{
     create_notification_artifact_buttons_view, handle_notification_artifact_buttons_event,

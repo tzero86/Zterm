@@ -1,10 +1,10 @@
-﻿use crate::ai::agent::task::TaskId;
+use crate::ai::agent::task::TaskId;
 use crate::ai::agent::{
     AIAgentActionResult, AIAgentActionResultType, TransferShellCommandControlToUserResult,
 };
 use crate::terminal::model::block::BlockId;
-use zterm_core::command::ExitCode;
 use warp_multi_agent_api as api;
+use zterm_core::command::ExitCode;
 
 #[test]
 fn transfer_control_snapshot_result_converts_to_tool_call_result_input() {

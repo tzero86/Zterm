@@ -70,8 +70,8 @@ impl ZtermDriveItem for ZtermDriveWorkflow {
     }
 
     fn preview(&self, appearance: &Appearance) -> Option<Box<dyn Element>> {
-        let mut modal =
-            Flex::column().with_cross_axis_alignment(zterm_ui::elements::CrossAxisAlignment::Stretch);
+        let mut modal = Flex::column()
+            .with_cross_axis_alignment(zterm_ui::elements::CrossAxisAlignment::Stretch);
 
         let mut text = Flex::column()
             .with_child(Container::new(self.render_workflow_name(appearance)).finish());

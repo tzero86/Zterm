@@ -1,4 +1,4 @@
-﻿use crate::{
+use crate::{
     drive::{cloud_object_styling::warp_drive_icon_color, DriveObjectType},
     notebooks::post_process_notebook,
     workflows::{
@@ -553,9 +553,10 @@ impl FileNode {
 
         let icon_element = match &self.file_type {
             FileType::Workflow => Icon::Workflow
-                .to_zterm_ui_icon(Fill::Solid(override_color.unwrap_or(
-                    warp_drive_icon_color(appearance, DriveObjectType::Workflow),
-                )))
+                .to_zterm_ui_icon(Fill::Solid(
+                    override_color
+                        .unwrap_or(warp_drive_icon_color(appearance, DriveObjectType::Workflow)),
+                ))
                 .finish(),
             FileType::Notebook => Icon::Notebook
                 .to_zterm_ui_icon(Fill::Solid(override_color.unwrap_or(

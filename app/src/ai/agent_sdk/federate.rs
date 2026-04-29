@@ -42,12 +42,13 @@ fn issue_token(
     };
 
     ManagedSecretManager::handle(ctx).update(ctx, move |manager, ctx| {
-        let future =
-            manager.issue_task_identity_token(zterm_managed_secrets::client::IdentityTokenOptions {
+        let future = manager.issue_task_identity_token(
+            zterm_managed_secrets::client::IdentityTokenOptions {
                 audience,
                 requested_duration: duration,
                 subject_template,
-            });
+            },
+        );
         ctx.spawn(future, move |_, result, ctx| match result {
             Ok(token) => {
                 let token_value = token.token;

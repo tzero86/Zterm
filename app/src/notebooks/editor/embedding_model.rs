@@ -6,7 +6,6 @@ use zterm_editor::{
     content::{anchor::Anchor, buffer::Buffer, selection_model::BufferSelectionModel},
     editor::EmbeddedItemModel,
 };
-use zterm_util::user_input::UserInput;
 use zterm_ui::{
     elements::{
         Align, Border, Container, CrossAxisAlignment, Empty, Flex, MainAxisAlignment,
@@ -16,6 +15,7 @@ use zterm_ui::{
     ui_components::{button::ButtonVariant, components::UiComponent},
     AppContext, Element, Entity, ModelAsRef, ModelContext, ModelHandle, SingletonEntity,
 };
+use zterm_util::user_input::UserInput;
 
 use crate::{
     appearance::Appearance,

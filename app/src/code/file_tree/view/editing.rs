@@ -1,4 +1,4 @@
-﻿//! Module for utlities related to editing items in the file tree.
+//! Module for utlities related to editing items in the file tree.
 
 #[cfg(test)]
 #[path = "editing_tests.rs"]
@@ -8,8 +8,8 @@ use repo_metadata::file_tree_store::FileTreeEntryState;
 use repo_metadata::{FileMetadata, FileTreeEntry};
 use std::cmp::Ordering;
 use std::sync::Arc;
-use zterm_util::standardized_path::StandardizedPath;
 use zterm_ui::{elements::MouseStateHandle, ViewContext};
+use zterm_util::standardized_path::StandardizedPath;
 
 use super::{FileTreeIdentifier, FileTreeItem, FileTreeView};
 use crate::{

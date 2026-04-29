@@ -5,8 +5,8 @@ use crate::{
 };
 use regex::Regex;
 use url::Url;
-use zterm_util::path::{is_posix_portable_pathname, ShellFamily};
 use zterm_ui::AppContext;
+use zterm_util::path::{is_posix_portable_pathname, ShellFamily};
 
 use crate::root_view::SubshellCommandArg;
 

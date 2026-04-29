@@ -10,11 +10,11 @@ use std::path::Path;
 use futures::future::ready;
 #[cfg(feature = "local_fs")]
 use ignore::gitignore::Gitignore;
-use zterm_util::standardized_path::StandardizedPath;
 use zterm_ui::r#async::{BoxFuture, SpawnedFutureHandle};
 #[cfg(feature = "local_fs")]
 use zterm_ui::SingletonEntity;
 use zterm_ui::{Entity, ModelContext, ModelHandle};
+use zterm_util::standardized_path::StandardizedPath;
 
 #[cfg(feature = "local_fs")]
 use crate::watcher::DirectoryWatcher;

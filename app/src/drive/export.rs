@@ -1,4 +1,4 @@
-﻿#[cfg(feature = "local_fs")]
+#[cfg(feature = "local_fs")]
 use std::io::ErrorKind;
 use std::{
     collections::{
@@ -14,12 +14,12 @@ use aho_corasick::{AhoCorasick, MatchKind};
 use anyhow::{anyhow, Context};
 #[cfg(feature = "local_fs")]
 use futures::AsyncWriteExt;
-use zterm_util::path::ShellFamily;
 use zterm_ui::{
     platform::{file_picker::FilePickerError, FilePickerConfiguration, OperatingSystem},
     r#async::SpawnedFutureHandle,
     AppContext, Entity, ModelContext, SingletonEntity, WindowId,
 };
+use zterm_util::path::ShellFamily;
 
 use crate::{
     cloud_object::{model::persistence::CloudModel, Space},

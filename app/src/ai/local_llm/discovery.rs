@@ -1,7 +1,7 @@
 //! Auto-discovery and provider detection for local LLMs
 
-use crate::ai::local_llm::{LocalLLMClient, LocalLLMProvider};
 use crate::ai::local_llm::client::LocalModel;
+use crate::ai::local_llm::{LocalLLMClient, LocalLLMProvider};
 
 /// Discover available local LLM providers by probing default ports
 pub async fn discover_providers() -> Vec<(LocalLLMProvider, u64)> {

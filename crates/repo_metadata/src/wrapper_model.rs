@@ -9,8 +9,8 @@
 use std::path::Path;
 
 use zterm_core::HostId;
-use zterm_util::standardized_path::StandardizedPath;
 use zterm_ui::{AppContext, ModelContext, ModelHandle, SingletonEntity};
+use zterm_util::standardized_path::StandardizedPath;
 
 use crate::file_tree_store::FileTreeState;
 use crate::file_tree_update::RepoMetadataUpdate;

@@ -1,8 +1,8 @@
-﻿use std::ops::BitOrAssign;
+use std::ops::BitOrAssign;
 
 use zterm_terminal::model::char_or_str::CharOrStr;
-use zterm_util::path::LineAndColumnArg;
 use zterm_ui::text::words::is_default_word_boundary;
+use zterm_util::path::LineAndColumnArg;
 
 use crate::terminal::model::secrets::{ObfuscateSecrets, SecretLevel};
 use crate::terminal::model::{blockgrid::BlockGrid, secrets::IsObfuscated};

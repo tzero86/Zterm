@@ -26,7 +26,6 @@ use zterm_editor::{
     selection::{TextDirection, TextUnit},
 };
 
-use zterm_util::{path::LineAndColumnArg, user_input::UserInput};
 use zterm_ui::{
     accessibility::{AccessibilityContent, ActionAccessibilityContent, WarpA11yRole},
     assets::asset_cache::{AssetCache, AssetHandle, AssetState},
@@ -54,6 +53,7 @@ use zterm_ui::{
 };
 use zterm_ui::{actions::StandardAction, elements::Hoverable};
 use zterm_ui::{keymap::PerPlatformKeystroke, windowing::WindowManager};
+use zterm_util::{path::LineAndColumnArg, user_input::UserInput};
 
 use crate::{
     appearance::Appearance,

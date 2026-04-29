@@ -1,11 +1,10 @@
-﻿use std::collections::HashSet;
+use std::collections::HashSet;
 use std::path::{Path, PathBuf};
 
 use ai::index::full_source_code_embedding::manager::{
     CodebaseIndexManager, CodebaseIndexManagerEvent,
 };
 use settings::Setting;
-use zterm_util::path::user_friendly_path;
 use zterm_ui::{
     elements::{
         Border, ChildView, ConstrainedBox, Container, CrossAxisAlignment, Flex, Hoverable,
@@ -14,6 +13,7 @@ use zterm_ui::{
     platform::Cursor,
     AppContext, Element, Entity, SingletonEntity, TypedActionView, View, ViewContext, ViewHandle,
 };
+use zterm_util::path::user_friendly_path;
 
 use crate::{
     ai::persisted_workspace::{PersistedWorkspace, PersistedWorkspaceEvent},

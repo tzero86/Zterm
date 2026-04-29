@@ -1,4 +1,4 @@
-﻿use std::{
+use std::{
     collections::HashSet,
     path::{Path, PathBuf},
     sync::Arc,
@@ -6,11 +6,11 @@
 
 use itertools::Itertools;
 use lazy_static::lazy_static;
-use zterm_util::path::EscapeChar;
 use zterm_ui::{
     accessibility::{AccessibilityContent, ActionAccessibilityContent, WarpA11yRole},
     SingletonEntity, ViewContext,
 };
+use zterm_util::path::EscapeChar;
 
 #[cfg(feature = "local_fs")]
 use crate::code::editor_management::CodeSource;

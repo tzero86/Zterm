@@ -1,9 +1,9 @@
-﻿use std::{collections::HashMap, sync::Arc};
+use std::{collections::HashMap, sync::Arc};
 
 use crate::{ai::agent::redaction, terminal::model::session::SessionType};
 use futures_util::StreamExt;
-use zterm_core::features::FeatureFlag;
 use warp_multi_agent_api as api;
+use zterm_core::features::FeatureFlag;
 
 use crate::server::server_api::ServerApi;
 
@@ -271,7 +271,7 @@ fn get_supported_cli_agent_tools(params: &RequestParams) -> Vec<api::ToolType> {
 mod tests;
 
 /// Generate output using a local LLM provider
-/// 
+///
 /// This function will be called when local LLM inference is enabled.
 /// It converts the request to the local LLM format and streams responses back.
 #[allow(dead_code)]
@@ -285,7 +285,7 @@ async fn generate_local_llm_output(
     // 2. Call client.generate() with the messages and model
     // 3. Wrap the stream to convert ChatChunk responses to api::Response format
     // 4. Return the wrapped stream
-    
+
     use anyhow::anyhow;
     Err(ConvertToAPITypeError::Other(anyhow!(
         "Local LLM integration not yet fully implemented"

@@ -20,9 +20,9 @@ mod tests {
     use std::rc::Rc;
     use std::time::Duration;
     use virtual_fs::{Stub, VirtualFS};
-    use zterm_util::standardized_path::StandardizedPath;
     use zterm_ui::r#async::FutureExt as _;
     use zterm_ui::App;
+    use zterm_util::standardized_path::StandardizedPath;
 
     impl LocalRepoMetadataModel {
         fn new_for_test() -> Self {

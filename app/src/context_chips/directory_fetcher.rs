@@ -1,11 +1,11 @@
-﻿use std::cmp::Ordering;
+use std::cmp::Ordering;
 
 use crate::completer::SessionContext;
 use crate::ui_components::icons::Icon;
 use typed_path::TypedPathBuf;
 use zterm_completer::completer::{EngineDirEntry, EngineFileType, PathCompletionContext};
-use zterm_util::file_type::is_binary_file;
 use zterm_ui::{r#async::SpawnedFutureHandle, AppContext, Entity, ModelContext};
+use zterm_util::file_type::is_binary_file;
 
 use super::display_menu::GenericMenuItem;
 

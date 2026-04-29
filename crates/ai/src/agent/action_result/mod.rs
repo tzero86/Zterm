@@ -4,8 +4,8 @@ use std::{fmt::Display, ops::Range, time::SystemTime};
 
 use itertools::Itertools as _;
 use serde::{Deserialize, Serialize};
-use zterm_core::command::ExitCode;
 use warp_multi_agent_api::apply_file_diffs_result::success::UpdatedFileContent;
+use zterm_core::command::ExitCode;
 use zterm_terminal::model::BlockId;
 
 use crate::{

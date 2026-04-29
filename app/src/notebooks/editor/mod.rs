@@ -14,8 +14,10 @@ use zterm_editor::{
         ParagraphStyles, RichTextStyles, TableStyle, PARAGRAPH_MIN_HEIGHT,
     },
 };
+use zterm_ui::{
+    elements::Border, fonts::FamilyId, ui_components::checkbox::HOVER_BACKGROUND_COLOR,
+};
 use zterm_util::user_input::UserInput;
-use zterm_ui::{elements::Border, fonts::FamilyId, ui_components::checkbox::HOVER_BACKGROUND_COLOR};
 
 use crate::{
     appearance::Appearance,

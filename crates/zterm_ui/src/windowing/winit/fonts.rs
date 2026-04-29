@@ -9,9 +9,9 @@ mod linux;
 
 #[cfg(target_os = "windows")]
 mod windows;
-use zterm_ui_core::fonts::{Style, Weight};
 #[cfg(target_os = "windows")]
 use windows::loader;
+use zterm_ui_core::fonts::{Style, Weight};
 
 use std::any::Any;
 use std::collections::HashMap;

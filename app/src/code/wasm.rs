@@ -1,10 +1,10 @@
-﻿use std::path::{Path, PathBuf};
+use std::path::{Path, PathBuf};
 
-use zterm_util::path::LineAndColumnArg;
 use zterm_ui::{
     elements::{DraggableState, Empty, MouseStateHandle},
     AppContext, Element, Entity, ModelHandle, TypedActionView, View, ViewContext, ViewHandle,
 };
+use zterm_util::path::LineAndColumnArg;
 
 use super::{editor_management::CodeSource, local_code_editor::LocalCodeEditorView};
 use crate::pane_group::{

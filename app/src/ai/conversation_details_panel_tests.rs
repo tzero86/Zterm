@@ -1,10 +1,10 @@
-﻿use std::collections::HashMap;
+use std::collections::HashMap;
 
 use chrono::{Local, Utc};
 use persistence::model::AgentConversationData;
+use warp_multi_agent_api as api;
 use zterm_cli::agent::Harness;
 use zterm_core::features::FeatureFlag;
-use warp_multi_agent_api as api;
 use zterm_ui::{App, EntityId};
 
 use crate::ai::agent::conversation::{AIConversation, AIConversationId};

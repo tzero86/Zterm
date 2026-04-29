@@ -6,8 +6,8 @@ use repo_metadata::{
     repository::{RepositorySubscriber, SubscriberId},
     DirectoryWatcher, Repository, RepositoryUpdate,
 };
-use zterm_util::standardized_path::StandardizedPath;
 use zterm_ui::{ModelContext, SingletonEntity, WeakModelHandle};
+use zterm_util::standardized_path::StandardizedPath;
 
 use crate::{model::LspServerModel, types::WatchedFileChangeEvent, LspServerConfig};
 

@@ -1,4 +1,4 @@
-﻿//! This module contains core business logic for Agent Mode, primarily sending input to an AI
+//! This module contains core business logic for Agent Mode, primarily sending input to an AI
 //! model and receiving output.
 //!
 //! The `BlocklistAIController` orchestrates state updates and service calls to power the
@@ -74,8 +74,8 @@ use session_sharing_protocol::common::ParticipantId;
 use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
 use std::time::Duration;
-use zterm_core::assertions::safe_assert;
 use warp_multi_agent_api::{message, Task, ToolType};
+use zterm_core::assertions::safe_assert;
 use zterm_ui::r#async::{SpawnedFutureHandle, Timer};
 
 use super::orchestration_events::{OrchestrationEventService, OrchestrationEventServiceEvent};

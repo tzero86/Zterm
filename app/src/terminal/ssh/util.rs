@@ -190,7 +190,9 @@ impl SshZtermifyCommand {
         } else if GCLOUD_REGEX.is_match(command) {
             Some(SshZtermifyCommand::SshLike(SshLikeCommand::Gcloud))
         } else if ELASTIC_BEANSTALK_REGEX.is_match(command) {
-            Some(SshZtermifyCommand::SshLike(SshLikeCommand::ElasticBeanstalk))
+            Some(SshZtermifyCommand::SshLike(
+                SshLikeCommand::ElasticBeanstalk,
+            ))
         } else if DIGITAL_OCEAN_DROPLET_REGEX.is_match(command) {
             Some(SshZtermifyCommand::SshLike(
                 SshLikeCommand::DigitalOceanDroplet,

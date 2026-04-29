@@ -12,9 +12,9 @@ use crate::{CanonicalizedPath, RepoMetadataError, Repository, RepositoryUpdate};
 use futures::channel::mpsc;
 use futures::StreamExt as _;
 use virtual_fs::{Stub, VirtualFS};
-use zterm_util::standardized_path::StandardizedPath;
 use zterm_ui::r#async::Timer;
 use zterm_ui::{App, ModelContext, ModelHandle};
+use zterm_util::standardized_path::StandardizedPath;
 
 #[test]
 fn test_add_repository_success() {

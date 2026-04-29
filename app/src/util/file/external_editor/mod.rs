@@ -1,4 +1,4 @@
-﻿#[cfg(target_os = "linux")]
+#[cfg(target_os = "linux")]
 mod linux;
 #[cfg(target_os = "macos")]
 mod mac;
@@ -10,8 +10,8 @@ use std::path::PathBuf;
 
 use serde::{Deserialize, Serialize};
 use settings::EditorChoice;
-use zterm_util::path::LineAndColumnArg;
 use zterm_ui::{AppContext, SingletonEntity};
+use zterm_util::path::LineAndColumnArg;
 
 pub use self::settings::{EditorLayout, EditorSettings};
 

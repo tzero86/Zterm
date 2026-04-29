@@ -1,4 +1,4 @@
-﻿use crate::terminal::shell::ShellType;
+use crate::terminal::shell::ShellType;
 use repo_metadata::repositories::{DetectedRepositories, RepoDetectionSource};
 use repo_metadata::{RepoMetadataEvent, RepoMetadataModel, RepositoryIdentifier};
 use std::collections::{HashMap, HashSet};
@@ -7,10 +7,10 @@ use std::path::{Path, PathBuf};
 use std::sync::Arc;
 use zterm_core::channel::ChannelState;
 use zterm_core::SessionId;
-use zterm_util::standardized_path::StandardizedPath;
 use zterm_ui::platform::TerminationMode;
 use zterm_ui::r#async::{Spawnable, SpawnableOutput, SpawnedFutureHandle};
 use zterm_ui::{Entity, ModelContext, SingletonEntity};
+use zterm_util::standardized_path::StandardizedPath;
 
 use zterm_files::{FileModel, FileModelEvent};
 use zterm_util::content_version::ContentVersion;

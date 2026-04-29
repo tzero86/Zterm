@@ -21,7 +21,8 @@ use zterm_ui::{
 };
 
 use crate::terminal::warpify::settings::{
-    EnableSshWarpification, SshExtensionInstallMode, UseSshTmuxWrapper, ZtermifySettingsChangedEvent,
+    EnableSshWarpification, SshExtensionInstallMode, UseSshTmuxWrapper,
+    ZtermifySettingsChangedEvent,
 };
 use crate::ui_components::blended_colors;
 use crate::{

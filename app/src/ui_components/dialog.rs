@@ -1,4 +1,4 @@
-﻿use super::blended_colors;
+use super::blended_colors;
 use crate::appearance::Appearance;
 use zterm_ui::elements::{
     Border, ConstrainedBox, Container, CornerRadius, CrossAxisAlignment, Dismiss, Element, Flex,
@@ -35,7 +35,9 @@ pub fn dialog_styles(appearance: &Appearance) -> UiComponentStyles {
         font_weight: Some(zterm_ui::fonts::Weight::Bold),
         background: Some(background.into()),
         border_color: Some(theme.surface_3().into()),
-        border_radius: Some(CornerRadius::with_all(zterm_ui::elements::Radius::Pixels(8.))),
+        border_radius: Some(CornerRadius::with_all(zterm_ui::elements::Radius::Pixels(
+            8.,
+        ))),
         border_width: Some(1.),
         ..Default::default()
     }

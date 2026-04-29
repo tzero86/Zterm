@@ -30,9 +30,9 @@ use vec1::Vec1;
 use zterm_core::semantic_selection::SemanticSelection;
 use zterm_core::ui::builder::UiBuilder;
 use zterm_core::ui::theme::AnsiColorIdentifier;
-use zterm_util::user_input::UserInput;
 use zterm_ui::platform::Cursor;
 use zterm_ui::text::SelectionType;
+use zterm_util::user_input::UserInput;
 
 use pathfinder_color::ColorU;
 use session_sharing_protocol::common::{ParticipantId, Selection};

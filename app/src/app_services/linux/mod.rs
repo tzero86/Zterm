@@ -1,9 +1,9 @@
-﻿use std::collections::HashMap;
+use std::collections::HashMap;
 
 use futures_util::FutureExt as _;
 use itertools::Itertools as _;
-use zterm_ui::{r#async::executor::BackgroundTask, AppContext, SingletonEntity};
 use zbus::{interface, proxy, zvariant};
+use zterm_ui::{r#async::executor::BackgroundTask, AppContext, SingletonEntity};
 
 use crate::channel::ChannelState;
 use crate::report_if_error;

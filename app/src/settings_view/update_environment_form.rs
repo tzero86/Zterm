@@ -3085,10 +3085,11 @@ impl UpdateEnvironmentForm {
                 };
 
                 let icon_size = appearance.ui_font_size();
-                let icon = ConstrainedBox::new(Icon::Lightbulb.to_zterm_ui_icon(text_fill).finish())
-                    .with_width(icon_size)
-                    .with_height(icon_size)
-                    .finish();
+                let icon =
+                    ConstrainedBox::new(Icon::Lightbulb.to_zterm_ui_icon(text_fill).finish())
+                        .with_width(icon_size)
+                        .with_height(icon_size)
+                        .finish();
 
                 let text = Text::new(
                     button_text,

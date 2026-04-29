@@ -29,9 +29,9 @@ use ai::project_context::model::ProjectRulePath;
 use chrono::{DateTime, Local, Utc};
 use lsp::supported_servers::LSPServerType;
 use uuid::Uuid;
+use warp_multi_agent_api as api;
 use zterm_core::command::ExitCode;
 use zterm_graphql::scalars::time::ServerTimestamp;
-use warp_multi_agent_api as api;
 use zterm_ui::{AppContext, Entity, SingletonEntity};
 
 use crate::ai::blocklist::PersistedAIInput;

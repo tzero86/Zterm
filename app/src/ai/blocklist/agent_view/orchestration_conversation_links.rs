@@ -1,4 +1,4 @@
-﻿use pathfinder_color::ColorU;
+use pathfinder_color::ColorU;
 use pathfinder_geometry::vector::Vector2F;
 use zterm_core::ui::appearance::Appearance;
 use zterm_core::ui::theme::Fill;
@@ -199,7 +199,9 @@ pub(crate) fn conversation_navigation_card_with_icon(
             Container::new(
                 ConstrainedBox::new(
                     Icon::ChevronRight
-                        .to_zterm_ui_icon(blended_colors::text_sub(theme, theme.background()).into())
+                        .to_zterm_ui_icon(
+                            blended_colors::text_sub(theme, theme.background()).into(),
+                        )
                         .finish(),
                 )
                 .with_height(20.)

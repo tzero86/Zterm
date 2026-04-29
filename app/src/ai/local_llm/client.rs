@@ -1,14 +1,14 @@
 //! Local LLM HTTP client for Ollama, LM Studio, and OpenAI-compatible endpoints
 
+use crate::ai::local_llm::LocalLLMProvider;
 use anyhow::{anyhow, Result};
+use bytes::BytesMut;
+use futures::StreamExt;
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
-use std::time::Duration;
-use futures::StreamExt;
-use bytes::BytesMut;
 use std::sync::Arc;
+use std::time::Duration;
 use tokio::sync::Mutex;
-use crate::ai::local_llm::LocalLLMProvider;
 
 #[derive(Clone)]
 pub struct LocalLLMClient {
@@ -61,10 +61,11 @@ impl LocalLLMClient {
         }
 
         use futures::stream::StreamExt;
-        
+
         let buffer = Arc::new(Mutex::new(BytesMut::new()));
 
-        let stream = response.bytes_stream()
+        let stream = response
+            .bytes_stream()
             .then(move |bytes_result| {
                 let buffer = Arc::clone(&buffer);
                 async move {
@@ -72,11 +73,11 @@ impl LocalLLMClient {
                         Ok(chunk) => {
                             let mut buf = buffer.lock().await;
                             buf.extend_from_slice(&chunk);
-                            
+
                             // Find newline and extract text in a scoped block
                             let (complete_text, bytes_to_keep) = {
                                 let text = String::from_utf8_lossy(&buf);
-                                
+
                                 if let Some(last_newline_pos) = text.rfind('\n') {
                                     let complete = text[..=last_newline_pos].to_string();
                                     let incomplete = text[last_newline_pos + 1..].to_string();
@@ -85,7 +86,7 @@ impl LocalLLMClient {
                                     (None, 0)
                                 }
                             };
-                            
+
                             if let Some(complete_text) = complete_text {
                                 // Now text borrow is dropped, we can mutate buf
                                 let total_len = buf.len();

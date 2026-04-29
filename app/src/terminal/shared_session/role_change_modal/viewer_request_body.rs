@@ -1,6 +1,8 @@
-﻿use crate::{appearance::Appearance, ui_components::blended_colors};
+use crate::{appearance::Appearance, ui_components::blended_colors};
 use session_sharing_protocol::common::Role;
-use zterm_ui::elements::{Container, Flex, MainAxisAlignment, MouseStateHandle, ParentElement, Text};
+use zterm_ui::elements::{
+    Container, Flex, MainAxisAlignment, MouseStateHandle, ParentElement, Text,
+};
 use zterm_ui::{
     elements::CrossAxisAlignment,
     fonts::Weight,

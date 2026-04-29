@@ -75,7 +75,6 @@ use std::collections::HashMap;
 use std::path::PathBuf;
 use std::rc::Rc;
 use zterm_core::ui::theme::color::internal_colors;
-use zterm_util::path::user_friendly_path;
 use zterm_ui::elements::{
     Clipped, Empty, FormattedTextElement, MainAxisAlignment, MainAxisSize, Text, Wrap,
 };
@@ -90,6 +89,7 @@ use zterm_ui::ui_components::radio_buttons::{
 use zterm_ui::ui_components::slider::SliderStateHandle;
 use zterm_ui::ui_components::switch::SwitchStateHandle;
 use zterm_ui::units::IntoPixels;
+use zterm_util::path::user_friendly_path;
 
 use zterm_ui::id;
 use zterm_ui::{

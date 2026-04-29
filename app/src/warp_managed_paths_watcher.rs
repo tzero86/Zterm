@@ -9,10 +9,10 @@ use repo_metadata::RepositoryUpdate;
 #[cfg(any(not(target_family = "wasm"), test))]
 use repo_metadata::TargetFile;
 #[cfg(not(target_family = "wasm"))]
+use watcher::{BulkFilesystemWatcher, BulkFilesystemWatcherEvent};
+#[cfg(not(target_family = "wasm"))]
 use zterm_ui::ModelHandle;
 use zterm_ui::{Entity, ModelContext, SingletonEntity};
-#[cfg(not(target_family = "wasm"))]
-use watcher::{BulkFilesystemWatcher, BulkFilesystemWatcherEvent};
 
 /// Duration between filesystem watch events for the Warp managed paths watcher, in milliseconds.
 #[cfg(not(target_family = "wasm"))]

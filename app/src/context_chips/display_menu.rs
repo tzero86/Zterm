@@ -702,10 +702,13 @@ impl DisplayChipMenu {
         let image_key = format!("env-sidecar:{}:image", data.id);
 
         let icon = |icon: Icon| {
-            ConstrainedBox::new(icon.to_zterm_ui_icon(Fill::Solid(label_text_color)).finish())
-                .with_width(ENV_SIDE_CAR_ICON_SIZE)
-                .with_height(ENV_SIDE_CAR_ICON_SIZE)
-                .finish()
+            ConstrainedBox::new(
+                icon.to_zterm_ui_icon(Fill::Solid(label_text_color))
+                    .finish(),
+            )
+            .with_width(ENV_SIDE_CAR_ICON_SIZE)
+            .with_height(ENV_SIDE_CAR_ICON_SIZE)
+            .finish()
         };
 
         let label_text = |text: &str| {

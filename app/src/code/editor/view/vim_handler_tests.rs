@@ -22,12 +22,12 @@ use zterm_editor::{
     content::buffer::{InitialBufferState, ToBufferCharOffset, ToBufferPoint},
     render::element::VerticalExpansionBehavior,
 };
-use zterm_util::user_input::UserInput;
 use zterm_ui::text::point::Point;
 use zterm_ui::{
     keymap::Keystroke, platform::WindowStyle, App, SingletonEntity, TypedActionView, UpdateModel,
     ViewHandle,
 };
+use zterm_util::user_input::UserInput;
 
 // Await render/layout completion for a CodeEditorView in tests.
 async fn layout_editor_view(app: &mut App, editor: &ViewHandle<CodeEditorView>) {

@@ -29,9 +29,6 @@ use zterm_core::{
 use zterm_editor::{
     content::buffer::InitialBufferState, render::element::VerticalExpansionBehavior,
 };
-use zterm_util::file::FileSaveError;
-use zterm_util::path::common_path;
-use zterm_util::standardized_path::StandardizedPath;
 use zterm_ui::{
     elements::{
         new_scrollable::{ScrollableAppearance, SingleAxisConfig},
@@ -49,6 +46,9 @@ use zterm_ui::{
     AppContext, Element, Entity, FocusContext, ModelHandle, SingletonEntity, TypedActionView, View,
     ViewContext, ViewHandle,
 };
+use zterm_util::file::FileSaveError;
+use zterm_util::path::common_path;
+use zterm_util::standardized_path::StandardizedPath;
 
 use super::malformed_line_heuristics::has_malformed_terminal_correction_signal;
 use crate::view_components::action_button::{ActionButton, NakedTheme};

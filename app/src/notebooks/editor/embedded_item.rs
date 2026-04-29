@@ -616,7 +616,9 @@ impl RenderableBlock for RenderableEmbeddedWorkflow {
             );
         }
 
-        ctx.paint.scene.start_layer(zterm_ui::ClipBounds::ActiveLayer);
+        ctx.paint
+            .scene
+            .start_layer(zterm_ui::ClipBounds::ActiveLayer);
 
         // Position the block footer right below the content area, flush with its right-hand edge.
         // This gives the footer some padding relative to the visible area with a background.

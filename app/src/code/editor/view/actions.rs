@@ -28,7 +28,6 @@ use zterm_editor::{
     },
     selection::{TextDirection, TextUnit},
 };
-use zterm_util::user_input::UserInput;
 use zterm_ui::{
     actions::StandardAction,
     elements::Axis,
@@ -37,6 +36,7 @@ use zterm_ui::{
     units::Pixels,
     AppContext, TypedActionView, ViewContext, WeakViewHandle,
 };
+use zterm_util::user_input::UserInput;
 
 /// Limit the keybindings that conflict with the Agent Mode embedded editor.
 const NON_EDITABLE_KEYMAP_CONTEXT: &str = "NonEditableKeymapContext";

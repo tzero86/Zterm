@@ -1,4 +1,4 @@
-﻿//! Windows implementation of login-item registration via the HKCU
+//! Windows implementation of login-item registration via the HKCU
 //! `Software\Microsoft\Windows\CurrentVersion\Run` registry key.
 //!
 //! This is the standard user-scope startup mechanism surfaced by
@@ -10,10 +10,10 @@ use crate::report_if_error;
 use crate::terminal::general_settings::GeneralSettings;
 use ::settings::Setting;
 use std::path::{Path, PathBuf};
-use zterm_core::channel::ChannelState;
-use zterm_ui::{AppContext, SingletonEntity};
 use winreg::enums::{HKEY_CURRENT_USER, KEY_SET_VALUE};
 use winreg::RegKey;
+use zterm_core::channel::ChannelState;
+use zterm_ui::{AppContext, SingletonEntity};
 
 /// The registry subkey Windows scans on sign-in to launch per-user startup apps.
 const RUN_SUBKEY: &str = r"Software\Microsoft\Windows\CurrentVersion\Run";

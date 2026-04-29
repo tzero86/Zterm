@@ -1,4 +1,4 @@
-﻿mod in_band_command_executor;
+mod in_band_command_executor;
 #[cfg(feature = "local_tty")]
 mod local_command_executor;
 #[cfg(feature = "local_tty")]
@@ -151,8 +151,8 @@ fn new_command_executor_for_local_tty_session(
     use remote_server_executor::RemoteServerCommandExecutor;
     use settings::Setting as _;
     use tmux_executor::TmuxCommandExecutor;
-    use zterm_ui::SingletonEntity as _;
     use wsl_command_executor::WslCommandExecutor;
+    use zterm_ui::SingletonEntity as _;
 
     use crate::{
         features::FeatureFlag,

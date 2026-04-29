@@ -54,7 +54,6 @@ use zterm_core::{
     settings::ToggleableSetting as _,
     ui::theme::{AnsiColorIdentifier, Fill as ThemeFill},
 };
-use zterm_util::path::user_friendly_path;
 use zterm_ui::{
     elements::{
         ChildView, ConstrainedBox, Container, CornerRadius, CrossAxisAlignment, Element, Empty,
@@ -73,6 +72,7 @@ use zterm_ui::{
     Action, AppContext, Entity, ModelHandle, SingletonEntity, TypedActionView, View, ViewContext,
     ViewHandle,
 };
+use zterm_util::path::user_friendly_path;
 
 const MAIN_SECTION_MARGIN: f32 = 12.;
 const SUB_SECTION_MARGIN: f32 = 8.;
@@ -1541,7 +1541,9 @@ impl CodePageWidget {
             label_row.add_child(
                 Container::new(
                     ConstrainedBox::new(
-                        status_icon.to_zterm_ui_icon(ThemeFill::Solid(color)).finish(),
+                        status_icon
+                            .to_zterm_ui_icon(ThemeFill::Solid(color))
+                            .finish(),
                     )
                     .with_width(STATUS_ICON_SIZE)
                     .with_height(STATUS_ICON_SIZE)

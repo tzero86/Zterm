@@ -3,7 +3,6 @@ use std::path::PathBuf;
 
 use zterm_core::ui::theme::color::internal_colors;
 use zterm_core::{send_telemetry_from_ctx, ui::Icon};
-use zterm_util::path::LineAndColumnArg;
 use zterm_ui::{
     elements::{
         resizable_state_handle, ChildView, ConstrainedBox, Container, CrossAxisAlignment,
@@ -15,6 +14,7 @@ use zterm_ui::{
     AppContext, Entity, FocusContext, ModelHandle, SingletonEntity, TypedActionView, View,
     ViewContext, ViewHandle, WeakViewHandle,
 };
+use zterm_util::path::LineAndColumnArg;
 
 use crate::ai::agent::conversation::AIConversationId;
 use crate::ai::agent_conversations_model::AgentConversationsModel;

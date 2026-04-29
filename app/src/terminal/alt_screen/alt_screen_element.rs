@@ -1,4 +1,4 @@
-﻿use crate::appearance::Appearance;
+use crate::appearance::Appearance;
 use crate::pane_group::SplitPaneState;
 use crate::settings::EnforceMinimumContrast;
 use crate::terminal::blockgrid_renderer::GridRenderParams;
@@ -29,11 +29,11 @@ use parking_lot::FairMutex;
 use pathfinder_geometry::vector::vec2f;
 use vec1::Vec1;
 use zterm_core::features::FeatureFlag;
-use zterm_util::user_input::UserInput;
 use zterm_ui::elements::new_scrollable::{NewScrollableElement, ScrollableAxis};
 use zterm_ui::event::{KeyState, ModifiersState};
 use zterm_ui::platform::keyboard::KeyCode;
 use zterm_ui::text::SelectionType;
+use zterm_util::user_input::UserInput;
 
 use super::{should_intercept_mouse, should_intercept_scroll};
 use std::ops::{Deref as _, Range};

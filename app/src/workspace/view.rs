@@ -233,7 +233,8 @@ use crate::drive::import::modal::{ImportModal, ImportModalEvent};
 use crate::drive::workflows::arguments::ArgumentsState;
 use crate::drive::workflows::modal::{WorkflowModal, WorkflowModalEvent};
 use crate::drive::{
-    CloudObjectTypeAndId, DriveObjectType, DrivePanel, DrivePanelEvent, OpenZtermDriveObjectSettings,
+    CloudObjectTypeAndId, DriveObjectType, DrivePanel, DrivePanelEvent,
+    OpenZtermDriveObjectSettings,
 };
 use crate::experiments::{BlockOnboarding, Experiment};
 use crate::menu::{
@@ -388,10 +389,10 @@ use std::time::Duration;
 use std::time::{SystemTime, UNIX_EPOCH};
 use zterm_core::context_flag::ContextFlag;
 use zterm_core::semantic_selection::SemanticSelection;
-use zterm_util::path::{user_friendly_path, LineAndColumnArg};
 use zterm_ui::fonts::Weight;
 use zterm_ui::modals::{AlertDialogWithCallbacks, AppModalCallback};
 use zterm_ui::windowing::{StateEvent, WindowManager};
+use zterm_util::path::{user_friendly_path, LineAndColumnArg};
 
 use zterm_core::user_preferences::GetUserPreferences as _;
 use zterm_ui::clipboard::ClipboardContent;
@@ -14534,7 +14535,9 @@ impl Workspace {
         ctx.focus_self();
         ctx.notify();
         self.set_selected_object(
-            Some(ZtermDriveItemId::Object(workflow.cloud_object_type_and_id())),
+            Some(ZtermDriveItemId::Object(
+                workflow.cloud_object_type_and_id(),
+            )),
             ctx,
         );
     }
@@ -18421,11 +18424,14 @@ impl Workspace {
         let text_color = theme.main_text_color(Fill::Solid(bg_color)).into_solid();
 
         // Left side: alert icon + bold heading + regular description, all inline.
-        let icon =
-            ConstrainedBox::new(Icon::AlertCircle.to_zterm_ui_icon(text_color.into()).finish())
-                .with_width(16.)
-                .with_height(16.)
-                .finish();
+        let icon = ConstrainedBox::new(
+            Icon::AlertCircle
+                .to_zterm_ui_icon(text_color.into())
+                .finish(),
+        )
+        .with_width(16.)
+        .with_height(16.)
+        .finish();
 
         let ui_font_family = appearance.ui_font_family();
         const BANNER_FONT_SIZE: f32 = 12.;

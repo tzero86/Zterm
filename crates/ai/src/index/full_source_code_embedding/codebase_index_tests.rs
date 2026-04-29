@@ -22,8 +22,8 @@ use std::collections::HashMap;
 use std::ops::Range;
 use std::path::PathBuf;
 use std::sync::Arc;
-use zterm_util::standardized_path::StandardizedPath;
 use zterm_ui::{App, SingletonEntity};
+use zterm_util::standardized_path::StandardizedPath;
 
 use super::{
     CodebaseIndex, CodebaseIndexTimeStampMetadata, TreeSourceSyncState,

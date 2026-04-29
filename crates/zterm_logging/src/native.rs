@@ -9,8 +9,8 @@ use anyhow::Result;
 use chrono::Local;
 use log::LevelFilter;
 use std::sync::OnceLock;
-use zterm_core::features::FeatureFlag;
 use zip::{CompressionMethod, ZipWriter, write::SimpleFileOptions};
+use zterm_core::features::FeatureFlag;
 
 use crate::{LogConfig, LogDestination};
 use zterm_core::channel::ChannelState;

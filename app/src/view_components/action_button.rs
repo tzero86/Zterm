@@ -1,4 +1,4 @@
-﻿use pathfinder_color::ColorU;
+use pathfinder_color::ColorU;
 use pathfinder_geometry::vector::{vec2f, Vector2F};
 use std::{borrow::Cow, sync::Arc};
 use zterm_core::ui::{
@@ -820,7 +820,9 @@ impl View for ActionButton {
                 row.add_child(
                     Container::new(
                         ConstrainedBox::new(
-                            Icon::ChevronDown.to_zterm_ui_icon(text_color.into()).finish(),
+                            Icon::ChevronDown
+                                .to_zterm_ui_icon(text_color.into())
+                                .finish(),
                         )
                         .with_width(icon_size)
                         .with_height(icon_size)

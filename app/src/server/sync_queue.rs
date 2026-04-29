@@ -8,7 +8,9 @@ use std::{
     time::Duration,
 };
 use zterm_graphql::scalars::time::ServerTimestamp;
-use zterm_ui::{r#async::FutureId, Entity, ModelContext, RequestState, RetryOption, SingletonEntity};
+use zterm_ui::{
+    r#async::FutureId, Entity, ModelContext, RequestState, RetryOption, SingletonEntity,
+};
 
 use lazy_static::lazy_static;
 use uuid::Uuid;
