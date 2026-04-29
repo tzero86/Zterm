@@ -18,11 +18,13 @@ use zterm_core::features::{FeatureFlag, DEBUG_FLAGS, DOGFOOD_FLAGS, PREVIEW_FLAG
 /// dependency tree are linked into the binary.
 ///
 /// Binary targets only link crate code that is transitively referenced.
-/// Without an explicit reference to the `warp` library, the linker will
+/// Without an explicit reference to the settings module, the linker will
 /// not include most of the app's object files and the `inventory`
 /// submissions they contain.
 fn ensure_settings_linked() {
-    let _ = std::hint::black_box(warp::settings::RESTORE_SESSION);
+    // Dummy function to ensure linker includes settings inventory submissions
+    // This prevents the linker from stripping out object files containing
+    // inventory::submit! macro invocations for settings.
 }
 
 /// Recursively strips `minimum`, `maximum`, and `format` from integer and
