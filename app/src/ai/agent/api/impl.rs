@@ -129,6 +129,24 @@ pub async fn generate_multi_agent_output(
         mcp_context: params.mcp_context.map(Into::into),
     };
 
+    // TODO: Integrate local LLM when enabled
+    // When AppContext is available, add:
+    // use crate::ai::local_llm::{LocalLLMClient, LocalLLMSettings};
+    //
+    // if let Some(local_settings) = LocalLLMSettings::as_ref(app_context) {
+    //     if local_settings.is_enabled() {
+    //         if let Some(model_name) = &local_settings.selected_model {
+    //             log::info!("Using local LLM model: {}", model_name);
+    //             let client = LocalLLMClient::new(local_settings.base_url());
+    //             if let Ok(stream) = generate_local_llm_output(client, model_name.clone(), params).await {
+    //                 return Ok(stream);
+    //             } else {
+    //                 log::warn!("Local LLM inference failed, falling back to cloud");
+    //             }
+    //         }
+    //     }
+    // }
+
     let response_stream = server_api.generate_multi_agent_output(&request).await;
     match response_stream {
         Ok(stream) => {
@@ -251,3 +269,25 @@ fn get_supported_cli_agent_tools(params: &RequestParams) -> Vec<api::ToolType> {
 #[cfg(test)]
 #[path = "impl_tests.rs"]
 mod tests;
+
+/// Generate output using a local LLM provider
+/// 
+/// This function will be called when local LLM inference is enabled.
+/// It converts the request to the local LLM format and streams responses back.
+#[allow(dead_code)]
+async fn generate_local_llm_output(
+    _client: crate::ai::local_llm::LocalLLMClient,
+    _model: String,
+    _params: RequestParams,
+) -> Result<ResponseStream, ConvertToAPITypeError> {
+    // TODO: Implement local LLM inference
+    // 1. Extract messages from params.input
+    // 2. Call client.generate() with the messages and model
+    // 3. Wrap the stream to convert ChatChunk responses to api::Response format
+    // 4. Return the wrapped stream
+    
+    use anyhow::anyhow;
+    Err(ConvertToAPITypeError::Other(anyhow!(
+        "Local LLM integration not yet fully implemented"
+    )))
+}
