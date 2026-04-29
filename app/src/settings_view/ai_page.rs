@@ -10,6 +10,7 @@ use crate::ai::execution_profiles::profiles::{
 };
 use crate::ai::execution_profiles::{ActionPermission, WriteToPtyPermission};
 use crate::ai::llms::{LLMId, LLMPreferences, LLMPreferencesEvent};
+use crate::ai::local_llm::{LocalLLMSettings};
 use crate::ai::mcp::TemplatableMCPServerManager;
 use crate::ai::paths::host_native_absolute_path;
 use crate::auth::auth_manager::{AuthManager, LoginGatedFeature};
@@ -1509,6 +1510,7 @@ impl AISettingsPageView {
                 }
                 widgets.push(Box::new(ApiKeysWidget::new(ctx)));
                 widgets.push(Box::new(AwsBedrockWidget::new(ctx)));
+                widgets.push(Box::new(LocalLLMWidget::default()));
                 widgets.push(Box::new(OtherAIWidget::default()));
                 if FeatureFlag::AgentModeComputerUse.is_enabled() {
                     widgets.push(Box::new(CloudAgentComputerUseWidget::default()));
@@ -5795,6 +5797,200 @@ impl SettingsWidget for CloudAgentComputerUseWidget {
         }
 
         column.finish()
+    }
+}
+
+#[derive(Default)]
+struct LocalLLMWidget {
+    local_llm_provider_dropdown: Option<ViewHandle<Dropdown<AISettingsPageAction>>>,
+    local_llm_model_dropdown: Option<ViewHandle<Dropdown<AISettingsPageAction>>>,
+}
+
+impl LocalLLMWidget {
+    fn render_local_llm_section(
+        &self,
+        _view: &AISettingsPageView,
+        appearance: &Appearance,
+        app: &AppContext,
+    ) -> Box<dyn Element> {
+        let ai_settings = AISettings::as_ref(app);
+        let is_any_ai_enabled = ai_settings.is_any_ai_enabled(app);
+        let local_llm_settings = LocalLLMSettings::as_ref(app);
+
+        let enabled = local_llm_settings.enabled;
+
+        let mut column = Flex::column()
+            .with_child(render_separator(appearance))
+            .with_child(
+                Container::new(
+                    Flex::row()
+                        .with_main_axis_size(MainAxisSize::Max)
+                        .with_main_axis_alignment(MainAxisAlignment::SpaceBetween)
+                        .with_child(
+                            build_sub_header(
+                                appearance,
+                                "Local LLM Configuration",
+                                Some(styles::header_font_color(is_any_ai_enabled, app)),
+                            )
+                            .finish(),
+                        )
+                        .finish(),
+                )
+                .with_padding_bottom(HEADER_PADDING)
+                .finish(),
+            );
+
+        if is_any_ai_enabled {
+            // Provider selection
+            column.add_child(
+                Container::new(
+                    Flex::column()
+                        .with_child(
+                            Flex::row()
+                                .with_child(
+                                    Box::new(
+                                        Text::new_inline(
+                                            "Provider: ",
+                                            appearance.ui_font_family(),
+                                            CONTENT_FONT_SIZE,
+                                        )
+                                        .with_color(appearance.theme().active_ui_text_color().into()),
+                                    ),
+                                )
+                                .with_child(
+                                    Box::new(
+                                        Text::new_inline(
+                                            local_llm_settings.provider.display_name(),
+                                            appearance.ui_font_family(),
+                                            CONTENT_FONT_SIZE,
+                                        )
+                                        .with_color(appearance.theme().accent().into_solid()),
+                                    ),
+                                )
+                                .finish(),
+                        )
+                        .finish(),
+                )
+                .with_padding_left(16.)
+                .with_padding_right(16.)
+                .with_padding_top(8.)
+                .with_padding_bottom(8.)
+                .finish(),
+            );
+
+            // Health check status
+            if enabled {
+                column.add_child(
+                    Container::new(
+                        Flex::column()
+                            .with_child(
+                                Box::new(
+                                    Text::new_inline(
+                                        format!(
+                                            "Status: Enabled (using {} mode)",
+                                            local_llm_settings.provider.display_name()
+                                        ),
+                                        appearance.ui_font_family(),
+                                        CONTENT_FONT_SIZE,
+                                    )
+                                    .with_color(appearance.theme().accent().into_solid()),
+                                ),
+                            )
+                            .finish(),
+                    )
+                    .with_padding_left(16.)
+                    .with_padding_right(16.)
+                    .with_padding_top(8.)
+                    .with_padding_bottom(8.)
+                    .finish(),
+                );
+            } else {
+                column.add_child(
+                    Container::new(
+                        Flex::column()
+                            .with_child(
+                                Box::new(
+                                    Text::new_inline(
+                                        "Status: Disabled - Enable to use local LLM",
+                                        appearance.ui_font_family(),
+                                        CONTENT_FONT_SIZE,
+                                    )
+                                    .with_color(appearance.theme().disabled_ui_text_color().into()),
+                                ),
+                            )
+                            .finish(),
+                    )
+                    .with_padding_left(16.)
+                    .with_padding_right(16.)
+                    .with_padding_top(8.)
+                    .with_padding_bottom(8.)
+                    .finish(),
+                );
+            }
+
+            // Selected model
+            if let Some(model) = &local_llm_settings.selected_model {
+                let model_name = model.clone();
+                column.add_child(
+                    Container::new(
+                        Flex::column()
+                            .with_child(
+                                Flex::row()
+                                    .with_child(
+                                        Box::new(
+                                            Text::new_inline(
+                                                "Selected Model: ",
+                                                appearance.ui_font_family(),
+                                                CONTENT_FONT_SIZE,
+                                            )
+                                            .with_color(appearance.theme().active_ui_text_color().into()),
+                                        ),
+                                    )
+                                    .with_child(
+                                        Box::new(
+                                            Text::new_inline(
+                                                model_name,
+                                                appearance.ui_font_family(),
+                                                CONTENT_FONT_SIZE,
+                                            )
+                                            .with_color(appearance.theme().accent().into_solid()),
+                                        ),
+                                    )
+                                    .finish(),
+                            )
+                            .finish(),
+                    )
+                    .with_padding_left(16.)
+                    .with_padding_right(16.)
+                    .with_padding_top(8.)
+                    .with_padding_bottom(8.)
+                    .finish(),
+                );
+            }
+        }
+
+        column.finish()
+    }
+}
+
+impl SettingsWidget for LocalLLMWidget {
+    type View = AISettingsPageView;
+
+    fn search_terms(&self) -> &str {
+        "local llm model ollama lm studio openai compatible custom inference endpoint"
+    }
+
+    fn should_render(&self, app: &AppContext) -> bool {
+        AISettings::as_ref(app).is_any_ai_enabled(app)
+    }
+
+    fn render(
+        &self,
+        view: &Self::View,
+        appearance: &Appearance,
+        app: &AppContext,
+    ) -> Box<dyn Element> {
+        self.render_local_llm_section(view, appearance, app)
     }
 }
 
