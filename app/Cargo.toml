@@ -623,6 +623,10 @@ default = [
     "open_zterm_new_settings_modes",
     "skip_firebase_anonymous_user",
     "settings_file",
+    "orchestration",
+    "local_computer_use",
+    "agent_harness",
+    "solo_user_byok",
 ]
 # Enable this feature to automatically perform heap profiling.  NOTE: This will
 # substantially slow down program execution.
