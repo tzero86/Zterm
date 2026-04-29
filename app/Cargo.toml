@@ -725,7 +725,7 @@ resize_fix = []
 pluggable_notifications = []
 # This enables `read_files` to support images.
 read_image_files = []
-# This feature enables plugin support in Warp. Note that its typically checked
+# This feature enables plugin support in Zterm. Note that its typically checked
 # directly, rather than via the `FeatureFlag` enum, because its value is
 # required early in the app lifecycle prior to `FeatureFlag` initialization.
 plugin_host = ["dep:rquickjs", "dep:zterm_js", "zterm_cli/plugin_host"]

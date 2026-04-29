@@ -36,7 +36,7 @@ use zterm_ui::{
     AppContext, Element, SingletonEntity,
 };
 
-const OPEN_ZTERM_AI_ITEM_BODY_TEXT: &str = "Ask Warp AI for command suggestions";
+const OPEN_ZTERM_AI_ITEM_BODY_TEXT: &str = "Ask Zterm AI for command suggestions";
 const TRANSLATE_WITH_ZTERM_AI_ITEM_BODY_TEXT: &str = "Translate into shell command using Zterm AI";
 
 #[derive(Clone, Debug)]
@@ -140,7 +140,7 @@ impl SearchItem for ZtermAISearchItem {
     }
 
     fn accessibility_label(&self) -> String {
-        format!("Warp AI: {}", self.item_body_text())
+        format!("Zterm AI: {}", self.item_body_text())
     }
 }
 

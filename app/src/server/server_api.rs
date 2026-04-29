@@ -34,11 +34,11 @@ use prost::Message;
 use referral::ReferralsClient;
 use team::TeamClient;
 use url::Url;
+use workspace::WorkspaceClient;
 use zterm_core::context_flag::ContextFlag;
 use zterm_core::errors::{register_error, AnyhowErrorExt, ErrorExt};
 use zterm_managed_secrets::client::ManagedSecretsClient;
 use zterm_ui::{r#async::BoxFuture, ModelContext};
-use workspace::WorkspaceClient;
 
 use crate::server::telemetry::TelemetryApi;
 use crate::settings::PrivacySettingsSnapshot;
@@ -157,7 +157,7 @@ pub enum AIApiError {
     #[error("Request failed due to lack of AI quota.")]
     QuotaLimit,
 
-    #[error("Warp is currently overloaded. Please try again later.")]
+    #[error("Service is currently overloaded. Please try again later.")]
     ServerOverloaded,
 
     #[error("Internal error occurred at transport layer.")]
@@ -327,7 +327,7 @@ pub enum TranscribeError {
     #[error("Request failed due to lack of Voice quota.")]
     QuotaLimit,
 
-    #[error("Warp is currently overloaded. Please try again later.")]
+    #[error("Service is currently overloaded. Please try again later.")]
     ServerOverloaded,
 
     #[error("Internal error occurred at transport layer.")]

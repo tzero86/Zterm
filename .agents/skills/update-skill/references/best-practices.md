@@ -1,4 +1,4 @@
-﻿# Best Practices for Zterm Skills
+# Best Practices for Zterm Skills
 
 Detailed authoring guidance for creating effective skills in `.agents/skills/`.
 
@@ -32,11 +32,11 @@ For skills with multiple independent domains, organize by domain:
 
 ```
 skill-name/
-├── SKILL.md (overview and navigation)
-└── references/
-    ├── domain-a.md
-    ├── domain-b.md
-    └── domain-c.md
++-- SKILL.md (overview and navigation)
++-- references/
+    +-- domain-a.md
+    +-- domain-b.md
+    +-- domain-c.md
 ```
 
 When the user works with domain-a, the agent only loads domain-a.md, not the others.
@@ -66,12 +66,12 @@ The description field enables skill discovery. the agent uses it to decide when 
 ### Description Best Practices
 
 1. **Be specific and include key terms**
-   - Good: "Add a new feature flag to gate code changes in the Warp codebase."
+   - Good: "Add a new feature flag to gate code changes in the Zterm codebase."
    - Avoid: "Helps with features."
 
 2. **Include both what and when**
    - What the skill does: "Write, improve, and run Rust unit tests"
-   - When to use it: "in the warp Rust codebase"
+   - When to use it: "in the Zterm Rust codebase"
 
 3. **Write in third person**
    - Good: "Adds feature flags to gate code changes"
@@ -225,49 +225,49 @@ if FeatureFlag::YourFeatureName.is_enabled() {
 
 ## Common Anti-Patterns
 
-### ❌ Windows-Style Paths
+### ? Windows-Style Paths
 
 Always use forward slashes:
 
-- ✓ Good: `scripts/helper.py`, `references/guide.md`
-- ✗ Avoid: `scripts\helper.py`, `references\guide.md`
+- ? Good: `scripts/helper.py`, `references/guide.md`
+- ? Avoid: `scripts\helper.py`, `references\guide.md`
 
-### ❌ Vague Descriptions
+### ? Vague Descriptions
 
 Be specific:
 
-- ✗ Avoid: "Helps with documents"
-- ✓ Good: "Extract text and tables from PDF files"
+- ? Avoid: "Helps with documents"
+- ? Good: "Extract text and tables from PDF files"
 
-### ❌ Too Many Options
+### ? Too Many Options
 
 Don't present multiple approaches unless necessary:
 
-- ✗ Avoid: "You can use pypdf, or pdfplumber, or PyMuPDF, or..."
-- ✓ Good: "Use pdfplumber for text extraction. For scanned PDFs requiring OCR, use pdf2image with pytesseract instead."
+- ? Avoid: "You can use pypdf, or pdfplumber, or PyMuPDF, or..."
+- ? Good: "Use pdfplumber for text extraction. For scanned PDFs requiring OCR, use pdf2image with pytesseract instead."
 
-### ❌ Time-Sensitive Information
+### ? Time-Sensitive Information
 
 Don't include dates or version-specific guidance:
 
-- ✗ Avoid: "If you're doing this before August 2025, use the old API."
-- ✓ Good: Use a "Current method" and "Old patterns" section with deprecation notes
+- ? Avoid: "If you're doing this before August 2025, use the old API."
+- ? Good: Use a "Current method" and "Old patterns" section with deprecation notes
 
-### ❌ Inconsistent Terminology
+### ? Inconsistent Terminology
 
 Choose one term and use it throughout:
 
-- ✗ Avoid: Mix "API endpoint", "URL", "API route", "path"
-- ✓ Good: Always "API endpoint"
+- ? Avoid: Mix "API endpoint", "URL", "API route", "path"
+- ? Good: Always "API endpoint"
 
-### ❌ Explaining the Obvious
+### ? Explaining the Obvious
 
 Skip explanations for concepts the agent already knows:
 
-- ✗ Avoid: "Git is a version control system that tracks changes in files..."
-- ✓ Good: "Use `git --no-pager diff` to see changes without pagination"
+- ? Avoid: "Git is a version control system that tracks changes in files..."
+- ? Good: "Use `git --no-pager diff` to see changes without pagination"
 
-### ❌ Over-Structuring Simple Skills
+### ? Over-Structuring Simple Skills
 
 Not every skill needs an Overview, Best Practices, and Examples section. Use only what adds value:
 
@@ -307,4 +307,4 @@ Skills improve through usage. When updating a skill:
 3. **Update targeted sections** - Fix specific issues without over-explaining
 4. **Test changes** - Use the skill on similar tasks to verify improvements
 
-Keep iterations focused. Don't add content preemptively—only add what's proven necessary through real usage.
+Keep iterations focused. Don't add content preemptively�only add what's proven necessary through real usage.

@@ -1,13 +1,13 @@
-﻿---
+---
 name: create-pr
-description: Create a pull request in the warp repository for the current branch. Use when the user mentions opening a PR, creating a pull request, submitting changes for review, or preparing code for merge.
+description: Create a pull request in the Zterm repository for the current branch. Use when the user mentions opening a PR, creating a pull request, submitting changes for review, or preparing code for merge.
 ---
 
 # create-pr
 
 ## Overview
 
-This guide covers best practices for creating pull requests in the warp repository, including merging master, running presubmit checks, linking Linear tasks, ensuring appropriate test coverage, and structuring your PR for effective review.
+This guide covers best practices for creating pull requests in the Zterm repository, including merging master, running presubmit checks, linking Linear tasks, ensuring appropriate test coverage, and structuring your PR for effective review.
 
 ## Related Skills
 
@@ -70,7 +70,7 @@ This helps you:
 - Catch unintended changes before review
 - Write an accurate PR description
 - Ensure you're comparing against the correct base branch
-- **Tests:** Include tests when required—bug fixes (regression test), algorithmic code (unit tests), UI components (layout test), P0 use cases (integration test). See Testing Requirements below.
+- **Tests:** Include tests when required�bug fixes (regression test), algorithmic code (unit tests), UI components (layout test), P0 use cases (integration test). See Testing Requirements below.
 
 ### 4. Link to Linear task
 
@@ -128,7 +128,7 @@ Add changelog entries when appropriate using the format at the bottom of the PR 
 When committing changes or creating a PR, include attribution at the end of every commit message or PR description:
 
 ```
-Co-Authored-By: Warp <agent@warp.dev>
+Co-Authored-By: Zterm <agent@warp.dev>
 ```
 
 ## Testing Requirements

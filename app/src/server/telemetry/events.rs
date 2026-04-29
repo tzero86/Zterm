@@ -401,7 +401,7 @@ pub enum SharingDialogSource {
     DriveIndex,
     /// The sharing dialog was auto-opened from shared session creation.
     StartedSessionShare,
-    /// The user intented into Warp with an email address to invite.
+    /// The user intented into Zterm with an email address to invite.
     InviteeRequest,
     /// The user jumped from an inherited ACL to its definition on a parent object.
     InheritedPermission,
@@ -1358,7 +1358,7 @@ pub enum TelemetryEvent {
     DatabaseReadError(String),
     DatabaseWriteError(String),
     AppStartup(AppStartupInfo),
-    /// The native app was opened while logged out. Since Warp requires login,
+    /// The native app was opened while logged out. Since Zterm requires login,
     /// this usually means a new user.
     LoggedOutStartup,
     /// The download source, if it can be determined. Will only be sent when
@@ -1602,11 +1602,11 @@ pub enum TelemetryEvent {
     InitialWorkingDirectoryConfigurationChanged {
         advanced_mode_enabled: bool,
     },
-    /// Opened legacy Warp AI.
+    /// Opened legacy Zterm AI.
     OpenedZtermAI {
         source: OpenedZtermAISource,
     },
-    /// Issued legacy Warp AI request.
+    /// Issued legacy Zterm AI request.
     ZtermAIRequestIssued {
         result: ZtermAIRequestResult,
     },
@@ -1738,7 +1738,7 @@ pub enum TelemetryEvent {
         source: ZtermDriveSource,
         is_code_mode_v2: bool,
     },
-    // Toggled the legacy Warp AI side panel.
+    // Toggled the legacy Zterm AI side panel.
     ToggleZtermAI {
         opened: bool,
     },
@@ -1987,7 +1987,7 @@ pub enum TelemetryEvent {
     /// language auto-detection false-positive.
     AgentModePotentialAutoDetectionFalsePositive(AgentModeAutoDetectionFalsePositivePayload),
 
-    /// This is a telemetry event used to help track performance of Agent Predict in Warp,
+    /// This is a telemetry event used to help track performance of Agent Predict in Zterm,
     /// by keeping track of the context given and the predictions generated.
     AgentModePrediction {
         was_suggestion_accepted: bool,
@@ -2622,7 +2622,7 @@ pub enum TelemetryEvent {
     AgentManagementViewOpenedSession,
     /// Emitted when the user copies a session link from the Agent Management View.
     AgentManagementViewCopiedSessionLink,
-    /// Detected that Warp is running in an isolated sandbox.
+    /// Detected that Zterm is running in an isolated sandbox.
     DetectedIsolationPlatform {
         platform: zterm_isolation_platform::IsolationPlatformType,
     },
@@ -5449,7 +5449,9 @@ impl TelemetryEventDesc for TelemetryEventDiscriminants {
             Self::AgentModeRatedResponse => {
                 EnablementState::Flag(FeatureFlag::GlobalAIAnalyticsBanner)
             }
-            Self::ExecutedZtermDrivePrompt => EnablementState::Flag(FeatureFlag::AgentModeWorkflows),
+            Self::ExecutedZtermDrivePrompt => {
+                EnablementState::Flag(FeatureFlag::AgentModeWorkflows)
+            }
             Self::ImageReceived => EnablementState::Always,
             Self::FileExceededContextLimit => EnablementState::Always,
             Self::AgentModeError => EnablementState::Always,

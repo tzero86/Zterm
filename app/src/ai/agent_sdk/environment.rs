@@ -169,8 +169,8 @@ impl EnvironmentCommandRunner {
                         OutputFormat::Text | OutputFormat::Pretty
                     ) {
                         println!(
-                            "All Warp dev images contain Python and Node. For more information, see: {}\n",
-                            ZTERM_DEV_ENVIRONMENTS_REPO
+                            "All Zterm dev images contain Python and Node. For more information, see: {}\n",
+                                                        ZTERM_DEV_ENVIRONMENTS_REPO
                         );
                     }
                     output::print_list(image_infos, global_options.output_format);
@@ -353,8 +353,8 @@ impl EnvironmentCommandRunner {
                 ListZtermDevImagesResult::ListZtermDevImagesOutput(output) => {
                     if output.images.is_empty() {
                         super::report_fatal_error(
-                            anyhow::anyhow!("No Warp dev images available."),
-                            ctx,
+                            anyhow::anyhow!("No Zterm dev images available."),
+                                                        ctx,
                         );
                         return;
                     }
@@ -364,7 +364,7 @@ impl EnvironmentCommandRunner {
                     );
                     println!(
                         "All warpdotdev images contain Python and Node, in addition to language-specific tooling. For more info: {}\n",
-                        ZTERM_DEV_ENVIRONMENTS_REPO
+                                            ZTERM_DEV_ENVIRONMENTS_REPO
                     );
 
                     let mut image_choices: Vec<String> =

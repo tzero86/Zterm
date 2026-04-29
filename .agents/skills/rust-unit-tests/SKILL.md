@@ -1,9 +1,9 @@
-ï»¿---
+---
 name: rust-unit-tests
-description: Write, improve, and run Rust unit tests in the warp Rust codebase.
+description: Write, improve, and run Rust unit tests in the Zterm Rust codebase.
 ---
 
-# Rust Unit Tests in warp
+# Rust Unit Tests in Zterm
 
 ## Scope
 - This skill focuses on crate-level unit tests.
@@ -29,7 +29,7 @@ mod tests;
 
 ## Async and feature-gated code
 - For async logic, use `#[tokio::test]` when the code requires a runtime.
-- Prefer runtime feature checks (e.g., `FeatureFlag::X.is_enabled()`) over `#[cfg(...)]` so tests donâ€™t require recompilation to toggle behavior.
+- Prefer runtime feature checks (e.g., `FeatureFlag::X.is_enabled()`) over `#[cfg(...)]` so tests don’t require recompilation to toggle behavior.
 
 ## Quickstart harness (UI/model tests)
 - Prefer `zterm_ui::App::test` for deterministic unit tests around views/models.
@@ -81,7 +81,7 @@ let _flag = FeatureFlag::CreatingSharedSessions.override_enabled(true);
 assert_lines_approx_eq!(actual_lines, INLINE_BANNER_HEIGHT);
 ```
 - Concurrency: keep `model.lock()` scopes minimal; avoid nested/re-entrant locks in the same call chain.
-- Donâ€™t call `initialize_settings_for_tests` directly when using `initialize_app_for_terminal_view` (it already calls it).
+- Don’t call `initialize_settings_for_tests` directly when using `initialize_app_for_terminal_view` (it already calls it).
 - Async needs: use `#[tokio::test]` when a real runtime is required; otherwise prefer `App::test`.
 - Tests touching global/external state: consider `serial_test`'s `#[serial]` or local mocking instead of parallelism.
 

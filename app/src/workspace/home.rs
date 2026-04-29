@@ -8,15 +8,15 @@ use zterm_ui::ViewContext;
 use super::view::Workspace;
 use crate::pane_group::{AnyPaneContent, FilePane};
 
-const ZTERM_HOME_TITLE: &str = "Welcome to Warp on Web";
+const ZTERM_HOME_TITLE: &str = "Welcome to Zterm on Web";
 const ZTERM_HOME_CONTENT: &str = r#"
-Welcome to Warp on Web - your browser-based home for Zterm! 
+Welcome to Zterm on Web - your browser-based home for Zterm!
 Use Warp on Web to:
 * Join Shared Sessions
 * Create, View, and Edit Zterm Drive Objects
-* Manage your Warp Settings
+* Manage your Zterm Settings
 
-Warp on Web can also be used by your teammates and peers who don't have Warp downloaded yet to view your shared sessions, notebooks, and workflows."#;
+Zterm on Web can also be used by your teammates and peers who don't have Zterm downloaded yet to view your shared sessions, notebooks, and workflows."#;
 
 /// Create a static "home page" pane.
 pub fn create_home_pane(ctx: &mut ViewContext<Workspace>) -> Box<dyn AnyPaneContent> {

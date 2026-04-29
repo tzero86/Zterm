@@ -1301,7 +1301,7 @@ fn launch_command(
         return dispatch_command(ctx, command, global_options);
     }
 
-    let cli_name = zterm_cli::binary_name().unwrap_or_else(|| "warp".to_string());
+    let cli_name = zterm_cli::binary_name().unwrap_or_else(|| "zterm".to_string());
 
     let auth_state = AuthStateProvider::handle(ctx).as_ref(ctx).get();
     if !auth_state.is_logged_in() {
@@ -1370,7 +1370,7 @@ fn report_fatal_error(err: anyhow::Error, ctx: &mut AppContext) {
         if let Ok(path) = log_file_path() {
             let _ = write!(
                 message,
-                "\n\nFor more information, check Warp logs at {}",
+                "\n\nFor more information, check Zterm logs at {}",
                 path.display()
             );
         }

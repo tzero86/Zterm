@@ -185,10 +185,10 @@ impl AgentSource {
             AgentSource::Slack => "Slack",
             AgentSource::Cli => "CLI",
             AgentSource::ScheduledAgent => "Scheduled",
-            AgentSource::Interactive => "Warp (local agent)",
+            AgentSource::Interactive => "Zterm (local agent)",
             AgentSource::WebApp => "Oz Web",
             AgentSource::GitHubAction => "GitHub Action",
-            AgentSource::CloudMode => "Warp (cloud agent)",
+            AgentSource::CloudMode => "Zterm (cloud agent)",
         }
     }
 

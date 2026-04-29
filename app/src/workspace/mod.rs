@@ -667,7 +667,9 @@ pub fn init(app: &mut AppContext) {
             WorkspaceAction::CreatePersonalFolder,
         )
         .with_group(bindings::BindingGroup::Folders.as_str())
-        .with_context_predicate(id!("Workspace") & id!(flags::ENABLE_ZTERM_DRIVE) & id!("IsOnline")),
+        .with_context_predicate(
+            id!("Workspace") & id!(flags::ENABLE_ZTERM_DRIVE) & id!("IsOnline"),
+        ),
         EditableBinding::new(
             NEW_TAB_BINDING_NAME,
             BindingDescription::new("Create new tab"),
@@ -915,7 +917,7 @@ pub fn init(app: &mut AppContext) {
     app.register_editable_bindings([
         EditableBinding::new(
             "workspace:terminate_app",
-            "Quit Warp",
+            "Quit Zterm",
             WorkspaceAction::TerminateApp,
         )
         .with_context_predicate(id!("Workspace"))

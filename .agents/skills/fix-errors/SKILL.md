@@ -1,11 +1,11 @@
 ﻿---
 name: fix-errors
-description: Fix compilation errors, linting issues, and test failures in the warp Rust codebase. Covers presubmit checks, WASM-specific errors, and running specific tests. Use when the user hits build errors, clippy or fmt failures, test failures, or needs to run or interpret presubmit before a PR.
+description: Fix compilation errors, linting issues, and test failures in the Zterm Rust codebase. Covers presubmit checks, WASM-specific errors, and running specific tests. Use when the user hits build errors, clippy or fmt failures, test failures, or needs to run or interpret presubmit before a PR.
 ---
 
 # fix-errors
 
-Fix compilation errors, linting issues, and test failures in the warp Rust codebase.
+Fix compilation errors, linting issues, and test failures in the Zterm Rust codebase.
 
 ## Overview
 

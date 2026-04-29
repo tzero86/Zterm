@@ -1120,8 +1120,8 @@ fn resolve_fallback_warping_message<V: View>(
         return None;
     }
     Some(match display_name.as_deref() {
-        Some(name) => format!("Warping with {name}."),
-        None => "Warping with another model.".to_owned(),
+        Some(name) => format!("Running with {name}."),
+        None => "Running with another model.".to_owned(),
     })
 }
 

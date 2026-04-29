@@ -82,15 +82,15 @@ use zterm_cli::agent::Harness;
 use zterm_core::command::ExitCode;
 use zterm_core::context_flag::ContextFlag;
 use zterm_core::HostId;
-use zterm_util::path::convert_wsl_to_windows_host_path;
-#[cfg(feature = "local_fs")]
-use zterm_util::path::LineAndColumnArg;
 use zterm_ui::elements::{
     Clipped, CrossAxisAlignment, DispatchEventResult, EventHandler, Flex, MainAxisSize, Shrinkable,
     Stack,
 };
 use zterm_ui::keymap::{Context, EditableBinding, FixedBinding};
 use zterm_ui::notification::NotificationSendError;
+use zterm_util::path::convert_wsl_to_windows_host_path;
+#[cfg(feature = "local_fs")]
+use zterm_util::path::LineAndColumnArg;
 
 use zterm_ui::windowing::WindowManager;
 use zterm_ui::{
@@ -2912,7 +2912,7 @@ impl PaneGroup {
             Banner::<PaneGroupAction>::new_permanently_dismissible(
                 BannerTextContent::formatted_text(vec![
                     FormattedTextFragment::plain_text(
-                        "Warp doesn't currently support your default shell, falling back to zsh.  ",
+                        "Zterm doesn't currently support your default shell, falling back to zsh.  ",
                     ),
                     FormattedTextFragment::hyperlink("Learn more", ZTERM_SHELL_COMPATIBILITY_DOCS),
                 ]),

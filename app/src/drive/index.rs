@@ -1064,7 +1064,11 @@ impl DriveIndex {
         NetworkStatus::as_ref(app).is_online()
     }
 
-    pub fn scroll_item_into_view(&mut self, item_id: ZtermDriveItemId, ctx: &mut ViewContext<Self>) {
+    pub fn scroll_item_into_view(
+        &mut self,
+        item_id: ZtermDriveItemId,
+        ctx: &mut ViewContext<Self>,
+    ) {
         self.clipped_scroll_state.scroll_to_position(ScrollTarget {
             position_id: item_id.drive_row_position_id(),
             mode: ScrollToPositionMode::FullyIntoView,
@@ -1728,7 +1732,7 @@ impl DriveIndex {
             (DriveIndexVariant::MainIndex, DriveIndexSection::JoinTeam) => {
                 if self.is_online(app) {
                     let join_teams_text = format!(
-                        "Collaborate with {} of your teammates already on Warp.",
+                        "Collaborate with {} of your teammates already on Zterm.",
                         UserWorkspaces::handle(app)
                             .as_ref(app)
                             .total_teammates_in_joinable_teams()
@@ -1799,7 +1803,8 @@ impl DriveIndex {
     }
 
     fn render_trash_row(&self, appearance: &Appearance, _: &AppContext) -> Box<dyn Element> {
-        let font_color = self.font_color_based_on_focused_state(appearance, ZtermDriveItemId::Trash);
+        let font_color =
+            self.font_color_based_on_focused_state(appearance, ZtermDriveItemId::Trash);
         let icon = Container::new(
             ConstrainedBox::new(Icon::Trash.to_zterm_ui_icon(font_color.into()).finish())
                 .with_width(SECTION_HEADER_FONT_SIZE)
@@ -2946,7 +2951,10 @@ impl DriveIndex {
         .finish()
     }
 
-    fn render_warp_drive_loading_icon(&self, appearance: &Appearance) -> Box<dyn zterm_ui::Element> {
+    fn render_warp_drive_loading_icon(
+        &self,
+        appearance: &Appearance,
+    ) -> Box<dyn zterm_ui::Element> {
         // Use same padding as icon_button (4px) to center the icon within ICON_DIMENSIONS
         let icon_button_padding = (ICON_DIMENSIONS - LOADING_ICON_WIDTH) / 2.;
         let loading_icon = Container::new(

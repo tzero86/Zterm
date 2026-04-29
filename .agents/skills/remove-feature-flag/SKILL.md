@@ -1,11 +1,11 @@
 ﻿---
 name: remove-feature-flag
-description: Remove a feature flag after it has been rolled out and stabilized in the Warp codebase.
+description: Remove a feature flag after it has been rolled out and stabilized in the Zterm codebase.
 ---
 
 # remove-feature-flag
 
-Remove a feature flag after it has been rolled out and stabilized in the Warp codebase.
+Remove a feature flag after it has been rolled out and stabilized in the Zterm codebase.
 
 ## Overview
 

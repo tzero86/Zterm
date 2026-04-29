@@ -279,7 +279,7 @@ impl TelemetryEventDesc for AgentManagementTelemetryEventDiscriminants {
                 "User clicked Continue locally in the details panel"
             }
             #[cfg(target_family = "wasm")]
-            Self::TombstoneOpenInWarp => "User clicked Open in Warp in the tombstone",
+            Self::TombstoneOpenInWarp => "User clicked Open in Zterm in the tombstone",
             Self::CloudRunCancelled => "User cancelled a cloud run",
             Self::ConversationForked => "User forked a conversation",
         }

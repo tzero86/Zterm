@@ -80,7 +80,7 @@ impl IntentionSlide {
 
         let title = appearance
             .ui_builder()
-            .paragraph("Welcome to Warp")
+            .paragraph("Welcome to Zterm")
             .with_style(UiComponentStyles {
                 font_size: Some(36.),
                 font_weight: Some(Weight::Medium),
@@ -260,10 +260,11 @@ impl IntentionSlide {
                 .with_main_axis_size(MainAxisSize::Min)
                 .with_cross_axis_alignment(CrossAxisAlignment::Start);
             for &item in items {
-                let icon_el = ConstrainedBox::new(Icon::Check.to_zterm_ui_icon(check_fill).finish())
-                    .with_width(16.)
-                    .with_height(16.)
-                    .finish();
+                let icon_el =
+                    ConstrainedBox::new(Icon::Check.to_zterm_ui_icon(check_fill).finish())
+                        .with_width(16.)
+                        .with_height(16.)
+                        .finish();
                 let text_el = appearance
                     .ui_builder()
                     .paragraph(item.to_string())

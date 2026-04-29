@@ -55,7 +55,7 @@ const DESCRIPTION_TEXT: &str = "Rules enhance the agent by providing structured 
 const SEARCH_PLACEHOLDER_TEXT: &str = "Search rules";
 const ZERO_STATE_TEXT: &str = "Once you add a rule, it will be shown here.";
 const ZERO_STATE_TEXT_PROJECT: &str =
-    "Once you generate a WARP.md rules file for a project, it will appear here.";
+    "Once you generate a ZTERM.md rules file for a project, it will appear here.";
 
 const DISABLED_BANNER_TEXT: &str =
     "Your rules are disabled and won't be used as context in sessions. You can ";
@@ -527,15 +527,15 @@ impl RuleView {
             if is_selected {
                 container = container
                     .with_background(appearance.theme().surface_2())
-                    .with_corner_radius(CornerRadius::with_all(zterm_ui::elements::Radius::Pixels(
-                        4.,
-                    )));
+                    .with_corner_radius(CornerRadius::with_all(
+                        zterm_ui::elements::Radius::Pixels(4.),
+                    ));
             } else if state.is_hovered() {
                 container = container
                     .with_background(appearance.theme().surface_1())
-                    .with_corner_radius(CornerRadius::with_all(zterm_ui::elements::Radius::Pixels(
-                        4.,
-                    )));
+                    .with_corner_radius(CornerRadius::with_all(
+                        zterm_ui::elements::Radius::Pixels(4.),
+                    ));
             }
 
             container.finish()
@@ -609,7 +609,9 @@ impl RuleView {
                 .finish(),
         )
         .with_background(appearance.theme().accent_overlay())
-        .with_corner_radius(CornerRadius::with_all(zterm_ui::elements::Radius::Pixels(4.)))
+        .with_corner_radius(CornerRadius::with_all(zterm_ui::elements::Radius::Pixels(
+            4.,
+        )))
         .with_uniform_padding(style::BANNER_PADDING)
         .with_margin_bottom(style::ITEM_BOTTOM_MARGIN)
         .finish()
@@ -704,7 +706,9 @@ impl RuleView {
         Some(
             Container::new(row.finish())
                 .with_background(internal_colors::neutral_1(appearance.theme()))
-                .with_corner_radius(CornerRadius::with_all(zterm_ui::elements::Radius::Pixels(4.)))
+                .with_corner_radius(CornerRadius::with_all(zterm_ui::elements::Radius::Pixels(
+                    4.,
+                )))
                 .with_border(
                     Border::all(1.)
                         .with_border_color(internal_colors::neutral_2(appearance.theme())),
@@ -785,7 +789,9 @@ impl RuleView {
 
             Container::new(row.finish())
                 .with_background(bg_color)
-                .with_corner_radius(CornerRadius::with_all(zterm_ui::elements::Radius::Pixels(4.)))
+                .with_corner_radius(CornerRadius::with_all(zterm_ui::elements::Radius::Pixels(
+                    4.,
+                )))
                 .with_border(
                     Border::all(1.)
                         .with_border_color(internal_colors::neutral_2(appearance.theme())),

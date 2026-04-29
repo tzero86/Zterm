@@ -117,9 +117,9 @@ use zterm_core::channel::ChannelState;
 use zterm_editor::content::{
     edit::resolve_asset_source_relative_to_directory, mermaid_diagram::mermaid_asset_source,
 };
-use zterm_util::path::to_relative_path;
 use zterm_ui::elements::shimmering_text::ShimmeringTextStateHandle;
 use zterm_ui::elements::{Highlight, HighlightedRange};
+use zterm_util::path::to_relative_path;
 
 pub const STATUS_ICON_SIZE_DELTA: f32 = 4.;
 pub const STATUS_FOOTER_VERTICAL_PADDING: f32 = 4.;
@@ -127,9 +127,9 @@ pub const WAITING_FOR_USER_INPUT_MESSAGE: &str = "Agent waiting for instructions
 const IMAGE_SOURCE_LINK_LINE_INDEX: usize = 1;
 
 const ERROR_APOLOGY_TEXT: &str = "I'm sorry, I couldn't complete that request.";
-const INTERNAL_ZTERM_ERROR: &str = "Internal Warp error.";
+const INTERNAL_ZTERM_ERROR: &str = "Internal Zterm error.";
 
-pub const LOAD_OUTPUT_MESSAGE: &str = "Warping...";
+pub const LOAD_OUTPUT_MESSAGE: &str = "Running...";
 pub const LOAD_OUTPUT_MESSAGE_FOR_ADJUSTING: &str = "Adjusting tasks...";
 pub const LOAD_OUTPUT_MESSAGE_FOR_PASSIVE_CODE_GEN: &str = "Generating fix...";
 pub const LOAD_OUTPUT_MESSAGE_FOR_CREATING_DIFF: &str = "Creating diff...";
@@ -2958,7 +2958,7 @@ pub fn render_failed_output(props: FailedOutputProps, app: &AppContext) -> Box<d
             )
         }
         RenderableAIError::ServerOverloaded => {
-            "Warp is currently overloaded. Please try again later.".to_string()
+            "Service is currently overloaded. Please try again later.".to_string()
         }
         RenderableAIError::InternalWarpError => {
             format!("{ERROR_APOLOGY_TEXT}\n\n{INTERNAL_ZTERM_ERROR}")

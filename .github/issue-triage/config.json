@@ -150,7 +150,7 @@
     },
     "area:ui-framework": {
       "color": "5319e7",
-      "description": "Core Warp UI framework, rendering, layout, and windowing infrastructure."
+      "description": "Core Zterm UI framework, rendering, layout, and windowing infrastructure."
     },
     "area:warp-drive": {
       "color": "0e8a16",
