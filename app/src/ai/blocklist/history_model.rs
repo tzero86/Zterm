@@ -29,6 +29,7 @@ use crate::ai::agent::AIAgentExchangeId;
 use crate::ai::agent::CancellationReason;
 use crate::ai::artifacts::Artifact;
 use crate::ai::document::ai_document_model::AIDocumentModel;
+use crate::auth::AuthStateProvider;
 use crate::input_suggestions::HistoryOrder;
 use crate::persistence::model::AgentConversationData;
 use crate::persistence::ModelEvent;
@@ -1360,6 +1361,7 @@ impl BlocklistAIHistoryModel {
         // If this conversation doesn't have server metadata yet, and it has a server conversation token,
         // fetch the metadata from the server.
         let should_fetch_metadata = FeatureFlag::CloudConversations.is_enabled()
+            && AuthStateProvider::as_ref(ctx).get().is_logged_in()
             && conversation.server_metadata().is_none()
             && conversation.server_conversation_token().is_some();
 
