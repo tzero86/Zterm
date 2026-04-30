@@ -3,7 +3,7 @@
 use crate::ai::local_llm::LocalLLMProvider;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use zterm_ui::{Entity, SingletonEntity};
+use zterm_ui::{AppContext, Entity, SingletonEntity};
 
 /// Settings for local LLM inference
 #[derive(Clone, Debug, Serialize, Deserialize, JsonSchema)]
@@ -75,6 +75,13 @@ impl LocalLLMSettings {
 impl Default for LocalLLMSettings {
     fn default() -> Self {
         Self::new()
+    }
+}
+
+impl LocalLLMSettings {
+    /// Initialize the singleton in the app context.
+    pub fn init(ctx: &mut AppContext) {
+        ctx.add_singleton_model(|_| LocalLLMSettings::new());
     }
 }
 

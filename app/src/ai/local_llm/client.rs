@@ -314,33 +314,33 @@ struct ModelData {
 // === Parsing Functions ===
 
 fn parse_sse_line(text: &str) -> anyhow::Result<ChatChunk> {
+    let mut content = String::new();
+    let mut finish_reason: Option<String> = None;
+
     for line in text.lines() {
         if line.starts_with("data: ") {
             let json_str = &line[6..];
             if json_str == "[DONE]" {
-                return Ok(ChatChunk {
-                    content: None,
-                    finish_reason: Some("stop".to_string()),
-                });
+                finish_reason = Some("stop".to_string());
+                break;
             }
 
-            match serde_json::from_str::<OpenAIChunk>(json_str) {
-                Ok(chunk) => {
-                    if let Some(choice) = chunk.choices.first() {
-                        return Ok(ChatChunk {
-                            content: choice.delta.content.clone(),
-                            finish_reason: choice.finish_reason.clone(),
-                        });
+            if let Ok(chunk) = serde_json::from_str::<OpenAIChunk>(json_str) {
+                if let Some(choice) = chunk.choices.first() {
+                    if let Some(c) = &choice.delta.content {
+                        content.push_str(c);
+                    }
+                    if choice.finish_reason.is_some() {
+                        finish_reason = choice.finish_reason.clone();
                     }
                 }
-                Err(_) => continue,
             }
         }
     }
 
     Ok(ChatChunk {
-        content: None,
-        finish_reason: None,
+        content: if content.is_empty() { None } else { Some(content) },
+        finish_reason,
     })
 }
 

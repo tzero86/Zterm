@@ -293,7 +293,11 @@ async fn generate_local_llm_output(
         .clone()
         .unwrap_or_else(|| ".".to_owned());
 
-    let client = LocalLLMClient::new(provider.clone(), provider.default_base_url());
+    let base_url = params
+        .local_llm_base_url
+        .clone()
+        .unwrap_or_else(|| provider.default_base_url().to_string());
+    let client = LocalLLMClient::new(provider.clone(), base_url);
 
     let tools = build_agent_tools();
     let mut messages = build_initial_messages(&params.input, &cwd);
@@ -620,7 +624,9 @@ async fn execute_tool_call(tc: &ToolCallInfo, cwd: &str) -> String {
 }
 
 async fn run_shell_command_in_cwd(command: &str, cwd: &str) -> String {
-    let output = {
+    const SHELL_TIMEOUT_SECS: u64 = 30;
+
+    let output_future = async {
         #[cfg(target_os = "windows")]
         {
             tokio::process::Command::new("cmd")
@@ -636,6 +642,20 @@ async fn run_shell_command_in_cwd(command: &str, cwd: &str) -> String {
                 .current_dir(cwd)
                 .output()
                 .await
+        }
+    };
+
+    let output = match tokio::time::timeout(
+        std::time::Duration::from_secs(SHELL_TIMEOUT_SECS),
+        output_future,
+    )
+    .await
+    {
+        Ok(result) => result,
+        Err(_) => {
+            return format!(
+                "Error: command timed out after {SHELL_TIMEOUT_SECS}s"
+            );
         }
     };
 

@@ -33,6 +33,7 @@ use crate::ai::blocklist::{BlocklistAIPermissions, RequestInput};
 use crate::ai::mcp::templatable_manager::TemplatableMCPServerInfo;
 use crate::ai::mcp::TemplatableMCPServerManager;
 use crate::settings::AISettings;
+use crate::ai::local_llm::LocalLLMSettings;
 use crate::terminal::safe_mode_settings::get_secret_obfuscation_mode;
 use crate::workspaces::user_workspaces::UserWorkspaces;
 use zterm_core::user_preferences::GetUserPreferences;
@@ -128,6 +129,8 @@ pub struct RequestParams {
     pub parent_agent_id: Option<String>,
     /// The display name for this agent (e.g. "Agent 1"), assigned by the orchestrator.
     pub agent_name: Option<String>,
+    /// Configured local LLM base URL (e.g. from LM Studio or Ollama settings).
+    pub local_llm_base_url: Option<String>,
 }
 
 pub type Event = Result<warp_multi_agent_api::ResponseEvent, Arc<AIApiError>>;
@@ -309,6 +312,7 @@ impl RequestParams {
             supported_tools_override: request_input.supported_tools_override.clone(),
             parent_agent_id: None,
             agent_name: None,
+            local_llm_base_url: LocalLLMSettings::as_ref(app).base_url().into(),
         }
     }
 }
