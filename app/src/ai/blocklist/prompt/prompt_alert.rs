@@ -367,7 +367,7 @@ impl PromptAlertView {
                     } else {
                         text_fragments.push(FormattedTextFragment::hyperlink(
                             CONTACT_SUPPORT_TEXT,
-                            "mailto:support@warp.dev".to_owned(),
+                            "https://github.com/tzero86/Zterm/issues".to_owned(),
                         ));
                     }
                 } else {

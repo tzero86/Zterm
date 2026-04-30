@@ -3191,7 +3191,7 @@ impl UsageWidget {
                 vec![
                     FormattedTextFragment::hyperlink(
                         "Upgrade to Enterprise",
-                        "mailto:sales@warp.dev",
+                        "https://github.com/tzero86/Zterm/issues",
                     ),
                     FormattedTextFragment::plain_text(" for custom limits and dedicated support."),
                 ]

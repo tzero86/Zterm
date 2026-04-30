@@ -4702,7 +4702,7 @@ impl AIInputWidget {
                         FormattedTextFragment::plain_text("Encountered an incorrect detection? "),
                         FormattedTextFragment::hyperlink(
                             "Let us know",
-                            "https://warpdotdev.typeform.com/to/offrTIpq",
+                            "https://github.com/tzero86/Zterm/issues",
                         ),
                     ]
                 });
@@ -4757,7 +4757,7 @@ impl AIInputWidget {
                 "Enabling natural language detection will detect when natural language is written in the terminal input, and then automatically switch to Agent Mode for AI queries."
                 ),
                 FormattedTextFragment::plain_text(" Encountered an incorrect input detection? "),
-                FormattedTextFragment::hyperlink("Let us know", "https://warpdotdev.typeform.com/to/offrTIpq"),
+                FormattedTextFragment::hyperlink("Let us know", "https://github.com/tzero86/Zterm/issues"),
                 ]
             });
 
@@ -6084,7 +6084,7 @@ impl ApiKeysWidget {
                 // to sales to enable BYOK on their existing plan.
                 if team.billing_metadata.customer_type == CustomerType::Enterprise {
                     vec![
-                        FormattedTextFragment::hyperlink("Contact sales", "mailto:sales@warp.dev"),
+                        FormattedTextFragment::hyperlink("Contact sales", "https://github.com/tzero86/Zterm/issues"),
                         FormattedTextFragment::plain_text(
                             " to enable bringing your own API keys on your Enterprise plan.",
                         ),

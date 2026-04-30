@@ -16956,7 +16956,7 @@ impl Workspace {
                 .finish()
             })
             .on_click(|ctx, _, _| {
-                ctx.dispatch_typed_action(WorkspaceAction::OpenLink("https://warp.dev".to_owned()));
+                ctx.dispatch_typed_action(WorkspaceAction::OpenLink("https://github.com/tzero86/Zterm".to_owned()));
             })
             .with_cursor(Cursor::PointingHand)
             .finish();
@@ -19602,7 +19602,7 @@ impl Workspace {
 
         if !is_app_installed {
             // App not installed - redirect to download page
-            ctx.open_url("https://warp.dev/download");
+            ctx.open_url("https://github.com/tzero86/Zterm/releases");
             // In webapp code we cannot distinguish between
             // the localhost:9277/install_detection endpoint not running (not installed) vs
             // the browser blocking Local Network Access which results in CORS error;

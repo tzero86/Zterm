@@ -930,7 +930,7 @@ impl TeamsPageView {
                 ctx.open_url(upgrade_link);
             }
             UserWorkspacesEvent::GenerateUpgradeLinkRejected(err) => self.show_error(
-                "Failed to generate upgrade link. Please contact us at feedback@warp.dev",
+                "Failed to generate upgrade link. Please open an issue at https://github.com/tzero86/Zterm/issues",
                 Some(err),
                 ctx,
             ),
@@ -938,7 +938,7 @@ impl TeamsPageView {
                 ctx.open_url(billing_session_link);
             }
             UserWorkspacesEvent::GenerateStripeBillingPortalLinkRejected(err) => self.show_error(
-                "Failed to generate billing link. Please contact us at feedback@warp.dev",
+                "Failed to generate billing link. Please open an issue at https://github.com/tzero86/Zterm/issues",
                 Some(err),
                 ctx,
             ),
