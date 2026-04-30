@@ -160,6 +160,30 @@ runs:
         echo "::error::protoc install step failed on ${{ inputs.target_os }}"
         exit 1
 
+    - name: Export PROTOC for prost-build (Unix)
+      if: ${{ inputs.target_os != 'windows' }}
+      shell: bash
+      run: |
+        if ${{ inputs.target_os == 'linux' || inputs.target_os == 'wasm' }}; then
+          echo "PROTOC=/usr/local/bin/protoc" >> "$GITHUB_ENV"
+        else
+          echo "PROTOC=$(brew --prefix)/bin/protoc" >> "$GITHUB_ENV"
+        fi
+
+    - name: Export PROTOC for prost-build (Windows)
+      if: ${{ inputs.target_os == 'windows' }}
+      shell: pwsh
+      run: |
+        $protoc = Get-Command protoc -ErrorAction SilentlyContinue
+        if ($protoc) {
+          "PROTOC=$($protoc.Source)" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        } else {
+          $chocoPath = "C:\ProgramData\chocolatey\bin\protoc.exe"
+          if (Test-Path $chocoPath) {
+            "PROTOC=$chocoPath" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          }
+        }
+
     - uses: maxim-lobanov/setup-xcode@ed7a3b1fda3918c0306d1b724322adc0b8cc0a90 # v1.7.0
       if: ${{ inputs.target_os == 'macos' && inputs.is_self_hosted != 'true' }}
       with:
