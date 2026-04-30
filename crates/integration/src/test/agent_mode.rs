@@ -8,6 +8,7 @@ use crate::{util::skip_if_powershell_core_2303, Builder};
 use lazy_static::lazy_static;
 use pathfinder_geometry::vector::{vec2f, Vector2F};
 use settings::ToggleableSetting;
+use warp_multi_agent_api as api;
 use zterm::{
     cmd_or_ctrl_shift,
     features::FeatureFlag,
@@ -22,7 +23,6 @@ use zterm::{
     },
     settings::SelectionSettings,
 };
-use warp_multi_agent_api as api;
 use zterm_ui::{async_assert, integration::TestStep, text::SelectionType, Event, SingletonEntity};
 
 cfg_if::cfg_if! {
