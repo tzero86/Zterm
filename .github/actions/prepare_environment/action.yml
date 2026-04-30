@@ -145,6 +145,7 @@ runs:
       continue-on-error: true
       with:
         brew: protobuf
+        apt: protobuf-compiler
         choco: protoc
 
     - name: Install protoc via winget (fallback for Windows)
