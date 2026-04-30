@@ -314,11 +314,12 @@ async fn generate_local_llm_output(
     }
 
     let request_id = Uuid::new_v4().to_string();
-    let task_id = params
-        .tasks
-        .first()
-        .map(|task| task.id.clone())
-        .unwrap_or_else(|| "root-task".to_owned());
+    // Generate a fresh UUID for the synthetic server task. We cannot reuse the
+    // optimistic root task's ID (a UUID we don't know here) because compute_active_tasks()
+    // returns an empty Vec for new conversations whose root task has no server source yet.
+    // Instead we emit CreateTask first, which upgrades the optimistic root task to a
+    // server-backed task keyed by our UUID, then AddMessagesToTask can find it.
+    let task_id = Uuid::new_v4().to_string();
     let message_id = format!("local-message-{request_id}");
 
     let init_event = api::ResponseEvent {
@@ -331,6 +332,25 @@ async fn generate_local_llm_output(
                 .unwrap_or_default(),
             run_id: String::new(),
         })),
+    };
+
+    // CreateTask must come before AddMessagesToTask. It upgrades the optimistic root
+    // task (which has no server source) into a server-backed task with our task_id.
+    // After this action the task exists in task_store and added_exchanges_by_response
+    // entries are updated to reference our new task_id.
+    let create_task_action = api::ClientAction {
+        action: Some(api::client_action::Action::CreateTask(
+            api::client_action::CreateTask {
+                task: Some(api::Task {
+                    id: task_id.clone(),
+                    messages: vec![],
+                    dependencies: None,
+                    description: String::new(),
+                    summary: String::new(),
+                    server_data: String::new(),
+                }),
+            },
+        )),
     };
 
     let add_message_action = api::ClientAction {
@@ -355,7 +375,7 @@ async fn generate_local_llm_output(
     let client_actions_event = api::ResponseEvent {
         r#type: Some(api::response_event::Type::ClientActions(
             api::response_event::ClientActions {
-                actions: vec![add_message_action],
+                actions: vec![create_task_action, add_message_action],
             },
         )),
     };
