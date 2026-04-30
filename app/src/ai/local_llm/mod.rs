@@ -13,6 +13,8 @@ pub mod discovery;
 pub mod provider;
 pub mod settings;
 
-pub use client::{AgentMessage, ChatMessage, LocalLLMClient, ToolCallInfo};
+#[cfg(not(target_arch = "wasm32"))]
+pub use client::ToolCallInfo;
+pub use client::{AgentMessage, ChatMessage, LocalLLMClient};
 pub use provider::LocalLLMProvider;
 pub use settings::LocalLLMSettings;
