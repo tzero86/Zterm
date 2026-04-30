@@ -1,9 +1,16 @@
 use std::{collections::HashMap, sync::Arc};
 
-use crate::{ai::agent::redaction, terminal::model::session::SessionType};
+use crate::{
+    ai::{
+        agent::{redaction, AIAgentInput},
+        local_llm::{ChatMessage, LocalLLMClient, LocalLLMProvider},
+    },
+    terminal::model::session::SessionType,
+};
 use futures_util::StreamExt;
 use warp_multi_agent_api as api;
 use zterm_core::features::FeatureFlag;
+use uuid::Uuid;
 
 use crate::server::server_api::ServerApi;
 
@@ -14,6 +21,10 @@ pub async fn generate_multi_agent_output(
     mut params: RequestParams,
     cancellation_rx: futures::channel::oneshot::Receiver<()>,
 ) -> Result<ResponseStream, ConvertToAPITypeError> {
+    if let Some((provider, model_name)) = parse_local_model_id(&params.model) {
+        return generate_local_llm_output(provider, model_name, params, cancellation_rx).await;
+    }
+
     let supported_tools = params
         .supported_tools_override
         .take()
@@ -270,24 +281,182 @@ fn get_supported_cli_agent_tools(params: &RequestParams) -> Vec<api::ToolType> {
 #[path = "impl_tests.rs"]
 mod tests;
 
-/// Generate output using a local LLM provider
-///
-/// This function will be called when local LLM inference is enabled.
-/// It converts the request to the local LLM format and streams responses back.
-#[allow(dead_code)]
 async fn generate_local_llm_output(
-    _client: crate::ai::local_llm::LocalLLMClient,
-    _model: String,
-    _params: RequestParams,
+    provider: LocalLLMProvider,
+    model: String,
+    params: RequestParams,
+    cancellation_rx: futures::channel::oneshot::Receiver<()>,
 ) -> Result<ResponseStream, ConvertToAPITypeError> {
-    // TODO: Implement local LLM inference
-    // 1. Extract messages from params.input
-    // 2. Call client.generate() with the messages and model
-    // 3. Wrap the stream to convert ChatChunk responses to api::Response format
-    // 4. Return the wrapped stream
+    let messages = extract_local_chat_messages(&params.input);
+    if messages.is_empty() {
+        return Err(ConvertToAPITypeError::Other(anyhow::anyhow!(
+            "No supported local-chat input in request"
+        )));
+    }
 
-    use anyhow::anyhow;
-    Err(ConvertToAPITypeError::Other(anyhow!(
-        "Local LLM integration not yet fully implemented"
-    )))
+    let client = LocalLLMClient::new(provider.clone(), provider.default_base_url());
+    let mut stream = client.generate(messages, &model, None).await.map_err(|e| {
+        ConvertToAPITypeError::Other(anyhow::anyhow!("Local LLM request failed: {e}"))
+    })?;
+
+    let mut generated_text = String::new();
+    while let Some(item) = stream.next().await {
+        let chunk = item.map_err(|e| {
+            ConvertToAPITypeError::Other(anyhow::anyhow!("Local LLM stream failed: {e}"))
+        })?;
+        if let Some(content) = chunk.content {
+            generated_text.push_str(&content);
+        }
+    }
+
+    if generated_text.trim().is_empty() {
+        generated_text = "The local model did not return any content.".to_owned();
+    }
+
+    let request_id = Uuid::new_v4().to_string();
+    let task_id = "root-task".to_owned();
+    let message_id = format!("local-message-{request_id}");
+
+    let init_event = api::ResponseEvent {
+        r#type: Some(api::response_event::Type::Init(api::response_event::StreamInit {
+            request_id: request_id.clone(),
+            conversation_id: params
+                .conversation_token
+                .as_ref()
+                .map(|token| token.as_str().to_string())
+                .unwrap_or_default(),
+            run_id: String::new(),
+        })),
+    };
+
+    let create_task_action = api::ClientAction {
+        action: Some(api::client_action::Action::CreateTask(
+            api::client_action::CreateTask {
+                task: Some(api::Task {
+                    id: task_id.clone(),
+                    messages: vec![],
+                    dependencies: None,
+                    description: "Local assistant".to_owned(),
+                    summary: String::new(),
+                    server_data: String::new(),
+                }),
+            },
+        )),
+    };
+
+    let add_message_action = api::ClientAction {
+        action: Some(api::client_action::Action::AddMessagesToTask(
+            api::client_action::AddMessagesToTask {
+                task_id,
+                messages: vec![api::Message {
+                    id: message_id,
+                    task_id: "root-task".to_owned(),
+                    server_message_data: String::new(),
+                    citations: vec![],
+                    message: Some(api::message::Message::AgentOutput(api::message::AgentOutput {
+                        text: generated_text,
+                    })),
+                    request_id,
+                    timestamp: None,
+                }],
+            },
+        )),
+    };
+
+    let client_actions_event = api::ResponseEvent {
+        r#type: Some(api::response_event::Type::ClientActions(
+            api::response_event::ClientActions {
+                actions: vec![create_task_action, add_message_action],
+            },
+        )),
+    };
+
+    let finished_event = api::ResponseEvent {
+        r#type: Some(api::response_event::Type::Finished(
+            api::response_event::StreamFinished {
+                reason: Some(api::response_event::stream_finished::Reason::Done(
+                    api::response_event::stream_finished::Done {},
+                )),
+                conversation_usage_metadata: None,
+                token_usage: vec![],
+                should_refresh_model_config: false,
+                request_cost: None,
+            },
+        )),
+    };
+
+    let output_stream =
+        futures_util::stream::iter(vec![Ok(init_event), Ok(client_actions_event), Ok(finished_event)])
+            .take_until(cancellation_rx);
+    Ok(Box::pin(output_stream))
+}
+
+fn parse_local_model_id(model_id: &crate::ai::llms::LLMId) -> Option<(LocalLLMProvider, String)> {
+    let model_id = model_id.to_string();
+    let parse_provider = |prefix: &str, provider: LocalLLMProvider| -> Option<(LocalLLMProvider, String)> {
+        if !model_id.starts_with(prefix) {
+            return None;
+        }
+        let encoded = &model_id[prefix.len()..];
+        decode_hex_model_name(encoded).map(|decoded| (provider, decoded))
+    };
+
+    parse_provider("local-ollama-hex-", LocalLLMProvider::Ollama)
+        .or_else(|| parse_provider("local-lmstudio-hex-", LocalLLMProvider::LMStudio))
+        .or_else(|| parse_provider("local-custom-hex-", LocalLLMProvider::Custom))
+        // Legacy IDs used before hex encoding.
+        .or_else(|| {
+            model_id
+                .strip_prefix("local-ollama-")
+                .map(|name| (LocalLLMProvider::Ollama, name.to_owned()))
+        })
+        .or_else(|| {
+            model_id
+                .strip_prefix("local-lmstudio-")
+                .map(|name| (LocalLLMProvider::LMStudio, name.to_owned()))
+        })
+        .or_else(|| {
+            model_id
+                .strip_prefix("local-custom-")
+                .map(|name| (LocalLLMProvider::Custom, name.to_owned()))
+        })
+}
+
+fn decode_hex_model_name(encoded: &str) -> Option<String> {
+    if encoded.is_empty() || encoded.len() % 2 != 0 {
+        return None;
+    }
+
+    let bytes = (0..encoded.len())
+        .step_by(2)
+        .map(|i| u8::from_str_radix(&encoded[i..i + 2], 16))
+        .collect::<Result<Vec<_>, _>>()
+        .ok()?;
+    String::from_utf8(bytes).ok()
+}
+
+fn extract_local_chat_messages(inputs: &[AIAgentInput]) -> Vec<ChatMessage> {
+    let mut messages = Vec::new();
+    for input in inputs {
+        match input {
+            AIAgentInput::UserQuery { query, .. }
+            | AIAgentInput::AutoCodeDiffQuery { query, .. }
+            | AIAgentInput::CreateNewProject { query, .. } => {
+                if !query.trim().is_empty() {
+                    messages.push(ChatMessage {
+                        role: "user".to_owned(),
+                        content: query.clone(),
+                    });
+                }
+            }
+            AIAgentInput::SummarizeConversation { prompt: Some(prompt) } if !prompt.trim().is_empty() => {
+                messages.push(ChatMessage {
+                    role: "user".to_owned(),
+                    content: prompt.clone(),
+                });
+            }
+            _ => {}
+        }
+    }
+    messages
 }

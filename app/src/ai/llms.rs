@@ -1155,18 +1155,16 @@ fn local_model_to_llm_info(provider: &LocalLLMProvider, model_name: String) -> L
         LocalLLMProvider::Custom => "custom",
     };
 
-    let sanitized_name: String = model_name
-        .chars()
-        .map(|c| match c {
-            'a'..='z' | 'A'..='Z' | '0'..='9' | '-' | '_' | '.' => c,
-            _ => '-',
-        })
-        .collect();
+    let encoded_name = model_name
+        .as_bytes()
+        .iter()
+        .map(|byte| format!("{byte:02x}"))
+        .collect::<String>();
 
     LLMInfo {
         display_name: format!("{model_name} ({})", provider.display_name()),
         base_model_name: model_name,
-        id: format!("local-{provider_key}-{sanitized_name}").into(),
+        id: format!("local-{provider_key}-hex-{encoded_name}").into(),
         reasoning_level: None,
         usage_metadata: LLMUsageMetadata {
             request_multiplier: 1,
