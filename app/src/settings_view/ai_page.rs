@@ -1505,7 +1505,8 @@ impl AISettingsPageView {
                 }
                 widgets.push(Box::new(ApiKeysWidget::new(ctx)));
                 widgets.push(Box::new(AwsBedrockWidget::new(ctx)));
-                widgets.push(Box::new(LocalLLMWidget::default()));
+                // TODO: LocalLLMWidget requires singleton initialization pattern fix
+                // widgets.push(Box::new(LocalLLMWidget::default()));
                 widgets.push(Box::new(OtherAIWidget::default()));
                 if FeatureFlag::AgentModeComputerUse.is_enabled() {
                     widgets.push(Box::new(CloudAgentComputerUseWidget::default()));
