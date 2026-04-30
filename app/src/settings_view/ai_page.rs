@@ -5788,11 +5788,13 @@ impl SettingsWidget for CloudAgentComputerUseWidget {
 }
 
 #[derive(Default)]
+#[allow(dead_code)]
 struct LocalLLMWidget {
     local_llm_provider_dropdown: Option<ViewHandle<Dropdown<AISettingsPageAction>>>,
     local_llm_model_dropdown: Option<ViewHandle<Dropdown<AISettingsPageAction>>>,
 }
 
+#[allow(dead_code)]
 impl LocalLLMWidget {
     fn render_local_llm_section(
         &self,

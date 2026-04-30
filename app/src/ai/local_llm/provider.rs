@@ -3,9 +3,10 @@
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[derive(Clone, Debug, PartialEq, Eq, Default, Serialize, Deserialize, JsonSchema)]
 pub enum LocalLLMProvider {
     /// Ollama (default: http://localhost:11434)
+    #[default]
     Ollama,
     /// LM Studio (default: http://localhost:1234)
     LMStudio,
@@ -42,12 +43,6 @@ impl LocalLLMProvider {
             Self::Ollama => format!("{}/", base_url.trim_end_matches("/v1")),
             _ => format!("{}/models", base_url),
         }
-    }
-}
-
-impl Default for LocalLLMProvider {
-    fn default() -> Self {
-        Self::Ollama
     }
 }
 

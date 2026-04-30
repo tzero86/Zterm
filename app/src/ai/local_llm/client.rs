@@ -2,12 +2,14 @@
 
 use crate::ai::local_llm::LocalLLMProvider;
 use anyhow::{anyhow, Result};
+#[cfg(not(target_arch = "wasm32"))]
 use bytes::BytesMut;
-use futures::StreamExt;
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
+#[cfg(not(target_arch = "wasm32"))]
 use std::sync::Arc;
 use std::time::Duration;
+#[cfg(not(target_arch = "wasm32"))]
 use tokio::sync::Mutex;
 
 #[derive(Clone)]
@@ -30,6 +32,7 @@ impl LocalLLMClient {
     }
 
     /// Stream a chat completion (OpenAI-compatible format)
+    #[cfg(not(target_arch = "wasm32"))]
     pub async fn generate(
         &self,
         messages: Vec<ChatMessage>,
@@ -179,8 +182,9 @@ impl LocalLLMClient {
     }
 
     /// Health check - verify provider is reachable
+    #[cfg(not(target_arch = "wasm32"))]
     pub async fn health_check(&self) -> Result<u64> {
-        let start = std::time::Instant::now();
+        let start = instant::Instant::now();
 
         let health_url = self.provider.health_endpoint(&self.base_url);
 
@@ -318,8 +322,7 @@ fn parse_sse_line(text: &str) -> anyhow::Result<ChatChunk> {
     let mut finish_reason: Option<String> = None;
 
     for line in text.lines() {
-        if line.starts_with("data: ") {
-            let json_str = &line[6..];
+        if let Some(json_str) = line.strip_prefix("data: ") {
             if json_str == "[DONE]" {
                 finish_reason = Some("stop".to_string());
                 break;

@@ -358,6 +358,7 @@ pub enum AgentDriverError {
     #[error(
         "Failed to authenticate with server - please log in via 'oz login', provide an API key via '--api-key <key>', or set the ZTERM_API_KEY environment variable"
     )]
+    #[allow(dead_code)]
     NotLoggedIn,
     #[error("Saved prompt not found for id {0}")]
     AIWorkflowNotFound(String),

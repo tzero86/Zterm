@@ -470,7 +470,7 @@ fn parse_local_model_id(model_id: &crate::ai::llms::LLMId) -> Option<(LocalLLMPr
 }
 
 fn decode_hex_model_name(encoded: &str) -> Option<String> {
-    if encoded.is_empty() || encoded.len() % 2 != 0 {
+    if encoded.is_empty() || !encoded.len().is_multiple_of(2) {
         return None;
     }
 
@@ -482,6 +482,7 @@ fn decode_hex_model_name(encoded: &str) -> Option<String> {
     String::from_utf8(bytes).ok()
 }
 
+#[allow(dead_code)]
 fn extract_local_chat_messages(inputs: &[AIAgentInput]) -> Vec<ChatMessage> {
     let mut messages = Vec::new();
     for input in inputs {
