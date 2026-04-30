@@ -9,7 +9,7 @@ use zterm_core::user_preferences::GetUserPreferences;
 use zterm_ui::{AppContext, Entity, EntityId, ModelContext, SingletonEntity};
 
 use crate::{
-    ai::local_llm::{discovery, LocalLLMProvider},
+    ai::local_llm::LocalLLMProvider,
     auth::{
         auth_manager::{AuthManager, AuthManagerEvent},
         AuthStateProvider,
@@ -908,16 +908,18 @@ impl LLMPreferences {
         #[cfg(target_arch = "wasm32")]
         {
             let _ = ctx;
-            return;
         }
         #[cfg(not(target_arch = "wasm32"))]
         ctx.spawn(
             async move {
                 let mut local_choices = Vec::new();
-                let providers = discovery::discover_providers().await;
+                let providers = crate::ai::local_llm::discovery::discover_providers().await;
                 for (provider, _) in providers {
-                    if let Ok(models) =
-                        discovery::list_models_for_provider(provider.clone(), None).await
+                    if let Ok(models) = crate::ai::local_llm::discovery::list_models_for_provider(
+                        provider.clone(),
+                        None,
+                    )
+                    .await
                     {
                         local_choices.extend(
                             models
@@ -1165,6 +1167,7 @@ fn merge_available_llms(base: &AvailableLLMs, local_choices: &[LLMInfo]) -> Avai
     merged
 }
 
+#[cfg_attr(target_arch = "wasm32", allow(dead_code))]
 fn local_model_to_llm_info(provider: &LocalLLMProvider, model_name: String) -> LLMInfo {
     let provider_key = match provider {
         LocalLLMProvider::Ollama => "ollama",

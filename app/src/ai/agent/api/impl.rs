@@ -1,9 +1,11 @@
 use std::{collections::HashMap, sync::Arc};
 
+#[cfg(not(target_arch = "wasm32"))]
+use crate::ai::local_llm::ToolCallInfo;
 use crate::{
     ai::{
         agent::{redaction, AIAgentInput},
-        local_llm::{AgentMessage, ChatMessage, LocalLLMClient, LocalLLMProvider, ToolCallInfo},
+        local_llm::{AgentMessage, ChatMessage, LocalLLMClient, LocalLLMProvider},
     },
     terminal::model::session::SessionType,
 };
