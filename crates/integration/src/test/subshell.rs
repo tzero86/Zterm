@@ -1,11 +1,11 @@
 use std::collections::HashMap;
 
 use settings::Setting as _;
-use warp::integration_testing::terminal::util::current_shell_starter_and_version;
-use warp::integration_testing::view_getters::single_input_view_for_tab;
-use warp::root_view::SubshellCommandArg;
-use warp::terminal::shell::ShellType;
-use warp::{
+use zterm::integration_testing::terminal::util::current_shell_starter_and_version;
+use zterm::integration_testing::view_getters::single_input_view_for_tab;
+use zterm::root_view::SubshellCommandArg;
+use zterm::terminal::shell::ShellType;
+use zterm::{
     integration_testing::{
         step::new_step_with_default_assertions,
         subshell::{

@@ -12,7 +12,7 @@ use strum_macros::EnumIter;
 use version_compare::Version;
 
 use crate::builder::cargo_target_tmpdir;
-use warp::{
+use zterm::{
     integration_testing::{
         terminal::util::{
             current_shell_starter_and_version, default_histfile_directory, ExpectedOutput,
@@ -23,7 +23,7 @@ use warp::{
 };
 use zterm_ui::{App, WindowId};
 
-use warp::terminal::shell;
+use zterm::terminal::shell;
 
 pub fn get_input_buffer(
     app: &App,

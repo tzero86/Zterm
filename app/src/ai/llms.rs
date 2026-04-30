@@ -905,6 +905,12 @@ impl LLMPreferences {
     }
 
     fn refresh_local_models(&self, ctx: &mut ModelContext<Self>) {
+        #[cfg(target_arch = "wasm32")]
+        {
+            let _ = ctx;
+            return;
+        }
+        #[cfg(not(target_arch = "wasm32"))]
         ctx.spawn(
             async move {
                 let mut local_choices = Vec::new();

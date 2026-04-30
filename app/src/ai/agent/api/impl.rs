@@ -333,7 +333,13 @@ async fn generate_local_llm_output(
         });
 
         for tc in &tool_calls {
+            #[cfg(not(target_arch = "wasm32"))]
             let result = execute_tool_call(tc, &cwd).await;
+            #[cfg(target_arch = "wasm32")]
+            let result = {
+                let _ = (&cwd,);
+                format!("Tool execution unavailable on wasm: {}", tc.function.name)
+            };
             messages.push(AgentMessage {
                 role: "tool".to_owned(),
                 content: Some(result),
@@ -600,6 +606,7 @@ fn build_initial_messages(inputs: &[AIAgentInput], cwd: &str) -> Vec<AgentMessag
     messages
 }
 
+#[cfg(not(target_arch = "wasm32"))]
 async fn execute_tool_call(tc: &ToolCallInfo, cwd: &str) -> String {
     let args: serde_json::Value = serde_json::from_str(&tc.function.arguments).unwrap_or_default();
 
@@ -636,6 +643,7 @@ async fn execute_tool_call(tc: &ToolCallInfo, cwd: &str) -> String {
     }
 }
 
+#[cfg(not(target_arch = "wasm32"))]
 async fn run_shell_command_in_cwd(command: &str, cwd: &str) -> String {
     const SHELL_TIMEOUT_SECS: u64 = 30;
 

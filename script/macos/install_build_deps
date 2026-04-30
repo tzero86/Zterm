@@ -1,5 +1,9 @@
 #!/bin/sh
 #
-# Installs macOS-specific build dependencies required to build Warp.
+# Installs macOS-specific build dependencies required to build Zterm.
 
-xcodebuild -downloadComponent MetalToolchain
+# `xcodebuild -downloadComponent` is only available on Xcode 16+. On older
+# CI runners this option is invalid; the Metal toolchain is usually already
+# present, so treat any failure as non-fatal.
+xcodebuild -downloadComponent MetalToolchain || \
+    echo "Skipping MetalToolchain download (xcodebuild -downloadComponent unavailable or failed)."

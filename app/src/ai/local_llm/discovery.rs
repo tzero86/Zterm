@@ -4,6 +4,7 @@ use crate::ai::local_llm::client::LocalModel;
 use crate::ai::local_llm::{LocalLLMClient, LocalLLMProvider};
 
 /// Discover available local LLM providers by probing default ports
+#[cfg(not(target_arch = "wasm32"))]
 pub async fn discover_providers() -> Vec<(LocalLLMProvider, u64)> {
     let mut available = Vec::new();
 
@@ -21,6 +22,7 @@ pub async fn discover_providers() -> Vec<(LocalLLMProvider, u64)> {
 }
 
 /// Try connecting to a provider at its default base URL
+#[cfg(not(target_arch = "wasm32"))]
 async fn try_provider(provider: LocalLLMProvider) -> anyhow::Result<u64> {
     let base_url = provider.default_base_url();
     let client = LocalLLMClient::new(provider, base_url);
