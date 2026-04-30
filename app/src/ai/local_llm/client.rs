@@ -109,6 +109,50 @@ impl LocalLLMClient {
         Ok(Box::new(stream))
     }
 
+    /// Non-streaming chat with optional tool support for the agentic loop.
+    pub async fn generate_with_tools(
+        &self,
+        messages: Vec<AgentMessage>,
+        model: &str,
+        tools: Option<Vec<serde_json::Value>>,
+    ) -> Result<NonStreamingResponse> {
+        let mut payload = serde_json::json!({
+            "model": model,
+            "messages": messages,
+            "stream": false,
+            "temperature": 0.7,
+            "max_tokens": 4096,
+        });
+
+        if let Some(tools) = tools {
+            if !tools.is_empty() {
+                payload["tools"] = serde_json::Value::Array(tools);
+                payload["tool_choice"] = serde_json::json!("auto");
+            }
+        }
+
+        let response = self
+            .client
+            .post(format!("{}/chat/completions", self.base_url))
+            .json(&payload)
+            .timeout(Duration::from_secs(self.timeout_secs))
+            .send()
+            .await?;
+
+        if !response.status().is_success() {
+            return Err(anyhow!(
+                "LLM error: {} - {}",
+                response.status(),
+                response.text().await.unwrap_or_default()
+            ));
+        }
+
+        let text = response.text().await?;
+        let parsed: NonStreamingResponse = serde_json::from_str(&text)
+            .map_err(|e| anyhow!("Failed to parse LLM response: {e}\nResponse: {text}"))?;
+        Ok(parsed)
+    }
+
     /// List models available from this provider
     pub async fn list_models(&self) -> Result<Vec<LocalModel>> {
         let is_ollama = matches!(self.provider, LocalLLMProvider::Ollama);
@@ -163,6 +207,51 @@ impl LocalLLMClient {
 pub struct ChatMessage {
     pub role: String,
     pub content: String,
+}
+
+/// Flexible message type for the agentic loop (all roles + tool calls/results)
+#[derive(Serialize, Clone, Debug)]
+pub struct AgentMessage {
+    pub role: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub content: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub tool_calls: Option<Vec<ToolCallInfo>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub tool_call_id: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug)]
+pub struct ToolCallInfo {
+    pub id: String,
+    pub r#type: String,
+    pub function: ToolCallFunction,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug)]
+pub struct ToolCallFunction {
+    pub name: String,
+    pub arguments: String,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct NonStreamingResponse {
+    pub choices: Vec<NonStreamingChoice>,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct NonStreamingChoice {
+    pub message: NonStreamingMessage,
+    pub finish_reason: Option<String>,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct NonStreamingMessage {
+    pub role: String,
+    pub content: Option<String>,
+    pub tool_calls: Option<Vec<ToolCallInfo>>,
 }
 
 #[derive(Deserialize, Clone, Debug)]

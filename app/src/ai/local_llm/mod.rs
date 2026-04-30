@@ -8,6 +8,6 @@ pub mod discovery;
 pub mod provider;
 pub mod settings;
 
-pub use client::{ChatMessage, LocalLLMClient};
+pub use client::{AgentMessage, ChatMessage, LocalLLMClient, NonStreamingResponse, ToolCallFunction, ToolCallInfo};
 pub use provider::LocalLLMProvider;
 pub use settings::LocalLLMSettings;

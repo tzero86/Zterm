@@ -8,6 +8,15 @@ impl LLMId {
     pub fn as_str(&self) -> &str {
         &self.0
     }
+
+    /// Returns `true` if this ID represents a locally-discovered model
+    /// (e.g. an Ollama or LM Studio model with the `local-*` prefix).
+    /// Local models are discovered at runtime and may not be present in the
+    /// server-provided model list, so their IDs should not be cleared during
+    /// validation against the current model choices.
+    pub fn is_local(&self) -> bool {
+        self.0.starts_with("local-")
+    }
 }
 
 impl From<String> for LLMId {

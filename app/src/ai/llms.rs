@@ -969,44 +969,51 @@ impl LLMPreferences {
         }
 
         // Clear any model selections where the model is no longer supported.
+        // Local models (local-*) are discovered asynchronously at runtime and may not
+        // be present in models_by_feature yet when this runs, so skip clearing them —
+        // their absence here is not evidence they've been removed by the user or server.
         let profiles_model = AIExecutionProfilesModel::handle(ctx);
         profiles_model.update(ctx, |profiles, ctx| {
             for profile_id in profiles.get_all_profile_ids() {
                 if let Some(profile) = profiles.get_profile_by_id(profile_id, ctx) {
                     if let Some(preferred_llm_id) = &profile.data().base_model {
-                        if self
-                            .models_by_feature
-                            .agent_mode
-                            .info_for_id(preferred_llm_id)
-                            .is_none()
+                        if !preferred_llm_id.is_local()
+                            && self
+                                .models_by_feature
+                                .agent_mode
+                                .info_for_id(preferred_llm_id)
+                                .is_none()
                         {
                             profiles.set_base_model(profile_id, None, ctx);
                         }
                     }
                     if let Some(preferred_llm_id) = &profile.data().coding_model {
-                        if self
-                            .models_by_feature
-                            .coding
-                            .info_for_id(preferred_llm_id)
-                            .is_none()
+                        if !preferred_llm_id.is_local()
+                            && self
+                                .models_by_feature
+                                .coding
+                                .info_for_id(preferred_llm_id)
+                                .is_none()
                         {
                             profiles.set_coding_model(profile_id, None, ctx);
                         }
                     }
                     if let Some(preferred_llm_id) = &profile.data().cli_agent_model {
-                        if self
-                            .get_cli_agent_available()
-                            .info_for_id(preferred_llm_id)
-                            .is_none()
+                        if !preferred_llm_id.is_local()
+                            && self
+                                .get_cli_agent_available()
+                                .info_for_id(preferred_llm_id)
+                                .is_none()
                         {
                             profiles.set_cli_agent_model(profile_id, None, ctx);
                         }
                     }
                     if let Some(preferred_llm_id) = &profile.data().computer_use_model {
-                        if self
-                            .get_computer_use_available()
-                            .info_for_id(preferred_llm_id)
-                            .is_none()
+                        if !preferred_llm_id.is_local()
+                            && self
+                                .get_computer_use_available()
+                                .info_for_id(preferred_llm_id)
+                                .is_none()
                         {
                             profiles.set_computer_use_model(profile_id, None, ctx);
                         }

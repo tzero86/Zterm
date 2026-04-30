@@ -3,7 +3,7 @@ use std::{collections::HashMap, sync::Arc};
 use crate::{
     ai::{
         agent::{redaction, AIAgentInput},
-        local_llm::{ChatMessage, LocalLLMClient, LocalLLMProvider},
+        local_llm::{AgentMessage, ChatMessage, LocalLLMClient, LocalLLMProvider, ToolCallInfo},
     },
     terminal::model::session::SessionType,
 };
@@ -287,37 +287,62 @@ async fn generate_local_llm_output(
     params: RequestParams,
     cancellation_rx: futures::channel::oneshot::Receiver<()>,
 ) -> Result<ResponseStream, ConvertToAPITypeError> {
-    let messages = extract_local_chat_messages(&params.input);
-    if messages.is_empty() {
-        return Err(ConvertToAPITypeError::Other(anyhow::anyhow!(
-            "No supported local-chat input in request"
-        )));
-    }
+    let cwd = params
+        .session_context
+        .current_working_directory()
+        .clone()
+        .unwrap_or_else(|| ".".to_owned());
 
     let client = LocalLLMClient::new(provider.clone(), provider.default_base_url());
-    let mut stream = client.generate(messages, &model, None).await.map_err(|e| {
-        ConvertToAPITypeError::Other(anyhow::anyhow!("Local LLM request failed: {e}"))
-    })?;
 
-    let mut generated_text = String::new();
-    while let Some(item) = stream.next().await {
-        let chunk = item.map_err(|e| {
-            ConvertToAPITypeError::Other(anyhow::anyhow!("Local LLM stream failed: {e}"))
+    let tools = build_agent_tools();
+    let mut messages = build_initial_messages(&params.input, &cwd);
+
+    let mut final_text = String::new();
+    const MAX_ITERATIONS: usize = 10;
+
+    for _ in 0..MAX_ITERATIONS {
+        let response = client
+            .generate_with_tools(messages.clone(), &model, Some(tools.clone()))
+            .await
+            .map_err(|e| ConvertToAPITypeError::Other(anyhow::anyhow!("Local LLM request failed: {e}")))?;
+
+        let choice = response.choices.into_iter().next().ok_or_else(|| {
+            ConvertToAPITypeError::Other(anyhow::anyhow!("LLM returned no choices"))
         })?;
-        if let Some(content) = chunk.content {
-            generated_text.push_str(&content);
+
+        let tool_calls = choice.message.tool_calls.clone().unwrap_or_default();
+
+        if tool_calls.is_empty() {
+            final_text = choice.message.content.unwrap_or_default();
+            break;
+        }
+
+        messages.push(AgentMessage {
+            role: "assistant".to_owned(),
+            content: choice.message.content,
+            tool_calls: Some(tool_calls.clone()),
+            tool_call_id: None,
+            name: None,
+        });
+
+        for tc in &tool_calls {
+            let result = execute_tool_call(tc, &cwd).await;
+            messages.push(AgentMessage {
+                role: "tool".to_owned(),
+                content: Some(result),
+                tool_calls: None,
+                tool_call_id: Some(tc.id.clone()),
+                name: Some(tc.function.name.clone()),
+            });
         }
     }
 
-    if generated_text.trim().is_empty() {
-        generated_text = "The local model did not return any content.".to_owned();
+    if final_text.trim().is_empty() {
+        final_text = "The local model did not return any content.".to_owned();
     }
 
     let request_id = Uuid::new_v4().to_string();
-    // If params.tasks is non-empty, the root task is already server-backed (upgraded
-    // by a previous CreateTask in this conversation). Reuse its existing ID.
-    // If params.tasks is empty, the root task is still optimistic (first message in a
-    // new conversation) — emit CreateTask to upgrade it with a fresh UUID.
     let (task_id, needs_create_task) = if let Some(existing_task) = params.tasks.first() {
         (existing_task.id.clone(), false)
     } else {
@@ -339,8 +364,6 @@ async fn generate_local_llm_output(
 
     let mut actions: Vec<api::ClientAction> = Vec::new();
 
-    // CreateTask upgrades the optimistic root task to a server-backed task. Only
-    // needed for the first message in a new conversation (when params.tasks is empty).
     if needs_create_task {
         actions.push(api::ClientAction {
             action: Some(api::client_action::Action::CreateTask(
@@ -368,7 +391,7 @@ async fn generate_local_llm_output(
                     server_message_data: String::new(),
                     citations: vec![],
                     message: Some(api::message::Message::AgentOutput(api::message::AgentOutput {
-                        text: generated_text,
+                        text: final_text,
                     })),
                     request_id,
                     timestamp: None,
@@ -471,4 +494,175 @@ fn extract_local_chat_messages(inputs: &[AIAgentInput]) -> Vec<ChatMessage> {
         }
     }
     messages
+}
+
+fn build_agent_tools() -> Vec<serde_json::Value> {
+    vec![
+        serde_json::json!({
+            "type": "function",
+            "function": {
+                "name": "run_shell_command",
+                "description": "Run a shell command in the current working directory and return its output. Use this to explore the filesystem, run programs, check git status, etc.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "command": {
+                            "type": "string",
+                            "description": "The shell command to execute"
+                        }
+                    },
+                    "required": ["command"]
+                }
+            }
+        }),
+        serde_json::json!({
+            "type": "function",
+            "function": {
+                "name": "read_file",
+                "description": "Read the contents of a file. Path can be absolute or relative to the current working directory.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "path": {
+                            "type": "string",
+                            "description": "Path to the file to read"
+                        }
+                    },
+                    "required": ["path"]
+                }
+            }
+        }),
+    ]
+}
+
+fn build_initial_messages(inputs: &[AIAgentInput], cwd: &str) -> Vec<AgentMessage> {
+    let system_content = format!(
+        "You are a helpful terminal assistant running inside a terminal application. \
+         The user's current working directory is: {cwd}\n\
+         You have access to tools to run shell commands and read files. \
+         Use them freely to explore the filesystem and answer questions accurately.\n\
+         When running commands on Windows, use PowerShell or cmd syntax."
+    );
+
+    let mut messages = vec![AgentMessage {
+        role: "system".to_owned(),
+        content: Some(system_content),
+        tool_calls: None,
+        tool_call_id: None,
+        name: None,
+    }];
+
+    for input in inputs {
+        match input {
+            AIAgentInput::UserQuery { query, .. }
+            | AIAgentInput::AutoCodeDiffQuery { query, .. }
+            | AIAgentInput::CreateNewProject { query, .. } => {
+                if !query.trim().is_empty() {
+                    messages.push(AgentMessage {
+                        role: "user".to_owned(),
+                        content: Some(query.clone()),
+                        tool_calls: None,
+                        tool_call_id: None,
+                        name: None,
+                    });
+                }
+            }
+            AIAgentInput::SummarizeConversation { prompt: Some(prompt) } if !prompt.trim().is_empty() => {
+                messages.push(AgentMessage {
+                    role: "user".to_owned(),
+                    content: Some(prompt.clone()),
+                    tool_calls: None,
+                    tool_call_id: None,
+                    name: None,
+                });
+            }
+            _ => {}
+        }
+    }
+
+    messages
+}
+
+async fn execute_tool_call(tc: &ToolCallInfo, cwd: &str) -> String {
+    let args: serde_json::Value = serde_json::from_str(&tc.function.arguments).unwrap_or_default();
+
+    match tc.function.name.as_str() {
+        "run_shell_command" => {
+            let command = match args["command"].as_str() {
+                Some(c) => c.to_owned(),
+                None => return "Error: missing 'command' argument".to_owned(),
+            };
+            run_shell_command_in_cwd(&command, cwd).await
+        }
+        "read_file" => {
+            let path = match args["path"].as_str() {
+                Some(p) => p.to_owned(),
+                None => return "Error: missing 'path' argument".to_owned(),
+            };
+            let full_path = if std::path::Path::new(&path).is_absolute() {
+                path
+            } else {
+                format!("{}/{}", cwd, path)
+            };
+            match tokio::fs::read_to_string(&full_path).await {
+                Ok(content) => {
+                    if content.len() > 8192 {
+                        format!("[truncated to 8192 chars]\n{}", &content[..8192])
+                    } else {
+                        content
+                    }
+                }
+                Err(e) => format!("Error reading file: {e}"),
+            }
+        }
+        _ => format!("Unknown tool: {}", tc.function.name),
+    }
+}
+
+async fn run_shell_command_in_cwd(command: &str, cwd: &str) -> String {
+    let output = {
+        #[cfg(target_os = "windows")]
+        {
+            tokio::process::Command::new("cmd")
+                .args(["/C", command])
+                .current_dir(cwd)
+                .output()
+                .await
+        }
+        #[cfg(not(target_os = "windows"))]
+        {
+            tokio::process::Command::new("sh")
+                .args(["-c", command])
+                .current_dir(cwd)
+                .output()
+                .await
+        }
+    };
+
+    match output {
+        Ok(out) => {
+            let stdout = String::from_utf8_lossy(&out.stdout);
+            let stderr = String::from_utf8_lossy(&out.stderr);
+            let mut result = String::new();
+            if !stdout.is_empty() {
+                result.push_str(&stdout);
+            }
+            if !stderr.is_empty() {
+                if !result.is_empty() {
+                    result.push('\n');
+                }
+                result.push_str("[stderr] ");
+                result.push_str(&stderr);
+            }
+            if result.is_empty() {
+                result = "(no output)".to_owned();
+            }
+            if result.len() > 8192 {
+                result.truncate(8192);
+                result.push_str("\n[output truncated]");
+            }
+            result
+        }
+        Err(e) => format!("Command execution error: {e}"),
+    }
 }
