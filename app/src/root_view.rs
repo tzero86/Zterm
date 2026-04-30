@@ -1,5 +1,6 @@
 use crate::ai::agent::api::ServerConversationToken;
 use crate::ai::blocklist::SerializedBlockListItem;
+use crate::ai::local_llm::LocalLLMSettings;
 use crate::appearance::Appearance;
 use crate::auth::auth_manager::{AuthManager, AuthManagerEvent};
 use crate::auth::auth_override_warning_modal::AuthOverrideWarningModalVariant;
@@ -1728,6 +1729,9 @@ impl RootView {
         ctx.subscribe_to_model(&AuthManager::handle(ctx), |me, _, event, ctx| {
             me.handle_auth_manager_event(event, ctx);
         });
+
+        // Initialize LocalLLMSettings singleton early to prevent access panics
+        LocalLLMSettings::handle(ctx);
 
         ctx.subscribe_to_model(&CloudPreferencesSyncer::handle(ctx), |me, _, event, ctx| {
             me.handle_cloud_preferences_syncer_event(event, ctx);

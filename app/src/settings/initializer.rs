@@ -3,7 +3,6 @@
 use zterm_core::{features::FeatureFlag, settings::Setting};
 use zterm_ui::{Entity, ModelContext, SingletonEntity};
 
-use crate::ai::local_llm::LocalLLMSettings;
 use crate::settings::{AISettings, FontSettings, ThinkingDisplayMode};
 use crate::{
     auth::auth_state::AuthState,
@@ -34,8 +33,6 @@ impl SettingsInitializer {
     /// but we don't want to change it for existing users (which is what would happen if we changed the
     /// default value in define_settings_group! in code).
     pub fn handle_user_fetched(&self, auth_state: Arc<AuthState>, ctx: &mut ModelContext<Self>) {
-        // Initialize all singleton settings
-        LocalLLMSettings::handle(ctx);
         /// We use a font-size of 16px (12pt) on Windows to more closely match the default font size of
         /// Windows terminal.
         const DEFAULT_WINDOWS_MONOSPACE_FONT_SIZE: f32 = 16.;

@@ -10,7 +10,6 @@ use crate::ai::execution_profiles::profiles::{
 };
 use crate::ai::execution_profiles::{ActionPermission, WriteToPtyPermission};
 use crate::ai::llms::{LLMId, LLMPreferences, LLMPreferencesEvent};
-use crate::ai::local_llm::LocalLLMSettings;
 use crate::ai::mcp::TemplatableMCPServerManager;
 use crate::ai::paths::host_native_absolute_path;
 use crate::auth::auth_manager::{AuthManager, LoginGatedFeature};
@@ -5803,15 +5802,13 @@ impl LocalLLMWidget {
         let ai_settings = AISettings::as_ref(app);
         let is_any_ai_enabled = ai_settings.is_any_ai_enabled(app);
         
-        // Initialize LocalLLMSettings singleton if not already done
-        let _ = LocalLLMSettings::handle(app);
-        let local_llm_settings = LocalLLMSettings::as_ref(app);
-
-        let enabled = local_llm_settings.enabled;
-
+        // LocalLLMSettings integration not yet complete - skip rendering
+        // The singleton needs to be initialized earlier in app startup
         let mut column = Flex::column()
-            .with_child(render_separator(appearance))
-            .with_child(
+            .with_child(render_separator(appearance));
+
+        if is_any_ai_enabled {
+            column.add_child(
                 Container::new(
                     Flex::row()
                         .with_main_axis_size(MainAxisSize::Max)
@@ -5829,33 +5826,17 @@ impl LocalLLMWidget {
                 .with_padding_bottom(HEADER_PADDING)
                 .finish(),
             );
-
-        if is_any_ai_enabled {
-            // Provider selection
+            
             column.add_child(
                 Container::new(
-                    Flex::column()
-                        .with_child(
-                            Flex::row()
-                                .with_child(Box::new(
-                                    Text::new_inline(
-                                        "Provider: ",
-                                        appearance.ui_font_family(),
-                                        CONTENT_FONT_SIZE,
-                                    )
-                                    .with_color(appearance.theme().active_ui_text_color().into()),
-                                ))
-                                .with_child(Box::new(
-                                    Text::new_inline(
-                                        local_llm_settings.provider.display_name(),
-                                        appearance.ui_font_family(),
-                                        CONTENT_FONT_SIZE,
-                                    )
-                                    .with_color(appearance.theme().accent().into_solid()),
-                                ))
-                                .finish(),
+                    Box::new(
+                        Text::new_inline(
+                            "Local LLM support is being initialized. This feature will be available soon.",
+                            appearance.ui_font_family(),
+                            CONTENT_FONT_SIZE,
                         )
-                        .finish(),
+                        .with_color(appearance.theme().disabled_ui_text_color().into()),
+                    )
                 )
                 .with_padding_left(16.)
                 .with_padding_right(16.)
@@ -5863,90 +5844,6 @@ impl LocalLLMWidget {
                 .with_padding_bottom(8.)
                 .finish(),
             );
-
-            // Health check status
-            if enabled {
-                column.add_child(
-                    Container::new(
-                        Flex::column()
-                            .with_child(Box::new(
-                                Text::new_inline(
-                                    format!(
-                                        "Status: Enabled (using {} mode)",
-                                        local_llm_settings.provider.display_name()
-                                    ),
-                                    appearance.ui_font_family(),
-                                    CONTENT_FONT_SIZE,
-                                )
-                                .with_color(appearance.theme().accent().into_solid()),
-                            ))
-                            .finish(),
-                    )
-                    .with_padding_left(16.)
-                    .with_padding_right(16.)
-                    .with_padding_top(8.)
-                    .with_padding_bottom(8.)
-                    .finish(),
-                );
-            } else {
-                column.add_child(
-                    Container::new(
-                        Flex::column()
-                            .with_child(Box::new(
-                                Text::new_inline(
-                                    "Status: Disabled - Enable to use local LLM",
-                                    appearance.ui_font_family(),
-                                    CONTENT_FONT_SIZE,
-                                )
-                                .with_color(appearance.theme().disabled_ui_text_color().into()),
-                            ))
-                            .finish(),
-                    )
-                    .with_padding_left(16.)
-                    .with_padding_right(16.)
-                    .with_padding_top(8.)
-                    .with_padding_bottom(8.)
-                    .finish(),
-                );
-            }
-
-            // Selected model
-            if let Some(model) = &local_llm_settings.selected_model {
-                let model_name = model.clone();
-                column.add_child(
-                    Container::new(
-                        Flex::column()
-                            .with_child(
-                                Flex::row()
-                                    .with_child(Box::new(
-                                        Text::new_inline(
-                                            "Selected Model: ",
-                                            appearance.ui_font_family(),
-                                            CONTENT_FONT_SIZE,
-                                        )
-                                        .with_color(
-                                            appearance.theme().active_ui_text_color().into(),
-                                        ),
-                                    ))
-                                    .with_child(Box::new(
-                                        Text::new_inline(
-                                            model_name,
-                                            appearance.ui_font_family(),
-                                            CONTENT_FONT_SIZE,
-                                        )
-                                        .with_color(appearance.theme().accent().into_solid()),
-                                    ))
-                                    .finish(),
-                            )
-                            .finish(),
-                    )
-                    .with_padding_left(16.)
-                    .with_padding_right(16.)
-                    .with_padding_top(8.)
-                    .with_padding_bottom(8.)
-                    .finish(),
-                );
-            }
         }
 
         column.finish()
