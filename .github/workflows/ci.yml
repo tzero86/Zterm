@@ -73,15 +73,13 @@ jobs:
       - name: Determine macOS runner type
         id: mac_runner_type
         run: |
-          RUNNER_TYPE='["namespace-profile-mac-ci"]'
+          RUNNER_TYPE='["macos-latest"]'
           echo "value=$RUNNER_TYPE" >> $GITHUB_OUTPUT
 
       - name: Determine wasm runner type
         id: wasm_runner_type
         run: |
-          # Use a larger (16 core, 64GB ram) runner on Linux to speed up execution time.
-          # https://github.com/warpdotdev/warp-internal/settings/actions/runners
-          RUNNER_TYPE='["ubuntu-latest-large"]'
+          RUNNER_TYPE='["ubuntu-latest"]'
           echo "value=$RUNNER_TYPE" >> $GITHUB_OUTPUT
 
   tests:
@@ -110,17 +108,13 @@ jobs:
 
           - os: "linux"
             name: "Linux"
-            # Use a larger (16 core, 64GB ram) runner on Linux to speed up execution time.
-            # https://github.com/warpdotdev/warp-internal/settings/actions/runners
-            runner: ubuntu-latest-large
-            # We don't (yet) have any self-hosted Linux runners.
+            runner: ubuntu-latest
             is_self_hosted: false
             extra_test_args: ""
 
           - os: "windows"
             name: "Windows"
-            runner: windows-latest-large
-            # We don't (yet) have any self-hosted Windows runners.
+            runner: windows-latest
             is_self_hosted: false
             extra_test_args: "--exclude command-signatures-v2 --exclude zterm_js"
     runs-on: ${{ matrix.runner }}
@@ -484,18 +478,14 @@ jobs:
 
           - os: "linux"
             name: "Linux"
-            # Use a larger (16 core, 64GB ram) runner on Linux to speed up execution time.
-            # https://github.com/warpdotdev/warp-internal/settings/actions/runners
-            runner: ubuntu-latest-large
-            # We don't (yet) have any self-hosted Linux runners.
+            runner: ubuntu-latest
             is_self_hosted: false
             null_device: "/dev/null"
             clippy_excludes: "--exclude zterm_completer"
 
           - os: "windows"
             name: "Windows"
-            runner: windows-latest-large
-            # We don't (yet) have any self-hosted Windows runners.
+            runner: windows-latest
             is_self_hosted: false
             null_device: "NUL"
             clippy_excludes: "--exclude zterm_js --exclude command-signatures-v2"
@@ -636,17 +626,13 @@ jobs:
 
           - os: "linux"
             name: "Linux"
-            # Use a larger (16 core, 64GB ram) runner on Linux to speed up execution time.
-            # https://github.com/warpdotdev/warp-internal/settings/actions/runners
-            runner: ubuntu-latest-large
-            # We don't (yet) have any self-hosted Linux runners.
+            runner: ubuntu-latest
             is_self_hosted: false
             null_device: "/dev/null"
 
           - os: "windows"
             name: "Windows"
-            runner: windows-latest-large
-            # We don't (yet) have any self-hosted Windows runners.
+            runner: windows-latest
             is_self_hosted: false
             null_device: "NUL"
 
