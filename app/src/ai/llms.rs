@@ -1,4 +1,4 @@
-﻿use parking_lot::FairMutex;
+use parking_lot::FairMutex;
 use serde::{de, Deserialize, Serialize};
 use std::{
     collections::{HashMap, HashSet},
@@ -9,11 +9,11 @@ use zterm_core::user_preferences::GetUserPreferences;
 use zterm_ui::{AppContext, Entity, EntityId, ModelContext, SingletonEntity};
 
 use crate::{
+    ai::local_llm::{discovery, LocalLLMProvider},
     auth::{
         auth_manager::{AuthManager, AuthManagerEvent},
         AuthStateProvider,
     },
-    ai::local_llm::{discovery, LocalLLMProvider},
     network::{NetworkStatus, NetworkStatusEvent, NetworkStatusKind},
     report_error,
     server::server_api::ServerApiProvider,
@@ -910,7 +910,9 @@ impl LLMPreferences {
                 let mut local_choices = Vec::new();
                 let providers = discovery::discover_providers().await;
                 for (provider, _) in providers {
-                    if let Ok(models) = discovery::list_models_for_provider(provider.clone(), None).await {
+                    if let Ok(models) =
+                        discovery::list_models_for_provider(provider.clone(), None).await
+                    {
                         local_choices.extend(
                             models
                                 .into_iter()
@@ -948,7 +950,8 @@ impl LLMPreferences {
     }
 
     fn rebuild_models_by_feature(&mut self, ctx: &mut ModelContext<Self>) {
-        let update = merge_models_by_feature(&self.remote_models_by_feature, &self.local_llm_choices);
+        let update =
+            merge_models_by_feature(&self.remote_models_by_feature, &self.local_llm_choices);
         let has_existing_persisted_config = get_cached_models(ctx).is_some();
 
         let old = std::mem::replace(&mut self.models_by_feature, update);
@@ -1146,7 +1149,8 @@ fn merge_models_by_feature(remote: &ModelsByFeature, local_choices: &[LLMInfo]) 
 
 fn merge_available_llms(base: &AvailableLLMs, local_choices: &[LLMInfo]) -> AvailableLLMs {
     let mut merged = base.clone();
-    let mut existing_ids: HashSet<LLMId> = merged.choices.iter().map(|llm| llm.id.clone()).collect();
+    let mut existing_ids: HashSet<LLMId> =
+        merged.choices.iter().map(|llm| llm.id.clone()).collect();
     for llm in local_choices {
         if existing_ids.insert(llm.id.clone()) {
             merged.choices.push(llm.clone());

@@ -8,9 +8,9 @@ use crate::{
     terminal::model::session::SessionType,
 };
 use futures_util::StreamExt;
+use uuid::Uuid;
 use warp_multi_agent_api as api;
 use zterm_core::features::FeatureFlag;
-use uuid::Uuid;
 
 use crate::server::server_api::ServerApi;
 
@@ -309,7 +309,9 @@ async fn generate_local_llm_output(
         let response = client
             .generate_with_tools(messages.clone(), &model, Some(tools.clone()))
             .await
-            .map_err(|e| ConvertToAPITypeError::Other(anyhow::anyhow!("Local LLM request failed: {e}")))?;
+            .map_err(|e| {
+                ConvertToAPITypeError::Other(anyhow::anyhow!("Local LLM request failed: {e}"))
+            })?;
 
         let choice = response.choices.into_iter().next().ok_or_else(|| {
             ConvertToAPITypeError::Other(anyhow::anyhow!("LLM returned no choices"))
@@ -355,15 +357,17 @@ async fn generate_local_llm_output(
     let message_id = format!("local-message-{request_id}");
 
     let init_event = api::ResponseEvent {
-        r#type: Some(api::response_event::Type::Init(api::response_event::StreamInit {
-            request_id: request_id.clone(),
-            conversation_id: params
-                .conversation_token
-                .as_ref()
-                .map(|token| token.as_str().to_string())
-                .unwrap_or_default(),
-            run_id: String::new(),
-        })),
+        r#type: Some(api::response_event::Type::Init(
+            api::response_event::StreamInit {
+                request_id: request_id.clone(),
+                conversation_id: params
+                    .conversation_token
+                    .as_ref()
+                    .map(|token| token.as_str().to_string())
+                    .unwrap_or_default(),
+                run_id: String::new(),
+            },
+        )),
     };
 
     let mut actions: Vec<api::ClientAction> = Vec::new();
@@ -394,9 +398,9 @@ async fn generate_local_llm_output(
                     task_id,
                     server_message_data: String::new(),
                     citations: vec![],
-                    message: Some(api::message::Message::AgentOutput(api::message::AgentOutput {
-                        text: final_text,
-                    })),
+                    message: Some(api::message::Message::AgentOutput(
+                        api::message::AgentOutput { text: final_text },
+                    )),
                     request_id,
                     timestamp: None,
                 }],
@@ -424,21 +428,25 @@ async fn generate_local_llm_output(
         )),
     };
 
-    let output_stream =
-        futures_util::stream::iter(vec![Ok(init_event), Ok(client_actions_event), Ok(finished_event)])
-            .take_until(cancellation_rx);
+    let output_stream = futures_util::stream::iter(vec![
+        Ok(init_event),
+        Ok(client_actions_event),
+        Ok(finished_event),
+    ])
+    .take_until(cancellation_rx);
     Ok(Box::pin(output_stream))
 }
 
 fn parse_local_model_id(model_id: &crate::ai::llms::LLMId) -> Option<(LocalLLMProvider, String)> {
     let model_id = model_id.to_string();
-    let parse_provider = |prefix: &str, provider: LocalLLMProvider| -> Option<(LocalLLMProvider, String)> {
-        if !model_id.starts_with(prefix) {
-            return None;
-        }
-        let encoded = &model_id[prefix.len()..];
-        decode_hex_model_name(encoded).map(|decoded| (provider, decoded))
-    };
+    let parse_provider =
+        |prefix: &str, provider: LocalLLMProvider| -> Option<(LocalLLMProvider, String)> {
+            if !model_id.starts_with(prefix) {
+                return None;
+            }
+            let encoded = &model_id[prefix.len()..];
+            decode_hex_model_name(encoded).map(|decoded| (provider, decoded))
+        };
 
     parse_provider("local-ollama-hex-", LocalLLMProvider::Ollama)
         .or_else(|| parse_provider("local-lmstudio-hex-", LocalLLMProvider::LMStudio))
@@ -488,7 +496,9 @@ fn extract_local_chat_messages(inputs: &[AIAgentInput]) -> Vec<ChatMessage> {
                     });
                 }
             }
-            AIAgentInput::SummarizeConversation { prompt: Some(prompt) } if !prompt.trim().is_empty() => {
+            AIAgentInput::SummarizeConversation {
+                prompt: Some(prompt),
+            } if !prompt.trim().is_empty() => {
                 messages.push(ChatMessage {
                     role: "user".to_owned(),
                     content: prompt.clone(),
@@ -571,7 +581,9 @@ fn build_initial_messages(inputs: &[AIAgentInput], cwd: &str) -> Vec<AgentMessag
                     });
                 }
             }
-            AIAgentInput::SummarizeConversation { prompt: Some(prompt) } if !prompt.trim().is_empty() => {
+            AIAgentInput::SummarizeConversation {
+                prompt: Some(prompt),
+            } if !prompt.trim().is_empty() => {
                 messages.push(AgentMessage {
                     role: "user".to_owned(),
                     content: Some(prompt.clone()),
@@ -653,9 +665,7 @@ async fn run_shell_command_in_cwd(command: &str, cwd: &str) -> String {
     {
         Ok(result) => result,
         Err(_) => {
-            return format!(
-                "Error: command timed out after {SHELL_TIMEOUT_SECS}s"
-            );
+            return format!("Error: command timed out after {SHELL_TIMEOUT_SECS}s");
         }
     };
 

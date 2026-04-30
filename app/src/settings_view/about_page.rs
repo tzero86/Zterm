@@ -1,14 +1,12 @@
-﻿use super::{
+use super::{
     settings_page::{
         MatchData, PageType, SettingsPageEvent, SettingsPageMeta, SettingsPageViewHandle,
         SettingsWidget,
     },
     SettingsSection,
 };
+use crate::{appearance::Appearance, channel::ChannelState, workspace::WorkspaceAction};
 use asset_macro::bundled_asset;
-use crate::{
-    appearance::Appearance, channel::ChannelState, workspace::WorkspaceAction,
-};
 use zterm_ui::{
     elements::{
         Align, CacheOption, ConstrainedBox, Container, CrossAxisAlignment, Element, Flex, Image,
@@ -67,11 +65,7 @@ impl SettingsWidget for AboutPageWidget {
         let version = ChannelState::app_version().unwrap_or("v#.##.###");
 
         let logo = ConstrainedBox::new(
-            Image::new(
-                bundled_asset!("svg/zterm-logo.svg"),
-                CacheOption::Original,
-            )
-            .finish(),
+            Image::new(bundled_asset!("svg/zterm-logo.svg"), CacheOption::Original).finish(),
         )
         .with_width(96.)
         .with_height(96.)

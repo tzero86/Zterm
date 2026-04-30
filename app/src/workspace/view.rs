@@ -16956,7 +16956,9 @@ impl Workspace {
                 .finish()
             })
             .on_click(|ctx, _, _| {
-                ctx.dispatch_typed_action(WorkspaceAction::OpenLink("https://github.com/tzero86/Zterm".to_owned()));
+                ctx.dispatch_typed_action(WorkspaceAction::OpenLink(
+                    "https://github.com/tzero86/Zterm".to_owned(),
+                ));
             })
             .with_cursor(Cursor::PointingHand)
             .finish();

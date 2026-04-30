@@ -1,4 +1,4 @@
-﻿pub(crate) mod convert_conversation;
+pub(crate) mod convert_conversation;
 mod convert_from;
 mod convert_to;
 mod r#impl;
@@ -30,10 +30,10 @@ use crate::{
 
 use super::{AIAgentInput, MCPContext, MCPServer, RequestMetadata, Suggestions};
 use crate::ai::blocklist::{BlocklistAIPermissions, RequestInput};
+use crate::ai::local_llm::LocalLLMSettings;
 use crate::ai::mcp::templatable_manager::TemplatableMCPServerInfo;
 use crate::ai::mcp::TemplatableMCPServerManager;
 use crate::settings::AISettings;
-use crate::ai::local_llm::LocalLLMSettings;
 use crate::terminal::safe_mode_settings::get_secret_obfuscation_mode;
 use crate::workspaces::user_workspaces::UserWorkspaces;
 use zterm_core::user_preferences::GetUserPreferences;

@@ -5802,11 +5802,10 @@ impl LocalLLMWidget {
     ) -> Box<dyn Element> {
         let ai_settings = AISettings::as_ref(app);
         let is_any_ai_enabled = ai_settings.is_any_ai_enabled(app);
-        
+
         // LocalLLMSettings integration not yet complete - skip rendering
         // The singleton needs to be initialized earlier in app startup
-        let mut column = Flex::column()
-            .with_child(render_separator(appearance));
+        let mut column = Flex::column().with_child(render_separator(appearance));
 
         if is_any_ai_enabled {
             column.add_child(
@@ -5827,7 +5826,7 @@ impl LocalLLMWidget {
                 .with_padding_bottom(HEADER_PADDING)
                 .finish(),
             );
-            
+
             column.add_child(
                 Container::new(
                     Box::new(
@@ -6084,7 +6083,10 @@ impl ApiKeysWidget {
                 // to sales to enable BYOK on their existing plan.
                 if team.billing_metadata.customer_type == CustomerType::Enterprise {
                     vec![
-                        FormattedTextFragment::hyperlink("Contact sales", "https://github.com/tzero86/Zterm/issues"),
+                        FormattedTextFragment::hyperlink(
+                            "Contact sales",
+                            "https://github.com/tzero86/Zterm/issues",
+                        ),
                         FormattedTextFragment::plain_text(
                             " to enable bringing your own API keys on your Enterprise plan.",
                         ),

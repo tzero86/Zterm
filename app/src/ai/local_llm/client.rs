@@ -339,7 +339,11 @@ fn parse_sse_line(text: &str) -> anyhow::Result<ChatChunk> {
     }
 
     Ok(ChatChunk {
-        content: if content.is_empty() { None } else { Some(content) },
+        content: if content.is_empty() {
+            None
+        } else {
+            Some(content)
+        },
         finish_reason,
     })
 }
