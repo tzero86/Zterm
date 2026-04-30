@@ -314,12 +314,15 @@ async fn generate_local_llm_output(
     }
 
     let request_id = Uuid::new_v4().to_string();
-    // Generate a fresh UUID for the synthetic server task. We cannot reuse the
-    // optimistic root task's ID (a UUID we don't know here) because compute_active_tasks()
-    // returns an empty Vec for new conversations whose root task has no server source yet.
-    // Instead we emit CreateTask first, which upgrades the optimistic root task to a
-    // server-backed task keyed by our UUID, then AddMessagesToTask can find it.
-    let task_id = Uuid::new_v4().to_string();
+    // If params.tasks is non-empty, the root task is already server-backed (upgraded
+    // by a previous CreateTask in this conversation). Reuse its existing ID.
+    // If params.tasks is empty, the root task is still optimistic (first message in a
+    // new conversation) — emit CreateTask to upgrade it with a fresh UUID.
+    let (task_id, needs_create_task) = if let Some(existing_task) = params.tasks.first() {
+        (existing_task.id.clone(), false)
+    } else {
+        (Uuid::new_v4().to_string(), true)
+    };
     let message_id = format!("local-message-{request_id}");
 
     let init_event = api::ResponseEvent {
@@ -334,26 +337,28 @@ async fn generate_local_llm_output(
         })),
     };
 
-    // CreateTask must come before AddMessagesToTask. It upgrades the optimistic root
-    // task (which has no server source) into a server-backed task with our task_id.
-    // After this action the task exists in task_store and added_exchanges_by_response
-    // entries are updated to reference our new task_id.
-    let create_task_action = api::ClientAction {
-        action: Some(api::client_action::Action::CreateTask(
-            api::client_action::CreateTask {
-                task: Some(api::Task {
-                    id: task_id.clone(),
-                    messages: vec![],
-                    dependencies: None,
-                    description: String::new(),
-                    summary: String::new(),
-                    server_data: String::new(),
-                }),
-            },
-        )),
-    };
+    let mut actions: Vec<api::ClientAction> = Vec::new();
 
-    let add_message_action = api::ClientAction {
+    // CreateTask upgrades the optimistic root task to a server-backed task. Only
+    // needed for the first message in a new conversation (when params.tasks is empty).
+    if needs_create_task {
+        actions.push(api::ClientAction {
+            action: Some(api::client_action::Action::CreateTask(
+                api::client_action::CreateTask {
+                    task: Some(api::Task {
+                        id: task_id.clone(),
+                        messages: vec![],
+                        dependencies: None,
+                        description: String::new(),
+                        summary: String::new(),
+                        server_data: String::new(),
+                    }),
+                },
+            )),
+        });
+    }
+
+    actions.push(api::ClientAction {
         action: Some(api::client_action::Action::AddMessagesToTask(
             api::client_action::AddMessagesToTask {
                 task_id: task_id.clone(),
@@ -370,13 +375,11 @@ async fn generate_local_llm_output(
                 }],
             },
         )),
-    };
+    });
 
     let client_actions_event = api::ResponseEvent {
         r#type: Some(api::response_event::Type::ClientActions(
-            api::response_event::ClientActions {
-                actions: vec![create_task_action, add_message_action],
-            },
+            api::response_event::ClientActions { actions },
         )),
     };
 
