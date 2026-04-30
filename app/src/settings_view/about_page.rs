@@ -5,12 +5,11 @@
     },
     SettingsSection,
 };
+use asset_macro::bundled_asset;
 use crate::{
-    appearance::Appearance, channel::ChannelState, themes::theme::ColorScheme,
-    workspace::WorkspaceAction,
+    appearance::Appearance, channel::ChannelState, workspace::WorkspaceAction,
 };
 use zterm_ui::{
-    assets::asset_cache::AssetSource,
     elements::{
         Align, CacheOption, ConstrainedBox, Container, CrossAxisAlignment, Element, Flex, Image,
         MainAxisAlignment, MouseStateHandle, ParentElement, Wrap,
@@ -67,6 +66,24 @@ impl SettingsWidget for AboutPageWidget {
 
         let version = ChannelState::app_version().unwrap_or("v#.##.###");
 
+        let logo = ConstrainedBox::new(
+            Image::new(
+                bundled_asset!("svg/zterm-logo.svg"),
+                CacheOption::Original,
+            )
+            .finish(),
+        )
+        .with_width(96.)
+        .with_height(96.)
+        .finish();
+
+        let app_name = ui_builder
+            .span("Zterm".to_owned())
+            .with_soft_wrap()
+            .build()
+            .with_margin_top(16.)
+            .finish();
+
         let version_text = ui_builder
             .span(version.to_string())
             .with_soft_wrap()
@@ -96,6 +113,8 @@ impl SettingsWidget for AboutPageWidget {
         Align::new(
             Flex::column()
                 .with_cross_axis_alignment(CrossAxisAlignment::Center)
+                .with_child(Container::new(logo).with_margin_top(24.).finish())
+                .with_child(app_name)
                 .with_child(version_row.finish())
                 .with_child(
                     ui_builder
