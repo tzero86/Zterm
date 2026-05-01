@@ -48,7 +48,12 @@ impl RenderableBlock for RenderableRunnableCommand {
         &self.viewport_item
     }
 
-    fn layout(&mut self, _model: &RenderState, ctx: &mut zterm_ui::LayoutContext, app: &AppContext) {
+    fn layout(
+        &mut self,
+        _model: &RenderState,
+        ctx: &mut zterm_ui::LayoutContext,
+        app: &AppContext,
+    ) {
         self.footer.layout(
             SizeConstraint::strict(vec2f(
                 self.viewport_item.content_size.x(),
@@ -87,7 +92,9 @@ impl RenderableBlock for RenderableRunnableCommand {
 
         // Place the button at a higher z-index for event handling. See the comment on
         // `RichTextElement::content_z_index` for context.
-        ctx.paint.scene.start_layer(zterm_ui::ClipBounds::ActiveLayer);
+        ctx.paint
+            .scene
+            .start_layer(zterm_ui::ClipBounds::ActiveLayer);
 
         // Position the block footer right below the content area, flush with its right-hand edge.
         // This gives the footer some padding relative to the visible area with a background.

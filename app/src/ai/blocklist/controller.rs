@@ -1,4 +1,4 @@
-﻿//! This module contains core business logic for Agent Mode, primarily sending input to an AI
+//! This module contains core business logic for Agent Mode, primarily sending input to an AI
 //! model and receiving output.
 //!
 //! The `BlocklistAIController` orchestrates state updates and service calls to power the
@@ -63,7 +63,6 @@ use crate::terminal::{
     ShellLaunchData,
 };
 use crate::workspaces::update_manager::TeamUpdateManager;
-use crate::workspaces::user_workspaces::UserWorkspaces;
 use crate::{send_telemetry_from_ctx, server::telemetry::TelemetryEvent};
 use anyhow::anyhow;
 use chrono::{DateTime, Local};
@@ -73,10 +72,9 @@ use pending_response_streams::PendingResponseStreams;
 use session_sharing_protocol::common::ParticipantId;
 use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
-use std::time::Duration;
-use zterm_core::assertions::safe_assert;
 use warp_multi_agent_api::{message, Task, ToolType};
-use zterm_ui::r#async::{SpawnedFutureHandle, Timer};
+use zterm_core::assertions::safe_assert;
+use zterm_ui::r#async::SpawnedFutureHandle;
 
 use super::orchestration_events::{OrchestrationEventService, OrchestrationEventServiceEvent};
 use zterm_ui::{AppContext, Entity, EntityId, ModelContext, ModelHandle, SingletonEntity};
@@ -2543,37 +2541,8 @@ impl BlocklistAIController {
         });
     }
 
-    /// Checks if we should refresh AI overage information after an AI request completes.
-    /// This is used to ensure the UI matches the state of the workspace,
-    /// especially because overages are not real-time communicated to clients.
-    fn maybe_refresh_ai_overages(&mut self, ctx: &mut ModelContext<Self>) {
-        let workspace = UserWorkspaces::as_ref(ctx).current_workspace();
-        let Some(workspace) = workspace else {
-            return;
-        };
-
-        // We want to minimize the number of times we ping our backend for updated usage information;
-        // doing it after every AI query finishes would be very expensive.
-
-        // If a user is below their personal limits, then we know that they won't eat into overages,
-        // so we don't need to refresh.
-        let has_no_requests_remaining = !AIRequestUsageModel::as_ref(ctx).has_requests_remaining();
-        // If overages aren't enabled, we're not going to reap the benefit of refreshing at all anyway.
-        let are_overages_enabled = workspace.are_overages_enabled();
-
-        if are_overages_enabled && has_no_requests_remaining {
-            // Give a one second delay to ensure that Stripe has been charged and the database is completely updated,
-            // before syncing new AI overages data.
-            ctx.spawn(
-                async move { Timer::after(Duration::from_secs(1)).await },
-                |_, _, ctx| {
-                    UserWorkspaces::handle(ctx).update(ctx, |user_workspaces, ctx| {
-                        user_workspaces.refresh_ai_overages(ctx);
-                    });
-                },
-            );
-        }
-    }
+    /// No-op: billing overages are not applicable in Zterm (no cloud account required).
+    fn maybe_refresh_ai_overages(&mut self, _ctx: &mut ModelContext<Self>) {}
 
     pub(super) fn handle_response_stream_finished(
         &mut self,

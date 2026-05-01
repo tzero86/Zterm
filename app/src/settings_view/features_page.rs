@@ -298,7 +298,7 @@ pub fn init_actions_from_parent_view<T: Action + Clone>(
 
     if !FeatureFlag::SSHTmuxWrapper.is_enabled() {
         toggle_binding_pairs.push(ToggleSettingActionPair::new(
-            "Warp SSH wrapper",
+            "Zterm SSH wrapper",
             builder(SettingsAction::FeaturesPageToggle(
                 #[allow(deprecated)]
                 FeaturesPageAction::ToggleSshWrapper,
@@ -549,7 +549,7 @@ pub fn init_actions_from_parent_view<T: Action + Clone>(
 
     if DefaultTerminal::can_warp_become_default() {
         app.register_fixed_bindings([FixedBinding::empty(
-            "Make Warp the default terminal",
+            "Make Zterm the default terminal",
             builder(SettingsAction::FeaturesPageToggle(
                 FeaturesPageAction::MakeWarpDefaultTerminal,
             )),
@@ -4511,9 +4511,9 @@ impl SettingsWidget for LoginItemWidget {
         let general_settings = GeneralSettings::as_ref(app);
         let ui_builder = appearance.ui_builder();
         #[cfg(target_os = "macos")]
-        let label = "Start Warp at login (requires macOS 13+)";
+        let label = "Start Zterm at login (requires macOS 13+)";
         #[cfg(not(target_os = "macos"))]
-        let label = "Start Warp at login";
+        let label = "Start Zterm at login";
         render_body_item::<FeaturesPageAction>(
             label.into(),
             None,
@@ -4777,7 +4777,7 @@ impl SettingsWidget for DefaultTerminalWidget {
     type View = FeaturesPageView;
 
     fn search_terms(&self) -> &str {
-        "warp default terminal application"
+        "zterm default terminal application"
     }
 
     fn render(
@@ -4790,7 +4790,7 @@ impl SettingsWidget for DefaultTerminalWidget {
         let default_terminal = DefaultTerminal::as_ref(app);
         if default_terminal.is_warp_default() {
             ui_builder
-                .wrappable_text("Warp is the default terminal", true)
+                .wrappable_text("Zterm is the default terminal", true)
                 .with_style(UiComponentStyles {
                     font_color: Some(appearance.theme().disabled_ui_text_color().into()),
                     margin: Some(Coords::default().bottom(16.)),
@@ -4801,7 +4801,7 @@ impl SettingsWidget for DefaultTerminalWidget {
         } else {
             ui_builder
                 .link(
-                    "Make Warp the default terminal".to_string(),
+                    "Make Zterm the default terminal".to_string(),
                     None,
                     Some(Box::new(|ctx| {
                         ctx.dispatch_typed_action(FeaturesPageAction::MakeWarpDefaultTerminal);
@@ -4894,11 +4894,11 @@ impl SettingsWidget for SSHWrapperWidget {
     ) -> Box<dyn Element> {
         let ui_builder = appearance.ui_builder();
         render_body_item::<FeaturesPageAction>(
-            "Warp SSH Wrapper".into(),
+            "Zterm SSH Wrapper".into(),
             Some(AdditionalInfo {
                 mouse_state: self.additional_info_link.clone(),
                 on_click_action: Some(FeaturesPageAction::OpenUrl(
-                    "https://docs.warp.dev/terminal/warpify/ssh-legacy#implementation".into(),
+                    "https://docs.zterm.dev/terminal/ztermify/ssh-legacy#implementation".into(),
                 )),
                 secondary_text: if view.ssh_wrapper_toggled {
                     Some("This change will take effect in new sessions".to_string())
@@ -7166,7 +7166,7 @@ impl SettingsWidget for WindowSystemWidget {
                     may be blurry if your Wayland compositor is using fraction scaling (ex: 125%)."
                 .to_string();
         if view.force_x11_changed {
-            secondary_text.push_str("\n\nRestart Warp for changes to take effect.");
+            secondary_text.push_str("\n\nRestart Zterm for changes to take effect.");
         }
         let warp_theme = appearance.theme();
         children.add_child(

@@ -1,4 +1,4 @@
-﻿//! Renders the AI output portion of the AI block.
+//! Renders the AI output portion of the AI block.
 //!
 //! This includes text, code snippets, suggested commands, and interactive inline action UX.
 use crate::ai::agent::api::ServerConversationToken;
@@ -42,13 +42,13 @@ use pathfinder_color::ColorU;
 use pathfinder_geometry::vector::vec2f;
 use ui_components::{button, Component as _, Options as _};
 use zterm_core::ui::theme::color::internal_colors;
-#[allow(unused_imports)]
-use zterm_util::path::{common_path, CleanPathResult};
 use zterm_ui::elements::new_scrollable::SingleAxisConfig;
 use zterm_ui::elements::{
     ChildAnchor, NewScrollable, OffsetPositioning, ParentAnchor, ParentOffsetBounds, Stack,
 };
 use zterm_ui::EntityId;
+#[allow(unused_imports)]
+use zterm_util::path::{common_path, CleanPathResult};
 
 use crate::ai::blocklist::block::{
     CollapsibleElementState, CollapsibleExpansionState, FinishReason, ImportedCommentGroup,
@@ -1293,7 +1293,7 @@ fn render_search_codebase(
                                             ctx.dispatch_typed_action(
                                                 WorkspaceAction::ShowSettingsPageWithSearch {
                                                     search_query: "Autonomy".to_string(),
-                                                    section: Some(SettingsSection::WarpAgent),
+                                                    section: Some(SettingsSection::ZtermAgent),
                                                 },
                                             );
                                         })),

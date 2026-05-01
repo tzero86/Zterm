@@ -1,4 +1,4 @@
-﻿use parking_lot::FairMutex;
+use parking_lot::FairMutex;
 use serde::{de, Deserialize, Serialize};
 use std::{
     collections::{HashMap, HashSet},
@@ -9,6 +9,7 @@ use zterm_core::user_preferences::GetUserPreferences;
 use zterm_ui::{AppContext, Entity, EntityId, ModelContext, SingletonEntity};
 
 use crate::{
+    ai::local_llm::LocalLLMProvider,
     auth::{
         auth_manager::{AuthManager, AuthManagerEvent},
         AuthStateProvider,
@@ -496,7 +497,9 @@ struct AvailableLLMsUpdate {
 /// Singleton model holding user/workspace LLM preferences, including the set of LLMs available for
 /// use as well as the user's preferred LLM for Agent Mode.
 pub struct LLMPreferences {
+    remote_models_by_feature: ModelsByFeature,
     models_by_feature: ModelsByFeature,
+    local_llm_choices: Vec<LLMInfo>,
     last_update: Option<AvailableLLMsUpdate>,
     // Stores temporary model overrides for a given terminal view.
     // NOTE: We only store an override if the model selected by the user is different
@@ -507,14 +510,15 @@ pub struct LLMPreferences {
 
 impl LLMPreferences {
     pub fn new(ctx: &mut ModelContext<Self>) -> Self {
-        let models_by_feature = get_cached_models(ctx).unwrap_or_default();
+        let remote_models_by_feature = get_cached_models(ctx).unwrap_or_default();
+        let models_by_feature = remote_models_by_feature.clone();
 
         ctx.subscribe_to_model(&NetworkStatus::handle(ctx), |me, event, ctx| {
             if let NetworkStatusEvent::NetworkStatusChanged {
                 new_status: NetworkStatusKind::Online,
             } = event
             {
-                me.refresh_authed_models(ctx);
+                me.refresh_available_models(ctx);
             }
         });
 
@@ -524,20 +528,22 @@ impl LLMPreferences {
         // have a personal workspace. This is a stop-gap.
         ctx.subscribe_to_model(&AuthManager::handle(ctx), |me, event, ctx| {
             if let AuthManagerEvent::AuthComplete = event {
-                me.refresh_authed_models(ctx);
+                me.refresh_available_models(ctx);
             }
         });
 
         ctx.subscribe_to_model(&UserWorkspaces::handle(ctx), |me, event, ctx| {
             if let UserWorkspacesEvent::TeamsChanged = event {
-                me.refresh_authed_models(ctx);
+                me.refresh_available_models(ctx);
             }
         });
 
         let base_llm_for_terminal_view = HashMap::new();
 
         let me = Self {
+            remote_models_by_feature,
             models_by_feature,
+            local_llm_choices: Vec::new(),
             last_update: None,
             base_llm_for_terminal_view,
         };
@@ -548,6 +554,8 @@ impl LLMPreferences {
         // to avoid duplicate requests at startup.
         #[cfg(feature = "agent_mode_evals")]
         me.refresh_available_models(ctx);
+
+        me.refresh_local_models(ctx);
 
         me
     }
@@ -858,7 +866,7 @@ impl LLMPreferences {
             async move { ai_api_client.get_feature_model_choices().await },
             |me, result, ctx| match result {
                 Ok(update) => {
-                    if update != me.models_by_feature {
+                    if update != me.remote_models_by_feature {
                         me.on_server_update(update, ctx);
                     }
                 }
@@ -876,7 +884,7 @@ impl LLMPreferences {
             async move { ai_api_client.get_free_available_models(None).await },
             |me, result, ctx| match result {
                 Ok(update) => {
-                    if update != me.models_by_feature {
+                    if update != me.remote_models_by_feature {
                         me.on_server_update(update, ctx);
                     }
                 }
@@ -893,6 +901,45 @@ impl LLMPreferences {
         } else {
             self.refresh_public_models(ctx);
         }
+        self.refresh_local_models(ctx);
+    }
+
+    fn refresh_local_models(&self, ctx: &mut ModelContext<Self>) {
+        #[cfg(target_arch = "wasm32")]
+        {
+            let _ = ctx;
+        }
+        #[cfg(not(target_arch = "wasm32"))]
+        ctx.spawn(
+            async move {
+                let mut local_choices = Vec::new();
+                let providers = crate::ai::local_llm::discovery::discover_providers().await;
+                for (provider, _) in providers {
+                    if let Ok(models) = crate::ai::local_llm::discovery::list_models_for_provider(
+                        provider.clone(),
+                        None,
+                    )
+                    .await
+                    {
+                        local_choices.extend(
+                            models
+                                .into_iter()
+                                .map(|model| local_model_to_llm_info(&provider, model.name)),
+                        );
+                    }
+                }
+
+                let mut seen = HashSet::new();
+                local_choices.retain(|llm| seen.insert(llm.id.clone()));
+                local_choices
+            },
+            |me, local_choices, ctx| {
+                if local_choices != me.local_llm_choices {
+                    me.local_llm_choices = local_choices;
+                    me.rebuild_models_by_feature(ctx);
+                }
+            },
+        );
     }
 
     pub fn update_feature_model_choices(
@@ -906,11 +953,19 @@ impl LLMPreferences {
     }
 
     fn on_server_update(&mut self, update: ModelsByFeature, ctx: &mut ModelContext<Self>) {
+        self.remote_models_by_feature = update;
+        self.rebuild_models_by_feature(ctx);
+    }
+
+    fn rebuild_models_by_feature(&mut self, ctx: &mut ModelContext<Self>) {
+        let update =
+            merge_models_by_feature(&self.remote_models_by_feature, &self.local_llm_choices);
         let has_existing_persisted_config = get_cached_models(ctx).is_some();
 
         let old = std::mem::replace(&mut self.models_by_feature, update);
 
-        match serde_json::to_string(&self.models_by_feature) {
+        // Persist only remote/server models in cache; local model discovery is runtime-only.
+        match serde_json::to_string(&self.remote_models_by_feature) {
             Ok(serialized_update) => {
                 if let Err(e) = ctx
                     .private_user_preferences()
@@ -925,44 +980,51 @@ impl LLMPreferences {
         }
 
         // Clear any model selections where the model is no longer supported.
+        // Local models (local-*) are discovered asynchronously at runtime and may not
+        // be present in models_by_feature yet when this runs, so skip clearing them —
+        // their absence here is not evidence they've been removed by the user or server.
         let profiles_model = AIExecutionProfilesModel::handle(ctx);
         profiles_model.update(ctx, |profiles, ctx| {
             for profile_id in profiles.get_all_profile_ids() {
                 if let Some(profile) = profiles.get_profile_by_id(profile_id, ctx) {
                     if let Some(preferred_llm_id) = &profile.data().base_model {
-                        if self
-                            .models_by_feature
-                            .agent_mode
-                            .info_for_id(preferred_llm_id)
-                            .is_none()
+                        if !preferred_llm_id.is_local()
+                            && self
+                                .models_by_feature
+                                .agent_mode
+                                .info_for_id(preferred_llm_id)
+                                .is_none()
                         {
                             profiles.set_base_model(profile_id, None, ctx);
                         }
                     }
                     if let Some(preferred_llm_id) = &profile.data().coding_model {
-                        if self
-                            .models_by_feature
-                            .coding
-                            .info_for_id(preferred_llm_id)
-                            .is_none()
+                        if !preferred_llm_id.is_local()
+                            && self
+                                .models_by_feature
+                                .coding
+                                .info_for_id(preferred_llm_id)
+                                .is_none()
                         {
                             profiles.set_coding_model(profile_id, None, ctx);
                         }
                     }
                     if let Some(preferred_llm_id) = &profile.data().cli_agent_model {
-                        if self
-                            .get_cli_agent_available()
-                            .info_for_id(preferred_llm_id)
-                            .is_none()
+                        if !preferred_llm_id.is_local()
+                            && self
+                                .get_cli_agent_available()
+                                .info_for_id(preferred_llm_id)
+                                .is_none()
                         {
                             profiles.set_cli_agent_model(profile_id, None, ctx);
                         }
                     }
                     if let Some(preferred_llm_id) = &profile.data().computer_use_model {
-                        if self
-                            .get_computer_use_available()
-                            .info_for_id(preferred_llm_id)
-                            .is_none()
+                        if !preferred_llm_id.is_local()
+                            && self
+                                .get_computer_use_available()
+                                .info_for_id(preferred_llm_id)
+                                .is_none()
                         {
                             profiles.set_computer_use_model(profile_id, None, ctx);
                         }
@@ -1075,6 +1137,66 @@ fn get_cached_models(app: &mut AppContext) -> Option<ModelsByFeature> {
                 }
             }
         }
+    }
+}
+
+fn merge_models_by_feature(remote: &ModelsByFeature, local_choices: &[LLMInfo]) -> ModelsByFeature {
+    let mut merged = remote.clone();
+    merged.agent_mode = merge_available_llms(&merged.agent_mode, local_choices);
+    merged.coding = merge_available_llms(&merged.coding, local_choices);
+    merged.cli_agent = merged
+        .cli_agent
+        .as_ref()
+        .map(|available| merge_available_llms(available, local_choices));
+    merged.computer_use = merged
+        .computer_use
+        .as_ref()
+        .map(|available| merge_available_llms(available, local_choices));
+    merged
+}
+
+fn merge_available_llms(base: &AvailableLLMs, local_choices: &[LLMInfo]) -> AvailableLLMs {
+    let mut merged = base.clone();
+    let mut existing_ids: HashSet<LLMId> =
+        merged.choices.iter().map(|llm| llm.id.clone()).collect();
+    for llm in local_choices {
+        if existing_ids.insert(llm.id.clone()) {
+            merged.choices.push(llm.clone());
+        }
+    }
+    merged
+}
+
+#[cfg_attr(target_arch = "wasm32", allow(dead_code))]
+fn local_model_to_llm_info(provider: &LocalLLMProvider, model_name: String) -> LLMInfo {
+    let provider_key = match provider {
+        LocalLLMProvider::Ollama => "ollama",
+        LocalLLMProvider::LMStudio => "lmstudio",
+        LocalLLMProvider::Custom => "custom",
+    };
+
+    let encoded_name = model_name
+        .as_bytes()
+        .iter()
+        .map(|byte| format!("{byte:02x}"))
+        .collect::<String>();
+
+    LLMInfo {
+        display_name: format!("{model_name} ({})", provider.display_name()),
+        base_model_name: model_name,
+        id: format!("local-{provider_key}-hex-{encoded_name}").into(),
+        reasoning_level: None,
+        usage_metadata: LLMUsageMetadata {
+            request_multiplier: 1,
+            credit_multiplier: None,
+        },
+        description: Some("Local model".to_owned()),
+        disable_reason: None,
+        vision_supported: true,
+        spec: None,
+        provider: LLMProvider::Unknown,
+        host_configs: HashMap::new(),
+        discount_percentage: None,
     }
 }
 

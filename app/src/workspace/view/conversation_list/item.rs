@@ -13,7 +13,6 @@ use crate::workspace::view::conversation_list::view::ConversationListViewAction;
 use pathfinder_geometry::vector::vec2f;
 use zterm_core::ui::color::coloru_with_opacity;
 use zterm_core::ui::theme::color::internal_colors;
-use zterm_util::path::user_friendly_path;
 use zterm_ui::elements::{
     AnchorPair, ChildAnchor, ChildView, ConstrainedBox, Container, CornerRadius,
     CrossAxisAlignment, DispatchEventResult, Element, EventHandler, Flex, Highlight, Hoverable,
@@ -26,6 +25,7 @@ use zterm_ui::platform::Cursor;
 use zterm_ui::text_layout::TextStyle;
 use zterm_ui::ui_components::components::{UiComponent, UiComponentStyles};
 use zterm_ui::{AppContext, SingletonEntity, ViewHandle};
+use zterm_util::path::user_friendly_path;
 
 /// Maximum length for tooltip text before truncation
 const MAX_TOOLTIP_LENGTH: usize = 80;

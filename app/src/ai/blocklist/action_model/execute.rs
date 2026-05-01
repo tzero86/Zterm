@@ -1,4 +1,4 @@
-﻿pub(super) mod ask_user_question;
+pub(super) mod ask_user_question;
 pub(super) mod call_mcp_tool;
 pub(super) mod create_documents;
 pub(super) mod edit_documents;
@@ -61,14 +61,14 @@ use futures::AsyncReadExt;
 use std::{any::Any, path::PathBuf, pin::Pin, sync::Arc};
 #[cfg(feature = "local_fs")]
 use zterm_files::{FileModel, TextFileReadResult};
-#[cfg(feature = "local_fs")]
-use zterm_util::file::FileLoadError;
-#[cfg(feature = "local_fs")]
-use zterm_util::file_type::is_buffer_binary;
 use zterm_ui::{
     r#async::{Spawnable, SpawnableOutput},
     AppContext, Entity, EntityId, ModelContext, ModelHandle, SingletonEntity,
 };
+#[cfg(feature = "local_fs")]
+use zterm_util::file::FileLoadError;
+#[cfg(feature = "local_fs")]
+use zterm_util::file_type::is_buffer_binary;
 
 #[cfg(feature = "local_fs")]
 use crate::util::image::{

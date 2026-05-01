@@ -121,7 +121,6 @@ use std::ops::Range;
 use std::path::{Path, PathBuf};
 use std::rc::Rc;
 use std::{cell::OnceCell, sync::Arc};
-use zterm_util::path::ShellFamily;
 use zterm_ui::elements::MainAxisAlignment;
 use zterm_ui::elements::MainAxisSize;
 use zterm_ui::elements::SecretRange;
@@ -130,6 +129,7 @@ use zterm_ui::ui_components::button::TextAndIcon;
 use zterm_ui::ui_components::button::TextAndIconAlignment;
 use zterm_ui::ui_components::components::UiComponent;
 use zterm_ui::ui_components::components::UiComponentStyles;
+use zterm_util::path::ShellFamily;
 
 use crate::util::link_detection::*;
 use chrono::Duration;
@@ -3630,7 +3630,7 @@ impl AIBlock {
             AwsBedrockCredentialsErrorEvent::ConfigureLoginCommand => {
                 ctx.dispatch_typed_action(&WorkspaceAction::ShowSettingsPageWithSearch {
                     search_query: "aws bedrock".to_string(),
-                    section: Some(SettingsSection::WarpAgent),
+                    section: Some(SettingsSection::ZtermAgent),
                 });
             }
         });
@@ -6256,7 +6256,7 @@ impl TypedActionView for AIBlock {
             AIBlockAction::ConfigureAwsLoginCommand => {
                 ctx.dispatch_typed_action(&WorkspaceAction::ShowSettingsPageWithSearch {
                     search_query: "aws bedrock".to_string(),
-                    section: Some(SettingsSection::WarpAgent),
+                    section: Some(SettingsSection::ZtermAgent),
                 });
             }
             AIBlockAction::ToggleImportedCommentCollapsed {

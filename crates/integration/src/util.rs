@@ -9,10 +9,7 @@ use std::{
 use strum::IntoEnumIterator;
 use strum_macros::EnumIter;
 
-use version_compare::Version;
-
-use crate::builder::cargo_target_tmpdir;
-use warp::{
+use zterm::{
     integration_testing::{
         terminal::util::{
             current_shell_starter_and_version, default_histfile_directory, ExpectedOutput,
@@ -23,7 +20,7 @@ use warp::{
 };
 use zterm_ui::{App, WindowId};
 
-use warp::terminal::shell;
+use zterm::terminal::shell;
 
 pub fn get_input_buffer(
     app: &App,
@@ -94,25 +91,6 @@ pub fn set_zsh_histfile_location(dir: impl AsRef<Path>) {
     rc_file
         .write_all("\nHISTFILE=${ZDOTDIR:-$HOME}/.zsh_history".as_bytes())
         .expect("Failed to write to zshrc file");
-}
-
-/// Usually, the title is the pwd where the home dir is shortened as "~".
-/// However, this wasn't the case in Fish prior to version 3.4.0, see:
-/// https://github.com/fish-shell/fish-shell/commit/698b8189356c8224443fdfc4399408f932d53aca
-pub(crate) fn tab_title_in_home_dir(home_suffix: &str) -> String {
-    let (shell_starter, shell_version) = current_shell_starter_and_version();
-    let shell_version = Version::from(&shell_version).expect("shell version must be valid");
-    if shell_starter.shell_type() == ShellType::Fish
-        && shell_version < Version::from("3.4.0").expect("shell version must be valid")
-    {
-        let home_path = Path::new(&cargo_target_tmpdir::get()).join(home_suffix);
-        format!(
-            "fish {}",
-            home_path.to_str().expect("path must be valid unicode")
-        )
-    } else {
-        String::from("~")
-    }
 }
 
 /// Writes the `rc_contents` into the corresponding RC files depending on the value of

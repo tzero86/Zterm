@@ -1,16 +1,13 @@
-﻿use super::{
+use super::{
     settings_page::{
         MatchData, PageType, SettingsPageEvent, SettingsPageMeta, SettingsPageViewHandle,
         SettingsWidget,
     },
     SettingsSection,
 };
-use crate::{
-    appearance::Appearance, channel::ChannelState, themes::theme::ColorScheme,
-    workspace::WorkspaceAction,
-};
+use crate::{appearance::Appearance, channel::ChannelState, workspace::WorkspaceAction};
+use asset_macro::bundled_asset;
 use zterm_ui::{
-    assets::asset_cache::AssetSource,
     elements::{
         Align, CacheOption, ConstrainedBox, Container, CrossAxisAlignment, Element, Flex, Image,
         MainAxisAlignment, MouseStateHandle, ParentElement, Wrap,
@@ -54,7 +51,7 @@ impl SettingsWidget for AboutPageWidget {
     type View = AboutPageView;
 
     fn search_terms(&self) -> &str {
-        "about warp version"
+        "about zterm version"
     }
 
     fn render(
@@ -63,16 +60,23 @@ impl SettingsWidget for AboutPageWidget {
         appearance: &Appearance,
         _app: &AppContext,
     ) -> Box<dyn Element> {
-        let theme = appearance.theme();
         let ui_builder = appearance.ui_builder();
 
-        let image_path = if theme.inferred_color_scheme() == ColorScheme::LightOnDark {
-            "bundled/svg/warp-logo-with-light-title.svg"
-        } else {
-            "bundled/svg/warp-logo-with-dark-title.svg"
-        };
-
         let version = ChannelState::app_version().unwrap_or("v#.##.###");
+
+        let logo = ConstrainedBox::new(
+            Image::new(bundled_asset!("svg/zterm-logo.svg"), CacheOption::Original).finish(),
+        )
+        .with_width(96.)
+        .with_height(96.)
+        .finish();
+
+        let app_name = ui_builder
+            .span("Zterm".to_owned())
+            .with_soft_wrap()
+            .build()
+            .with_margin_top(16.)
+            .finish();
 
         let version_text = ui_builder
             .span(version.to_string())
@@ -103,22 +107,12 @@ impl SettingsWidget for AboutPageWidget {
         Align::new(
             Flex::column()
                 .with_cross_axis_alignment(CrossAxisAlignment::Center)
-                .with_child(
-                    ConstrainedBox::new(
-                        Image::new(
-                            AssetSource::Bundled { path: image_path },
-                            CacheOption::BySize,
-                        )
-                        .finish(),
-                    )
-                    .with_max_height(100.)
-                    .with_max_width(350.)
-                    .finish(),
-                )
+                .with_child(Container::new(logo).with_margin_top(24.).finish())
+                .with_child(app_name)
                 .with_child(version_row.finish())
                 .with_child(
                     ui_builder
-                        .span("Copyright 2026 Warp")
+                        .span("Copyright 2026 Zterm")
                         .build()
                         .with_margin_top(16.)
                         .finish(),

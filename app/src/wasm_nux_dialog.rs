@@ -1,4 +1,4 @@
-﻿use crate::appearance::Appearance;
+use crate::appearance::Appearance;
 use crate::report_if_error;
 use crate::settings::app_installation_detection::{
     UserAppInstallDetectionSettings, UserAppInstallStatus,
@@ -283,7 +283,7 @@ impl TypedActionView for WasmNUXDialog {
                 ctx.notify();
             }
             WasmNUXDialogAction::LearnMore => {
-                ctx.open_url("https://www.warp.dev");
+                ctx.open_url("https://github.com/tzero86/Zterm");
             }
         }
     }

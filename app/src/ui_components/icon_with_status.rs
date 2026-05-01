@@ -157,10 +157,11 @@ fn render_with_optional_status_badge(
         return circle;
     };
     let (icon, color) = status.status_icon_and_color(theme);
-    let badge_icon = ConstrainedBox::new(icon.to_zterm_ui_icon(ZtermThemeFill::Solid(color)).finish())
-        .with_width(sizing.badge_icon_size)
-        .with_height(sizing.badge_icon_size)
-        .finish();
+    let badge_icon =
+        ConstrainedBox::new(icon.to_zterm_ui_icon(ZtermThemeFill::Solid(color)).finish())
+            .with_width(sizing.badge_icon_size)
+            .with_height(sizing.badge_icon_size)
+            .finish();
     let badge = Container::new(badge_icon)
         .with_uniform_padding(sizing.badge_padding)
         .with_corner_radius(CornerRadius::with_all(Radius::Percentage(50.)))

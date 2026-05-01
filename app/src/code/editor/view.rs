@@ -64,7 +64,6 @@ use zterm_editor::{
     },
     search::{SearchEvent, Searcher, MATCH_FILL, SELECTED_MATCH_FILL},
 };
-use zterm_util::content_version::ContentVersion;
 use zterm_ui::{
     elements::{
         new_scrollable::{
@@ -83,6 +82,7 @@ use zterm_ui::{
     AppContext, BlurContext, Element, Entity, FocusContext, ModelHandle, SingletonEntity, View,
     ViewContext, ViewHandle, WeakViewHandle, WindowId,
 };
+use zterm_util::content_version::ContentVersion;
 
 mod actions;
 pub use actions::init;
@@ -997,17 +997,18 @@ impl CodeEditorView {
                 if let Some(results) = self.searcher.as_ref(ctx).results() {
                     if !results.matches.is_empty() {
                         // Convert all match ranges to selection offsets
-                        let selection_offsets: Vec<zterm_editor::content::buffer::SelectionOffsets> =
-                            results
-                                .matches
-                                .iter()
-                                .map(|match_result| {
-                                    zterm_editor::content::buffer::SelectionOffsets {
-                                        head: match_result.end,
-                                        tail: match_result.start,
-                                    }
-                                })
-                                .collect();
+                        let selection_offsets: Vec<
+                            zterm_editor::content::buffer::SelectionOffsets,
+                        > = results
+                            .matches
+                            .iter()
+                            .map(
+                                |match_result| zterm_editor::content::buffer::SelectionOffsets {
+                                    head: match_result.end,
+                                    tail: match_result.start,
+                                },
+                            )
+                            .collect();
 
                         // Set multiple selections on the editor to highlight all matches
                         if let Ok(selections) = vec1::Vec1::try_from_vec(selection_offsets) {

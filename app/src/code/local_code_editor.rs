@@ -25,11 +25,6 @@ use zterm_editor::{
     content::{buffer::InitialBufferState, text::IndentUnit},
     render::model::{Decoration, LineCount},
 };
-use zterm_util::{
-    content_version::ContentVersion,
-    file::{FileId, FileLoadError, FileSaveError},
-    path::to_relative_path,
-};
 use zterm_ui::{
     elements::{
         Border, ChildAnchor, ChildView, ClippedScrollStateHandle, ConstrainedBox, Container,
@@ -47,6 +42,11 @@ use zterm_ui::{
     WindowId,
 };
 use zterm_ui::{platform::SaveFilePickerConfiguration, ModelHandle};
+use zterm_util::{
+    content_version::ContentVersion,
+    file::{FileId, FileLoadError, FileSaveError},
+    path::to_relative_path,
+};
 
 use crate::menu::{Event, Menu, MenuItem, MenuItemFields};
 

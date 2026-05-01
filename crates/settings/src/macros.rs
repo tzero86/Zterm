@@ -825,9 +825,9 @@ macro_rules! generate_settings_event_fn {
             ) {
                 use anyhow::anyhow;
                 use serde_json;
-                use zterm_ui::SingletonEntity;
                 use $crate::Setting as _;
                 use $crate::manager::{SettingsEvent, SettingsManager};
+                use zterm_ui::SingletonEntity;
                 SettingsManager::handle(ctx).update(ctx, |manager, ctx| {
                     // Propagate per settings change events through the SettingsManager
                     ctx.subscribe_to_model(&settings_group, |_manager, _, ctx| {

@@ -1,4 +1,4 @@
-﻿//! The "sender" of a shared session represents the sharer's end.
+//! The "sender" of a shared session represents the sharer's end.
 //!
 //! Currently there is no way to share a session from wasm.
 #![cfg_attr(target_family = "wasm", allow(dead_code))]
@@ -37,9 +37,9 @@ use std::pin::pin;
 use std::sync::Arc;
 use std::time::Duration;
 
+use websocket::{Message, Sink, Stream, WebSocket, WebsocketMessage as _};
 use zterm_ui::r#async::Timer;
 use zterm_ui::{Entity, ModelContext, ModelHandle, RequestState, RetryOption, SingletonEntity};
-use websocket::{Message, Sink, Stream, WebSocket, WebsocketMessage as _};
 
 use crate::editor::CrdtOperation;
 use crate::server::server_api::ServerApiProvider;

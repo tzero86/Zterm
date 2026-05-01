@@ -1,8 +1,8 @@
-﻿use crate::ai::agent::api::RequestParams;
+use crate::ai::agent::api::RequestParams;
 use crate::ai::blocklist::SessionContext;
 use crate::ai::llms::LLMId;
-use zterm_core::features::FeatureFlag;
 use warp_multi_agent_api as api;
+use zterm_core::features::FeatureFlag;
 
 use super::get_supported_tools;
 
@@ -39,6 +39,7 @@ fn request_params_with_ask_user_question_enabled(ask_user_question_enabled: bool
         supported_tools_override: None,
         parent_agent_id: None,
         agent_name: None,
+        local_llm_base_url: None,
     }
 }
 

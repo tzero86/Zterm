@@ -16,9 +16,9 @@ use crate::ai::skills::SkillManager;
 use crate::code_review::git_status_update::GitStatusUpdateModel;
 use crate::terminal::cli_agent_sessions::CLIAgentSessionsModel;
 use crate::warp_managed_paths_watcher::ZtermManagedPathsWatcher;
+use watcher::HomeDirectoryWatcher;
 use zterm_ui::SingletonEntity;
 use zterm_ui::{platform::WindowStyle, App, ViewHandle, WindowId};
-use watcher::HomeDirectoryWatcher;
 
 use super::settings::initialize_settings_for_tests;
 use crate::ai::blocklist::BlocklistAIPermissions;

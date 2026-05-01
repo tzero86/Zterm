@@ -150,7 +150,11 @@ pub fn build_description_row(
     )
 }
 
-pub fn description_row(text: &str, theme: &ZtermTheme, appearance: &Appearance) -> Box<dyn Element> {
+pub fn description_row(
+    text: &str,
+    theme: &ZtermTheme,
+    appearance: &Appearance,
+) -> Box<dyn Element> {
     let text = FormattedText::new(vec![FormattedTextLine::Line(vec![
         FormattedTextFragment::plain_text(text),
     ])]);

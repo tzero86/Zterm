@@ -3,10 +3,10 @@ use std::{collections::HashSet, future::Future, path::PathBuf};
 
 #[cfg(test)]
 use virtual_fs::{Stub, VirtualFS};
-use zterm_util::standardized_path::StandardizedPath;
 #[cfg(test)]
 use zterm_ui::r#async::FutureId;
 use zterm_ui::{AppContext, Entity, ModelContext, ModelHandle};
+use zterm_util::standardized_path::StandardizedPath;
 
 use crate::DirectoryWatcher;
 use crate::Repository;

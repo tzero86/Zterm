@@ -14,9 +14,9 @@ use zterm_editor::content::buffer::Buffer;
 use zterm_editor::content::diff::{text_diff, TextDiff};
 use zterm_editor::content::edit::PreciseDelta;
 use zterm_editor::content::version::BufferVersion;
+use zterm_ui::{Entity, ModelContext, ModelHandle, SingletonEntity, WeakModelHandle};
 use zterm_util::content_version::ContentVersion;
 use zterm_util::file::{FileId, FileLoadError, FileSaveError};
-use zterm_ui::{Entity, ModelContext, ModelHandle, SingletonEntity, WeakModelHandle};
 
 cfg_if::cfg_if! {
     if #[cfg(feature = "local_fs")] {

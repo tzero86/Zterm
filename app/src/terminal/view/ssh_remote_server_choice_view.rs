@@ -179,7 +179,9 @@ impl SshRemoteServerChoiceView {
                 "Manage Ztermify settings".into(),
                 None,
                 Some(Box::new(|ctx| {
-                    ctx.dispatch_typed_action(SshRemoteServerChoiceViewAction::OpenZtermifySettings);
+                    ctx.dispatch_typed_action(
+                        SshRemoteServerChoiceViewAction::OpenZtermifySettings,
+                    );
                 })),
                 self.manage_settings_mouse_state.clone(),
             )

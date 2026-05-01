@@ -119,7 +119,7 @@ impl SettingsWidget for ZtermDriveHeaderWidget {
     type View = ZtermDriveSettingsPageView;
 
     fn search_terms(&self) -> &str {
-        "warp drive sign up"
+        "zterm drive sign up"
     }
 
     fn should_render(&self, app: &AppContext) -> bool {
@@ -202,7 +202,7 @@ impl SettingsWidget for ZtermDriveToggleWidget {
     type View = ZtermDriveSettingsPageView;
 
     fn search_terms(&self) -> &str {
-        "warp drive tools panel command palette search workflows prompts notebooks environment variables"
+        "zterm drive tools panel command palette search workflows prompts notebooks environment variables"
     }
 
     fn render(
@@ -212,7 +212,7 @@ impl SettingsWidget for ZtermDriveToggleWidget {
         app: &AppContext,
     ) -> Box<dyn Element> {
         let settings = ZtermDriveSettings::as_ref(app);
-        let is_anonymous_or_logged_out = FeatureFlag::SkipFirebaseAnonymousUser.is_enabled()
+        let _is_anonymous_or_logged_out = FeatureFlag::SkipFirebaseAnonymousUser.is_enabled()
             && AuthStateProvider::as_ref(app)
                 .get()
                 .is_anonymous_or_logged_out();
@@ -222,30 +222,24 @@ impl SettingsWidget for ZtermDriveToggleWidget {
             Some(AdditionalInfo {
                 mouse_state: self.info_icon_mouse_state.clone(),
                 on_click_action: Some(ZtermDriveSettingsPageAction::OpenUrl(
-                    "https://docs.warp.dev/knowledge-and-collaboration/warp-drive".to_string(),
+                    "https://docs.zterm.dev/knowledge-and-collaboration/zterm-drive".to_string(),
                 )),
                 secondary_text: None,
                 tooltip_override_text: None,
             }),
             LocalOnlyIconState::Hidden,
-            if is_anonymous_or_logged_out {
-                ToggleState::Disabled
-            } else {
-                ToggleState::Enabled
-            },
+            ToggleState::Enabled,
             appearance,
             appearance
                 .ui_builder()
                 .switch(self.switch_state.clone())
-                .check(*settings.enable_warp_drive && !is_anonymous_or_logged_out)
-                .with_disabled(is_anonymous_or_logged_out)
+                .check(*settings.enable_warp_drive)
+                .with_disabled(false)
                 .build()
                 .on_click(move |ctx, _, _| {
-                    if !is_anonymous_or_logged_out {
-                        ctx.dispatch_typed_action(
-                            ZtermDriveSettingsPageAction::ToggleShowZtermDrive,
-                        );
-                    }
+                    ctx.dispatch_typed_action(
+                        ZtermDriveSettingsPageAction::ToggleShowZtermDrive,
+                    );
                 })
                 .finish(),
             Some("Zterm Drive is a workspace in your terminal where you can save Workflows, Notebooks, Prompts, and Environment Variables for personal use or to share with a team.".into()),

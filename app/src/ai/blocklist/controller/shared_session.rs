@@ -1,13 +1,13 @@
-﻿// Session-sharing specific logic for BlocklistAIController.
+// Session-sharing specific logic for BlocklistAIController.
 // This module extends BlocklistAIController with methods used when viewing a shared session
 // and defines state used only for session sharing.
 use std::collections::HashMap;
 
 use itertools::Itertools;
 use session_sharing_protocol::common::{AgentAttachment, ParticipantId, ServerConversationToken};
-use zterm_core::features::FeatureFlag;
 use warp_multi_agent_api::response_event::{stream_finished, ClientActions};
 use warp_multi_agent_api::{client_action::Action, message::Message};
+use zterm_core::features::FeatureFlag;
 
 use super::response_stream::ResponseStreamId;
 use super::{BlocklistAIController, RequestInput};

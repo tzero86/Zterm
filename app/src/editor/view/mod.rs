@@ -39,11 +39,11 @@ use settings::Setting as _;
 use snapshot::{EditorHeightShrinkDelay, ViewSnapshot};
 use vec1::{vec1, Vec1};
 use zterm_core::{safe_error, send_telemetry_from_ctx};
-use zterm_util::{path::ShellFamily, user_input::UserInput};
 use zterm_ui::platform::keyboard::KeyCode;
 use zterm_ui::ui_components::button::ButtonTooltipPosition;
 use zterm_ui::ui_components::components::{Coords, UiComponent, UiComponentStyles};
 use zterm_ui::{elements, ViewHandle};
+use zterm_util::{path::ShellFamily, user_input::UserInput};
 
 use crate::ai::agent::ImageContext;
 use crate::ai::blocklist::{BlocklistAIContextModel, PendingAttachment, PendingFile};

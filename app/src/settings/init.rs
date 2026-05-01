@@ -4,7 +4,7 @@ use zterm_ui::{rendering::GPUPowerPreference, AppContext, SingletonEntity};
 use zterm_ui_extras::user_preferences;
 
 use crate::{
-    ai::cloud_agent_settings::CloudAgentSettings,
+    ai::{cloud_agent_settings::CloudAgentSettings, local_llm::LocalLLMSettings},
     appearance,
     banner::BannerState,
     drive::settings::ZtermDriveSettings,
@@ -116,6 +116,7 @@ pub fn init(
     ctx: &mut AppContext,
 ) -> UserDefaultsOnStartup {
     ctx.add_singleton_model(|_| SettingsInitializer::new());
+    LocalLLMSettings::init(ctx);
 
     register_all_settings(ctx);
 

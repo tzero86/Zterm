@@ -38,7 +38,6 @@ use std::{
 };
 use zterm_core::features::FeatureFlag;
 use zterm_core::ui::Icon;
-use zterm_util::path::LineAndColumnArg;
 use zterm_ui::elements::{ChildAnchor, Empty, PositionedElementAnchor};
 use zterm_ui::keymap::EditableBinding;
 use zterm_ui::EntityId;
@@ -59,6 +58,7 @@ use zterm_ui::{
     platform::Cursor,
     ui_components::components::UiComponent,
 };
+use zterm_util::path::LineAndColumnArg;
 
 /// Describes which agent destination is available for sending review comments.
 #[derive(Clone, Debug, PartialEq)]

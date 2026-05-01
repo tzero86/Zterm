@@ -10,11 +10,11 @@ use std::{
 
 use futures_util::future::Either;
 use url::Url;
-use zterm_util::path::{CleanPathResult, LineAndColumnArg};
 use zterm_ui::{
     r#async::SpawnedFutureHandle, AppContext, Entity, ModelContext, ModelHandle, SingletonEntity,
     WindowId,
 };
+use zterm_util::path::{CleanPathResult, LineAndColumnArg};
 
 #[cfg(feature = "local_fs")]
 use crate::util::file::external_editor::EditorSettings;

@@ -153,8 +153,10 @@ macro_rules! send_telemetry_from_ctx {
         let event = $event;
         if event.enablement_state().is_enabled() {
             let auth_state =
-                <$crate::telemetry::TelemetryContextModel as zterm_ui::SingletonEntity>::handle($ctx)
-                    .as_ref($ctx);
+                <$crate::telemetry::TelemetryContextModel as zterm_ui::SingletonEntity>::handle(
+                    $ctx,
+                )
+                .as_ref($ctx);
             let user_id = auth_state.user_id($ctx);
             let anonymous_id = auth_state.anonymous_id($ctx);
             zterm_ui::record_telemetry_from_ctx!(

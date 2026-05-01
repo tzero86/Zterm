@@ -1,4 +1,4 @@
-﻿use std::{
+use std::{
     collections::HashMap,
     ffi::OsString,
     future::Future,
@@ -16,11 +16,11 @@ use zterm_cli::share::{ShareAccessLevel, ShareRequest, ShareSubject};
 use zterm_completer::completer::CommandOutput;
 use zterm_core::command::ExitCode;
 use zterm_core::features::FeatureFlag;
-use zterm_util::path::ShellFamily;
 use zterm_ui::{
     r#async::FutureExt, AppContext, Entity, ModelContext, ModelHandle, SingletonEntity as _,
     ViewHandle,
 };
+use zterm_util::path::ShellFamily;
 
 use crate::terminal::model::session::ExecuteCommandOptions;
 

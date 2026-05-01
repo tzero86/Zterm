@@ -29,9 +29,9 @@ use std::ops::Deref;
 #[cfg(feature = "local_fs")]
 use std::path::PathBuf;
 use std::sync::Arc;
+use warp_workflows::workflows as global_workflows;
 use zterm_core::ui::builder::UiBuilder;
 use zterm_core::ui::theme::color::internal_colors;
-use warp_workflows::workflows as global_workflows;
 use zterm_ui::accessibility::{AccessibilityContent, WarpA11yRole};
 use zterm_ui::color::ColorU;
 use zterm_ui::elements::{

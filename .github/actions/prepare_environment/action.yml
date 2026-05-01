@@ -145,12 +145,8 @@ runs:
       continue-on-error: true
       with:
         brew: protobuf
+        apt: protobuf-compiler
         choco: protoc
-
-    - name: Install protoc via winget (fallback for Windows)
-      if: ${{ inputs.target_os == 'windows' && steps.install_protoc.outcome == 'failure' }}
-      shell: pwsh
-      run: winget install Google.Protobuf
 
     - name: Fail if protoc install did not succeed
       if: ${{ inputs.target_os != 'windows' && steps.install_protoc.outcome == 'failure' }}
@@ -159,7 +155,60 @@ runs:
         echo "::error::protoc install step failed on ${{ inputs.target_os }}"
         exit 1
 
+    - name: Export PROTOC for prost-build (Unix)
+      if: ${{ inputs.target_os != 'windows' }}
+      shell: bash
+      run: |
+        if ${{ inputs.target_os == 'linux' || inputs.target_os == 'wasm' }}; then
+          echo "PROTOC=/usr/local/bin/protoc" >> "$GITHUB_ENV"
+        else
+          echo "PROTOC=$(brew --prefix)/bin/protoc" >> "$GITHUB_ENV"
+        fi
+
+    - name: Export PROTOC for prost-build (Windows)
+      if: ${{ inputs.target_os == 'windows' }}
+      shell: pwsh
+      run: |
+        $ErrorActionPreference = "Stop"
+
+        function Get-ProtocPath {
+          $cmd = Get-Command protoc -ErrorAction SilentlyContinue
+          if ($cmd) { return $cmd.Source }
+
+          $candidates = @(
+            "C:\ProgramData\chocolatey\bin\protoc.exe",
+            "$env:ProgramFiles\Google\Protocol Buffers\bin\protoc.exe",
+            "$env:LOCALAPPDATA\Programs\Google\Protocol Buffers\bin\protoc.exe"
+          )
+
+          foreach ($candidate in $candidates) {
+            if (Test-Path $candidate) { return $candidate }
+          }
+
+          return $null
+        }
+
+        $protocPath = Get-ProtocPath
+
+        if (-not $protocPath) {
+          choco install protoc -y --no-progress
+          $protocPath = Get-ProtocPath
+        }
+
+        if (-not $protocPath) {
+          winget install --id Google.Protobuf -e --accept-package-agreements --accept-source-agreements --disable-interactivity
+          $protocPath = Get-ProtocPath
+        }
+
+        if (-not $protocPath) {
+          throw "Could not find protoc after install attempts"
+        }
+
+        "PROTOC=$protocPath" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        (Split-Path -Parent $protocPath) | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+        & $protocPath --version
+
     - uses: maxim-lobanov/setup-xcode@ed7a3b1fda3918c0306d1b724322adc0b8cc0a90 # v1.7.0
       if: ${{ inputs.target_os == 'macos' && inputs.is_self_hosted != 'true' }}
       with:
-        xcode-version: '26'
+        xcode-version: latest-stable

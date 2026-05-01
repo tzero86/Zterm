@@ -266,7 +266,6 @@ use zterm_core::{
     ui::theme::{color::internal_colors, AnsiColorIdentifier},
 };
 use zterm_editor::editor::NavigationKey;
-use zterm_util::path::ShellFamily;
 use zterm_ui::{
     accessibility::{AccessibilityContent, ActionAccessibilityContent, WarpA11yRole},
     clipboard::{ClipboardContent, ImageData},
@@ -300,6 +299,7 @@ pub use zterm_ui::{
     geometry::vector::{vec2f, Vector2F},
     WindowId,
 };
+use zterm_util::path::ShellFamily;
 
 use self::decorations::InputBackgroundJobOptions;
 use super::{
@@ -3839,7 +3839,7 @@ impl Input {
                 });
             }
             InlineProfileSelectorEvent::ManageProfiles => {
-                ctx.emit(Event::OpenSettings(SettingsSection::WarpAgent));
+                ctx.emit(Event::OpenSettings(SettingsSection::ZtermAgent));
             }
             InlineProfileSelectorEvent::Dismissed => {
                 if self
@@ -8984,7 +8984,8 @@ impl Input {
                             // the completions finish quickly, since that causes a jittery UX.
                             let _ = ctx.spawn(
                                 async move {
-                                    zterm_ui::r#async::Timer::after(Duration::from_millis(750)).await;
+                                    zterm_ui::r#async::Timer::after(Duration::from_millis(750))
+                                        .await;
                                     old_buffer_text_original
                                 },
                                 move |input, old_buffer_text_original, ctx| {

@@ -33,11 +33,11 @@ use zterm_core::features::FeatureFlag;
 use zterm_core::ui::appearance::Appearance;
 use zterm_core::ui::icons::ICON_DIMENSIONS;
 use zterm_editor::render::element::VerticalExpansionBehavior;
-use zterm_util::path::LineAndColumnArg;
 use zterm_ui::elements::Rect;
 use zterm_ui::fonts::Style;
 use zterm_ui::text::point::Point;
 use zterm_ui::text_layout::ClipConfig;
+use zterm_util::path::LineAndColumnArg;
 
 #[cfg(feature = "local_fs")]
 use zterm_ui::clipboard::ClipboardContent;

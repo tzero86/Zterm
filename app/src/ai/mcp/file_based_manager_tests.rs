@@ -12,9 +12,9 @@ use settings::Setting as _;
 use std::collections::HashSet;
 use std::path::PathBuf;
 use uuid::Uuid;
+use watcher::HomeDirectoryWatcher;
 use zterm_core::features::FeatureFlag;
 use zterm_ui::{App, Entity, ModelHandle, SingletonEntity as _};
-use watcher::HomeDirectoryWatcher;
 
 // Helper to initialize dependencies and return FileBasedMCPManager handle
 fn setup_app(app: &mut App) -> zterm_ui::ModelHandle<FileBasedMCPManager> {

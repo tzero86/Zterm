@@ -1,4 +1,4 @@
-﻿mod header_revamp;
+mod header_revamp;
 
 use crate::code_review::code_review_view::{
     CodeReviewHeaderFields, CodeReviewView, CONTENT_TOP_MARGIN,
@@ -445,7 +445,9 @@ impl CodeReviewHeader {
                     .build()
                     .finish()
             })
-            .with_tooltip_position(zterm_ui::ui_components::button::ButtonTooltipPosition::AboveLeft)
+            .with_tooltip_position(
+                zterm_ui::ui_components::button::ButtonTooltipPosition::AboveLeft,
+            )
             .build()
             .on_click(|ctx, _, _| {
                 ctx.dispatch_typed_action(CodeReviewAction::AddDiffSetAsContext(

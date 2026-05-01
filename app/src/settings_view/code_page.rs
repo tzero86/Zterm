@@ -54,7 +54,6 @@ use zterm_core::{
     settings::ToggleableSetting as _,
     ui::theme::{AnsiColorIdentifier, Fill as ThemeFill},
 };
-use zterm_util::path::user_friendly_path;
 use zterm_ui::{
     elements::{
         ChildView, ConstrainedBox, Container, CornerRadius, CrossAxisAlignment, Element, Empty,
@@ -73,6 +72,7 @@ use zterm_ui::{
     Action, AppContext, Entity, ModelHandle, SingletonEntity, TypedActionView, View, ViewContext,
     ViewHandle,
 };
+use zterm_util::path::user_friendly_path;
 
 const MAIN_SECTION_MARGIN: f32 = 12.;
 const SUB_SECTION_MARGIN: f32 = 8.;
@@ -82,10 +82,10 @@ const LSP_STATUS_INDICATOR_SIZE: f32 = 8.;
 const CODE_FEATURE_NAME: &str = "Code";
 const INITIALIZATION_SETTINGS_HEADER: &str = "Initialization Settings";
 const CODEBASE_INDEXING_LABEL: &str = "Codebase indexing";
-const CODEBASE_INDEX_DESCRIPTION: &str = "Warp can automatically index code repositories as you navigate them, helping agents quickly understand context and provide solutions. Code is never stored on the server. If a codebase is unable to be indexed, Warp can still navigate your codebase and gain insights via grep and find tool calling.";
+const CODEBASE_INDEX_DESCRIPTION: &str = "Zterm can automatically index code repositories as you navigate them, helping agents quickly understand context and provide solutions. Code is never stored on the server. If a codebase is unable to be indexed, Zterm can still navigate your codebase and gain insights via grep and find tool calling.";
 const ZTERM_INDEXING_IGNORE_DESCRIPTION: &str = "To exclude specific files or directories from indexing, add them to the .warpindexingignore file in your repository directory. These files will still be accessible to AI features, but they won't be included in codebase embeddings.";
 const AUTO_INDEX_FEATURE_NAME: &str = "Index new folders by default";
-const AUTO_INDEX_DESCRIPTION: &str = "When set to true, Warp will automatically index code repositories as you navigate them - helping agents quickly understand context and provide targeted solutions.";
+const AUTO_INDEX_DESCRIPTION: &str = "When set to true, Zterm will automatically index code repositories as you navigate them - helping agents quickly understand context and provide targeted solutions.";
 const INDEXING_DISABLED_ADMIN_TEXT: &str = "Team admins have disabled codebase indexing.";
 const INDEXING_WORKSPACE_ENABLED_ADMIN_TEXT: &str = "Team admins have enabled codebase indexing.";
 const INDEXING_DISABLED_GLOBAL_AI_TEXT: &str =
@@ -1541,7 +1541,9 @@ impl CodePageWidget {
             label_row.add_child(
                 Container::new(
                     ConstrainedBox::new(
-                        status_icon.to_zterm_ui_icon(ThemeFill::Solid(color)).finish(),
+                        status_icon
+                            .to_zterm_ui_icon(ThemeFill::Solid(color))
+                            .finish(),
                     )
                     .with_width(STATUS_ICON_SIZE)
                     .with_height(STATUS_ICON_SIZE)

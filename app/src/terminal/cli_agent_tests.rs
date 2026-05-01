@@ -5,8 +5,8 @@ use std::sync::Arc;
 use chrono::Local;
 use smol_str::SmolStr;
 use zterm_editor::render::model::LineCount;
-use zterm_util::path::EscapeChar;
 use zterm_ui::App;
+use zterm_util::path::EscapeChar;
 
 use super::{
     build_diff_hunk_prompt, build_review_prompt, build_selection_line_range_prompt,

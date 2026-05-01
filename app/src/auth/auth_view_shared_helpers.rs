@@ -26,7 +26,7 @@ use zterm_ui::{
 use crate::settings::PrivacySettings;
 use crate::themes::theme::ThemeKind;
 
-const PRIVACY_URL: &str = "https://warp.dev/privacy";
+const PRIVACY_URL: &str = "https://github.com/tzero86/Zterm/blob/main/PRIVACY.md";
 
 pub const AUTH_MODAL_GAP: f32 = 16.;
 const MODAL_CORNER_RADIUS: Radius = Radius::Pixels(8.);

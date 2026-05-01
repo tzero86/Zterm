@@ -26,6 +26,8 @@ use std::{collections::HashMap, fmt::Display};
 use super::task_store::TaskStore;
 use uuid::Uuid;
 use vec1::{Size0Error, Vec1};
+use warp_multi_agent_api::response_event::stream_finished;
+use warp_multi_agent_api::{self as api, response_event::stream_finished::TokenUsage};
 use zterm_core::command::ExitCode;
 use zterm_core::execution_mode::AppExecutionMode;
 use zterm_core::features::FeatureFlag;
@@ -33,8 +35,6 @@ use zterm_core::send_telemetry_from_ctx;
 use zterm_core::ui::appearance::Appearance;
 use zterm_core::ui::theme::color::internal_colors;
 use zterm_core::ui::theme::ZtermTheme;
-use warp_multi_agent_api::response_event::stream_finished;
-use warp_multi_agent_api::{self as api, response_event::stream_finished::TokenUsage};
 use zterm_ui::color::ColorU;
 use zterm_ui::{EntityId, ModelContext, SingletonEntity};
 

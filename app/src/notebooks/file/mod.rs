@@ -5,7 +5,6 @@ use std::{
 };
 
 use pathfinder_geometry::vector::vec2f;
-use zterm_util::path::user_friendly_path;
 #[cfg(feature = "local_fs")]
 use zterm_ui::clipboard::ClipboardContent;
 use zterm_ui::{
@@ -24,6 +23,7 @@ use zterm_ui::{
     AppContext, Element, Entity, ModelHandle, SingletonEntity, TypedActionView, View, ViewContext,
     ViewHandle,
 };
+use zterm_util::path::user_friendly_path;
 
 #[cfg(feature = "local_fs")]
 use crate::notebooks::post_process_notebook;

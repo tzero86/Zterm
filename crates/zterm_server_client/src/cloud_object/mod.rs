@@ -892,7 +892,9 @@ impl TryFrom<zterm_graphql::object_permissions::ObjectPermissions> for ServerPer
 impl TryFrom<zterm_graphql::object_permissions::ObjectGuest> for ServerObjectGuest {
     type Error = anyhow::Error;
 
-    fn try_from(value: zterm_graphql::object_permissions::ObjectGuest) -> Result<Self, Self::Error> {
+    fn try_from(
+        value: zterm_graphql::object_permissions::ObjectGuest,
+    ) -> Result<Self, Self::Error> {
         let object_guest = ServerObjectGuest {
             subject: value.subject.try_into()?,
             access_level: value.access_level,
@@ -936,7 +938,9 @@ impl TryFrom<zterm_graphql::object_permissions::GuestSubject> for ServerGuestSub
 impl TryFrom<zterm_graphql::object_permissions::LinkSharing> for ServerLinkSharing {
     type Error = anyhow::Error;
 
-    fn try_from(value: zterm_graphql::object_permissions::LinkSharing) -> Result<Self, Self::Error> {
+    fn try_from(
+        value: zterm_graphql::object_permissions::LinkSharing,
+    ) -> Result<Self, Self::Error> {
         Ok(ServerLinkSharing {
             access_level: value.access_level,
             source: value.source.map(TryInto::try_into).transpose()?,

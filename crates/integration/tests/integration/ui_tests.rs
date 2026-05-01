@@ -126,6 +126,7 @@ integration_tests! {
     test_with_launch_config_with_no_active_pane,
     test_find_query_not_evaluated_on_terminal_mode_change,
     test_custom_open_completions_menu_binding,
+    #[ignore = "Flakes in CI: depends on gcloud SSH auth setup"]
     test_ssh_with_shell_override,
 
     #[ignore = "Affected by agent_view feature flag UI changes"]

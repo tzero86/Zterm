@@ -1,4 +1,4 @@
-﻿use std::sync::Arc;
+use std::sync::Arc;
 
 use repo_metadata::entry::{DirectoryEntry, Entry, FileMetadata};
 use repo_metadata::file_tree_store::FileTreeState;
@@ -151,8 +151,10 @@ fn repo_transition_unregisters_lazy_loaded_path() {
                     .unwrap()
                 ));
                 let displayed_std =
-                    zterm_util::standardized_path::StandardizedPath::try_from_local(&displayed_root)
-                        .unwrap();
+                    zterm_util::standardized_path::StandardizedPath::try_from_local(
+                        &displayed_root,
+                    )
+                    .unwrap();
                 assert_eq!(
                     view.root_directories
                         .get(&displayed_std)
@@ -180,8 +182,10 @@ fn repo_transition_unregisters_lazy_loaded_path() {
 
             file_tree_view.read(&app, |view, _ctx| {
                 let displayed_std =
-                    zterm_util::standardized_path::StandardizedPath::try_from_local(&displayed_root)
-                        .unwrap();
+                    zterm_util::standardized_path::StandardizedPath::try_from_local(
+                        &displayed_root,
+                    )
+                    .unwrap();
                 let repo_std =
                     zterm_util::standardized_path::StandardizedPath::try_from_local(&repo_root)
                         .unwrap();
@@ -259,8 +263,10 @@ fn repo_backed_unloaded_directory_loads_through_model() {
                 assert!(!view
                     .root_directories
                     .get(
-                        &zterm_util::standardized_path::StandardizedPath::try_from_local(&repo_root)
-                            .unwrap()
+                        &zterm_util::standardized_path::StandardizedPath::try_from_local(
+                            &repo_root
+                        )
+                        .unwrap()
                     )
                     .is_some_and(|root_dir| root_dir.entry.contains(
                         &zterm_util::standardized_path::StandardizedPath::try_from_local(
@@ -284,8 +290,10 @@ fn repo_backed_unloaded_directory_loads_through_model() {
                 assert!(view
                     .root_directories
                     .get(
-                        &zterm_util::standardized_path::StandardizedPath::try_from_local(&repo_root)
-                            .unwrap()
+                        &zterm_util::standardized_path::StandardizedPath::try_from_local(
+                            &repo_root
+                        )
+                        .unwrap()
                     )
                     .is_some_and(|root_dir| root_dir.entry.contains(
                         &zterm_util::standardized_path::StandardizedPath::try_from_local(
@@ -309,8 +317,10 @@ fn repo_backed_unloaded_directory_loads_through_model() {
                 assert!(view
                     .root_directories
                     .get(
-                        &zterm_util::standardized_path::StandardizedPath::try_from_local(&repo_root)
-                            .unwrap()
+                        &zterm_util::standardized_path::StandardizedPath::try_from_local(
+                            &repo_root
+                        )
+                        .unwrap()
                     )
                     .is_some_and(|root_dir| root_dir.entry.contains(
                         &zterm_util::standardized_path::StandardizedPath::try_from_local(

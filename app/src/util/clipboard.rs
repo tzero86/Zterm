@@ -1,8 +1,8 @@
-﻿use std::borrow::Cow;
+use std::borrow::Cow;
 
 use itertools::Itertools;
-use zterm_util::path::ShellFamily;
 use zterm_ui::clipboard::ClipboardContent;
+use zterm_util::path::ShellFamily;
 
 /// Returns a string representation of the ClipboardContent with any paths properly escaped if there is a known shell. If not, do not escape the paths.
 pub fn clipboard_content_with_escaped_paths(

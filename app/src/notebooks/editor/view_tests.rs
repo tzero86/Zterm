@@ -11,7 +11,9 @@ use zterm_util::user_input::UserInput;
 use zterm_ui::event::ModifiersState;
 use zterm_ui::r#async::block_on;
 use zterm_ui::windowing::WindowManager;
-use zterm_ui::{platform::WindowStyle, presenter::ChildView, App, Element, Entity, View, ViewHandle};
+use zterm_ui::{
+    platform::WindowStyle, presenter::ChildView, App, Element, Entity, View, ViewHandle,
+};
 use zterm_ui::{SingletonEntity, TypedActionView, WindowId};
 
 use super::{EditorViewAction, RichTextEditorConfig, RichTextEditorView};

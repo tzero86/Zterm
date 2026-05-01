@@ -11,9 +11,9 @@ use std::{
     collections::{HashMap, HashSet},
     time::Duration,
 };
+use warp_multi_agent_api::ConversationData;
 use zterm_core::channel::ChannelState;
 use zterm_core::{features::FeatureFlag, report_error};
-use warp_multi_agent_api::ConversationData;
 
 use super::auth::AuthClient;
 use super::ServerApi;
@@ -2206,7 +2206,9 @@ impl From<zterm_graphql::workspace::LlmSpec> for LLMSpec {
     }
 }
 
-impl From<zterm_graphql::queries::get_feature_model_choices::LlmUsageMetadata> for LLMUsageMetadata {
+impl From<zterm_graphql::queries::get_feature_model_choices::LlmUsageMetadata>
+    for LLMUsageMetadata
+{
     fn from(value: zterm_graphql::queries::get_feature_model_choices::LlmUsageMetadata) -> Self {
         Self {
             request_multiplier: value.request_multiplier.max(1) as usize,
@@ -2251,7 +2253,9 @@ impl From<zterm_graphql::workspace::DisableReason> for DisableReason {
         match value {
             zterm_graphql::workspace::DisableReason::AdminDisabled => DisableReason::AdminDisabled,
             zterm_graphql::workspace::DisableReason::OutOfRequests => DisableReason::OutOfRequests,
-            zterm_graphql::workspace::DisableReason::ProviderOutage => DisableReason::ProviderOutage,
+            zterm_graphql::workspace::DisableReason::ProviderOutage => {
+                DisableReason::ProviderOutage
+            }
             zterm_graphql::workspace::DisableReason::RequiresUpgrade => {
                 DisableReason::RequiresUpgrade
             }

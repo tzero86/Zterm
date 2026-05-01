@@ -4,11 +4,11 @@ use std::{
     sync::Arc,
 };
 
-use zterm_util::path::ShellFamily;
 use warp_workflows::workflows as global_workflows;
 #[cfg(not(target_family = "wasm"))]
 use zterm_ui::platform::OperatingSystem;
 use zterm_ui::{AppContext, Entity, ModelContext, SingletonEntity};
+use zterm_util::path::ShellFamily;
 
 #[cfg(feature = "local_fs")]
 use crate::user_config::load_workflows;

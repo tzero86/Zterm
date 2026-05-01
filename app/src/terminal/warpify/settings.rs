@@ -6,9 +6,9 @@ use settings::{
     ChangeEventReason, RespectUserSyncSetting, Setting, SupportedPlatforms, SyncToCloud,
 };
 use strum_macros::EnumIter;
-use zterm_util::path::ShellFamily;
 use zterm_ui::{AppContext, ModelContext};
 use zterm_ui::{Entity, SingletonEntity};
+use zterm_util::path::ShellFamily;
 
 use crate::terminal::ssh::util::{parse_interactive_ssh_command, SshZtermifyCommand};
 

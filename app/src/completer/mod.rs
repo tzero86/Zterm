@@ -1,4 +1,4 @@
-﻿#[cfg(feature = "completions_v2")]
+#[cfg(feature = "completions_v2")]
 mod js;
 
 use std::collections::{HashMap, HashSet};
@@ -17,8 +17,8 @@ use zterm_completer::completer::{
 };
 use zterm_completer::signatures::CommandRegistry;
 use zterm_core::features::FeatureFlag;
-use zterm_util::path::{EscapeChar, ShellFamily};
 use zterm_ui::{AppContext, SingletonEntity};
+use zterm_util::path::{EscapeChar, ShellFamily};
 
 use crate::safe_warn;
 use crate::terminal::model::session::{ExecuteCommandOptions, Session, SessionType};

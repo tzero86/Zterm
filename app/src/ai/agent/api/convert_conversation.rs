@@ -1,4 +1,4 @@
-﻿//! Conversions from MAA API types to application types, for loading and restoring conversations.
+//! Conversions from MAA API types to application types, for loading and restoring conversations.
 //! Contains logic necessary for converting proto tasks to application exchanges and conversations.
 //! Whenever adding new MAA types, conversions here must be updated for restoration and loading to work.
 //! If some UI state is stored in the client, it needs to also be represented in the proto tasks somehow so it can be restored.
@@ -42,9 +42,9 @@ use chrono::{DateTime, Local, TimeZone};
 use persistence::model::AgentConversationData;
 use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
-use zterm_core::command::ExitCode;
 use warp_multi_agent_api as api;
 use warp_multi_agent_api::ask_user_question_result::answer_item::Answer as AskUserQuestionAnswer;
+use zterm_core::command::ExitCode;
 
 use crate::ai::agent::conversation::ServerAIConversationMetadata;
 use crate::ai::agent::UserQueryMode;

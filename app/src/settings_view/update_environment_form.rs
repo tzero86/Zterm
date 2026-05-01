@@ -3063,7 +3063,7 @@ impl UpdateEnvironmentForm {
             "Suggest image"
         };
 
-        let tooltip_text = "Warp will suggest a Docker image based on your selected repositories.";
+        let tooltip_text = "Zterm will suggest a Docker image based on your selected repositories.";
 
         let button = Hoverable::new(
             self.suggest_image_button_mouse_state.clone(),
@@ -3085,10 +3085,11 @@ impl UpdateEnvironmentForm {
                 };
 
                 let icon_size = appearance.ui_font_size();
-                let icon = ConstrainedBox::new(Icon::Lightbulb.to_zterm_ui_icon(text_fill).finish())
-                    .with_width(icon_size)
-                    .with_height(icon_size)
-                    .finish();
+                let icon =
+                    ConstrainedBox::new(Icon::Lightbulb.to_zterm_ui_icon(text_fill).finish())
+                        .with_width(icon_size)
+                        .with_height(icon_size)
+                        .finish();
 
                 let text = Text::new(
                     button_text,

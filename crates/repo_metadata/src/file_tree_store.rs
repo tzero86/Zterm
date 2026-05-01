@@ -4,8 +4,8 @@ use crate::file_tree_store::file_tree_state::FileTreeMapStore;
 use crate::{BuildTreeError, Entry, FileId, FileMetadata, Repository};
 use ignore::gitignore::Gitignore;
 use std::sync::Arc;
-use zterm_util::standardized_path::StandardizedPath;
 use zterm_ui::ModelHandle;
+use zterm_util::standardized_path::StandardizedPath;
 
 #[derive(Debug, Clone)]
 pub struct FileTreeEntry {

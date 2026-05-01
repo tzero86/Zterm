@@ -78,7 +78,9 @@ impl ZtermifyFooterView {
             WarpificationMode::Ssh { .. } => {
                 ("Ztermify SSH session", "terminal:warpify_ssh_session")
             }
-            WarpificationMode::Subshell { .. } => ("Ztermify subshell", "terminal:warpify_subshell"),
+            WarpificationMode::Subshell { .. } => {
+                ("Ztermify subshell", "terminal:warpify_subshell")
+            }
         };
         self.warpify_button.update(ctx, |button, ctx| {
             button.set_label(label, ctx);

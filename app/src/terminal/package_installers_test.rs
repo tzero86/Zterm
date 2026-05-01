@@ -1,4 +1,4 @@
-﻿use crate::terminal::package_installers::command_at_cursor_has_common_package_installer_prefix;
+use crate::terminal::package_installers::command_at_cursor_has_common_package_installer_prefix;
 
 #[test]
 fn test_command_at_cursor_has_common_package_installer_prefix_basic_prefixes() {
@@ -52,8 +52,8 @@ fn test_command_at_cursor_has_common_package_installer_prefix_with_alias_expansi
 
     use typed_path::TypedPathBuf;
     use zterm_completer::signatures::CommandRegistry;
-    use zterm_util::path::ShellFamily;
     use zterm_ui::App;
+    use zterm_util::path::ShellFamily;
 
     use crate::completer::SessionContext;
     use crate::terminal::model::session::{

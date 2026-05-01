@@ -5,8 +5,8 @@ use std::{collections::HashMap, sync::mpsc::SyncSender};
 
 use base64::{engine::general_purpose::STANDARD as BASE64_STANDARD, Engine as _};
 use url::Url;
-use zterm_cli::agent::Harness;
 use warp_multi_agent_api as multi_agent_api;
+use zterm_cli::agent::Harness;
 
 use zterm_ui::{
     AppContext, EntityId, ModelHandle, SingletonEntity, ViewContext, ViewHandle, WindowId,

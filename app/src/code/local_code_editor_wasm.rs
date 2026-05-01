@@ -6,11 +6,11 @@ use std::{
 use std::ops::Range;
 
 use zterm_editor::{content::buffer::InitialBufferState, render::model::LineCount};
-use zterm_util::file::{FileLoadError, FileSaveError};
 use zterm_ui::{
     elements::MouseStateHandle, AppContext, Element, Entity, TypedActionView, View, ViewContext,
     ViewHandle, WindowId,
 };
+use zterm_util::file::{FileLoadError, FileSaveError};
 
 use ai::diff_validation::DiffType;
 

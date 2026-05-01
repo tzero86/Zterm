@@ -1,4 +1,4 @@
-﻿use super::super::soft_wrap::{
+use super::super::soft_wrap::{
     ClampDirection, DisplayPointAndClampDirection, FrameLayouts, SoftWrapPoint, SoftWrapState,
 };
 use super::model::MarkedTextState;
@@ -25,7 +25,6 @@ use pathfinder_geometry::{
 use vim::vim::{MotionType, VimMode};
 use zterm_core::features::FeatureFlag;
 use zterm_core::ui::appearance::DEFAULT_UI_FONT_SIZE;
-use zterm_util::user_input::UserInput;
 use zterm_ui::event::KeyState;
 use zterm_ui::text_selection_utils::{
     calculate_tick_width, create_newline_tick_rect, selection_crosses_newline_row_based,
@@ -33,6 +32,7 @@ use zterm_ui::text_selection_utils::{
 };
 use zterm_ui::ViewHandle;
 use zterm_ui::{event::ModifiersState, text_layout::ComputeBaselinePositionArgs};
+use zterm_util::user_input::UserInput;
 
 use crate::editor::view::AutosuggestionLocation;
 use crate::themes::theme::Fill;

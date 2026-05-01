@@ -18,7 +18,6 @@ use crate::ai::agent_sdk::mcp_config::build_mcp_servers_from_specs;
 #[cfg(not(target_family = "wasm"))]
 use crate::ai::aws_credentials::refresh_aws_credentials;
 use crate::ai::llms::LLMId;
-use crate::auth::auth_manager::{AuthManager, AuthManagerEvent};
 use crate::cloud_object::model::persistence::CloudModel;
 use crate::server::server_api::ai::AIClient;
 use crate::workflows::workflow::Workflow;
@@ -1241,116 +1240,16 @@ impl AgentDriverRunner {
     }
 }
 
-/// Returns `true` if the given CLI command requires authentication.
-fn command_requires_auth(command: &CliCommand) -> bool {
-    match command {
-        CliCommand::Agent(agent_cmd) => match agent_cmd {
-            AgentCommand::Run { .. } => true,
-            AgentCommand::RunCloud { .. } => true,
-            AgentCommand::Profile(sub) => match sub {
-                AgentProfileCommand::List => true,
-            },
-            AgentCommand::List(_) => true,
-        },
-        CliCommand::Environment(environment_cmd) => match environment_cmd {
-            EnvironmentCommand::List => true,
-            EnvironmentCommand::Create { .. } => true,
-            EnvironmentCommand::Delete { .. } => true,
-            EnvironmentCommand::Update { .. } => true,
-            EnvironmentCommand::Get { .. } => true,
-            EnvironmentCommand::Image(ImageCommand::List) => true,
-        },
-        CliCommand::MCP(mcp_cmd) => match mcp_cmd {
-            MCPCommand::List => true,
-        },
-        CliCommand::Run(task_cmd) => match task_cmd {
-            TaskCommand::List { .. } => true,
-            TaskCommand::Get { .. } => true,
-            TaskCommand::Conversation { .. } => true,
-            TaskCommand::Message { .. } => true,
-        },
-        CliCommand::Model(model_cmd) => match model_cmd {
-            ModelCommand::List => true,
-        },
-        CliCommand::Login => false,
-        CliCommand::Logout => false,
-        CliCommand::Whoami => true,
-        CliCommand::Provider(_) => true,
-        CliCommand::Integration(_) => true,
-        CliCommand::Schedule(_) => true,
-        CliCommand::Secret(_) => true,
-        CliCommand::Federate(_) => true,
-        CliCommand::HarnessSupport(_) => true,
-        CliCommand::Artifact(_) => true,
-    }
-}
-
-/// Launch a CLI command, checking authentication first if needed.
-///
-/// If auth is not required, dispatches the command immediately.
-/// If auth is required and the user is logged in, triggers a user refresh
-/// before launching the command.
+/// Launch a CLI command, always dispatching immediately without requiring authentication.
 fn launch_command(
     ctx: &mut AppContext,
     command: CliCommand,
     global_options: GlobalOptions,
 ) -> anyhow::Result<()> {
-    let requires_auth = command_requires_auth(&command);
-
-    if !requires_auth {
-        return dispatch_command(ctx, command, global_options);
-    }
-
-    let cli_name = zterm_cli::binary_name().unwrap_or_else(|| "zterm".to_string());
-
-    let auth_state = AuthStateProvider::handle(ctx).as_ref(ctx).get();
-    if !auth_state.is_logged_in() {
-        return Err(anyhow::anyhow!(
-            "You are not logged in - please log in with `{cli_name} login` to continue."
-        ));
-    }
-
-    // User is logged in — subscribe to auth events, trigger a refresh, and wait
-    // for the result before running the command.
-    let mut dispatched = false;
-    ctx.subscribe_to_model(&AuthManager::handle(ctx), move |_, event, ctx| {
-        if dispatched {
-            return;
-        }
-        match event {
-            AuthManagerEvent::AuthComplete => {
-                dispatched = true;
-                if let Err(err) = dispatch_command(ctx, command.clone(), global_options.clone()) {
-                    report_fatal_error(err, ctx);
-                }
-            }
-            AuthManagerEvent::NeedsReauth => {
-                dispatched = true;
-                let auth_state = AuthStateProvider::handle(ctx).as_ref(ctx).get();
-                let message = if auth_state.is_api_key_authenticated() {
-                    "Your API key is invalid. Please provide a valid key via '--api-key' or the ZTERM_API_KEY environment variable.".to_string()
-                } else {
-                    format!("Your credentials are invalid. Please log in again with `{cli_name} login`.")
-                };
-                report_fatal_error(anyhow::anyhow!(message), ctx);
-            }
-            AuthManagerEvent::AuthFailed(err) => {
-                dispatched = true;
-                report_fatal_error(anyhow::anyhow!("Authentication failed: {err:#}"), ctx);
-            }
-            _ => {}
-        }
-    });
-
-    // Trigger the user refresh - the subscription above will handle the result.
-    AuthManager::handle(ctx).update(ctx, |auth_manager, ctx| {
-        auth_manager.refresh_user(ctx);
-    });
-
-    Ok(())
+    dispatch_command(ctx, command, global_options)
 }
 
-/// Check if we're running within Warp (for example, if this is an invocation of the Warp CLI
+/// Check if we're running within Warp(for example, if this is an invocation of the Warp CLI
 /// within a Warp terminal session).
 pub fn is_running_in_warp() -> bool {
     std::env::var("TERM_PROGRAM")

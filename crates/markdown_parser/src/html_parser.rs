@@ -267,7 +267,8 @@ pub fn parse_html(html: &str) -> Result<FormattedText> {
                 result.push_back(match node_name.as_str() {
                     // If it's a code block, process its children node as plain text.
                     "pre" => {
-                        if let Some(val) = get_attribute(&attrs.borrow(), ZTERM_EMBED_ATTRIBUTE_NAME)
+                        if let Some(val) =
+                            get_attribute(&attrs.borrow(), ZTERM_EMBED_ATTRIBUTE_NAME)
                         {
                             FormattedTextLine::Embedded(Mapping::from_iter([(
                                 Value::String("id".to_string()),

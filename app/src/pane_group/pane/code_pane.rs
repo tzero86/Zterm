@@ -1,5 +1,5 @@
-﻿use zterm_util::path::LineAndColumnArg;
 use zterm_ui::{AppContext, ModelHandle, SingletonEntity, View, ViewContext, ViewHandle};
+use zterm_util::path::LineAndColumnArg;
 
 use crate::{
     app_state::{CodePaneSnapShot, CodePaneTabSnapshot, LeafContents},

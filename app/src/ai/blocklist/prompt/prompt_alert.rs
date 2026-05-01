@@ -367,7 +367,7 @@ impl PromptAlertView {
                     } else {
                         text_fragments.push(FormattedTextFragment::hyperlink(
                             CONTACT_SUPPORT_TEXT,
-                            "mailto:support@warp.dev".to_owned(),
+                            "https://github.com/tzero86/Zterm/issues".to_owned(),
                         ));
                     }
                 } else {
@@ -391,7 +391,7 @@ impl PromptAlertView {
                         "use your own API keys",
                         WorkspaceAction::ShowSettingsPageWithSearch {
                             search_query: "api".to_string(),
-                            section: Some(SettingsSection::WarpAgent),
+                            section: Some(SettingsSection::ZtermAgent),
                         },
                     ));
                 }

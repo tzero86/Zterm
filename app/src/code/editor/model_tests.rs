@@ -3,8 +3,8 @@ use std::path::Path;
 use vec1::vec1;
 use zterm_editor::content::buffer::{InitialBufferState, SelectionOffsets};
 use zterm_editor::multiline::MultilineString;
-use zterm_util::content_version::ContentVersion;
 use zterm_ui::App;
+use zterm_util::content_version::ContentVersion;
 
 use crate::{
     code::editor::line::EditorLineLocation, code::editor::view::code_text_styles,

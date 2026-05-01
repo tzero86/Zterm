@@ -377,9 +377,6 @@ use sum_tree::SeekBias;
 use vec1::vec1;
 use zterm_core::context_flag::ContextFlag;
 use zterm_core::user_preferences::GetUserPreferences as _;
-#[cfg(feature = "local_fs")]
-use zterm_util::path::LineAndColumnArg;
-use zterm_util::path::ShellFamily;
 use zterm_ui::clipboard::ClipboardContent;
 use zterm_ui::elements::new_scrollable::{
     AxisConfiguration, ClippedAxisConfiguration, DualAxisConfig, NewScrollableElement,
@@ -399,6 +396,9 @@ use zterm_ui::platform::{Cursor, OperatingSystem};
 use zterm_ui::r#async::executor::Background;
 use zterm_ui::r#async::{SpawnedFutureHandle, Timer};
 use zterm_ui::windowing::WindowManager;
+#[cfg(feature = "local_fs")]
+use zterm_util::path::LineAndColumnArg;
+use zterm_util::path::ShellFamily;
 
 use zterm_ui::assets::asset_cache::{AssetCache, AssetCacheEvent};
 use zterm_ui::image_cache::ImageType;
@@ -422,7 +422,9 @@ use zterm_ui::{
     record_trace_event, WindowId,
 };
 
-use zterm_ui::{windowing, CursorInfo, EntityId, EventContext, ModelAsRef, SingletonEntity, Tracked};
+use zterm_ui::{
+    windowing, CursorInfo, EntityId, EventContext, ModelAsRef, SingletonEntity, Tracked,
+};
 
 use crate::ai_assistant::{AskAIType, ASK_AI_ASSISTANT_TEXT};
 use crate::appearance::{Appearance, AppearanceEvent};
@@ -18860,7 +18862,7 @@ impl TerminalView {
                 self.handle_usage_footer_toggled(block.id(), *conversation_id, *is_expanded, ctx);
             }
             AIBlockEvent::OpenSettings => {
-                ctx.emit(Event::OpenSettings(SettingsSection::WarpAgent));
+                ctx.emit(Event::OpenSettings(SettingsSection::ZtermAgent));
             }
             #[cfg(feature = "local_fs")]
             AIBlockEvent::OpenCodeInWarp { source, layout } => {

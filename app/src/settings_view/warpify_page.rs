@@ -21,7 +21,8 @@ use zterm_ui::{
 };
 
 use crate::terminal::warpify::settings::{
-    EnableSshWarpification, SshExtensionInstallMode, UseSshTmuxWrapper, ZtermifySettingsChangedEvent,
+    EnableSshWarpification, SshExtensionInstallMode, UseSshTmuxWrapper,
+    ZtermifySettingsChangedEvent,
 };
 use crate::ui_components::blended_colors;
 use crate::{
@@ -628,7 +629,7 @@ impl SettingsWidget for SubshellsWidget {
     type View = ZtermifyPageView;
 
     fn search_terms(&self) -> &str {
-        "warpify subshell"
+        "ztermify subshell"
     }
 
     fn render(
@@ -655,7 +656,7 @@ impl SettingsWidget for SSHWidget {
     type View = ZtermifyPageView;
 
     fn search_terms(&self) -> &str {
-        "warpify ssh"
+        "ztermify ssh"
     }
 
     fn render(

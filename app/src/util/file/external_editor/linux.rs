@@ -1,4 +1,4 @@
-﻿use std::{
+use std::{
     collections::HashMap,
     ffi::OsStr,
     path::{Path, PathBuf},
@@ -7,8 +7,8 @@
 
 use command::blocking::Command;
 use freedesktop_desktop_entry::DesktopEntry;
-use zterm_util::path::LineAndColumnArg;
 use zterm_ui::AppContext;
+use zterm_util::path::LineAndColumnArg;
 
 use super::Editor;
 

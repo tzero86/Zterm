@@ -1,4 +1,4 @@
-﻿use std::path::Path;
+use std::path::Path;
 use std::rc::Rc;
 use std::sync::Arc;
 use vec1::Vec1;
@@ -62,8 +62,8 @@ use crate::{
         },
     },
 };
-use zterm_core::channel::ChannelState;
 use warp_multi_agent_api as api;
+use zterm_core::channel::ChannelState;
 use zterm_ui::units::IntoPixels;
 use zterm_ui::{ModelHandle, SingletonEntity};
 

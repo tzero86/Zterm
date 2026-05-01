@@ -91,8 +91,8 @@ use super::{
 /// When `None`, the page shows all widgets (legacy/full view).
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum AISubpage {
-    /// The main "WarpAgent" page: global AI toggle + Active AI + Input + Other sections.
-    WarpAgent,
+    /// The main "ZtermAgent" page: global AI toggle + Active AI + Input + Other sections.
+    ZtermAgent,
     /// Agent profiles and permissions.
     Profiles,
     /// Knowledge / Rules settings.
@@ -104,7 +104,7 @@ pub enum AISubpage {
 impl AISubpage {
     pub fn from_section(section: SettingsSection) -> Option<Self> {
         match section {
-            SettingsSection::WarpAgent => Some(Self::WarpAgent),
+            SettingsSection::ZtermAgent => Some(Self::ZtermAgent),
             SettingsSection::AgentProfiles => Some(Self::Profiles),
             SettingsSection::Knowledge => Some(Self::Knowledge),
             SettingsSection::ThirdPartyCLIAgents => Some(Self::ThirdPartyCLIAgents),
@@ -1307,10 +1307,6 @@ impl AISettingsPageView {
                     ctx.dispatch_typed_action(AISettingsPageAction::CreateProfile);
                 })
         });
-
-        add_profile_button.update(ctx, |button, ctx| {
-            button.set_disabled(!is_any_ai_enabled, ctx);
-        });
         let agent_toolbar_inline_editor = ctx.add_typed_action_view(|ctx| {
             AgentToolbarInlineEditor::new(AgentToolbarEditorMode::AgentView, ctx)
         });
@@ -1475,7 +1471,7 @@ impl AISettingsPageView {
                     widgets.push(Box::new(CloudAgentComputerUseWidget::default()));
                 }
             }
-            Some(AISubpage::WarpAgent) => {
+            Some(AISubpage::ZtermAgent) => {
                 // Oz page: global toggle + Active AI + Input + Other
                 widgets.push(Box::new(GlobalAIWidget::default()));
                 if ai_settings
@@ -1509,6 +1505,8 @@ impl AISettingsPageView {
                 }
                 widgets.push(Box::new(ApiKeysWidget::new(ctx)));
                 widgets.push(Box::new(AwsBedrockWidget::new(ctx)));
+                // TODO: LocalLLMWidget requires singleton initialization pattern fix
+                // widgets.push(Box::new(LocalLLMWidget::default()));
                 widgets.push(Box::new(OtherAIWidget::default()));
                 if FeatureFlag::AgentModeComputerUse.is_enabled() {
                     widgets.push(Box::new(CloudAgentComputerUseWidget::default()));
@@ -1736,11 +1734,6 @@ impl AISettingsPageView {
         );
         Self::refresh_mcp_allowlist_dropdown(&self.mcp_allowlist_dropdown, ctx);
         Self::refresh_mcp_denylist_dropdown(&self.mcp_denylist_dropdown, ctx);
-
-        let is_any_ai_enabled = AISettings::as_ref(ctx).is_any_ai_enabled(ctx);
-        self.add_profile_button.update(ctx, |button, ctx| {
-            button.set_disabled(!is_any_ai_enabled, ctx);
-        });
     }
 
     fn reset_execution_profile_mouse_state_handles(&mut self, ctx: &mut ViewContext<Self>) {
@@ -3051,7 +3044,7 @@ impl SettingsWidget for GlobalAIWidget {
     type View = AISettingsPageView;
 
     fn search_terms(&self) -> &str {
-        "oz warp agent global ai a.i. active next command prompt code diffs suggestion suggested suggestions \
+        "oz Zterm Agent global ai a.i. active next command prompt code diffs suggestion suggested suggestions \
                 agent mode natural language detection input hint api keys bring your own byo google anthropic openai"
     }
 
@@ -3065,17 +3058,13 @@ impl SettingsWidget for GlobalAIWidget {
         let is_ai_disabled_due_to_remote_session_org_policy =
             AISettings::as_ref(app).is_ai_disabled_due_to_remote_session_org_policy(app);
 
-        let is_anonymous = AuthStateProvider::as_ref(app)
-            .get()
-            .is_anonymous_or_logged_out();
-
         let mut row = Flex::row()
             .with_main_axis_size(MainAxisSize::Max)
             .with_main_axis_alignment(MainAxisAlignment::SpaceBetween)
             .with_cross_axis_alignment(CrossAxisAlignment::Center)
             .with_child(
                 Text::new_inline(
-                    "Warp Agent",
+                    "Zterm Agent",
                     appearance.ui_font_family(),
                     PRIMARY_HEADER_FONT_SIZE,
                 )
@@ -3101,8 +3090,8 @@ impl SettingsWidget for GlobalAIWidget {
             );
         }
 
-        // Show sign-up button for anonymous users, toggle for logged-in users
-        if is_anonymous {
+        // Local-first design: profiles available to all users
+        if false {
             row.add_child(
                 Flex::row()
                     .with_cross_axis_alignment(CrossAxisAlignment::Center)
@@ -3416,7 +3405,7 @@ impl SettingsWidget for UsageWidget {
                 }
             } else {
                 vec![
-                    FormattedTextFragment::hyperlink("Contact support", "mailto:support@warp.dev"),
+                    FormattedTextFragment::hyperlink("Contact support", "mailto:support@zterm.dev"),
                     FormattedTextFragment::plain_text(" for more AI usage."),
                 ]
             }
@@ -4182,7 +4171,7 @@ impl AgentsWidget {
         );
         render_ai_list(
             "Command denylist",
-            "Regular expressions to match commands that the Warp Agent should always ask permission to execute.",
+            "Regular expressions to match commands that the Zterm Agent should always ask permission to execute.",
             list,
             view,
             ai_settings,
@@ -4215,7 +4204,7 @@ impl AgentsWidget {
 
         render_ai_list(
             "Command allowlist",
-            "Regular expressions to match commands that can be automatically executed by the Warp Agent.",
+            "Regular expressions to match commands that can be automatically executed by the Zterm Agent.",
             list,
             view,
             ai_settings,
@@ -4314,7 +4303,7 @@ impl AgentsWidget {
         render_dropdown_item(
             appearance,
             "Base model",
-            Some("This model serves as the primary engine behind the Warp Agent. It powers most interactions and invokes other models for tasks like planning or code generation when necessary. Warp may automatically switch to alternate models based on model availability or for auxiliary tasks such as conversation summarization."),
+            Some("This model serves as the primary engine behind the Zterm Agent. It powers most interactions and invokes other models for tasks like planning or code generation when necessary. Zterm may automatically switch to alternate models based on model availability or for auxiliary tasks such as conversation summarization."),
             Some(show_in_prompt_checkbox),
             LocalOnlyIconState::Hidden,
             (!ai_settings.is_any_ai_enabled(app)).then(|| appearance.theme().disabled_ui_text_color()),
@@ -4343,7 +4332,7 @@ impl AgentsWidget {
 
         let codebase_context_description = vec![
             FormattedTextFragment::plain_text(
-                "Allow the Warp Agent to generate an outline of your codebase that can be used for context. No code is ever stored on our servers. "
+                "Allow the Zterm Agent to generate an outline of your codebase that can be used for context. No code is ever stored on our servers. "
             ),
             FormattedTextFragment::hyperlink(
                 "Learn more",
@@ -4415,7 +4404,7 @@ impl AgentsWidget {
 
         let subtext = {
             let subtext_fragments = vec![
-                FormattedTextFragment::plain_text("You haven't added any MCP servers yet. Once you do, you'll be able to control how much autonomy the Warp Agent has when interacting with them. "),
+                FormattedTextFragment::plain_text("You haven't added any MCP servers yet. Once you do, you'll be able to control how much autonomy the Zterm Agent has when interacting with them. "),
                 FormattedTextFragment::hyperlink_action("Add a server", AISettingsPageAction::OpenMCPServerCollection),
                 FormattedTextFragment::plain_text(" or "),
                 FormattedTextFragment::hyperlink("learn more about MCPs.", "https://docs.warp.dev/agent-platform/capabilities/mcp"),
@@ -4489,7 +4478,7 @@ impl AgentsWidget {
         {
             let allowlist = self.render_mcp_list(
                 "MCP allowlist",
-                "Allow the Warp Agent to call these MCP servers.",
+                "Allow the Zterm Agent to call these MCP servers.",
                 &view.mcp_allowlist_dropdown,
                 BlocklistAIPermissions::as_ref(app).get_mcp_allowlist(app, None),
                 view.mcp_allowlist_mouse_state_handles.clone(),
@@ -4506,7 +4495,7 @@ impl AgentsWidget {
         {
             let denylist = self.render_mcp_list(
                 "MCP denylist",
-                "The Warp Agent will always ask for permission before calling any MCP servers on this list.",
+                "The Zterm Agent will always ask for permission before calling any MCP servers on this list.",
                 &view.mcp_denylist_dropdown,
                 BlocklistAIPermissions::as_ref(app).get_mcp_denylist(app, None),
                 view.mcp_denylist_mouse_state_handles.clone(),
@@ -4713,7 +4702,7 @@ impl AIInputWidget {
                         FormattedTextFragment::plain_text("Encountered an incorrect detection? "),
                         FormattedTextFragment::hyperlink(
                             "Let us know",
-                            "https://warpdotdev.typeform.com/to/offrTIpq",
+                            "https://github.com/tzero86/Zterm/issues",
                         ),
                     ]
                 });
@@ -4768,7 +4757,7 @@ impl AIInputWidget {
                 "Enabling natural language detection will detect when natural language is written in the terminal input, and then automatically switch to Agent Mode for AI queries."
                 ),
                 FormattedTextFragment::plain_text(" Encountered an incorrect input detection? "),
-                FormattedTextFragment::hyperlink("Let us know", "https://warpdotdev.typeform.com/to/offrTIpq"),
+                FormattedTextFragment::hyperlink("Let us know", "https://github.com/tzero86/Zterm/issues"),
                 ]
             });
 
@@ -4871,7 +4860,7 @@ impl SettingsWidget for MCPServersWidget {
 
         let mcp_description = vec![
             FormattedTextFragment::plain_text(
-               "Add MCP servers to extend the Warp Agent's capabilities. \
+               "Add MCP servers to extend the Zterm Agent's capabilities. \
             MCP servers expose data sources or tools to agents through a standardized interface, essentially acting like plugins. ",
             ),
             FormattedTextFragment::hyperlink(
@@ -5003,7 +4992,7 @@ impl AIFactWidget {
 
         let rules_description = vec![
             FormattedTextFragment::plain_text(
-                "Rules help the Warp Agent follow your conventions, whether for codebases or specific workflows. ",
+                "Rules help the Zterm Agent follow your conventions, whether for codebases or specific workflows. ",
             ),
             FormattedTextFragment::hyperlink(
                 "Learn more",
@@ -5081,7 +5070,7 @@ impl AIFactWidget {
         );
 
         let description = render_ai_setting_description(
-            "The Warp Agent can leverage your Zterm Drive Contents to tailor responses to your personal and team developer workflows and environments. This includes any Workflows, Notebooks, and Environment Variables.",
+            "The Zterm Agent can leverage your Zterm Drive Contents to tailor responses to your personal and team developer workflows and environments. This includes any Workflows, Notebooks, and Environment Variables.",
             ai_settings.is_any_ai_enabled(app),
             app,
         );
@@ -5170,7 +5159,7 @@ impl VoiceWidget {
         ));
 
         let voice_input_description_text_fragments = vec![
-                FormattedTextFragment::plain_text("Voice input allows you to control Warp by speaking directly to your terminal (powered by "),
+                FormattedTextFragment::plain_text("Voice input allows you to control Zterm by speaking directly to your terminal (powered by "),
                 FormattedTextFragment::hyperlink("Wispr Flow", WISPR_FLOW_URL),
                 FormattedTextFragment::plain_text(")."),
             ];
@@ -5501,7 +5490,7 @@ impl SettingsWidget for CLIAgentWidget {
                         on_click_action: None,
                         secondary_text: None,
                         tooltip_override_text: Some(
-                            "Requires the Warp plugin for your coding agent".to_owned(),
+                            "Requires the Zterm plugin for your coding agent".to_owned(),
                         ),
                     }),
                     LocalOnlyIconState::for_setting(
@@ -5771,7 +5760,7 @@ impl SettingsWidget for CloudAgentComputerUseWidget {
             )
             .with_child(toggle_row)
             .with_child(render_ai_setting_description(
-                "Enable computer use in cloud agent conversations started from the Warp app.",
+                "Enable computer use in cloud agent conversations started from the Zterm app.",
                 !is_disabled,
                 app,
             ));
@@ -5795,6 +5784,92 @@ impl SettingsWidget for CloudAgentComputerUseWidget {
         }
 
         column.finish()
+    }
+}
+
+#[derive(Default)]
+#[allow(dead_code)]
+struct LocalLLMWidget {
+    local_llm_provider_dropdown: Option<ViewHandle<Dropdown<AISettingsPageAction>>>,
+    local_llm_model_dropdown: Option<ViewHandle<Dropdown<AISettingsPageAction>>>,
+}
+
+#[allow(dead_code)]
+impl LocalLLMWidget {
+    fn render_local_llm_section(
+        &self,
+        _view: &AISettingsPageView,
+        appearance: &Appearance,
+        app: &AppContext,
+    ) -> Box<dyn Element> {
+        let ai_settings = AISettings::as_ref(app);
+        let is_any_ai_enabled = ai_settings.is_any_ai_enabled(app);
+
+        // LocalLLMSettings integration not yet complete - skip rendering
+        // The singleton needs to be initialized earlier in app startup
+        let mut column = Flex::column().with_child(render_separator(appearance));
+
+        if is_any_ai_enabled {
+            column.add_child(
+                Container::new(
+                    Flex::row()
+                        .with_main_axis_size(MainAxisSize::Max)
+                        .with_main_axis_alignment(MainAxisAlignment::SpaceBetween)
+                        .with_child(
+                            build_sub_header(
+                                appearance,
+                                "Local LLM Configuration",
+                                Some(styles::header_font_color(is_any_ai_enabled, app)),
+                            )
+                            .finish(),
+                        )
+                        .finish(),
+                )
+                .with_padding_bottom(HEADER_PADDING)
+                .finish(),
+            );
+
+            column.add_child(
+                Container::new(
+                    Box::new(
+                        Text::new_inline(
+                            "Local LLM support is being initialized. This feature will be available soon.",
+                            appearance.ui_font_family(),
+                            CONTENT_FONT_SIZE,
+                        )
+                        .with_color(appearance.theme().disabled_ui_text_color().into()),
+                    )
+                )
+                .with_padding_left(16.)
+                .with_padding_right(16.)
+                .with_padding_top(8.)
+                .with_padding_bottom(8.)
+                .finish(),
+            );
+        }
+
+        column.finish()
+    }
+}
+
+impl SettingsWidget for LocalLLMWidget {
+    type View = AISettingsPageView;
+
+    fn search_terms(&self) -> &str {
+        "local llm model ollama lm studio openai compatible custom inference endpoint"
+    }
+
+    fn should_render(&self, app: &AppContext) -> bool {
+        AISettings::as_ref(app).is_any_ai_enabled(app)
+    }
+
+    fn render(
+        &self,
+        view: &Self::View,
+        appearance: &Appearance,
+        app: &AppContext,
+    ) -> Box<dyn Element> {
+        self.render_local_llm_section(view, appearance, app)
     }
 }
 
@@ -5931,7 +6006,7 @@ impl ApiKeysWidget {
             .with_child(
                 Container::new(
                     render_ai_setting_description(
-                        "Use your own API keys from model providers for the Warp Agent to use. API keys are stored locally and never synced to the cloud. Using auto models or models from providers you have not provided API keys for will consume Warp credits.",
+                        "Use your own API keys from model providers for the Zterm Agent to use. API keys are stored locally and never synced to the cloud. Using auto models or models from providers you have not provided API keys for will consume Zterm credits.",
                         is_enabled,
                         app,
                     ))
@@ -6010,7 +6085,10 @@ impl ApiKeysWidget {
                 // to sales to enable BYOK on their existing plan.
                 if team.billing_metadata.customer_type == CustomerType::Enterprise {
                     vec![
-                        FormattedTextFragment::hyperlink("Contact sales", "mailto:sales@warp.dev"),
+                        FormattedTextFragment::hyperlink(
+                            "Contact sales",
+                            "https://github.com/tzero86/Zterm/issues",
+                        ),
                         FormattedTextFragment::plain_text(
                             " to enable bringing your own API keys on your Enterprise plan.",
                         ),
@@ -6071,7 +6149,7 @@ impl ApiKeysWidget {
         let ai_settings = AISettings::as_ref(app);
 
         let toggle = render_ai_setting_toggle::<CanUseWarpCreditsWithByok>(
-            "Warp credit fallback",
+            "Zterm credit fallback",
             AISettingsPageAction::ToggleCanUseWarpCreditsWithByok,
             *ai_settings.can_use_warp_credits_with_byok,
             ai_settings.is_any_ai_enabled(app),
@@ -6081,7 +6159,7 @@ impl ApiKeysWidget {
         );
 
         let description = render_ai_setting_description(
-            "When enabled, agent requests may be routed to one of Zterm's provided models in the event of an error. Warp will prioritize using your API keys over your Warp credits.",
+            "When enabled, agent requests may be routed to one of Zterm's provided models in the event of an error. Zterm will prioritize using your API keys over your Zterm credits.",
             ai_settings.is_any_ai_enabled(app),
             app,
         );
@@ -6353,9 +6431,9 @@ impl AwsBedrockWidget {
         let are_credentials_enabled = user_workspaces.is_aws_bedrock_credentials_enabled(app);
         let is_usage_enabled = is_section_enabled && are_credentials_enabled;
         let toggle_description = if is_admin_enforced {
-            "Warp loads and sends local AWS CLI credentials for Bedrock-supported models. This setting is managed by your organization.".to_string()
+            "Zterm loads and sends local AWS CLI credentials for Bedrock-supported models. This setting is managed by your organization.".to_string()
         } else {
-            "Warp loads and sends local AWS CLI credentials for Bedrock-supported models."
+            "Zterm loads and sends local AWS CLI credentials for Bedrock-supported models."
                 .to_string()
         };
 

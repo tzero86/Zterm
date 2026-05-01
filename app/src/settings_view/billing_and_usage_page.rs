@@ -1003,7 +1003,7 @@ impl TypedActionView for BillingAndUsagePageView {
             BillingAndUsagePageAction::NavigateToByokSettings => {
                 ctx.dispatch_typed_action_deferred(WorkspaceAction::ShowSettingsPageWithSearch {
                     search_query: "api".to_string(),
-                    section: Some(SettingsSection::WarpAgent),
+                    section: Some(SettingsSection::ZtermAgent),
                 });
             }
         }
@@ -3191,13 +3191,13 @@ impl UsageWidget {
                 vec![
                     FormattedTextFragment::hyperlink(
                         "Upgrade to Enterprise",
-                        "mailto:sales@warp.dev",
+                        "https://github.com/tzero86/Zterm/issues",
                     ),
                     FormattedTextFragment::plain_text(" for custom limits and dedicated support."),
                 ]
             } else if !team.billing_metadata.is_usage_based_pricing_toggleable() {
                 vec![
-                    FormattedTextFragment::hyperlink("Contact support", "mailto:support@warp.dev"),
+                    FormattedTextFragment::hyperlink("Contact support", "mailto:support@zterm.dev"),
                     FormattedTextFragment::plain_text(" for more AI usage."),
                 ]
             } else {

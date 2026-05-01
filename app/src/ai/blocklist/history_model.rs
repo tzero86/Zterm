@@ -1,4 +1,4 @@
-﻿use std::collections::hash_map::Entry;
+use std::collections::hash_map::Entry;
 use std::collections::{HashMap, HashSet};
 
 use anyhow::anyhow;
@@ -6,12 +6,12 @@ use chrono::{DateTime, Local, NaiveDateTime};
 use itertools::Itertools as _;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
-use zterm_core::features::FeatureFlag;
 use warp_multi_agent_api::response_event::stream_finished::ConversationUsageMetadata;
 use warp_multi_agent_api::{
     client_action::{Action, StartNewConversation},
     response_event::stream_finished::TokenUsage,
 };
+use zterm_core::features::FeatureFlag;
 use zterm_ui::{AppContext, Entity, EntityId, ModelContext, SingletonEntity};
 
 #[cfg(feature = "local_fs")]
@@ -29,6 +29,7 @@ use crate::ai::agent::AIAgentExchangeId;
 use crate::ai::agent::CancellationReason;
 use crate::ai::artifacts::Artifact;
 use crate::ai::document::ai_document_model::AIDocumentModel;
+use crate::auth::AuthStateProvider;
 use crate::input_suggestions::HistoryOrder;
 use crate::persistence::model::AgentConversationData;
 use crate::persistence::ModelEvent;
@@ -1360,6 +1361,7 @@ impl BlocklistAIHistoryModel {
         // If this conversation doesn't have server metadata yet, and it has a server conversation token,
         // fetch the metadata from the server.
         let should_fetch_metadata = FeatureFlag::CloudConversations.is_enabled()
+            && AuthStateProvider::as_ref(ctx).get().is_logged_in()
             && conversation.server_metadata().is_none()
             && conversation.server_conversation_token().is_some();
 

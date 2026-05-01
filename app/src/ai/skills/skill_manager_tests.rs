@@ -5,9 +5,9 @@ use repo_metadata::{repositories::DetectedRepositories, DirectoryWatcher, RepoMe
 use std::collections::{HashMap, HashSet};
 use std::fs;
 use tempfile::TempDir;
+use watcher::HomeDirectoryWatcher;
 use zterm_core::channel::ChannelState;
 use zterm_ui::App;
-use watcher::HomeDirectoryWatcher;
 
 // ============================================================================
 // Tests for get_skills_for_working_directory subdirectory scoping

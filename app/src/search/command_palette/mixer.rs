@@ -8,9 +8,9 @@ use crate::util::bindings::CommandBinding;
 use crate::workspace::PaneViewLocator;
 use std::sync::Arc;
 use strum_macros::IntoStaticStr;
-use zterm_util::path::LineAndColumnArg;
 use zterm_ui::keymap::BindingId;
 use zterm_ui::{EntityId, WindowId};
+use zterm_util::path::LineAndColumnArg;
 
 pub type CommandPaletteMixer = SearchMixer<CommandPaletteItemAction>;
 

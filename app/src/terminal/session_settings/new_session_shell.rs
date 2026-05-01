@@ -1,8 +1,8 @@
-﻿use std::path::PathBuf;
+use std::path::PathBuf;
 
 use serde::{Deserialize, Serialize};
-use zterm_util::path::ShellFamily;
 use zterm_ui::platform::OperatingSystem;
+use zterm_util::path::ShellFamily;
 
 #[derive(
     Debug,

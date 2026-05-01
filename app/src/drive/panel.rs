@@ -604,7 +604,11 @@ impl DrivePanel {
     }
 
     /// This functions scrolls the relevant Zterm Drive item into view.
-    pub fn scroll_item_into_view(&mut self, item_id: ZtermDriveItemId, ctx: &mut ViewContext<Self>) {
+    pub fn scroll_item_into_view(
+        &mut self,
+        item_id: ZtermDriveItemId,
+        ctx: &mut ViewContext<Self>,
+    ) {
         self.index_view.update(ctx, |index, ctx| {
             index.scroll_item_into_view(item_id, ctx);
         })

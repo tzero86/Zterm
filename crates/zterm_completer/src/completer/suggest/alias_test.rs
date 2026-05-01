@@ -47,7 +47,8 @@ pub fn test_expand_command_aliases() {
     #[cfg(not(feature = "v2"))]
     {
         // The test signature has an alias function, which expands subcommand "twelve" to "one".
-        let result = zterm_ui::r#async::block_on(expand_command_aliases("test twelve ", false, &ctx));
+        let result =
+            zterm_ui::r#async::block_on(expand_command_aliases("test twelve ", false, &ctx));
         assert_eq!(result.expanded_command_line, "test one ");
         assert_eq!(result.tokens_from_command, vec!["test", "one"]);
         // Should be using the subcommand signature for completions
@@ -61,8 +62,11 @@ pub fn test_expand_command_aliases() {
         );
 
         // We have a top-level aliasForTest which expands to test, and then the test signature expands "twelve" to "one"
-        let result =
-            zterm_ui::r#async::block_on(expand_command_aliases("aliasForTest twelve ", false, &ctx));
+        let result = zterm_ui::r#async::block_on(expand_command_aliases(
+            "aliasForTest twelve ",
+            false,
+            &ctx,
+        ));
         assert_eq!(result.expanded_command_line, "test one ");
         assert_eq!(result.tokens_from_command, vec!["test", "one"]);
         // Should be using the subcommand signature for completions

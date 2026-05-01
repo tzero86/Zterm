@@ -10,7 +10,6 @@
 //! place.
 use zterm_editor::content::buffer::InitialBufferState;
 use zterm_editor::render::element::VerticalExpansionBehavior;
-use zterm_util::path::LineAndColumnArg;
 use zterm_ui::{
     elements::{ChildView, MouseStateHandle},
     text_layout::ClipConfig,
@@ -18,6 +17,7 @@ use zterm_ui::{
     AppContext, Element, Entity, ModelHandle, SingletonEntity, TypedActionView, View, ViewContext,
     ViewHandle,
 };
+use zterm_util::path::LineAndColumnArg;
 
 use crate::appearance::Appearance;
 use crate::code::editor::scroll::{ScrollPosition, ScrollTrigger};

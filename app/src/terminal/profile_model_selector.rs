@@ -1,4 +1,4 @@
-﻿use ai::api_keys::{ApiKeyManager, ApiKeyManagerEvent};
+use ai::api_keys::{ApiKeyManager, ApiKeyManagerEvent};
 use indexmap::IndexMap;
 use instant::{Duration, Instant};
 use parking_lot::FairMutex;
@@ -91,7 +91,9 @@ pub fn calculate_scaled_font_size(appearance: &zterm_core::ui::appearance::Appea
 }
 
 /// Calculate the maximum width for profile name text (we will clip to this width)
-pub fn calculate_max_profile_name_width(appearance: &zterm_core::ui::appearance::Appearance) -> f32 {
+pub fn calculate_max_profile_name_width(
+    appearance: &zterm_core::ui::appearance::Appearance,
+) -> f32 {
     let scaled_font_size = calculate_scaled_font_size(appearance);
     scaled_font_size * MAX_PROFILE_NAME_WIDTH_SCALE_FACTOR
 }
@@ -512,7 +514,7 @@ impl ProfileModelSelector {
                 .on_click(|ctx| {
                     ctx.dispatch_typed_action(WorkspaceAction::ShowSettingsPageWithSearch {
                         search_query: "api".to_string(),
-                        section: Some(SettingsSection::WarpAgent),
+                        section: Some(SettingsSection::ZtermAgent),
                     });
                 })
         });
@@ -1825,7 +1827,7 @@ impl TypedActionView for ProfileModelSelector {
             ProfileModelSelectorAction::ManageProfiles => {
                 self.set_profile_menu_visibility(false, ctx);
                 ctx.emit(ProfileModelSelectorEvent::OpenSettings(
-                    SettingsSection::WarpAgent,
+                    SettingsSection::ZtermAgent,
                 ));
             }
             ProfileModelSelectorAction::ToggleProfileMenu => {

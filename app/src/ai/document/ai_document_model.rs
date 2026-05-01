@@ -11,7 +11,9 @@ use anyhow;
 use chrono::{DateTime, Local, Utc};
 use itertools::Itertools;
 use uuid::Uuid;
-use zterm_ui::{AppContext, Entity, EntityId, ModelContext, ModelHandle, SingletonEntity, WindowId};
+use zterm_ui::{
+    AppContext, Entity, EntityId, ModelContext, ModelHandle, SingletonEntity, WindowId,
+};
 
 use crate::ai::ai_document_view::DEFAULT_PLANNING_DOCUMENT_TITLE;
 use crate::auth::auth_state::AuthStateProvider;
