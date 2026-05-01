@@ -14,7 +14,7 @@ Zterm is a Rust-based terminal emulator and development environment. It combines
 - A themeable, GPU-accelerated interface
 - First-class support for modern shells
 
-Zterm is a fork of [Warp](https://github.com/warpdotdev/warp) by Denver Technologies, Inc. It preserves the open-source client while removing proprietary cloud infrastructure dependencies.
+Zterm is a Rust-based terminal emulator and development environment, originally forked from [Warp](https://github.com/warpdotdev/warp) by Denver Technologies, Inc. The project has evolved into an independent, community-driven platform with its own roadmap, architecture, and feature set focused on agentic workflows and AI-assisted development.
 
 ---
 

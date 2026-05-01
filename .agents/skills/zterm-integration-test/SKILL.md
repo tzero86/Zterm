@@ -1,5 +1,5 @@
 ---
-name: warp-integration-test
+name: zterm-integration-test
 description: Writes, runs, and debugs Zterm integration tests using the custom Builder/TestStep framework in `crates/integration`. Use when adding a new integration test, fixing a failing integration test, wiring a test into the manual runner or nextest suite, or verifying end-to-end UI and terminal behavior in Zterm.
 ---
 
