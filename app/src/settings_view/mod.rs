@@ -335,8 +335,8 @@ impl FromStr for SettingsSection {
             "Teams" => Ok(Self::Teams),
             "Ztermify" => Ok(Self::Ztermify),
             "ZtermDrive" | "Zterm Drive" => Ok(Self::ZtermDrive),
-            // This page was called "Oz" at one point, keep for backward compatibility.
-            "Oz" | "Zterm Agent" => Ok(Self::ZtermAgent),
+            // This page was called "Oz"/"Warp Agent" at one point, keep for backward compatibility.
+            "Oz" | "Warp Agent" | "Zterm Agent" => Ok(Self::ZtermAgent),
             "Profiles" | "AgentProfiles" => Ok(Self::AgentProfiles),
             "MCP servers" | "AgentMCPServers" => Ok(Self::AgentMCPServers),
             "Knowledge" => Ok(Self::Knowledge),

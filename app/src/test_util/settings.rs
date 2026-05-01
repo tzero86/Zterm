@@ -15,6 +15,7 @@ pub fn initialize_settings_for_tests_with_mode(
 ) {
     use crate::{
         ai::cloud_agent_settings::CloudAgentSettings,
+        ai::local_llm::LocalLLMSettings,
         drive::settings::ZtermDriveSettings,
         search::command_search::settings::CommandSearchSettings,
         settings::{
@@ -40,6 +41,7 @@ pub fn initialize_settings_for_tests_with_mode(
     };
     use zterm_core::{execution_mode::AppExecutionMode, semantic_selection::SemanticSelection};
     app.add_singleton_model(|ctx| AppExecutionMode::new(mode, is_sandboxed, ctx));
+    app.update(LocalLLMSettings::init);
 
     app.update(init_and_register_user_preferences);
     app.add_singleton_model(|_ctx| SettingsManager::default());

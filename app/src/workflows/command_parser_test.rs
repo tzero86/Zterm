@@ -1,6 +1,7 @@
-﻿use std::collections::HashMap;
+use std::collections::HashMap;
 
 use lazy_static::lazy_static;
+use string_offset::{ByteOffset, CharOffset};
 
 use crate::workflows::workflow::{Argument, Workflow};
 
@@ -173,19 +174,40 @@ fn test_compute_workflow_display_data_for_linked_history_command() {
     let display_data =
         compute_workflow_display_data_for_history_command(linked_history_command, &WORKFLOW)
             .expect("WorkflowDisplayData should be Some()");
+    let shell_path = "/opt/homebrew/bin/fish";
+    let test_name = "test_command_search_loads_history";
+    let shell_range_start = linked_history_command
+        .find(shell_path)
+        .expect("shell_path should exist in linked_history_command");
+    let test_name_range_start = linked_history_command
+        .find(test_name)
+        .expect("test_name should exist in linked_history_command");
+    let shell_byte_range =
+        ByteOffset::from(shell_range_start)..ByteOffset::from(shell_range_start + shell_path.len());
+    let test_name_byte_range = ByteOffset::from(test_name_range_start)
+        ..ByteOffset::from(test_name_range_start + test_name.len());
+    let shell_char_start = linked_history_command[..shell_range_start].chars().count();
+    let test_name_char_start = linked_history_command[..test_name_range_start]
+        .chars()
+        .count();
+    let shell_char_range = CharOffset::from(shell_char_start)
+        ..CharOffset::from(shell_char_start + shell_path.chars().count());
+    let test_name_char_range = CharOffset::from(test_name_char_start)
+        ..CharOffset::from(test_name_char_start + test_name.chars().count());
+
     assert_eq!(
         display_data.command_with_replaced_arguments.as_str(),
         linked_history_command,
     );
     assert_eq!(
         display_data.replaced_ranges,
-        vec![36.into()..58.into(), 155.into()..188.into()]
+        vec![shell_byte_range, test_name_byte_range]
     );
     assert_eq!(
         display_data.argument_index_to_char_range_map,
         HashMap::from([
-            (0.into(), vec![36.into()..58.into()]),
-            (1.into(), vec![155.into()..188.into()])
+            (0.into(), vec![shell_char_range]),
+            (1.into(), vec![test_name_char_range])
         ])
     );
 }
