@@ -5,9 +5,17 @@
 # run on a stable_release/* branch, it will assume it is building a new "stable"
 # channel candidate).
 
-name: Cut New Release Candidate
+# DISABLED: This workflow depends on Warp-owned release infrastructure.
+# See DISABLED_WARP_WORKFLOWS.md for details and replacement strategy.
+
+name: Cut New Release Candidate (DISABLED - Warp-specific infra)
 on:
   workflow_dispatch:
+    inputs:
+      _disabled:
+        description: "This workflow is disabled"
+        required: false
+        type: string
 
 jobs:
   compute_channel:

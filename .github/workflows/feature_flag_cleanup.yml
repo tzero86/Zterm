@@ -1,9 +1,15 @@
-﻿name: Feature Flag Cleanup
+﻿name: Feature Flag Cleanup (DISABLED - Warp-specific infra)
+# DISABLED: This workflow depends on warpdotdev/oz-agent-action (Warp-owned AI agent).
+# See DISABLED_WARP_WORKFLOWS.md for details and replacement strategy.
+# Could be valuable to replace with a Claude-powered equivalent in the future.
 
 on:
-  schedule:
-    - cron: '0 15 * * *' # 10am EST
   workflow_dispatch:
+    inputs:
+      _disabled:
+        description: "This workflow is disabled"
+        required: false
+        type: string:
 
 # Default to a read-only token. Jobs that need to push or open PRs widen
 # permissions explicitly below.
