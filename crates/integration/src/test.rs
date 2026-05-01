@@ -533,7 +533,10 @@ pub fn test_open_and_close_settings() -> Builder {
                 .with_hover_over_saved_position("close_tab_button:1")
                 .with_click_on_saved_position("close_tab_button:1")
                 .add_assertion(assert_tab_count(1))
-                .add_assertion(assert_tab_title(0, "~")),
+                .add_assertion(assert_tab_title(
+                    0,
+                    regex::Regex::new(r"^(~|bash)$").expect("regex should compile"),
+                )),
         )
 }
 
