@@ -40,9 +40,10 @@ jobs:
           VERSION="${{ inputs.version }}"
           CHANNEL="${{ inputs.channel }}"
           
-          # Validate semantic version format (X.Y.Z or X.Y.Z-prerelease)
-          if ! [[ $VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9]+)?$ ]]; then
-            echo "::error::Invalid version format: $VERSION (expected X.Y.Z or X.Y.Z-prerelease)"
+          # Validate semantic version format (X.Y.Z or X.Y.Z-prerelease with dot-separated identifiers)
+          # Allows: 1.0.0, 1.0.0-rc.1, 0.2.0-dev.1, 1.0.0-alpha.2.3, etc.
+          if ! [[ $VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9]+(\.[a-zA-Z0-9]+)*)?$ ]]; then
+            echo "::error::Invalid version format: $VERSION (expected X.Y.Z or X.Y.Z-prerelease.N)"
             exit 1
           fi
           
@@ -137,18 +138,19 @@ jobs:
         uses: actions/download-artifact@65a9edc5881444af0b3a3d60a0cc9efba8348bdd # v4.1.7
         with:
           path: artifacts
+          merge-multiple: true
 
       - name: Create Release Notes
         id: release_notes
         run: |
-          cat > RELEASE_NOTES.md << 'EOF'
+          cat > RELEASE_NOTES.md << EOF
           # ${{ needs.validate.outputs.release_name }}
           
-          Release channel: `${{ needs.validate.outputs.channel }}`
+          Release channel: \`${{ needs.validate.outputs.channel }}\`
           
           ## Changes in this release
           
-          $(git log --oneline $(git describe --tags --abbrev=0 2>/dev/null || echo "HEAD~10")..HEAD || echo "Initial release")
+          \$(git log --oneline \$(git describe --tags --abbrev=0 2>/dev/null || echo "HEAD~10")..HEAD || echo "Initial release")
           
           ## Installation
           
