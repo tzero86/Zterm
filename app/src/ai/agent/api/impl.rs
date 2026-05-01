@@ -307,11 +307,25 @@ async fn generate_local_llm_output(
     let mut final_text = String::new();
     const MAX_ITERATIONS: usize = 10;
 
-    for _ in 0..MAX_ITERATIONS {
+    for iteration in 0..MAX_ITERATIONS {
+        log::info!(
+            "Local LLM iteration {}/{} - model: '{}', message_count: {}",
+            iteration + 1,
+            MAX_ITERATIONS,
+            model,
+            messages.len()
+        );
+        
         let response = client
             .generate_with_tools(messages.clone(), &model, Some(tools.clone()))
             .await
             .map_err(|e| {
+                log::error!(
+                    "Local LLM inference failed at iteration {} - model: '{}', error: {:#}",
+                    iteration + 1,
+                    model,
+                    e
+                );
                 ConvertToAPITypeError::Other(anyhow::anyhow!("Local LLM request failed: {e}"))
             })?;
 

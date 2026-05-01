@@ -30,7 +30,6 @@ use crate::{
 
 use super::{AIAgentInput, MCPContext, MCPServer, RequestMetadata, Suggestions};
 use crate::ai::blocklist::{BlocklistAIPermissions, RequestInput};
-use crate::ai::local_llm::LocalLLMSettings;
 use crate::ai::mcp::templatable_manager::TemplatableMCPServerInfo;
 use crate::ai::mcp::TemplatableMCPServerManager;
 use crate::settings::AISettings;
@@ -312,7 +311,9 @@ impl RequestParams {
             supported_tools_override: request_input.supported_tools_override.clone(),
             parent_agent_id: None,
             agent_name: None,
-            local_llm_base_url: LocalLLMSettings::as_ref(app).base_url().into(),
+            // Don't set local_llm_base_url here - let generate_local_llm_output determine it from the provider
+            // extracted from the model ID (e.g., local-lmstudio-hex-... means use LM Studio's endpoint)
+            local_llm_base_url: None,
         }
     }
 }
