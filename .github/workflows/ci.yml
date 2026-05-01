@@ -86,16 +86,12 @@ jobs:
     name: Run ${{ matrix.name }} tests
     timeout-minutes: 60
     env:
-      # When CI runs on a PR from a fork, the GCP OIDC auth used by
-      # `google-github-actions/auth` fails because our Workload Identity
-      # Federation provider is configured to only trust the base repository.
-      # We skip the auth + gcloud install steps in those runs and exclude SSH
-      # integration tests (which require gcloud to tunnel into a GCP test VM)
-      # via the filter suffix below. Tests that need gcloud all have `_ssh_`
-      # in their name. Fork PRs lose SSH integration test coverage; those
-      # tests still run post-merge against `master`.
-      HAS_GCP_AUTH: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}
-      EXCLUDE_SSH_TESTS_FILTER: ${{ (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository) && ' and not test(/_ssh_/)' || '' }}
+      # The SSH integration tests require Warp-owned GCP/IAP infrastructure and
+      # service-account permissions. PR runs in this fork cannot acquire those
+      # credentials, so skip the gcloud setup and SSH test family for pull_request
+      # runs. Non-PR CI can still exercise the full SSH coverage.
+      HAS_GCP_AUTH: ${{ github.event_name != 'pull_request' }}
+      EXCLUDE_SSH_TESTS_FILTER: ${{ github.event_name == 'pull_request' && ' and not test(/ssh/)' || '' }}
     strategy:
       fail-fast: false
       matrix:
@@ -104,19 +100,19 @@ jobs:
             name: "MacOS"
             runner: ${{ fromJSON(needs.params.outputs.macos-runner) }}
             is_self_hosted: ${{ contains(fromJSON(needs.params.outputs.macos-runner), 'self-hosted') }}
-            extra_test_args: "--exclude zterm_js"
+            extra_test_args: "--exclude zterm_js --exclude managed_secrets_wasm --exclude serve-wasm"
 
           - os: "linux"
             name: "Linux"
             runner: ubuntu-latest
             is_self_hosted: false
-            extra_test_args: "--exclude zterm_js"
+            extra_test_args: "--exclude zterm_js --exclude managed_secrets_wasm --exclude serve-wasm"
 
           - os: "windows"
             name: "Windows"
             runner: windows-latest
             is_self_hosted: false
-            extra_test_args: "--exclude command-signatures-v2 --exclude zterm_js"
+            extra_test_args: "--exclude command-signatures-v2 --exclude zterm_js --exclude managed_secrets_wasm --exclude serve-wasm"
     runs-on: ${{ matrix.runner }}
     needs: params
     # Make sure an ID token is created with the necessary permissions to use

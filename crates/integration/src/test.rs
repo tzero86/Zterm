@@ -3419,20 +3419,20 @@ pub fn test_warp_auto_title_disabled() -> Builder {
             write_rc_files_for_test(
                 &dir,
                 r#"
-WARP_DISABLE_AUTO_TITLE="1"
+ZTERM_DISABLE_AUTO_TITLE="1"
 "#,
                 [ShellRcType::Bash],
             );
             write_rc_files_for_test(
                 &dir,
                 r#"
-WARP_DISABLE_AUTO_TITLE="true"
+ZTERM_DISABLE_AUTO_TITLE="true"
 "#,
                 [ShellRcType::Zsh],
             );
         })
         .with_step(wait_until_bootstrapped_single_pane_for_tab(0))
-        // If Warp title is disabled, we don't set the DISABLE_AUTO_TITLE env variable
+        // If Zterm title is disabled, we don't set the DISABLE_AUTO_TITLE env variable.
         .with_step(execute_command_for_single_terminal_in_tab(
             0,
             "echo $DISABLE_AUTO_TITLE".to_string(),
