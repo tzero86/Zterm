@@ -1,44 +1,38 @@
 {
-  "documentation": "See the README.md file in this directory.",
+  "documentation": "Zterm release channel configuration for automated releases. See DISABLED_WARP_WORKFLOWS.md for migration notes.",
   "channels": [
     {
       "channel": "dev",
       "type": "nightly",
       "is_prerelease": true,
-      "is_autopush": true,
-      "release_base_name": "Dev Release",
-      "release_body_text": "Nightly Zterm Dev release",
-      "sentry_project": "warp-client-dev",
-      "sentry_environment": "dev_release",
-      "changelog_slack_channel": "#dev-beta-changelogs",
-      "gcs_cache_control_value": "private, max-age=604800, immutable",
-      "web_gcs_bucket_prefix": "warp-server-staging"
+      "is_autopush": false,
+      "release_base_name": "Zterm Dev",
+      "release_body_text": "Zterm development (nightly) release",
+      "changelog_slack_channel": null,
+      "build_platforms": ["linux", "macos", "windows"],
+      "upload_artifacts": true
     },
     {
       "channel": "preview",
       "type": "weekly",
-      "is_prerelease": false,
+      "is_prerelease": true,
       "is_autopush": false,
-      "release_base_name": "Preview Release",
-      "release_body_text": "Zterm Preview release",
-      "sentry_project": "warp-client-beta-stable",
-      "sentry_environment": "preview_release",
-      "changelog_slack_channel": "#dev-beta-changelogs",
-      "gcs_cache_control_value": "public, max-age=604800, immutable",
-      "web_gcs_bucket_prefix": "warp"
+      "release_base_name": "Zterm Preview",
+      "release_body_text": "Zterm preview (testing) release",
+      "changelog_slack_channel": null,
+      "build_platforms": ["linux", "macos", "windows"],
+      "upload_artifacts": true
     },
     {
       "channel": "stable",
-      "type": "weekly",
+      "type": "manual",
       "is_prerelease": false,
       "is_autopush": false,
-      "release_base_name": "Stable Release",
-      "release_body_text": "Zterm Stable release",
-      "sentry_project": "warp-client-beta-stable",
-      "sentry_environment": "stable_release",
-      "changelog_slack_channel": "#release",
-      "gcs_cache_control_value": "public, max-age=604800, immutable",
-      "web_gcs_bucket_prefix": "warp"
+      "release_base_name": "Zterm",
+      "release_body_text": "Zterm stable release",
+      "changelog_slack_channel": null,
+      "build_platforms": ["linux", "macos", "windows"],
+      "upload_artifacts": true
     }
   ]
 }

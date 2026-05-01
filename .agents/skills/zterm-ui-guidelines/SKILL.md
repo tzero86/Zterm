@@ -1,9 +1,9 @@
 ---
-name: warp-ui-guidelines
+name: zterm-ui-guidelines
 description: Catalog of guidelines for writing UI code in the Zterm client. Read whenever doing any UI work in this repo, up front before writing the change, so the relevant guidelines shape the implementation.
 ---
 
-# warp-ui-guidelines
+# zterm-ui-guidelines
 
 This skill is a growing catalog of guidelines for working on Zterm's UI code. Each guideline captures a lesson that would otherwise be re-learned through review — typically because an agent or contributor reinvented a component, drifted from the design system, or bypassed a shared abstraction.
 

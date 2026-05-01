@@ -13,7 +13,7 @@ This guide covers best practices for creating pull requests in the Zterm reposit
 
 - `fix-errors` - Fix presubmit failures (formatting, linting, tests) before opening PR
 - `rust-unit-tests` - Write unit tests for your changes, if applicable (see "Testing Requirements" below)
-- `warp-integration-test` - Add or update integration coverage for user-visible flows, regressions, and P0 use cases
+- `zterm-integration-test` - Add or update integration coverage for user-visible flows, regressions, and P0 use cases
 - `add-feature-flag` - Gate changes behind feature flags
 
 ## Pre-PR Checklist
@@ -70,7 +70,7 @@ This helps you:
 - Catch unintended changes before review
 - Write an accurate PR description
 - Ensure you're comparing against the correct base branch
-- **Tests:** Include tests when required—bug fixes (regression test), algorithmic code (unit tests), UI components (layout test), P0 use cases (integration test). See Testing Requirements below.
+- **Tests:** Include tests when requiredï¿½bug fixes (regression test), algorithmic code (unit tests), UI components (layout test), P0 use cases (integration test). See Testing Requirements below.
 
 ### 4. Link to Linear task
 
@@ -191,7 +191,7 @@ Prefer a direct choice such as:
 - `Yes, add an integration test before creating the PR`
 - `No, continue without an integration test`
 
-If the user chooses to add one, use the `warp-integration-test` skill.
+If the user chooses to add one, use the `zterm-integration-test` skill.
 
 ### P0 use cases require integration tests
 
@@ -204,7 +204,7 @@ Integration tests should:
 - Validate end-to-end functionality
 - Be placed in the `integration/` directory
 
-Use the `warp-integration-test` skill for implementation details, test registration steps, and validation workflow.
+Use the `zterm-integration-test` skill for implementation details, test registration steps, and validation workflow.
 
 ## PR Description Guidelines
 

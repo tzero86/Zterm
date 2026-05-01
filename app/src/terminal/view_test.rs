@@ -3675,8 +3675,10 @@ fn submit_cli_agent_rich_input_opencode_defers_enter_and_close() {
         assert_eq!(pty_writes.borrow()[0], b"hello");
 
         // Wait for the delayed \r to arrive.
+        // Use 40 ticks (200ms) instead of default 20 (100ms) to account for
+        // system scheduling delays on slower CI environments like Linux.
         assert_eventually!(
-            pty_writes.borrow().len() == 2,
+            40 => pty_writes.borrow().len() == 2,
             "carriage return should be written after delay"
         );
         assert_eq!(pty_writes.borrow()[1], b"\r");

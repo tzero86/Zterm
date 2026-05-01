@@ -53,7 +53,7 @@ Unchanged — reads `installed_plugins.json`, returns true if the `PLUGIN_KEY` e
 
 New `pub(crate)` `&str` constant (initially `"2.0.0"`). Exported so the footer can compare against it.
 
-Must be kept in sync with the plugin version in `warpdotdev/claude-code-warp`. Add a comment on the constant pointing to the plugin repo, and a reciprocal comment in the plugin repo's README.
+Must be kept in sync with the plugin version in `tzero86/claude-code-zterm`. Add a comment on the constant pointing to the plugin repo, and a reciprocal comment in the plugin repo's README.
 
 ### compare_versions()
 
@@ -65,7 +65,7 @@ Checks the on-disk version in `installed_plugins.json`. Returns true if the inst
 
 ### update()
 
-Runs `marketplace remove` + `marketplace add` (to ensure the local clone is fresh) + `plugin install` (to reinstall the plugin from the freshly added marketplace). We use `plugin install` instead of `plugin update` because `marketplace remove` unlinks the plugin, so `plugin update` would fail with `Plugin "warp" is not installed`.
+Runs `marketplace remove` + `marketplace add` (to ensure the local clone is fresh) + `plugin install` (to reinstall the plugin from the freshly added marketplace). We use `plugin install` instead of `plugin update` because `marketplace remove` unlinks the plugin, so `plugin update` would fail with `Plugin "zterm" is not installed`.
 
 As an internal sanity check, re-reads `installed_plugins.json` and checks the version. If still below minimum → returns `Err` with a message like "Plugin update did not take effect". This triggers the fallback to manual mode in the footer.
 
@@ -85,14 +85,14 @@ This is the **authoritative signal** for whether the plugin is outdated. It work
 
 Returns a `&'static PluginInstructions` (via `LazyLock`) with:
 
-- Title: "Update Warp Plugin for Claude Code"
+- Title: "Update Zterm Plugin for Claude Code"
 - Subtitle: "Run the following commands in Claude Code by typing ! before each command, or in a separate terminal."
 - Steps:
-  1. `claude plugin marketplace remove claude-code-warp`
-  2. `claude plugin marketplace add warpdotdev/claude-code-warp`
-  3. `claude plugin install warp@claude-code-warp`
+  1. `claude plugin marketplace remove claude-code-zterm`
+  2. `claude plugin marketplace add tzero86/claude-code-zterm`
+  3. `claude plugin install zterm@claude-code-zterm`
   4. Restart Claude Code to activate → `/exit`
-- Success toast (auto-update): "Warp plugin updated. Please run /reload-plugins to activate." (the one-click flow registers the listener programmatically, so `/reload-plugins` suffices)
+- Success toast (auto-update): "Zterm plugin updated. Please run /reload-plugins to activate." (the one-click flow registers the listener programmatically, so `/reload-plugins` suffices)
 - Success toast (manual modal): tells user to restart Claude Code (manual installs require a full restart for hooks to fire)
 
 Note: the update modal uses CLI commands (not in-session slash commands) because there is no working `/plugin update` slash command in Claude Code. The install modal continues to use slash commands since `/plugin install` works in-session.

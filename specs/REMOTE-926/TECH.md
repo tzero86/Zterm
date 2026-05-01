@@ -193,7 +193,7 @@ sequenceDiagram
   - `viewer::TerminalManager::on_view_detached(Closed)` performs today's full teardown.
   - `viewer::TerminalManager::on_view_detached(Moved)` is a no-op (network stays `Active`, `SharedSessionStatus` unchanged) because `TerminalManager` is reused across the move.
   - `local_tty::TerminalManager::on_view_detached` behaves identically for all `DetachType` values (regression).
-- **Integration tests** (using the `crates/integration` framework; see skill `warp-integration-test`)
+- **Integration tests** (using the `crates/integration` framework; see skill `zterm-integration-test`)
   - Close a shared-session viewer tab, emit a new `DownstreamMessage::OrderedTerminalEvent` from a mock server, restore the tab, assert the new block is present.
   - Close a shared-session viewer tab with editor role, restore the tab, assert input is still `Editable`.
   - Close a shared-session viewer tab, assert no ended banner was inserted, restore, assert no ended banner.

@@ -21,31 +21,39 @@ This document catalogs workflows that depend on Warp-owned infrastructure or act
 ---
 
 ### Release Management Workflows
-**Files:** `create_release.yml`, `cut_new_release_candidate.yml`, `cut_new_releases.yml`, `delete_release.yml`
+**Files:** `create_release.yml`, `cut_new_release_candidate.yml`, `cut_new_releases.yml`, `delete_release.yml` (DISABLED - See `release.yml` for replacement)
 
-**Purpose:** Automated release creation and channel versioning
+**Purpose:** Automated release creation and channel versioning (Warp-specific)
 **Dependencies:**
 - `warpdotdev/channel-versions` repository (private, Warp-owned)
 - Warp Sentry organization (`warpdotdev`)
 - Warp S3 bucket (`warp-releases/`)
 - Various Warp-specific secrets
 
-**Status for Fork:** ⚠️ Needs replacement
-- Current releases are manual or need custom CI setup
-- Zterm doesn't have a release channel system yet
+**Status for Fork:** ✅ REPLACED
+- **Replacement:** `.github/workflows/release.yml` (custom Zterm release workflow)
+- **Configuration:** `release_configurations.json` (updated for Zterm channels)
+- **Documentation:** `RELEASE.md` (release process guide)
 
-**Replacement Approach:**
-1. **Option A (Quick):** Use GitHub Releases + Artifacts directly
-   - Create releases manually via GitHub CLI or UI
-   - Attach built binaries as release artifacts
-   
-2. **Option B (Recommended):** Build custom release workflow
-   - Implement `.github/workflows/release.yml` that:
-     - Builds binaries for Linux/macOS/Windows
-     - Creates GitHub Release with artifacts
-     - Tags releases with semantic versioning
-     - (Optional) Upload to Homebrew/other package managers
-   - Replace `release_configurations.json` with Zterm-specific config
+**How to Use the Replacement:**
+1. Go to **Actions** → **Create Release** in GitHub UI
+2. Click **Run workflow** and fill in:
+   - `version`: Semantic version (e.g., `0.2.0`)
+   - `channel`: `dev`, `preview`, or `stable`
+   - `create_tag`: Whether to create git tag (default: true)
+3. Workflow will:
+   - Build binaries for Linux, macOS, Windows
+   - Create GitHub Release with artifacts
+   - Create git tag (if enabled)
+   - Auto-generate release notes from git history
+
+**Key Differences from Warp:**
+- Uses GitHub Releases directly (no custom channel system)
+- No Sentry/analytics integration (for now)
+- No auto-push to package managers (future enhancement)
+- Manual workflow trigger (no scheduled releases yet)
+
+See `RELEASE.md` for detailed release process guide.
 
 ---
 

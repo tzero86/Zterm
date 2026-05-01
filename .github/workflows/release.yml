@@ -1,0 +1,216 @@
+name: Create Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g., 0.1.0)'
+        required: true
+        type: string
+      channel:
+        description: 'Release channel'
+        required: true
+        type: choice
+        options:
+          - dev
+          - preview
+          - stable
+      create_tag:
+        description: 'Create git tag for this release'
+        required: false
+        type: boolean
+        default: true
+
+env:
+  CARGO_TERM_COLOR: always
+  RUSTFLAGS: -C debuginfo=line-tables-only
+
+jobs:
+  validate:
+    name: Validate inputs
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.validate.outputs.version }}
+      channel: ${{ steps.validate.outputs.channel }}
+      release_name: ${{ steps.validate.outputs.release_name }}
+    steps:
+      - name: Validate version format
+        id: validate
+        run: |
+          VERSION="${{ inputs.version }}"
+          CHANNEL="${{ inputs.channel }}"
+          
+          # Validate semantic version format (X.Y.Z or X.Y.Z-prerelease with dot-separated identifiers)
+          # Allows: 1.0.0, 1.0.0-rc.1, 0.2.0-dev.1, 1.0.0-alpha.2.3, etc.
+          if ! [[ $VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9]+(\.[a-zA-Z0-9]+)*)?$ ]]; then
+            echo "::error::Invalid version format: $VERSION (expected X.Y.Z or X.Y.Z-prerelease.N)"
+            exit 1
+          fi
+          
+          # Map channel to release name
+          case "$CHANNEL" in
+            dev)
+              RELEASE_NAME="Zterm Dev v$VERSION"
+              IS_PRERELEASE=true
+              ;;
+            preview)
+              RELEASE_NAME="Zterm Preview v$VERSION"
+              IS_PRERELEASE=true
+              ;;
+            stable)
+              RELEASE_NAME="Zterm v$VERSION"
+              IS_PRERELEASE=false
+              ;;
+            *)
+              echo "::error::Unknown channel: $CHANNEL"
+              exit 1
+              ;;
+          esac
+          
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "channel=$CHANNEL" >> $GITHUB_OUTPUT
+          echo "release_name=$RELEASE_NAME" >> $GITHUB_OUTPUT
+          echo "is_prerelease=$IS_PRERELEASE" >> $GITHUB_OUTPUT
+
+  build:
+    name: Build (${{ matrix.target }})
+    runs-on: ${{ matrix.runner }}
+    needs: validate
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: x86_64-unknown-linux-gnu
+            runner: ubuntu-latest
+            artifact_name: zterm-x86_64-linux
+          - target: x86_64-pc-windows-msvc
+            runner: windows-latest
+            artifact_name: zterm-x86_64-windows.exe
+          - target: x86_64-apple-darwin
+            runner: macos-latest
+            artifact_name: zterm-x86_64-macos
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Cache Rust build artifacts
+        uses: Swatinem/rust-cache@23bce251a8cd2ffc3c1075b0129732cecf8348a0 # v2.7.3
+
+      - name: Build release binary
+        run: cargo build --release --target ${{ matrix.target }}
+        env:
+          CARGO_BUILD_TARGET: ${{ matrix.target }}
+
+      - name: Prepare artifact (Unix)
+        if: runner.os != 'Windows'
+        run: |
+          mkdir -p artifacts
+          cp target/${{ matrix.target }}/release/zterm artifacts/${{ matrix.artifact_name }}
+          chmod +x artifacts/${{ matrix.artifact_name }}
+
+      - name: Prepare artifact (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          mkdir artifacts
+          Copy-Item -Path "target\${{ matrix.target }}\release\zterm.exe" -Destination "artifacts\${{ matrix.artifact_name }}"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@65462800fd760344d9b3f3840b37ce0f4e39ca03 # v4.3.5
+        with:
+          name: ${{ matrix.artifact_name }}
+          path: artifacts/${{ matrix.artifact_name }}
+          retention-days: 1
+
+  create-release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: [validate, build]
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@65a9edc5881444af0b3a3d60a0cc9efba8348bdd # v4.1.7
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: Create Release Notes
+        id: release_notes
+        run: |
+          cat > RELEASE_NOTES.md << EOF
+          # ${{ needs.validate.outputs.release_name }}
+          
+          Release channel: \`${{ needs.validate.outputs.channel }}\`
+          
+          ## Changes in this release
+          
+          \$(git log --oneline \$(git describe --tags --abbrev=0 2>/dev/null || echo "HEAD~10")..HEAD || echo "Initial release")
+          
+          ## Installation
+          
+          Download the appropriate binary for your platform:
+          
+          - Linux (x86_64): `zterm-x86_64-linux`
+          - macOS (x86_64): `zterm-x86_64-macos`
+          - Windows (x86_64): `zterm-x86_64-windows.exe`
+          
+          ### For Linux/macOS:
+          
+          ```bash
+          chmod +x zterm-x86_64-linux  # or zterm-x86_64-macos
+          ./zterm-x86_64-linux
+          ```
+          
+          ### For Windows:
+          
+          Run `zterm-x86_64-windows.exe` directly or add to your PATH.
+          
+          ## Platform Support
+          
+          - **Linux**: x86_64, glibc 2.31+
+          - **macOS**: x86_64, 10.13+
+          - **Windows**: x86_64, Windows 10+
+          
+          For issues, visit https://github.com/tzero86/Zterm/issues
+          EOF
+          cat RELEASE_NOTES.md
+
+      - name: Create Release
+        uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844 # v1
+        with:
+          tag_name: v${{ needs.validate.outputs.version }}
+          name: ${{ needs.validate.outputs.release_name }}
+          body_path: RELEASE_NOTES.md
+          draft: false
+          prerelease: ${{ needs.validate.outputs.channel != 'stable' }}
+          files: |
+            artifacts/zterm-*-linux
+            artifacts/zterm-*-windows.exe
+            artifacts/zterm-*-macos
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create git tag
+        if: ${{ inputs.create_tag }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "v${{ needs.validate.outputs.version }}" -m "Release: ${{ needs.validate.outputs.release_name }}"
+          git push origin "v${{ needs.validate.outputs.version }}"
+
+  cleanup:
+    name: Cleanup
+    runs-on: ubuntu-latest
+    needs: create-release
+    if: always()
+    steps:
+      - name: Delete artifact uploads
+        uses: geekyeggo/delete-artifact@24928e75e6e6590170563b8ddae9fad8f45ca6a9 # v5.1
+        with:
+          name: zterm-*

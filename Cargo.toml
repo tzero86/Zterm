@@ -23,7 +23,7 @@ default-members = [
 ]
 
 [workspace.package]
-authors = ["Zterm Team <dev@warp.dev>"]
+authors = ["Zterm Contributors"]
 license = "AGPL-3.0-only"
 publish = false
 
