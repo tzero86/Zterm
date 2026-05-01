@@ -692,7 +692,7 @@ pub fn render_citation(
                 item.display_name().unwrap_or(String::from("Untitled")),
             )
         }
-        AIAgentCitation::WarpDocumentation { .. } => {
+        AIAgentCitation::ZtermDocumentation { .. } => {
             let icon = Icon::Warp.to_zterm_ui_icon(theme.foreground()).finish();
             let name = String::from("Zterm Docs");
             (Some(icon), name)
