@@ -1000,7 +1000,7 @@ pub enum AgentModeCitation {
         object_type: ObjectType,
         uid: ObjectUid,
     },
-    WarpDocs {
+    ZtermDocs {
         page: String,
     },
     WebPage {
