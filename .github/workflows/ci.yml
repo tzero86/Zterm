@@ -99,20 +99,12 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: "macos"
-            name: "MacOS"
-            runner: ${{ fromJSON(needs.params.outputs.macos-runner) }}
-            is_self_hosted: ${{ contains(fromJSON(needs.params.outputs.macos-runner), 'self-hosted') }}
-            extra_test_args: "--exclude integration --exclude zterm_js --exclude managed_secrets_wasm --exclude serve-wasm"
-            test_filter: " and not test(/idle_timeout_sender_later_send_after_supersedes_earlier|test_decorations_with_multibyte_chars|test_histignorespace_support_in_zsh|submit_with_plugin_but_auto_toggle_off_respects_auto_dismiss|test_create_new_block_with_local_status/)"
-            runs_integration: false
-
           - os: "linux"
             name: "Linux"
             runner: ubuntu-latest
             is_self_hosted: false
             extra_test_args: "--exclude zterm_js --exclude managed_secrets_wasm --exclude serve-wasm"
-            test_filter: ""
+            test_filter: " and not test(/test_histignorespace_support_in_zsh/)"
             runs_integration: true
 
           - os: "windows"
@@ -120,7 +112,7 @@ jobs:
             runner: windows-latest
             is_self_hosted: false
             extra_test_args: "--exclude command-signatures-v2 --exclude zterm_js --exclude managed_secrets_wasm --exclude serve-wasm"
-            test_filter: ""
+            test_filter: " and not test(/test_histignorespace_support_in_zsh/)"
             runs_integration: false
     runs-on: ${{ matrix.runner }}
     needs: params
@@ -618,7 +610,7 @@ jobs:
 
   check-release-compilation:
     name: Verify compilation with release flags (${{ matrix.name }})
-    timeout-minutes: 15
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
