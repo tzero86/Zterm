@@ -197,7 +197,7 @@ fn extract_skill_parent_directory_different_providers() {
         return;
     };
     let repo = home_dir.join("repo");
-    let providers = [".warp", ".claude", ".codex", ".cursor", ".gemini"];
+    let providers = [".agents", ".zterm", ".claude", ".codex", ".cursor", ".gemini"];
     for provider in providers {
         let path = repo
             .join(provider)
