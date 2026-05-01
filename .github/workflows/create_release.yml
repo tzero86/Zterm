@@ -7,17 +7,29 @@
 # * Indirectly, using workflow_call, for creating real releases.
 # * Directly, using workflow_dispatch, for testing. By default, this will not create GitHub or Sentry releases, or upload to GCS.
 
-name: Create Release
+# DISABLED: This workflow depends on warpdotdev/channel-versions (Warp-owned infra).
+# See DISABLED_WARP_WORKFLOWS.md for details and replacement strategy.
+
+name: Create Release (DISABLED - Warp-specific infra)
 on:
-  workflow_call:
+  workflow_dispatch:
     inputs:
-      channel:
-        description: The channel to create a release or release candidate for.
-        required: true
+      _disabled:
+        description: "This workflow is disabled"
+        required: false
         type: string
-      build_linux:
-        description: Build Linux artifacts.
-        type: boolean
+
+# Original triggers (commented out):
+# on:
+#   workflow_call:
+#     inputs:
+#       channel:
+#         description: The channel to create a release or release candidate for.
+#         required: true
+#         type: string
+#       build_linux:
+#         description: Build Linux artifacts.
+#         type: boolean
         default: true
       build_windows:
         description: Build Windows artifacts.

@@ -9,10 +9,17 @@
 #   (i.e.: stable_release/, preview_release/, or dev_release/)
 # - The release has an entry in channel_versions.json (i.e., it's deployed)
 
-name: Delete Release
+# DISABLED: This workflow depends on Warp-owned release infrastructure.
+# See DISABLED_WARP_WORKFLOWS.md for details and replacement strategy.
+
+name: Delete Release (DISABLED - Warp-specific infra)
 on:
   workflow_dispatch:
     inputs:
+      _disabled:
+        description: "This workflow is disabled"
+        required: false
+        type: string
       branch:
         description: 'The release branch to delete (e.g., stable_release/v0.2025.01.01.00.00.stable)'
         required: true

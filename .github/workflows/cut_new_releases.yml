@@ -4,21 +4,17 @@
 # Supports cutting releases for nightly release channels, weekly release
 # channels, or all release channels.  Releases run in parallel where able.
 
-name: Cut New Releases
-on:
-  schedule:
-    # Run this job every morning at 3am EST.
-    - cron: "0 8 * * *"
+# DISABLED: This workflow depends on Warp-owned release infrastructure.
+# See DISABLED_WARP_WORKFLOWS.md for details and replacement strategy.
 
+name: Cut New Releases (DISABLED - Warp-specific infra)
+on:
   workflow_dispatch:
     inputs:
-      targets:
-        type: choice
-        description: Which releases to build. Nightly = dev; Weekly = preview/stable.
-        options:
-          - nightly
-          - weekly
-          - all
+      _disabled:
+        description: "This workflow is disabled"
+        required: false
+        type: string
 
 env:
   CONFIG_FILE: ".github/workflows/release_configurations.json"

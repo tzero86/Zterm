@@ -1,17 +1,29 @@
-﻿name: Repo Sync
+﻿name: Repo Sync (DISABLED - Warp-specific infra)
+# DISABLED: This workflow depends on warpdotdev/repo-sync (Warp-owned action).
+# See DISABLED_WARP_WORKFLOWS.md for details and replacement strategy.
+# To re-enable, uncomment the 'on:' section below.
+# on:
+#   push:
+#     branches: [master]
+#   pull_request:
+#     types: [closed, opened, synchronize, edited, labeled]
+#     branches: [master]
+#   workflow_dispatch:
+#     inputs:
+#       action:
+#         description: "Which action to run"
+#         required: true
+#         type: choice
+#         options: [sync, escalation]
+
+# Placeholder to prevent workflow from triggering
 on:
-  push:
-    branches: [master]
-  pull_request:
-    types: [closed, opened, synchronize, edited, labeled]
-    branches: [master]
   workflow_dispatch:
     inputs:
-      action:
-        description: "Which action to run"
-        required: true
-        type: choice
-        options: [sync, escalation]
+      _disabled:
+        description: "This workflow is disabled"
+        required: false
+        type: string
 
 jobs:
   sync:

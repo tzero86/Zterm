@@ -1,5 +1,7 @@
 ﻿name: Trigger Implementation on Plan Approved (Local)
-on:
+# DISABLED: Depends on warpdotdev/oz-for-oss (Warp-owned AI agent action).
+# See DISABLED_WARP_WORKFLOWS.md for replacement strategy.
+on_DISABLED:
   pull_request_target:
     types: [labeled]
 concurrency:
