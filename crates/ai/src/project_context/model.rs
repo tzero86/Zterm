@@ -13,7 +13,7 @@ cfg_if::cfg_if! {
         use ignore::gitignore::Gitignore;
         use async_channel::Sender;
 
-        const RULES_FILE_PATTERN: [&str; 2] = ["WARP.md", "AGENTS.md"];
+        const RULES_FILE_PATTERN: [&str; 3] = ["ZTERM.md", "WARP.md", "AGENTS.md"];
         const MAX_SCAN_DEPTH: usize = 3;
         const MAX_FILES_TO_SCAN: usize = 5000;
     }
@@ -28,13 +28,17 @@ pub struct ProjectRule {
 #[derive(Debug, Default)]
 struct RuleAtPath {
     parent_path: PathBuf,
+    zterm_md: Option<ProjectRule>,
     warp_md: Option<ProjectRule>,
     agents_md: Option<ProjectRule>,
 }
 
 impl RuleAtPath {
     fn respected_rule(&self) -> Option<&ProjectRule> {
-        self.warp_md.as_ref().or(self.agents_md.as_ref())
+        self.zterm_md
+            .as_ref()
+            .or(self.warp_md.as_ref())
+            .or(self.agents_md.as_ref())
     }
 }
 
@@ -109,7 +113,9 @@ impl ProjectRules {
             .iter_mut()
             .find(|rule| rule.parent_path == parent)?;
 
-        if file_name.to_lowercase() == "warp.md" {
+        if file_name.to_lowercase() == "zterm.md" {
+            rule.zterm_md.take()
+        } else if file_name.to_lowercase() == "warp.md" {
             rule.warp_md.take()
         } else if file_name.to_lowercase() == "agents.md" {
             rule.agents_md.take()
@@ -141,7 +147,9 @@ impl ProjectRules {
 
         match existing_rule {
             Some(rule) => {
-                if file_name.to_lowercase() == "warp.md" {
+                if file_name.to_lowercase() == "zterm.md" {
+                    rule.zterm_md = rule_file;
+                } else if file_name.to_lowercase() == "warp.md" {
                     rule.warp_md = rule_file;
                 } else if file_name.to_lowercase() == "agents.md" {
                     rule.agents_md = rule_file;
@@ -152,7 +160,9 @@ impl ProjectRules {
                     parent_path: parent.to_path_buf(),
                     ..Default::default()
                 };
-                if file_name.to_lowercase() == "warp.md" {
+                if file_name.to_lowercase() == "zterm.md" {
+                    rule.zterm_md = rule_file;
+                } else if file_name.to_lowercase() == "warp.md" {
                     rule.warp_md = rule_file;
                 } else if file_name.to_lowercase() == "agents.md" {
                     rule.agents_md = rule_file;
@@ -164,7 +174,7 @@ impl ProjectRules {
 }
 
 /// Singleton model that keeps track of mapping between paths and rule files
-/// Currently supports WARP.md files, but designed to be extensible
+/// Currently supports ZTERM.md, WARP.md (legacy), and AGENTS.md files, designed to be extensible
 #[cfg_attr(not(feature = "local_fs"), allow(dead_code))]
 #[derive(Debug, Default)]
 pub struct ProjectContextModel {
@@ -238,11 +248,17 @@ impl ProjectContextModel {
                                 .rules
                                 .iter()
                                 .filter_map(|rule| {
-                                    rule.warp_md.as_ref().map(|rule| ProjectRulePath {
+                                    rule.zterm_md.as_ref().map(|rule| ProjectRulePath {
                                         project_root: root_clone.clone(),
                                         path: rule.path.clone(),
                                     })
                                 })
+                                .chain(rule_files.rules.iter().filter_map(|rule| {
+                                    rule.warp_md.as_ref().map(|rule| ProjectRulePath {
+                                        project_root: root_clone.clone(),
+                                        path: rule.path.clone(),
+                                    })
+                                }))
                                 .chain(rule_files.rules.iter().filter_map(|rule| {
                                     rule.agents_md.as_ref().map(|rule| ProjectRulePath {
                                         project_root: root_clone.clone(),

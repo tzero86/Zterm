@@ -6,7 +6,7 @@ use warp_multi_agent_api as api;
 #[derive(Debug, Clone, Hash, Eq, PartialEq)]
 pub enum AIAgentCitation {
     ZtermDriveObject { uid: String },
-    WarpDocumentation { path: String },
+    ZtermDocumentation { path: String },
     WebPage { url: String },
 }
 
@@ -16,8 +16,8 @@ impl Display for AIAgentCitation {
             AIAgentCitation::ZtermDriveObject { uid } => {
                 write!(f, "Zterm Drive Object: {uid}")
             }
-            AIAgentCitation::WarpDocumentation { path } => {
-                write!(f, "Warp Documentation: {path}")
+            AIAgentCitation::ZtermDocumentation { path } => {
+                write!(f, "Zterm Documentation: {path}")
             }
             AIAgentCitation::WebPage { url } => {
                 write!(f, "Web Page: {url}")
@@ -45,7 +45,7 @@ impl TryFrom<api::Citation> for AIAgentCitation {
             | api::DocumentType::Rule => Ok(AIAgentCitation::ZtermDriveObject {
                 uid: citation.document_id,
             }),
-            api::DocumentType::WarpDocumentation => Ok(AIAgentCitation::WarpDocumentation {
+            api::DocumentType::WarpDocumentation => Ok(AIAgentCitation::ZtermDocumentation {
                 path: citation.document_id,
             }),
             api::DocumentType::WebPage => Ok(AIAgentCitation::WebPage {
