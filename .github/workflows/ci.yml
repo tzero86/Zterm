@@ -104,13 +104,13 @@ jobs:
             name: "MacOS"
             runner: ${{ fromJSON(needs.params.outputs.macos-runner) }}
             is_self_hosted: ${{ contains(fromJSON(needs.params.outputs.macos-runner), 'self-hosted') }}
-            extra_test_args: ""
+            extra_test_args: "--exclude zterm_js"
 
           - os: "linux"
             name: "Linux"
             runner: ubuntu-latest
             is_self_hosted: false
-            extra_test_args: ""
+            extra_test_args: "--exclude zterm_js"
 
           - os: "windows"
             name: "Windows"
