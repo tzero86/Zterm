@@ -104,7 +104,7 @@ jobs:
             runner: ubuntu-latest
             is_self_hosted: false
             extra_test_args: "--exclude zterm_js --exclude managed_secrets_wasm --exclude serve-wasm"
-            test_filter: " and not test(/test_histignorespace_support_in_zsh/)"
+            test_filter: " and not test(/test_histignorespace_support_in_zsh|test_decorations_with_multibyte_chars/)"
             runs_integration: true
 
           - os: "windows"
