@@ -1,0 +1,175 @@
+{
+  "chunk_id": "10",
+  "title": "Crates - Parsing and Shell",
+  "scope": "crates/command, crates/zterm_completer, crates/syntax_tree",
+  "extraction_timestamp": "2024",
+  "nodes": [
+    {
+      "id": "command_crate",
+      "type": "crate",
+      "name": "command",
+      "responsibility": "Command parsing, AST generation, and semantic analysis for shell commands",
+      "confidence": 0.9
+    },
+    {
+      "id": "zterm_completer",
+      "type": "crate",
+      "name": "zterm_completer",
+      "responsibility": "Shell command and argument completion with context-aware suggestions",
+      "confidence": 0.9
+    },
+    {
+      "id": "syntax_tree_crate",
+      "type": "crate",
+      "name": "syntax_tree",
+      "responsibility": "Generic tree data structure for representing syntax and language structures",
+      "confidence": 0.85
+    },
+    {
+      "id": "command_parser",
+      "type": "module",
+      "name": "command parser",
+      "crate": "command",
+      "responsibility": "Parse shell command strings into executable command structures",
+      "confidence": 0.9
+    },
+    {
+      "id": "ast_module",
+      "type": "module",
+      "name": "AST generation",
+      "crate": "command",
+      "responsibility": "Build abstract syntax trees for shell commands",
+      "confidence": 0.85
+    },
+    {
+      "id": "completion_engine",
+      "type": "module",
+      "name": "completion engine",
+      "crate": "zterm_completer",
+      "responsibility": "Context-aware command and argument completion logic",
+      "confidence": 0.8
+    },
+    {
+      "id": "suggestion_provider",
+      "type": "module",
+      "name": "suggestion provider",
+      "crate": "zterm_completer",
+      "responsibility": "Generate completion suggestions from available commands/files/environment",
+      "confidence": 0.8
+    },
+    {
+      "id": "tree_structure",
+      "type": "type",
+      "name": "Tree",
+      "crate": "syntax_tree",
+      "responsibility": "Generic tree node structure for language parsing",
+      "confidence": 0.85
+    }
+  ],
+  "edges": [
+    {
+      "source": "command_crate",
+      "target": "command_parser",
+      "type": "contains",
+      "label": "parses shell input",
+      "confidence": 0.9
+    },
+    {
+      "source": "command_parser",
+      "target": "ast_module",
+      "type": "uses",
+      "label": "generates AST",
+      "confidence": 0.85
+    },
+    {
+      "source": "zterm_completer",
+      "target": "command_parser",
+      "type": "uses",
+      "label": "parses partial commands for context",
+      "confidence": 0.8
+    },
+    {
+      "source": "zterm_completer",
+      "target": "completion_engine",
+      "type": "contains",
+      "label": "drives completion logic",
+      "confidence": 0.9
+    },
+    {
+      "source": "completion_engine",
+      "target": "suggestion_provider",
+      "type": "uses",
+      "label": "generates suggestions",
+      "confidence": 0.8
+    },
+    {
+      "source": "syntax_tree_crate",
+      "target": "tree_structure",
+      "type": "defines",
+      "label": "generic tree primitive",
+      "confidence": 0.9
+    },
+    {
+      "source": "command_parser",
+      "target": "syntax_tree_crate",
+      "type": "uses",
+      "label": "builds AST using tree structure",
+      "confidence": 0.7
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "command_processing_pipeline",
+      "type": "subsystem",
+      "name": "Command Processing Pipeline",
+      "nodes": ["command_crate", "command_parser", "ast_module"],
+      "responsibility": "Transform raw shell input into structured, analyzable AST",
+      "confidence": 0.9
+    },
+    {
+      "id": "completion_subsystem",
+      "type": "subsystem",
+      "name": "Completion System",
+      "nodes": ["zterm_completer", "completion_engine", "suggestion_provider", "command_parser"],
+      "responsibility": "Provide intelligent shell command and argument completions",
+      "confidence": 0.85
+    }
+  ],
+  "design_patterns": [
+    {
+      "pattern": "Parser + AST separation",
+      "rationale": "command_parser handles syntax; ast_module handles semantics and structure",
+      "confidence": 0.9
+    },
+    {
+      "pattern": "Generic tree structure",
+      "rationale": "syntax_tree provides reusable tree abstraction for multiple parsers",
+      "confidence": 0.85
+    },
+    {
+      "pattern": "Context-driven completion",
+      "rationale": "completion_engine parses partial input to understand context before suggesting",
+      "confidence": 0.8
+    }
+  ],
+  "implicit_dependencies": [
+    {
+      "type": "data_flow",
+      "from": "command_parser",
+      "to": "completion_engine",
+      "description": "Completion needs command parsing to understand context",
+      "confidence": 0.85
+    },
+    {
+      "type": "pattern_similarity",
+      "modules": ["command_parser", "completion_engine"],
+      "description": "Both parse shell input; completion may reuse parser logic",
+      "confidence": 0.8
+    }
+  ],
+  "architectural_rationale": {
+    "separate_parsing": "Decoupling parsing from completion enables reuse of parser in other contexts",
+    "generic_tree": "syntax_tree provides foundation for language-agnostic AST representation",
+    "context_awareness": "Completion engine must understand partial commands to provide relevant suggestions"
+  }
+}

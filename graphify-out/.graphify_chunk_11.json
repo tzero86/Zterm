@@ -1,0 +1,188 @@
+{
+  "chunk_id": "11",
+  "title": "Crates - Data Structures and Utilities",
+  "scope": "crates/settings, crates/zterm_util, crates/sum_tree, crates/string-offset, crates/field_mask",
+  "extraction_timestamp": "2024",
+  "nodes": [
+    {
+      "id": "settings_crate",
+      "type": "crate",
+      "name": "settings",
+      "responsibility": "Application settings, configuration persistence, and user preferences management",
+      "confidence": 0.95
+    },
+    {
+      "id": "zterm_util_crate",
+      "type": "crate",
+      "name": "zterm_util",
+      "responsibility": "Common utility functions and helpers shared across crates",
+      "confidence": 0.85
+    },
+    {
+      "id": "sum_tree_crate",
+      "type": "crate",
+      "name": "sum_tree",
+      "responsibility": "Efficient range-tree data structure with aggregate values for fast queries",
+      "confidence": 0.9
+    },
+    {
+      "id": "string_offset_crate",
+      "type": "crate",
+      "name": "string-offset",
+      "responsibility": "Byte offset tracking in strings, UTF-8 aware position management",
+      "confidence": 0.85
+    },
+    {
+      "id": "field_mask_crate",
+      "type": "crate",
+      "name": "field_mask",
+      "responsibility": "Selective field updates for protobuf/structured data",
+      "confidence": 0.75
+    },
+    {
+      "id": "settings_value_crate",
+      "type": "crate",
+      "name": "settings_value",
+      "responsibility": "Type-safe settings value representation with derive macro support",
+      "confidence": 0.9
+    },
+    {
+      "id": "settings_value_derive",
+      "type": "crate",
+      "name": "settings_value_derive",
+      "responsibility": "Procedural macro for deriving SettingsValue trait",
+      "confidence": 0.85
+    },
+    {
+      "id": "persistence_crate",
+      "type": "crate",
+      "name": "persistence",
+      "responsibility": "Data persistence layer for serialization and storage",
+      "confidence": 0.8
+    },
+    {
+      "id": "simple_logger_crate",
+      "type": "crate",
+      "name": "simple_logger",
+      "responsibility": "Logging infrastructure with configurable levels and outputs",
+      "confidence": 0.8
+    }
+  ],
+  "edges": [
+    {
+      "source": "settings_crate",
+      "target": "settings_value_crate",
+      "type": "uses",
+      "label": "type-safe value representation",
+      "confidence": 0.9
+    },
+    {
+      "source": "settings_value_crate",
+      "target": "settings_value_derive",
+      "type": "uses",
+      "label": "procedural macro derivation",
+      "confidence": 0.9
+    },
+    {
+      "source": "settings_crate",
+      "target": "persistence_crate",
+      "type": "uses",
+      "label": "save/load settings to disk",
+      "confidence": 0.85
+    },
+    {
+      "source": "zterm_util_crate",
+      "target": "string_offset_crate",
+      "type": "uses",
+      "label": "string position utilities",
+      "confidence": 0.7
+    },
+    {
+      "source": "sum_tree_crate",
+      "target": "zterm_util_crate",
+      "type": "uses",
+      "label": "general utilities",
+      "confidence": 0.6
+    },
+    {
+      "source": "settings_crate",
+      "target": "simple_logger_crate",
+      "type": "uses",
+      "label": "log configuration changes",
+      "confidence": 0.7
+    },
+    {
+      "source": "persistence_crate",
+      "target": "field_mask_crate",
+      "type": "uses",
+      "label": "partial update semantics",
+      "confidence": 0.7
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "settings_subsystem",
+      "type": "subsystem",
+      "name": "Settings and Configuration",
+      "nodes": ["settings_crate", "settings_value_crate", "settings_value_derive", "persistence_crate"],
+      "responsibility": "Unified settings management with type-safe values and persistence",
+      "confidence": 0.9
+    },
+    {
+      "id": "data_structure_library",
+      "type": "subsystem",
+      "name": "Data Structures",
+      "nodes": ["sum_tree_crate", "string_offset_crate", "field_mask_crate"],
+      "responsibility": "Reusable, efficient data structures for common patterns",
+      "confidence": 0.8
+    },
+    {
+      "id": "utilities_subsystem",
+      "type": "subsystem",
+      "name": "Shared Utilities",
+      "nodes": ["zterm_util_crate", "simple_logger_crate"],
+      "responsibility": "Common infrastructure for all crates",
+      "confidence": 0.75
+    }
+  ],
+  "design_patterns": [
+    {
+      "pattern": "Procedural macro for trait derivation",
+      "rationale": "settings_value_derive eliminates boilerplate for SettingsValue implementation",
+      "confidence": 0.9
+    },
+    {
+      "pattern": "Range tree with aggregate values",
+      "rationale": "sum_tree enables efficient range queries and aggregation operations",
+      "confidence": 0.9
+    },
+    {
+      "pattern": "Field mask pattern",
+      "rationale": "field_mask enables partial updates without full structure replacement",
+      "confidence": 0.75
+    },
+    {
+      "pattern": "UTF-8 aware string offsets",
+      "rationale": "string_offset handles byte vs. character positions in UTF-8 text",
+      "confidence": 0.8
+    }
+  ],
+  "data_flow_patterns": [
+    {
+      "flow": "Settings lifecycle",
+      "stages": [
+        "settings_value_crate defines type",
+        "settings_value_derive generates trait impl",
+        "settings_crate manages instances",
+        "persistence_crate serializes to disk"
+      ],
+      "confidence": 0.85
+    }
+  ],
+  "architectural_rationale": {
+    "settings_hierarchy": "Separating settings_value (types) from settings_crate (management) enables reuse",
+    "sum_tree_purpose": "Efficient aggregation queries on large data structures (e.g., line counts)",
+    "string_offset_handling": "Terminal text manipulation requires byte-accurate offsets across UTF-8 boundaries",
+    "field_mask_utility": "Protobuf-style partial updates reduce unnecessary data transfers and updates"
+  }
+}

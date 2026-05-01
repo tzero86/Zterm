@@ -18780,8 +18780,8 @@ impl TerminalView {
                 AIAgentCitation::ZtermDriveObject { uid } => {
                     ctx.emit(Event::OpenZtermDriveObjectInPane(uid.clone()));
                 }
-                AIAgentCitation::WarpDocumentation { path } => {
-                    ctx.open_url(&format!("https://docs.warp.dev/{path}"));
+                AIAgentCitation::ZtermDocumentation { path } => {
+                    ctx.open_url(&format!("https://docs.zterm.dev/{path}"));
                 }
                 AIAgentCitation::WebPage { url } => {
                     ctx.open_url(url);

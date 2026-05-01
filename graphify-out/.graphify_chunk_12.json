@@ -1,0 +1,208 @@
+{
+  "chunk_id": "12",
+  "title": "Resources and Assets",
+  "scope": "resources/",
+  "extraction_timestamp": "2024",
+  "nodes": [
+    {
+      "id": "resources_dir",
+      "type": "directory",
+      "name": "resources",
+      "responsibility": "Static assets: icons, fonts, themes, bundled data",
+      "confidence": 1.0
+    },
+    {
+      "id": "icons_dir",
+      "type": "directory",
+      "name": "icons",
+      "path": "resources/icons",
+      "responsibility": "SVG and raster icons for UI elements, menus, toolbars",
+      "confidence": 0.95
+    },
+    {
+      "id": "fonts_dir",
+      "type": "directory",
+      "name": "fonts",
+      "path": "resources/fonts",
+      "responsibility": "TrueType/OpenType font files for monospace and UI rendering",
+      "confidence": 0.95
+    },
+    {
+      "id": "themes_dir",
+      "type": "directory",
+      "name": "themes",
+      "path": "resources/themes",
+      "responsibility": "Terminal color schemes and UI theme definitions",
+      "confidence": 0.95
+    },
+    {
+      "id": "bundled_dir",
+      "type": "directory",
+      "name": "bundled",
+      "path": "resources/bundled",
+      "responsibility": "Bundled resources included in binary distribution",
+      "confidence": 0.9
+    },
+    {
+      "id": "asset_cache_crate",
+      "type": "crate",
+      "name": "asset_cache",
+      "responsibility": "Crate: Asset loading, caching, and lifecycle management",
+      "confidence": 0.85
+    },
+    {
+      "id": "asset_macro_crate",
+      "type": "crate",
+      "name": "asset_macro",
+      "responsibility": "Crate: Procedural macro for embedding and referencing assets at compile-time",
+      "confidence": 0.85
+    },
+    {
+      "id": "icon_asset_type",
+      "type": "type",
+      "name": "Icon",
+      "module": "asset management",
+      "responsibility": "Typed reference to icon resource with path and metadata",
+      "confidence": 0.8
+    },
+    {
+      "id": "theme_asset_type",
+      "type": "type",
+      "name": "Theme",
+      "module": "asset management",
+      "responsibility": "Color scheme definition with palette, syntax highlighting rules",
+      "confidence": 0.8
+    },
+    {
+      "id": "font_asset_type",
+      "type": "type",
+      "name": "Font",
+      "module": "asset management",
+      "responsibility": "Font metadata: file path, fallback order, style variants",
+      "confidence": 0.8
+    }
+  ],
+  "edges": [
+    {
+      "source": "resources_dir",
+      "target": "icons_dir",
+      "type": "contains",
+      "label": "holds UI icons",
+      "confidence": 1.0
+    },
+    {
+      "source": "resources_dir",
+      "target": "fonts_dir",
+      "type": "contains",
+      "label": "holds font files",
+      "confidence": 1.0
+    },
+    {
+      "source": "resources_dir",
+      "target": "themes_dir",
+      "type": "contains",
+      "label": "holds color schemes",
+      "confidence": 1.0
+    },
+    {
+      "source": "resources_dir",
+      "target": "bundled_dir",
+      "type": "contains",
+      "label": "bundled distribution",
+      "confidence": 0.95
+    },
+    {
+      "source": "asset_cache_crate",
+      "target": "resources_dir",
+      "type": "loads",
+      "label": "loads assets at runtime",
+      "confidence": 0.85
+    },
+    {
+      "source": "asset_macro_crate",
+      "target": "resources_dir",
+      "type": "embeds",
+      "label": "references assets compile-time",
+      "confidence": 0.85
+    },
+    {
+      "source": "icon_asset_type",
+      "target": "icons_dir",
+      "type": "references",
+      "label": "points to icon file",
+      "confidence": 0.8
+    },
+    {
+      "source": "theme_asset_type",
+      "target": "themes_dir",
+      "type": "references",
+      "label": "points to theme definition",
+      "confidence": 0.8
+    },
+    {
+      "source": "font_asset_type",
+      "target": "fonts_dir",
+      "type": "references",
+      "label": "points to font file",
+      "confidence": 0.8
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "asset_management_subsystem",
+      "type": "subsystem",
+      "name": "Asset Management System",
+      "nodes": ["asset_cache_crate", "asset_macro_crate", "resources_dir", "icon_asset_type", "theme_asset_type", "font_asset_type"],
+      "responsibility": "Unified asset loading, caching, and referencing throughout application",
+      "confidence": 0.85
+    },
+    {
+      "id": "ui_resources",
+      "type": "subsystem",
+      "name": "UI Resources",
+      "nodes": ["icons_dir", "themes_dir", "fonts_dir"],
+      "responsibility": "Visual assets for user interface rendering",
+      "confidence": 0.9
+    }
+  ],
+  "resource_inventory": [
+    {
+      "category": "Icons",
+      "location": "resources/icons",
+      "purpose": "UI element graphics (buttons, menu items, status indicators)",
+      "format": "SVG primary, PNG fallback",
+      "confidence": 0.9
+    },
+    {
+      "category": "Fonts",
+      "location": "resources/fonts",
+      "purpose": "Terminal monospace rendering with fallback chains",
+      "format": "OTF/TTF",
+      "confidence": 0.95
+    },
+    {
+      "category": "Themes",
+      "location": "resources/themes",
+      "purpose": "Terminal color schemes and UI dark/light modes",
+      "format": "JSON or custom config",
+      "confidence": 0.9
+    }
+  ],
+  "design_patterns": [
+    {
+      "pattern": "Compile-time asset embedding",
+      "rationale": "asset_macro enables zero-runtime asset discovery overhead",
+      "confidence": 0.85
+    },
+    {
+      "pattern": "Runtime asset caching",
+      "rationale": "asset_cache deduplicates loaded assets in memory",
+      "confidence": 0.8
+    },
+    {
+      "pattern": "Typed asset references",
+      "rationale": "Icon/Theme/Font types prevent string-based asset lookup errors",
+      "confidence": 0.85
+    }
+  ]
+}

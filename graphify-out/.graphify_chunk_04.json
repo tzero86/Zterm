@@ -1,0 +1,302 @@
+{
+  "nodes": [
+    {
+      "id": "crates_ai_lib",
+      "label": "lib.rs",
+      "file_type": "code",
+      "source_file": "crates/ai/src/lib.rs",
+      "source_location": null
+    },
+    {
+      "id": "crates_ai_llm_id",
+      "label": "llm_id.rs",
+      "file_type": "code",
+      "source_file": "crates/ai/src/llm_id.rs",
+      "source_location": null
+    },
+    {
+      "id": "crates_ai_workspace",
+      "label": "workspace.rs",
+      "file_type": "code",
+      "source_file": "crates/ai/src/workspace.rs",
+      "source_location": null
+    },
+    {
+      "id": "crates_ai_agent",
+      "label": "agent (module)",
+      "file_type": "code",
+      "source_file": "crates/ai/src/agent/mod.rs",
+      "source_location": null
+    },
+    {
+      "id": "crates_ai_skills",
+      "label": "skills (module)",
+      "file_type": "code",
+      "source_file": "crates/ai/src/skills/mod.rs",
+      "source_location": null
+    },
+    {
+      "id": "crates_ai_index",
+      "label": "index (module)",
+      "file_type": "code",
+      "source_file": "crates/ai/src/index/mod.rs",
+      "source_location": null
+    },
+    {
+      "id": "crates_ai_document",
+      "label": "document.rs",
+      "file_type": "code",
+      "source_file": "crates/ai/src/document.rs",
+      "source_location": null
+    },
+    {
+      "id": "crates_ai_api_keys",
+      "label": "api_keys.rs",
+      "file_type": "code",
+      "source_file": "crates/ai/src/api_keys.rs",
+      "source_location": null
+    },
+    {
+      "id": "crates_ai_paths",
+      "label": "paths.rs",
+      "file_type": "code",
+      "source_file": "crates/ai/src/paths.rs",
+      "source_location": null
+    },
+    {
+      "id": "crates_ai_diff_validation",
+      "label": "diff_validation (module)",
+      "file_type": "code",
+      "source_file": "crates/ai/src/diff_validation/mod.rs",
+      "source_location": null
+    },
+    {
+      "id": "crates_ai_telemetry",
+      "label": "telemetry.rs",
+      "file_type": "code",
+      "source_file": "crates/ai/src/telemetry.rs",
+      "source_location": null
+    },
+    {
+      "id": "crates_ai_gfm_table",
+      "label": "gfm_table.rs",
+      "file_type": "code",
+      "source_file": "crates/ai/src/gfm_table.rs",
+      "source_location": null
+    },
+    {
+      "id": "concept_workspace_metadata",
+      "label": "WorkspaceMetadata",
+      "file_type": "code",
+      "source_file": "crates/ai/src/workspace.rs",
+      "source_location": "pub struct WorkspaceMetadata"
+    },
+    {
+      "id": "concept_skill_provider",
+      "label": "SkillProvider",
+      "file_type": "code",
+      "source_file": "crates/ai/src/skills/mod.rs",
+      "source_location": "pub use skill_provider::SkillProvider"
+    },
+    {
+      "id": "concept_agent_actions",
+      "label": "Agent Actions",
+      "file_type": "code",
+      "source_file": "crates/ai/src/agent/mod.rs",
+      "source_location": null
+    },
+    {
+      "id": "concept_llm_id",
+      "label": "LLMId Type",
+      "file_type": "code",
+      "source_file": "crates/ai/src/llm_id.rs",
+      "source_location": null
+    },
+    {
+      "id": "concept_project_context",
+      "label": "Project Context",
+      "file_type": "code",
+      "source_file": "crates/ai/src/project_context/mod.rs",
+      "source_location": null
+    },
+    {
+      "id": "concept_codebase_index",
+      "label": "Codebase Index",
+      "file_type": "code",
+      "source_file": "crates/ai/src/index/mod.rs",
+      "source_location": null
+    }
+  ],
+  "edges": [
+    {
+      "source": "crates_ai_lib",
+      "target": "crates_ai_agent",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/ai/src/lib.rs"
+    },
+    {
+      "source": "crates_ai_lib",
+      "target": "crates_ai_skills",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/ai/src/lib.rs"
+    },
+    {
+      "source": "crates_ai_lib",
+      "target": "crates_ai_llm_id",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/ai/src/lib.rs"
+    },
+    {
+      "source": "crates_ai_lib",
+      "target": "crates_ai_workspace",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/ai/src/lib.rs"
+    },
+    {
+      "source": "crates_ai_lib",
+      "target": "crates_ai_index",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/ai/src/lib.rs"
+    },
+    {
+      "source": "crates_ai_workspace",
+      "target": "concept_workspace_metadata",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/ai/src/workspace.rs"
+    },
+    {
+      "source": "crates_ai_skills",
+      "target": "concept_skill_provider",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/ai/src/skills/mod.rs"
+    },
+    {
+      "source": "crates_ai_agent",
+      "target": "concept_agent_actions",
+      "relation": "implements",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "crates/ai/src/agent/mod.rs"
+    },
+    {
+      "source": "crates_ai_llm_id",
+      "target": "concept_llm_id",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/ai/src/llm_id.rs"
+    },
+    {
+      "source": "crates_ai_index",
+      "target": "concept_codebase_index",
+      "relation": "implements",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "crates/ai/src/index/mod.rs"
+    },
+    {
+      "source": "crates_ai_agent",
+      "target": "crates_ai_api_keys",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "crates/ai/src/agent/mod.rs"
+    },
+    {
+      "source": "crates_ai_index",
+      "target": "crates_ai_document",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "crates/ai/src/index/mod.rs"
+    },
+    {
+      "source": "crates_ai_workspace",
+      "target": "crates_ai_paths",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "crates/ai/src/workspace.rs"
+    },
+    {
+      "source": "crates_ai_agent",
+      "target": "crates_ai_diff_validation",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "crates/ai/src/agent/mod.rs"
+    },
+    {
+      "source": "crates_ai_index",
+      "target": "concept_project_context",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "crates/ai/src/index/mod.rs"
+    },
+    {
+      "source": "crates_ai_gfm_table",
+      "target": "crates_ai_document",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.65,
+      "source_file": "crates/ai/src/gfm_table.rs"
+    },
+    {
+      "source": "crates_ai_telemetry",
+      "target": "crates_ai_agent",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "source_file": "crates/ai/src/telemetry.rs"
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "agent_execution_system",
+      "label": "Agent Execution System",
+      "nodes": ["crates_ai_agent", "concept_agent_actions", "crates_ai_diff_validation", "crates_ai_api_keys"],
+      "relation": "forms_subsystem"
+    },
+    {
+      "id": "knowledge_indexing",
+      "label": "Knowledge Indexing System",
+      "nodes": ["crates_ai_index", "crates_ai_document", "concept_codebase_index", "crates_ai_gfm_table"],
+      "relation": "forms_subsystem"
+    },
+    {
+      "id": "skill_management",
+      "label": "Skill Management System",
+      "nodes": ["crates_ai_skills", "concept_skill_provider", "crates_ai_paths"],
+      "relation": "forms_subsystem"
+    },
+    {
+      "id": "workspace_tracking",
+      "label": "Workspace Tracking",
+      "nodes": ["crates_ai_workspace", "concept_workspace_metadata", "crates_ai_paths"],
+      "relation": "forms_subsystem"
+    },
+    {
+      "id": "llm_foundation",
+      "label": "LLM Foundation Layer",
+      "nodes": ["crates_ai_llm_id", "concept_llm_id", "concept_project_context"],
+      "relation": "forms_subsystem"
+    }
+  ],
+  "input_tokens": 3200,
+  "output_tokens": 1600
+}

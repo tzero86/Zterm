@@ -1,0 +1,262 @@
+{
+  "chunk_id": "15",
+  "title": "Documentation and Guides",
+  "scope": "docs/guides/, docs/api/, docs/examples/",
+  "extraction_timestamp": "2024",
+  "nodes": [
+    {
+      "id": "docs_root",
+      "type": "directory",
+      "name": "docs",
+      "path": "docs/",
+      "responsibility": "Project documentation, user guides, API reference, examples",
+      "confidence": 1.0
+    },
+    {
+      "id": "index_md",
+      "type": "document",
+      "name": "index.md",
+      "path": "docs/index.md",
+      "responsibility": "Landing page with project overview, feature highlights, getting started links",
+      "confidence": 1.0
+    },
+    {
+      "id": "guides_dir",
+      "type": "directory",
+      "name": "guides",
+      "path": "docs/guides/",
+      "responsibility": "User guides for features, workflows, and configuration",
+      "confidence": 0.95
+    },
+    {
+      "id": "api_dir",
+      "type": "directory",
+      "name": "api",
+      "path": "docs/api/",
+      "responsibility": "API documentation for SDK, plugins, extensions",
+      "confidence": 0.9
+    },
+    {
+      "id": "examples_dir",
+      "type": "directory",
+      "name": "examples",
+      "path": "docs/examples/",
+      "responsibility": "Code examples, scripts, sample configurations",
+      "confidence": 0.9
+    },
+    {
+      "id": "getting_started",
+      "type": "document",
+      "name": "getting-started.md",
+      "path": "docs/guides/getting-started.md",
+      "responsibility": "Installation, first-time setup, basic usage walkthrough",
+      "confidence": 0.85
+    },
+    {
+      "id": "vitepress_config",
+      "type": "file",
+      "name": ".vitepress",
+      "path": "docs/.vitepress",
+      "responsibility": "VitePress documentation site configuration and theme",
+      "confidence": 0.85
+    },
+    {
+      "id": "package_json",
+      "type": "file",
+      "name": "package.json",
+      "path": "docs/package.json",
+      "responsibility": "Node.js dependencies for VitePress site generation",
+      "confidence": 0.8
+    },
+    {
+      "id": "ai_guide",
+      "type": "directory",
+      "name": "ai",
+      "path": "docs/ai/",
+      "responsibility": "AI agent integration, local LLM setup, capabilities documentation",
+      "confidence": 0.85
+    },
+    {
+      "id": "features_concepts",
+      "type": "conceptual_section",
+      "name": "Features and Concepts",
+      "topics": ["Local AI", "Zero Paywalls", "Built on Warp", "Open Source"],
+      "responsibility": "Document key product differentiators and architectural concepts",
+      "confidence": 0.85
+    },
+    {
+      "id": "configuration_docs",
+      "type": "conceptual_section",
+      "name": "Configuration",
+      "topics": ["Settings", "Themes", "Keybindings", "Environment"],
+      "responsibility": "Document customization options and preference management",
+      "confidence": 0.8
+    },
+    {
+      "id": "troubleshooting_section",
+      "type": "conceptual_section",
+      "name": "Troubleshooting",
+      "topics": ["Common Issues", "FAQ", "Platform-Specific"],
+      "responsibility": "Help users diagnose and resolve problems",
+      "confidence": 0.7
+    }
+  ],
+  "edges": [
+    {
+      "source": "docs_root",
+      "target": "index_md",
+      "type": "contains",
+      "label": "landing page",
+      "confidence": 1.0
+    },
+    {
+      "source": "docs_root",
+      "target": "guides_dir",
+      "type": "contains",
+      "label": "user guides",
+      "confidence": 0.95
+    },
+    {
+      "source": "docs_root",
+      "target": "api_dir",
+      "type": "contains",
+      "label": "API documentation",
+      "confidence": 0.9
+    },
+    {
+      "source": "docs_root",
+      "target": "examples_dir",
+      "type": "contains",
+      "label": "code examples",
+      "confidence": 0.9
+    },
+    {
+      "source": "index_md",
+      "target": "getting_started",
+      "type": "links_to",
+      "label": "call to action",
+      "confidence": 0.85
+    },
+    {
+      "source": "guides_dir",
+      "target": "configuration_docs",
+      "type": "contains",
+      "label": "customization docs",
+      "confidence": 0.8
+    },
+    {
+      "source": "guides_dir",
+      "target": "ai_guide",
+      "type": "contains",
+      "label": "AI feature guide",
+      "confidence": 0.85
+    },
+    {
+      "source": "guides_dir",
+      "target": "troubleshooting_section",
+      "type": "contains",
+      "label": "help section",
+      "confidence": 0.7
+    },
+    {
+      "source": "docs_root",
+      "target": "vitepress_config",
+      "type": "configured_by",
+      "label": "site generation",
+      "confidence": 0.85
+    },
+    {
+      "source": "vitepress_config",
+      "target": "package_json",
+      "type": "uses",
+      "label": "Node dependencies",
+      "confidence": 0.8
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "documentation_site",
+      "type": "subsystem",
+      "name": "Documentation Website",
+      "nodes": ["docs_root", "vitepress_config", "package_json", "index_md"],
+      "responsibility": "VitePress-based documentation site with markdown content",
+      "confidence": 0.9
+    },
+    {
+      "id": "user_guides",
+      "type": "subsystem",
+      "name": "User Guides and Tutorials",
+      "nodes": ["guides_dir", "getting_started", "configuration_docs", "ai_guide"],
+      "responsibility": "Help users get started, configure, and use advanced features",
+      "confidence": 0.9
+    },
+    {
+      "id": "reference_materials",
+      "type": "subsystem",
+      "name": "Reference Materials",
+      "nodes": ["api_dir", "examples_dir"],
+      "responsibility": "Complete API reference and working code examples",
+      "confidence": 0.85
+    }
+  ],
+  "content_organization": {
+    "landing_page": "index.md highlights key features and differentiators with links to guides",
+    "guides": "Walkthrough-style documentation for installation, setup, features, configuration",
+    "api": "Technical reference for SDK, plugins, extensions, integrations",
+    "examples": "Executable code samples demonstrating common tasks and patterns"
+  },
+  "documentation_concepts": [
+    {
+      "id": "local_ai_concept",
+      "name": "Local AI Integration",
+      "description": "Connection to Ollama or LM Studio for on-device LLM inference",
+      "topics": ["Setup", "Model Selection", "Capabilities", "Privacy Benefits"],
+      "confidence": 0.9
+    },
+    {
+      "id": "zero_paywall_concept",
+      "name": "Zero Paywalls Philosophy",
+      "description": "All features available from day one, no login gates or premium tiers",
+      "topics": ["Feature Parity", "Open Source", "No Cloud Required"],
+      "confidence": 0.9
+    },
+    {
+      "id": "warp_heritage_concept",
+      "name": "Built on Warp Foundation",
+      "description": "Modern terminal based on Warp codebase with cloud dependencies removed",
+      "topics": ["GPU Rendering", "UX Principles", "Architecture"],
+      "confidence": 0.85
+    }
+  ],
+  "design_patterns": [
+    {
+      "pattern": "VitePress static site generation",
+      "rationale": "Markdown-based docs enable version control and enable contributor contributions",
+      "confidence": 0.85
+    },
+    {
+      "pattern": "Feature-focused documentation structure",
+      "rationale": "Organize guides around product features (Local AI, Configuration, etc.) rather than technical modules",
+      "confidence": 0.85
+    }
+  ],
+  "configuration_options_documented": [
+    {
+      "category": "Terminal Settings",
+      "options": ["Font", "Color Scheme", "Shell", "Keybindings"]
+    },
+    {
+      "category": "AI Settings",
+      "options": ["LLM Provider", "Model Selection", "Local LLM Settings"]
+    },
+    {
+      "category": "UI/UX Settings",
+      "options": ["Theme", "Layout", "Startup Behavior"]
+    }
+  ],
+  "architectural_rationale": {
+    "vitepress_choice": "Modern static site generator with great Markdown support and built-in search",
+    "docs_in_repo": "Keeping docs in repo enables CI validation and version synchronization",
+    "concept_focused": "Documentation emphasizes what users care about (features) over implementation details"
+  }
+}
